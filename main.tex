@@ -1,11 +1,5 @@
 \documentclass[11pt]{article}
 
-% Editorial objective for AI collaborators and future revisions:
-% develop this manuscript as an initial six-page IEEE Control Systems Letters
-% (L-CSS) publication, followed by an expanded L-CSS + ACC version for
-% presentation at ACC. The alternative conference path is L-CSS + CDC 2027;
-% in either case, L-CSS is intended to be the archival journal publication.
-
 \usepackage[margin=1in]{geometry}
 
 \usepackage{amsmath,amssymb,amsthm}
@@ -14,6 +8,7 @@
 \usepackage{float}
 \usepackage[hidelinks]{hyperref}
 \usepackage{cite}
+\setlength{\emergencystretch}{1em}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
@@ -24,7 +19,15 @@
 
 \title{A Theory of Information Architecture for Networked Decisions:
 Freshness, Locality, and Coordination}
-\author{Scott Moeller and Bhaskar Krishnamachari}
+\author{
+Scott Moeller\\
+\small Independent Researcher\\
+\small \texttt{electronjoe@gmail.com}
+\and
+Bhaskar Krishnamachari\\
+\small University of Southern California\\
+\small \texttt{bkrishna@usc.edu}
+}
 
 \date{August 2026}
 
@@ -49,16 +52,17 @@ stale-global benchmarks. The crossover is governed by decision-relevant
 temporal predictability and the share of decision-relevant variation captured
 by local information; under a common-rate Gauss--Markov model with affine
 full-information decisions, this yields a closed-form threshold in the
-dimensionless delay $\tau/T$. Second, for a synchronized-snapshot radius family
-in which broader neighborhood snapshots arrive at greater age, we derive an
+dimensionless delay $\tau/T$. Second, for a non-nested synchronized-snapshot
+radius family in which increasing scope replaces, rather than augments, the
+fresher narrow snapshot, we derive an
 exact composition law between spatial omission and temporal staleness and
 characterize the optimal radius within that family by balancing marginal
 spatial-information gain against marginal freshness loss. In a canonical field
 model, the resulting scaling depends on the spatial correlation length
 $\ell_s$, decision-relevance length $\ell_c$, and temporal propagation length
-$L_T=vT$. Numerical experiments verify the predicted crossover,
-zero-to-positive-radius threshold, interior optimal-radius behavior, and
-corresponding shifts on finite noncanonical graphs. Within the analyzed
+$L_T=vT$. Numerical consistency checks reproduce the closed-form predictions
+within the assumed model, while finite-graph calculations illustrate the
+corresponding architectural shifts beyond the canonical line geometry. Within the analyzed
 exogenous-state quadratic framework, the resulting laws are governed by
 predictability of the full-information decision rather than raw
 state-prediction accuracy alone.
@@ -315,7 +319,6 @@ decision making. Within that family, the preferred radius is the spatial scale
 at which the marginal value of broader coordination is balanced by the loss of
 information freshness required to obtain it.
 
-%```latex
 \section{Networked Decisions and Information Architectures}
 \label{sec:model}
 
@@ -1414,7 +1417,8 @@ Combining Theorem~\ref{thm:general_crossover} with
 \begin{theorem}[Fresh-local/stale-global crossover]
 \label{thm:local_global_crossover}
 Under the Gauss--Markov and affine-decision assumptions of
-Theorem~\ref{thm:OU_stale_regret}, fresh-local information strictly
+Theorem~\ref{thm:OU_stale_regret}, suppose
+$0<\eta_{\mathrm{loc}}\le 1$. Fresh-local information strictly
 outperforms stale-global information if and only if
 \begin{equation}
     \boxed{
@@ -1444,6 +1448,9 @@ we have
     \rho>\rho^\star.
     \label{eq:rho_crossover}
 \end{equation}
+For $\eta_{\mathrm{loc}}=0$, define $\rho^\star=+\infty$ in the
+extended-real sense; fresh-local information then never strictly outperforms
+stale-global information at a finite delay.
 \end{theorem}
 
 \begin{proof}
@@ -1467,7 +1474,7 @@ The limiting cases are informative. If
     \eta_{\mathrm{loc}}=1,
 \]
 fresh-local information is sufficient to reproduce the full-information
-decision, and local control dominates for every $\tau>0$. If
+decision, and the fresh-local architecture dominates for every $\tau>0$. If
 \[
     \eta_{\mathrm{loc}}=0,
 \]
@@ -1488,7 +1495,7 @@ fractions cross.
 The fresh-local captured share $\eta_{\mathrm{loc}}$ depends jointly on the
 spatial statistics of the environment and on the coupling structure of the
 decision problem. To isolate the role of decision coupling, consider a
-symmetric shared-resource model with scalar actions,
+symmetric shared-resource model with $n\ge2$ scalar actions,
 \begin{equation}
     f(x,\theta)
     =
@@ -1685,7 +1692,7 @@ large-system limit, to a comparison between two dimensionless quantities:
 
 When $\gamma=0$, the decisions decouple and
 $\eta_{\mathrm{loc}}=1$: current local information is sufficient, so any
-positive global delay makes fresh-local control preferable. As $\gamma$
+positive global delay makes the fresh-local architecture preferable. As $\gamma$
 increases, each agent's optimal action depends more strongly on remote states,
 $\eta_{\mathrm{loc}}$ decreases, and the crossover moves to larger
 $\tau/T$. Thus stronger coordination coupling makes the system willing to
@@ -1698,196 +1705,6 @@ local--global comparison by allowing the information radius itself to vary,
 and ask how spatial predictability and temporal staleness jointly determine
 the optimal coordination scale.
 
-\iffalse % Section 3.6 retained for possible later use; excluded from this version.
-\subsection{Shared-Signal Teams and Delayed Pooling}
-\label{subsec:shared_signal}
-
-The shared-resource model of Section~\ref{subsec:coupling_example}
-couples \emph{independent} local states through the action cost. A
-complementary canonical structure arises when agents observe
-\emph{noisy private views of a common signal} and coordination consists
-of pooling observations. This structure is typical of replicated
-estimation and decision systems: each agent's observation is
-informative about the same underlying quantity, and the value of
-communication is noise averaging rather than the reconciliation of
-heterogeneous preferences.
-Let $G_t$ be a scalar latent signal following a stationary, mean-zero
-Ornstein--Uhlenbeck process with variance $\sigma^2$ and coherence time
-$T$, and let each of $M$ agents hold the local state
-\begin{equation}
-    \theta_{i,t}
-    =
-    G_t+\varepsilon_{i,t},
-    \qquad i=1,\ldots,M,
-    \label{eq:shared_signal_observation}
-\end{equation}
-where the $\varepsilon_{i,t}$ are mutually independent, mean-zero
-Ornstein--Uhlenbeck processes, independent of $G$, with common variance
-$\sigma_\varepsilon^2$ and the \emph{same} coherence time $T$. Write
-\begin{equation}
-    \alpha
-    \triangleq
-    \frac{\sigma^2}{\sigma_\varepsilon^2}
-    \label{eq:per_observation_snr}
-\end{equation}
-for the per-observation signal-to-noise ratio. Formally, the system
-state is $\theta_t=(G_t,\theta_{1,t},\ldots,\theta_{M,t})$, with the
-component $G_t$ attached to no agent: every admissible architecture
-observes only the noisy components. The cost is the common tracking
-objective
-\begin{equation}
-    f(x,\theta)
-    =
-    \frac{1}{2}
-    \sum_{i=1}^{M}
-    \left(
-        x_i-G_t
-    \right)^2,
-    \label{eq:shared_signal_cost}
-\end{equation}
-which is of the form \eqref{eq:quadratic_cost} with $Q=I$ and
-$b(\theta)=(G_t,\ldots,G_t)^\top$. The clairvoyant decision is
-$x_i^\star=G_t$ and the open-loop regret is
-$R_\infty=(M/2)\sigma^2$.
-
-Three architectures are of interest. Under \emph{fresh-local}
-information \eqref{eq:fresh_local_arch}, agent $i$ observes its own
-history $\{\theta_{i,s}:s\le t\}$. Under \emph{fresh-pooled}
-information, every agent observes all noisy histories
-$\{\theta_{j,s}:j\le M,\,s\le t\}$; this is the best any communication
-scheme can achieve and plays the role of the zero-delay coordination
-benchmark. Under the \emph{hybrid} architecture
-\eqref{eq:hybrid_arch}, agent $i$ combines its fresh local history with
-the pooled history delayed by $\tau$:
-\begin{equation}
-    \mathcal{G}^{\mathrm{hyb}}_{i,t}(\tau)
-    =
-    \sigma\!\left(\theta_{i,s}:s\le t\right)
-    \vee
-    \sigma\!\left(\theta_{j,s}:j\le M,\ s\le t-\tau\right).
-    \label{eq:shared_signal_hybrid}
-\end{equation}
-
-\begin{proposition}[Exact regret of delayed pooling]
-\label{prop:delayed_pooling}
-For the model
-\eqref{eq:shared_signal_observation}--\eqref{eq:shared_signal_cost},
-\begin{align}
-    R_{\mathrm{loc}}
-    &=
-    \frac{M}{2}\,
-    \frac{\sigma^2}{1+\alpha},
-    &
-    R_{\mathrm{pool}}
-    &=
-    \frac{M}{2}\,
-    \frac{\sigma^2}{1+M\alpha},
-    \label{eq:shared_signal_endpoints}
-\end{align}
-so that the fresh-local captured share is
-$\eta_{\mathrm{loc}}=\alpha/(1+\alpha)$, and the zero-delay
-\emph{coordination value} of pooling is
-\begin{equation}
-    V_0(M,\alpha)
-    \triangleq
-    R_{\mathrm{loc}}-R_{\mathrm{pool}}
-    =
-    \frac{M}{2}\,
-    \frac{\sigma^2\alpha(M-1)}
-         {(1+\alpha)(1+M\alpha)}.
-    \label{eq:coordination_value}
-\end{equation}
-Moreover, the hybrid architecture satisfies the exact identity
-\begin{equation}
-    \boxed{
-    R_{\mathrm{hyb}}(\tau)
-    =
-    e^{-2\tau/T}R_{\mathrm{pool}}
-    +
-    \left(1-e^{-2\tau/T}\right)R_{\mathrm{loc}},
-    }
-    \label{eq:hybrid_exact_decay}
-\end{equation}
-equivalently
-$R_{\mathrm{hyb}}(\tau)-R_{\mathrm{pool}}
-=\bigl(1-e^{-2\tau/T}\bigr)V_0(M,\alpha)$:
-the coordination value of pooled information decays with its age by
-exactly the factor $e^{-2\tau/T}$.
-\end{proposition}
-
-\begin{proof}
-All variables are jointly Gaussian and the architectures share common
-or nested information, so optimal policies are conditional
-expectations of $G_t$, and each regret equals $(M/2)$ times the
-corresponding conditional variance.
-
-Because $G$ and the $\varepsilon_i$ are independent
-Ornstein--Uhlenbeck processes with \emph{identical} coherence time,
-the innovations of the observed processes are sums of the latent
-innovations, and observing histories of the sums provides no
-separation of the latent components beyond that provided by their
-current values. Hence conditioning on the local history
-$\{\theta_{i,s}:s\le t\}$ yields
-$\operatorname{Var}(G_t\mid\cdot)=\sigma^2\sigma_\varepsilon^2/
-(\sigma^2+\sigma_\varepsilon^2)=\sigma^2/(1+\alpha)$, and conditioning
-on the pooled history yields
-$\operatorname{Var}(G_t\mid\cdot)=\sigma^2/(1+M\alpha)$, proving
-\eqref{eq:shared_signal_endpoints} and
-\eqref{eq:coordination_value}.
-
-For the hybrid architecture, decompose over the delay interval. Given
-the pooled history $\mathcal{F}^\theta_{t-\tau}$, the posterior of
-$G_{t-\tau}$ has variance $v_0=\sigma^2/(1+M\alpha)$. Every latent
-process propagates as
-$G_t=e^{-\tau/T}G_{t-\tau}+\eta$ and
-$\varepsilon_{i,t}=e^{-\tau/T}\varepsilon_{i,t-\tau}+\eta_i$, with
-innovations $\eta,\eta_i$ independent of $\mathcal{F}^\theta_{t-\tau}$
-and of one another, of variances $(1-e^{-2\tau/T})\sigma^2$ and
-$(1-e^{-2\tau/T})\sigma_\varepsilon^2$. Consequently the fresh local
-segment of history contributes new information only through
-\[
-    \theta_{i,t}-e^{-\tau/T}\theta_{i,t-\tau}
-    =
-    \eta+\eta_i,
-\]
-a single noisy observation of the signal innovation. Therefore
-\begin{align}
-    \operatorname{Var}
-    \left(
-        G_t
-        \mid
-        \mathcal{G}^{\mathrm{hyb}}_{i,t}(\tau)
-    \right)
-    &=
-    e^{-2\tau/T}v_0
-    +
-    \operatorname{Var}
-    \left(
-        \eta\mid\eta+\eta_i
-    \right)
-    \nonumber\\
-    &=
-    e^{-2\tau/T}\frac{\sigma^2}{1+M\alpha}
-    +
-    \left(1-e^{-2\tau/T}\right)
-    \frac{\sigma^2}{1+\alpha},
-\end{align}
-which is \eqref{eq:hybrid_exact_decay} after multiplying by $M/2$.
-\end{proof}
-
-Two features of Proposition~\ref{prop:delayed_pooling} deserve
-emphasis. First, \eqref{eq:hybrid_exact_decay} is an identity, not an
-approximation: within the common-rate Gauss--Markov model, delayed
-pooled information and fresh local information combine without
-interaction terms, because fresh local data can observe only the
-temporal innovation, which is exactly the component about which the
-stale pool is silent. This is the hybrid-architecture counterpart of
-the composition law of
-Theorem~\ref{thm:spatiotemporal_composition}. Second, the coordination
-value \eqref{eq:coordination_value} is a pure noise-averaging
-quantity: it grows like $M-1$ when $\alpha\gg1/M$ and saturates as the
-pooled estimate approaches the noise floor.
-\fi
 
 
 \section{Spatial and Temporal Predictability}
@@ -2110,6 +1927,10 @@ of information, shifted backward by $\tau$:
     \right).
     \label{eq:delayed_radius_architecture}
 \end{equation}
+Such common-time snapshots arise, for example, when a coordinated optimizer
+requires a temporally consistent system estimate at a common decision epoch, or
+when asynchronous measurements cannot be combined without explicit time
+alignment into a coherent state vector.
 For comparison, define the distinct history information set
 \begin{equation}
 \widetilde{\mathcal I}_{i,t}^{(r)}
@@ -2136,9 +1957,21 @@ and define the centered admissible-policy subspace
 \{u\in\mathcal S(\mathcal A):\mathbb E[u]=0\}.
 \label{eq:centered_policy_subspace}
 \end{equation}
-A delayed architecture family is \emph{shift-consistent} if time translation
-by $\tau$ maps the zero-delay centered admissible-policy subspace isometrically
-onto the corresponding delayed subspace. We write
+Let $S_{-\tau}$ shift a stationary sample path backward by $\tau$, and define
+the time-shift operator by
+\begin{equation}
+  (U_\tau Z)_t(\omega)\triangleq Z_t(S_{-\tau}\omega).
+  \label{eq:time_shift_operator}
+\end{equation}
+Stationarity makes $U_\tau$ an isometry under the $Q$-weighted $L^2$ norm.
+A delayed architecture family is \emph{shift-consistent} if
+\begin{equation}
+  U_\tau\mathcal S_0(\mathcal A_{r,0})
+  =\mathcal S_0(\mathcal A_{r,\tau}).
+  \label{eq:shift_consistency}
+\end{equation}
+The synchronized-snapshot family and the consistently shifted history family
+both satisfy this property. We write
 $P_{r,\tau}$ for the $Q$-orthogonal projection onto
 $\mathcal S_0(\mathcal A_{r,\tau})$.
 
@@ -2150,8 +1983,15 @@ Suppose the process is Gaussian and
 =e^{-|t-s|/T}\Sigma_S.
 \label{eq:common_rate_covariance_recalled}
 \end{equation}
-For an observed component set $N$ with complement $\bar N$, $s<t$, and
-nonsingular $\Sigma_{NN}$,
+For an observed component set $N$ with complement $\bar N$ and nonsingular
+$\Sigma_{NN}$, the current unobserved state is conditionally independent of the
+entire past observed history given the current observed snapshot:
+\begin{equation}
+\theta_{\bar N,t}\perp\!\!\!\perp
+\sigma(\theta_{N,s}:s<t)\mid\theta_{N,t}.
+\label{eq:snapshot_history_conditional_independence}
+\end{equation}
+In particular, for every $s<t$,
 \begin{align}
 &\operatorname{Cov}\!\left(
 \theta_{\bar N,t},\theta_{N,s}\mid\theta_{N,t}
@@ -2163,25 +2003,49 @@ e^{-(t-s)/T}\Sigma_{\bar N N}
 =0.
 \label{eq:snapshot_history_conditional_covariance}
 \end{align}
-Consequently,
-\begin{equation}
-\theta_{\bar N,t}\perp\!\!\!\perp
-\sigma(\theta_{N,s}:s<t)\mid\theta_{N,t}.
-\label{eq:snapshot_history_conditional_independence}
-\end{equation}
-For affine current-state decisions, the current observed snapshot is therefore
-sufficient relative to the observed history for predicting unobserved current
-components, and the two variants have the same zero-delay decision-relevant
-prediction error. If $\Sigma_{NN}$ is singular, the same statement uses the
-Moore--Penrose inverse on the covariance support. The result need not hold for
-heterogeneous temporal rates or nonseparable space--time processes.
+For affine current-state decisions, any team policy based on neighborhood
+histories can be replaced by a policy based only on the corresponding current
+neighborhood snapshots without increasing quadratic team cost. Thus the two
+variants have the same zero-delay architecture regret, including for coupled
+$Q$. If $\Sigma_{NN}$ is singular, the same statement uses the Moore--Penrose
+inverse on the covariance support. The result need not hold for heterogeneous
+temporal rates or nonseparable space--time processes.
 \end{lemma}
 
 \begin{proof}
-The displayed conditional covariance follows from the Gaussian conditional
-covariance formula and the common scalar decay factor. Gaussianity converts
-zero conditional cross-covariance into conditional independence; affine
-prediction then gives the stated decision-level sufficiency.
+For arbitrary $s_1,\ldots,s_k<t$, let
+$Z=(\theta_{N,s_1},\ldots,\theta_{N,s_k})$. Applying the Gaussian conditional
+covariance formula blockwise gives
+\begin{equation}
+\operatorname{Cov}(\theta_{\bar N,t},Z\mid\theta_{N,t})=0,
+\end{equation}
+because every block is exactly the cancellation displayed in
+\eqref{eq:snapshot_history_conditional_covariance}. Joint Gaussianity therefore
+makes $\theta_{\bar N,t}$ conditionally independent of every finite collection
+of past observed values given $\theta_{N,t}$. Cylinder events generate the
+observed-history sigma-algebra (equivalently, use rational times and path
+separability), so a monotone-class argument yields
+\eqref{eq:snapshot_history_conditional_independence}.
+
+For the team-level claim, let $\mathcal H_i$ be agent $i$'s neighborhood
+history and $\mathcal I_i$ its current neighborhood snapshot. Given any
+history-feasible square-integrable policy $u$, define
+\begin{equation}
+v_i\triangleq\mathbb E[u_i\mid\mathcal I_i].
+\end{equation}
+The conditional independence just proved implies
+$\mathbb E[u_i\mid\theta_t]=\mathbb E[u_i\mid\mathcal I_i]=v_i$; hence
+$v=\mathbb E[u\mid\theta_t]$ componentwise and $v$ is snapshot-feasible.
+Because $x_t^\star$ and $v$ are measurable with respect to $\theta_t$,
+conditioning on $\theta_t$ makes the cross term vanish and gives
+\begin{equation}
+\mathbb E\|x_t^\star-u\|_Q^2
+=\mathbb E\|x_t^\star-v\|_Q^2
++\mathbb E\|u-v\|_Q^2.
+\end{equation}
+Thus Rao--Blackwellization to current snapshots cannot increase team cost.
+Since snapshot policies are already history-feasible, the optimal regrets are
+equal.
 \end{proof}
 
 Define the normalized zero-delay spatial omission function
@@ -2513,142 +2377,6 @@ Spatial omission and temporal staleness are therefore not simply added as two
 independent penalties. Spatial information can only help with the portion of
 the current decision that remains temporally predictable when it arrives.
 
-\iffalse % Section 4.5 retained for possible later use; excluded from this version.
-\subsection{Periodic Refresh and Timescale Mixtures}
-\label{subsec:periodic_refresh}
-
-Many systems do not hold information age fixed: nonlocal state is
-re-collected periodically, so that its age cycles between $0$ and a
-refresh period $H$. Between refreshes the system operates on
-progressively staler shared information. The results above extend to
-this operating mode by averaging over the refresh cycle.
-
-Define
-\begin{equation}
-    \varphi(x)
-    \triangleq
-    1-\frac{1-e^{-x}}{x},
-    \qquad
-    \varphi(0)=0,
-    \label{eq:varphi_definition}
-\end{equation}
-an increasing, concave function with $\varphi(x)\approx x/2$ for small
-$x$ and $\varphi(x)\to1$ as $x\to\infty$.
-
-\begin{corollary}[Cycle-averaged regret under periodic refresh]
-\label{cor:cycle_average}
-Let $\{\mathcal{A}(\tau)\}_{\tau\ge0}$ be any shift-consistent family
-of architectures indexed by the age $\tau$ of its delayed information
-component, whose regret is affine in $e^{-2\tau/T}$:
-\begin{equation}
-    R\!\left(\mathcal{A}(\tau)\right)
-    =
-    R(0)
-    +
-    \left(\bar R-R(0)\right)
-    \left(1-e^{-2\tau/T}\right)
-    \label{eq:affine_in_exponential}
-\end{equation}
-for constants $R(0)\le\bar R$. This includes the delayed radius
-architectures $\mathcal{A}_{r,\tau}$ of
-Theorem~\ref{thm:spatiotemporal_composition}, with
-$R(0)=R(\mathcal{A}_{r,0})$ and $\bar R=R_\infty$, and the hybrid
-pooling architectures of Proposition~\ref{prop:delayed_pooling}, with
-$R(0)=R_{\mathrm{pool}}$ and $\bar R=R_{\mathrm{loc}}$. If the delayed
-component is refreshed every $H$ time units, so that its age cycles
-uniformly over $[0,H)$, then the time-averaged per-stage regret is
-\begin{equation}
-    \boxed{
-    \bar R_H
-    =
-    R(0)
-    +
-    \left(\bar R-R(0)\right)
-    \varphi\!\left(\frac{2H}{T}\right).
-    }
-    \label{eq:cycle_average_regret}
-\end{equation}
-\end{corollary}
-
-\begin{proof}
-Average \eqref{eq:affine_in_exponential} over $\tau\in[0,H)$:
-\[
-    \frac{1}{H}
-    \int_0^H
-    \left(1-e^{-2\tau/T}\right)d\tau
-    =
-    1-\frac{T}{2H}
-    \left(1-e^{-2H/T}\right)
-    =
-    \varphi\!\left(\frac{2H}{T}\right).
-    \qedhere
-\]
-\end{proof}
-
-The refresh period at which half of the recoverable coordination value
-is forfeited is $H_{1/2}\approx1.26\,T$; for $H\ll T$ the loss grows
-linearly, $\bar R_H-R(0)\approx(\bar R-R(0))\,H/T$, and for
-$H\gg T$ periodic refresh degenerates to the fresh-information
-endpoint $\bar R$.
-
-A second extension relaxes the common-rate assumption of
-\eqref{eq:spatiotemporal_OU}. Suppose the state decomposes into
-independent Ornstein--Uhlenbeck modes with distinct coherence times.
-
-\begin{proposition}[Mixture temporal unpredictability]
-\label{prop:mixture_eta_T}
-Suppose the centered clairvoyant decision decomposes as
-$X_t=\sum_k Z_{k,t}$, where the $Z_{k,t}$ are mutually independent,
-stationary Ornstein--Uhlenbeck processes with coherence times $T_k$,
-and let $R_{\infty,k}=\tfrac12\mathbb{E}\|Z_{k,t}\|_Q^2$ with weights
-$w_k=R_{\infty,k}/R_\infty$, $\sum_k w_k=1$. Then for every
-common-information architecture---one in which all agents share the
-information set $\mathcal{G}^\tau_t$ of
-\eqref{eq:sec3_global_arch}---the temporal unpredictability function is
-the mixture
-\begin{equation}
-    \boxed{
-    \eta_T(\tau)
-    =
-    \sum_k w_k
-    \left(
-        1-e^{-2\tau/T_k}
-    \right).
-    }
-    \label{eq:mixture_eta_T}
-\end{equation}
-\end{proposition}
-
-\begin{proof}
-The optimal common-information policy is the conditional expectation
-$\mathbb{E}[X_t\mid\mathcal{G}^\tau_t]=\sum_k
-\mathbb{E}[Z_{k,t}\mid\mathcal{G}^\tau_t]$, and the modal residuals
-$Z_{k,t}-\mathbb{E}[Z_{k,t}\mid\mathcal{G}^\tau_t]
-=e^{-\tau/T_k}\bigl(Z_{k,t-\tau}-
-\mathbb{E}[Z_{k,t-\tau}\mid\mathcal{G}^\tau_t]\bigr)+\xi_{k}$ reduce,
-for the full-history information set, to the modal innovations
-$\xi_k$, which are independent across $k$ with
-$\mathbb{E}\|\xi_k\|_Q^2=(1-e^{-2\tau/T_k})\,
-\mathbb{E}\|Z_{k,t}\|_Q^2$. Summing the orthogonal modal
-contributions yields \eqref{eq:mixture_eta_T}.
-\end{proof}
-
-\begin{remark}
-\label{rem:mixture_composition}
-For architectures with heterogeneous information
-(Theorem~\ref{thm:spatiotemporal_composition}), the mixture form
-extends exactly when the admissible policy subspaces respect the modal
-decomposition, so that projections of distinct modes remain
-uncorrelated; otherwise cross-terms between modal projections arise
-and \eqref{eq:mixture_eta_T} composed mode-by-mode should be regarded
-as an approximation. In applications, \eqref{eq:mixture_eta_T} plays
-the role of an empirical model class: a small number of
-$(w_k,T_k)$ pairs summarizes environments whose decision-relevant
-state carries several distinct timescales, and
-Corollary~\ref{cor:cycle_average} applies to each exponential term
-separately.
-\end{remark}
-\fi
 
 
 \section{Optimal Coordination Scale}
@@ -2684,14 +2412,33 @@ be a nondecreasing information-propagation law satisfying
 Architecture $\mathcal{A}_{r,\tau(r)}$ provides each agent with information
 from a synchronized radius-$r$ snapshot delayed by $\tau(r)$.
 
-The synchronized-snapshot family is not nested in radius: increasing $r$
-replaces a narrower, fresher snapshot with a broader, older one. This
-replacement, rather than the mere addition of remote observations, is what
-permits an interior optimum in the absence of an explicit
-information-acquisition cost. Under a native-age or streaming architecture
-that retained all previously available observations and only added remote
-observations as $r$ increased, the information sets would be nested and
-architecture regret would be weakly nonincreasing in $r$.
+\begin{proposition}[Nested information cannot create an interior optimum without explicit cost]
+\label{prop:nested_radius_monotonicity}
+If radius-indexed information sets satisfy
+$\mathcal G_i(r_1)\subseteq\mathcal G_i(r_2)$ for every agent $i$ whenever
+$r_1\le r_2$, then
+\begin{equation}
+R(r_2)\le R(r_1).
+\end{equation}
+Therefore, without an explicit information-acquisition cost, an interior radius
+optimum requires a non-nested architecture such as the synchronized-snapshot
+family studied here.
+\end{proposition}
+
+\begin{proof}
+The nesting assumption implies
+$\mathcal S(\mathcal A(r_1))\subseteq\mathcal S(\mathcal A(r_2))$.
+Information monotonicity, Eq.~\eqref{eq:architecture_monotonicity}, then gives
+the claim.
+\end{proof}
+
+The synchronized-snapshot family is non-nested in radius: increasing $r$
+replaces a narrower, fresher snapshot with a broader, older one; it does not
+retain fresh local observations while merely adding delayed remote ones. This
+replacement is what permits an interior optimum without an explicit
+information-acquisition cost. A native-age or streaming architecture that
+retained all existing observations while adding remote ones would instead fall
+under Proposition~\ref{prop:nested_radius_monotonicity}.
 
 Define
 \begin{equation}
@@ -2729,7 +2476,7 @@ e^{-2\tau(r+1)/T}\bigl(1-\eta_S(r+1)\bigr)
 e^{-2\tau(r)/T}\bigl(1-\eta_S(r)\bigr),
 \label{eq:discrete_radius_improvement}
 \end{equation}
-or equivalently
+or, provided $1-\eta_S(r)>0$, equivalently
 \begin{equation}
 \log\!\left(
 \frac{1-\eta_S(r+1)}{1-\eta_S(r)}
@@ -2738,7 +2485,9 @@ or equivalently
 \frac{2\bigl(\tau(r+1)-\tau(r)\bigr)}{T}.
 \label{eq:discrete_radius_log_improvement}
 \end{equation}
-Increasing the radius by one hop is beneficial precisely when the discrete
+The multiplicative comparison \eqref{eq:discrete_radius_improvement} remains
+the primary statement when $1-\eta_S(r)=0$. Increasing the radius by one hop is
+beneficial precisely when the discrete
 proportional gain in decision-relevant spatial information exceeds the
 freshness loss incurred over that hop.
 
@@ -2965,7 +2714,7 @@ opposite direction.
 It also gives comparative statics without committing to a specific covariance
 model. Under the single-crossing conditions of the theorem:
 
-\begin{itemize}
+\begin{enumerate}
     \item Increasing $T$ lowers $m_T(r)$ pointwise and therefore moves the
     optimum toward a larger radius.
 
@@ -2980,7 +2729,7 @@ model. Under the single-crossing conditions of the theorem:
     \item Any increase in spatial predictability that lowers $m_S(r)$
     pointwise makes additional radius less valuable and moves the optimum
     toward a smaller radius.
-\end{itemize}
+\end{enumerate}
 
 The final two statements are single-crossing conditions on the
 decision-relevant function $\eta_S(r)$; they are not automatic consequences
@@ -3602,266 +3351,10 @@ homogeneous-line scaling law; it is not substituted for discrete minimization
 on an arbitrary finite graph.
 
 
-\iffalse % Standalone application mini-cases retained but inactive after restructure.
-\section{Applications in Networked and Distributed Systems}
-\label{sec:applications}
-
-The abstract model of Sections~\ref{sec:model}--\ref{sec:optimal_coordination_scale}
-applies whenever agents make coupled decisions in response to an exogenously
-evolving distributed state, and broader state information incurs greater
-communication latency. The quadratic objective should be viewed either as an
-exact model for systems with quadratic resource or coordination penalties, or
-as a second-order approximation to a smooth objective near its operating
-point. We briefly describe four representative applications.
-
-\subsection{Wireless Power and Rate Allocation}
-
-Consider a wireless network in which node $i$ chooses a transmission rate or
-power $x_i$, while $\theta_i$ represents its current local transmission
-opportunity, such as channel quality, interference-free capacity, or
-traffic-weighted utility.
-
-A simple coupled objective is
-\begin{equation}
-    f(x,\theta)
-    =
-    \sum_{i=1}^{n}
-    \left(
-        \frac{q_i}{2}x_i^2-\theta_i x_i
-    \right)
-    +
-    \frac{1}{2}
-    \sum_{i,j}
-    \gamma_{ij}x_i x_j .
-    \label{eq:wireless_cost}
-\end{equation}
-The first term captures increasing marginal cost of power or aggressive rate
-allocation, while $\gamma_{ij}>0$ penalizes simultaneous activity by links
-that interfere or contend for a common wireless resource. In matrix form,
-\eqref{eq:wireless_cost} is precisely of the form
-\eqref{eq:quadratic_cost}.
-
-Here,
-\[
-    \theta_i
-    \leftrightarrow
-    \text{local channel/demand state},
-    \qquad
-    x_i
-    \leftrightarrow
-    \text{power or rate decision},
-\]
-and the off-diagonal structure of $Q$ captures interference or resource
-coupling. The graph $G$ may represent physical connectivity, interference
-proximity, or the control-plane network over which channel-state information
-is exchanged.
-
-A fresh-local architecture lets each transmitter react immediately to its own
-channel and demand. A larger-radius architecture additionally provides nearby
-channel or load information, while a global controller may operate on a
-network-wide but delayed channel-state snapshot. The theory therefore asks
-when the coordination benefit of broader channel knowledge outweighs the
-staleness induced by gathering it.
-
-\subsection{Edge-Computing Resource Allocation}
-
-Consider $n$ edge servers that choose compute allocations $x_i$ in response to
-time-varying local workloads. Let $d_i(\theta_i)$ denote the compute level
-preferred by server $i$ under its current exogenous workload state. A natural
-quadratic tracking objective is
-\begin{equation}
-    f(x,\theta)
-    =
-    \sum_{i=1}^{n}
-    \frac{q_i}{2}
-    \left(
-        x_i-d_i(\theta_i)
-    \right)^2
-    +
-    \frac{\gamma}{2}
-    \left(
-        \sum_{i=1}^{n}x_i-P
-    \right)^2 .
-    \label{eq:edge_cost}
-\end{equation}
-The first term penalizes deviation from locally desired compute allocation,
-while the second represents contention for a shared resource such as a power
-budget, cooling capacity, accelerator pool, or upstream bandwidth.
-
-Expanding \eqref{eq:edge_cost} yields the canonical quadratic form with
-\[
-    b_i(\theta)
-    =
-    q_i d_i(\theta_i)
-    +
-    \gamma P .
-\]
-The variables map as
-\[
-    \theta_i
-    \leftrightarrow
-    \text{local workload or service opportunity},
-    \qquad
-    x_i
-    \leftrightarrow
-    \text{allocated CPU/GPU capacity}.
-\]
-
-The graph $G$ may represent the edge-cloud communication topology or geographic
-proximity among servers. Small-radius architectures permit rapid autonomous
-allocation from local workload measurements; broader architectures allow
-coordination across neighboring sites; and a global orchestrator operates
-using telemetry collected from the entire system. If collecting wider
-telemetry produces delay $\tau(r)$, the optimal-radius theory directly
-characterizes the appropriate spatial scale of coordination.
-
-The exogeneity assumption is important here: $\theta_i$ should represent
-external workload intensity, arrivals, or resource conditions rather than a
-queue state whose evolution is itself controlled by previous decisions.
-
-\subsection{Distributed Sensing and Sensing-Effort Allocation}
-
-Consider a network of sensors observing a spatially correlated physical field.
-Agent $i$ chooses a sensing effort $x_i$, such as sampling rate, sensing time,
-beam dwell time, or transmit power used to communicate measurements. Let
-$\theta_i$ represent the current local value or quality of sensing at node
-$i$.
-
-One stylized objective is
-\begin{equation}
-    f(x,\theta)
-    =
-    \sum_{i=1}^{n}
-    \left(
-        \frac{q_i}{2}x_i^2-\theta_i x_i
-    \right)
-    +
-    \frac{\gamma}{2}
-    \left(
-        \sum_{i=1}^{n}x_i-S
-    \right)^2 ,
-    \label{eq:sensing_cost}
-\end{equation}
-where the first term balances information value against sensing energy and the
-second coordinates sensing effort around a desired aggregate budget $S$.
-More detailed quadratic models can additionally couple nearby sensors to
-discourage redundant sensing.
-
-In this application,
-\[
-    \theta_i
-    \leftrightarrow
-    \text{local target visibility or information quality},
-    \qquad
-    x_i
-    \leftrightarrow
-    \text{sensing effort}.
-\]
-The graph $G$ naturally represents spatial proximity or communication
-connectivity. Spatial smoothness of $\theta$ may be substantial because nearby
-sensors observe the same underlying physical process.
-
-This example makes the role of Section~\ref{sec:spatiotemporal_predictability}
-particularly transparent. If the physical field is spatially smooth, nearby
-measurements may already predict distant sensing conditions well, reducing the
-value of large information radius. If the field changes rapidly in time,
-waiting for distant measurements is additionally costly. The optimal
-coordination radius therefore balances spatial redundancy against temporal
-staleness.
-
-\subsection{Shared-Link and Multi-Resource Allocation}
-
-Consider multiple flows, services, or applications competing for shared
-network resources. Let $x_i$ denote the rate allocated to flow $i$, and let
-$\theta_i$ denote its current exogenous value, demand, or priority. A
-quadratic approximation to a network utility objective can be written as
-\begin{equation}
-    f(x,\theta)
-    =
-    \sum_{i=1}^{n}
-    \left(
-        \frac{q_i}{2}x_i^2-\theta_i x_i
-    \right)
-    +
-    \frac{1}{2}
-    \sum_{\ell}
-    \gamma_\ell
-    \left(
-        \sum_{i:\ell\in P_i}x_i-C_\ell
-    \right)^2 ,
-    \label{eq:multiresource_cost}
-\end{equation}
-where $P_i$ is the set of resources or links used by flow $i$, $C_\ell$ is a
-target capacity for resource $\ell$, and $\gamma_\ell$ penalizes aggregate
-overuse.
-
-The variables map as
-\[
-    \theta_i
-    \leftrightarrow
-    \text{flow value or exogenous demand},
-    \qquad
-    x_i
-    \leftrightarrow
-    \text{allocated transmission rate}.
-\]
-The resulting Hessian $Q$ has off-diagonal entries whenever two flows share a
-resource. Thus the decision-coupling structure is induced by resource overlap,
-while the graph $G$ can separately describe the communication network through
-which demand and resource-state information is disseminated.
-
-This separation is useful. Two flows may be geographically distant yet
-strongly coupled because they share a downstream bottleneck, while nearby
-flows may have almost independent resource paths. The information architecture
-should therefore depend not only on geometric distance but also on which
-remote states materially influence the optimal joint allocation.
-
-A central controller may gather all demand and capacity information before
-solving a global allocation problem, whereas a radius-limited architecture
-uses only nearby resource and demand information. A hybrid architecture may
-instead distribute low-dimensional congestion prices. In the aggregate
-quadratic models considered earlier, such prices can constitute sufficient
-statistics for the effect of remote state, illustrating how the framework can
-also guide the design of compressed global information.
-
-
-\subsection{Common Structure}
-
-Despite their different interpretations, the four examples share the same
-mathematical structure:
-\begin{equation}
-    \boxed{
-    \begin{array}{c}
-        \text{distributed, time-varying state } \theta_t
-        \\[1mm]
-        \Downarrow
-        \\[1mm]
-        \text{coupled desired decision } x_t^\star
-        \\[1mm]
-        \Downarrow
-        \\[1mm]
-        \text{information architecture determines what each agent can infer}
-    \end{array}}
-    \label{eq:common_application_structure}
-\end{equation}
-The state may be a channel, workload, sensing condition, demand, or resource
-availability; the action may be power, rate, compute, or sensing effort; and
-the coupling may arise through interference, shared infrastructure, common
-budgets, or overlapping resource paths.
-
-The architectural question is consequently common across these systems:
-\emph{how far should information propagate before a decision is made?}
-Increasing the information radius exposes agents to more decision-relevant
-state, but the additional information may arrive less frequently or with
-greater delay. The results of Sections~\ref{sec:fresh_local_global} and
-\ref{sec:optimal_coordination_scale} provide a common language for this
-tradeoff in terms of temporal predictability, spatial predictability, decision
-coupling, and information-propagation latency.
-\fi
 
 
 
-\section{Numerical Verification and Illustrations}
+\section{Numerical Consistency Checks and Finite-Graph Illustrations}
 \label{sec:numerical-evaluation}
 
 \subsection{Numerical Methodology and Synthetic Environments}
@@ -3895,7 +3388,7 @@ reproduction package.  The largest covariance condition number in the
 finite-graph experiments was $152.4$, and every constructed covariance passed
 a positive-semidefinite eigenvalue check.
 
-The experiments provide numerical verification and finite-graph illustrations
+The experiments provide numerical consistency checks and finite-graph illustrations
 within the assumed common-rate Gaussian-affine model. They are not tests of
 robustness to temporal-rate heterogeneity, nonseparable covariance,
 non-Gaussian evolution, nonlinear decision mappings, or mixed-age information
@@ -4052,7 +3545,7 @@ range moves the optimum from 1 to 5 hops.}
 \label{fig:decision-relevance}
 \end{figure}
 
-\subsection{Beyond the Canonical Line Model}
+\subsection{Finite Noncanonical Graph Geometries within the Common-Rate Gaussian Model}
 \label{subsec:numerical-general-graphs}
 
 Finally, we considered 64-node path, ring, two-dimensional grid, and random
@@ -4076,9 +3569,9 @@ discrete, these stepwise changes should be interpreted using one-hop regret
 differences---the discrete analogue of marginal balance---rather than the
 continuous first-order condition in Eq.~\eqref{eq:marginal_balance_condition}.
 
-\begin{figure}[t]
+\begin{figure}[p]
 \centering
-\includegraphics[width=0.94\linewidth]{figures/fig7_6_general_graphs.pdf}
+\includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
 \caption{Finite noncanonical graphs. Top: $\eta_S(r)$ computed from actual
 Gaussian conditional covariances and the resulting regret under one common
 normalized setting. Bottom: discrete optimal radius versus coherence time and
@@ -4107,7 +3600,13 @@ in the feedback loop, including sampling, packet loss, communication topology,
 and delay \cite{hespanha2007survey}. For spatially invariant plants, early work
 showed that optimal controllers can exhibit inherent spatial localization
 \cite{bamieh2002spatial}, while subsequent work imposed explicit finite-speed
-communication structure. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
+communication structure. Arbelaiz, Bamieh, Hosoi, and Jadbabaie characterize
+the spatial decay of optimal estimator gains and the extent over which
+measurements should be shared in a spatially distributed dynamic estimation
+problem \cite{arbelaiz2025estimation}. The present paper instead selects among
+scope-dependent-age information architectures for an exogenous stagewise team
+and derives an exact prediction-error composition identity and coordination-radius
+law. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
 under delayed communication requirements \cite{voulgaris2003optimal}; Bamieh
 and Voulgaris formulated distance-dependent information propagation through
 funnel causality \cite{bamieh2005convex}; and Fardad and Jovanovi\'c developed
@@ -4168,359 +3667,6 @@ Spatial statistics provides the closest statistical antecedent to our spatial-pr
 
 Graph signal processing extends analogous ideas to irregular domains. Shuman et al.\ use graph-Laplacian eigenvectors to define a graph Fourier domain and associate low graph frequencies with signals that vary slowly over the graph \cite{shuman2013emerging}. Graph-sampling theory asks when bandlimited graph signals can be exactly recovered from partial observations \cite{chen2015discrete}, while stationary graph signal processing gives spectral descriptions and Wiener-type estimators for random graph signals \cite{perraudin2017stationary}. Our objective is different: we do not value accurate reconstruction of $\theta_t$ per se. A radius-$r$ architecture is evaluated by its loss in reproducing the full-information decision $x_t^\star$, and increasing $r$ also increases information age through $\tau(r)$. Thus spatial omission and temporal staleness are priced jointly, and graph-smooth modes matter only insofar as they are decision-relevant.
 
-\iffalse % Superseded implications/extensions and conclusion retained inactive.
-\section{Architectural Implications and Extensions}
-\label{sec:implications}
-
-The preceding results suggest viewing information architecture itself as a
-design variable. The local--global crossover identifies when freshness should
-be preferred to breadth, while the optimal-radius result identifies the spatial
-scale at which additional information ceases to justify the delay required to
-obtain it. This section summarizes the resulting design implications, clarifies
-the principal modeling limitations of the present theory, and outlines several
-directions for extending it.
-
-\subsection{From Local to Global Architectures}
-
-The results of Sections~\ref{sec:fresh_local_global} and
-\ref{sec:optimal_coordination_scale} imply that neither purely local nor fully
-global information is universally preferable. Instead, the appropriate
-architecture depends on the interaction among temporal coherence, spatial
-predictability, communication latency, and decision coupling.
-
-When the environment changes rapidly relative to information-propagation time,
-or when remote state is highly predictable from local observations, a small
-information radius is favored. Conversely, slow temporal variation, fast
-information propagation, or strong long-range decision coupling make broader
-information more valuable. Intermediate-radius architectures arise naturally
-when the marginal benefit of additional spatial information balances the
-freshness loss incurred in obtaining it.
-
-This perspective replaces the usual binary distinction between centralized and
-distributed decision making with a continuum of architectures,
-\begin{equation}
-    \mathcal{A}_{0}
-    \longrightarrow
-    \mathcal{A}_{r}
-    \longrightarrow
-    \mathcal{A}_{D},
-    \label{eq:architecture_continuum}
-\end{equation}
-ranging from fresh-local to delayed-global information. The optimal operating
-point on this continuum is determined by the decision problem and the
-spatio-temporal statistics of the environment rather than by architecture
-labels alone.
-
-Information also need not be transported in raw form. If the globally optimal
-decision depends on remote state only through a low-dimensional statistic,
-then disseminating that statistic may provide most or all of the coordination
-benefit at substantially lower latency. This motivates hybrid architectures of
-the form
-\begin{equation}
-    \text{fresh local state}
-    \quad+\quad
-    \text{low-dimensional global summary},
-    \label{eq:hybrid_architecture_principle}
-\end{equation}
-such as congestion prices, aggregate resource signals, or other
-decision-relevant summaries.
-
-\subsection{Designing the Information Topology}
-
-The radius-dependent architectures analyzed in this paper impose a regular and
-symmetric information structure. More general systems may benefit from
-nonuniform information topologies. A node need not receive all state within a
-fixed radius, nor must all nodes use the same radius.
-
-Let $\mathcal{A}$ denote any admissible information architecture and let
-$C(\mathcal{A})$ represent its communication, sensing, computation, or monetary
-cost. A natural extension is
-\begin{equation}
-    \min_{\mathcal{A}}
-    \;
-    R(\mathcal{A})
-    +
-    \lambda C(\mathcal{A}),
-    \label{eq:architecture_regularized_design}
-\end{equation}
-or equivalently
-\begin{equation}
-    \min_{\mathcal{A}}
-    \;
-    R(\mathcal{A})
-    \qquad
-    \text{s.t.}
-    \qquad
-    C(\mathcal{A})\le B.
-    \label{eq:architecture_budget_design}
-\end{equation}
-
-This is a significant extension of the present formulation. In the current
-model, architecture regret measures only decision quality. Communication,
-sensing, and computation costs enter indirectly through the set of feasible
-architectures and, in particular, through the latency function $\tau(r)$.
-In many practical systems these costs are themselves first-order design
-considerations and should appear explicitly in the objective or as hard
-resource constraints.
-
-Such a formulation includes several practically relevant problems: selecting
-which remote observations each agent receives, determining which information
-links are worth maintaining, allocating update rates among different state
-variables, and choosing how much bandwidth or computation to devote to
-information acquisition.
-
-If adding an observation or information link changes architecture
-$\mathcal{A}$ to a richer architecture $\mathcal{A}'$, its decision value is
-naturally measured by
-\begin{equation}
-    \Delta R
-    =
-    R(\mathcal{A})
-    -
-    R(\mathcal{A}').
-    \label{eq:marginal_information_value}
-\end{equation}
-Thus information should be acquired not simply because it is uncertain, but
-because resolving that uncertainty materially changes the downstream decision.
-
-This viewpoint also suggests sparse, small-world-like information
-architectures. A system may rely primarily on fresh local or neighborhood
-state while maintaining only a small number of strategically selected
-long-range information links. Such links can reveal spatial modes or remote
-conditions that are poorly predicted locally but highly relevant to the
-decision objective. Under suitable spatial structure, a sparse set of nonlocal
-observations may therefore approach the decision quality of global information
-without incurring the latency required to assemble a complete system-wide
-snapshot.
-
-The relevant information topology need not coincide with the physical
-communication graph. The value of a long-range observation should depend on a
-combination of
-\begin{equation}
-    \text{decision relevance}
-    \times
-    \text{statistical novelty}
-    \times
-    \text{freshness}
-    \times
-    \text{acquisition cost},
-    \label{eq:information_link_value_factors}
-\end{equation}
-rather than physical distance alone.
-
-\subsection{Adaptive and Sequential Information Acquisition}
-
-The analysis so far assumes that the statistics governing spatial and temporal
-predictability are known and stationary. In many systems these quantities must
-instead be learned online and may themselves vary over time. Let
-\begin{equation}
-    \psi_t
-    =
-    \left(
-        T_t,\ell_{s,t},\Sigma_t,\ldots
-    \right)
-    \label{eq:time_varying_statistics}
-\end{equation}
-denote time-varying parameters describing the current spatio-temporal
-environment. An adaptive system could estimate $\psi_t$ from recent
-observations and choose an architecture according to
-\begin{equation}
-    \mathcal{A}_t
-    \in
-    \arg\min_{\mathcal{A}}
-    \left[
-        \widehat{R}_t(\mathcal{A})
-        +
-        \lambda C(\mathcal{A})
-    \right].
-    \label{eq:adaptive_architecture_selection}
-\end{equation}
-
-This creates a natural separation of timescales: fast decisions are made using
-the currently selected information architecture, while the architecture itself
-is adapted more slowly as environmental statistics change. Such a formulation
-could accommodate nonstationary regimes in which the preferred information
-radius expands or contracts as spatial correlation, temporal coherence, or
-decision coupling changes.
-
-A related extension makes information acquisition sequential within a single
-decision epoch. An agent may either act immediately using its current
-information or wait for additional observations to arrive. Let
-\[
-    \mathcal{G}_{i}^{(0)}
-    \subseteq
-    \mathcal{G}_{i}^{(1)}
-    \subseteq
-    \cdots
-\]
-denote progressively richer information sets available after additional
-waiting. The agent may choose a stopping time $\tau_i$ and then act using the
-information available at that time. A stylized objective is
-\begin{equation}
-    \min_{\tau_i,u_i}
-    \;
-    \mathbb{E}
-    \left[
-        f(u_i,\theta)
-        +
-        C_{\mathrm{wait}}(\tau_i)
-    \right].
-    \label{eq:act_or_wait}
-\end{equation}
-The projection framework supplies the decision-regret term associated with
-each information set, while optimal-stopping or sequential-decision methods
-determine whether the expected reduction in regret justifies waiting.
-
-More generally, an agent may choose not only whether to wait but
-\emph{which} observation to request. This leads to adaptive information
-acquisition policies in which remote measurements are queried only when their
-expected decision value exceeds their communication, energy, or latency cost.
-
-\subsection{Beyond the Canonical Statistical Model}
-
-The closed-form results in this paper rely on deliberately strong modeling
-assumptions. The exact projection geometry uses quadratic costs; the explicit
-staleness and coordination-radius formulas additionally assume affine
-full-information decisions, a common temporal coherence time for all modes,
-and, for the canonical spatial result, a separable space--time covariance
-model. These assumptions are analytically convenient and capture a useful
-baseline class, but they exclude many practical networked decision problems.
-
-For example, wireless power control and network utility maximization often
-involve logarithmic or otherwise non-quadratic utilities; scheduling and
-placement problems may involve discrete or combinatorial actions; and channel,
-demand, or workload processes may be non-Gaussian, heavy-tailed,
-mode-switching, or exhibit multiple temporal timescales. In such cases, the
-specific formulas derived here should be interpreted as canonical design laws
-rather than universal identities.
-
-Several generalizations appear natural. For smooth strongly convex objectives,
-quadratic approximation around the full-information optimum suggests that
-architecture regret should remain locally controlled by a weighted
-decision-prediction error, although exact projection identities become
-upper--lower bounds. Multiple temporal timescales can be handled by replacing a
-single coherence time $T$ with mode-dependent decay rates or, more generally,
-a temporal prediction-error function. Likewise, nonseparable space--time
-models can be treated through a joint predictability function
-\begin{equation}
-    \eta_{ST}(r,\tau),
-    \label{eq:general_joint_predictability}
-\end{equation}
-without requiring the exact factorization obtained in
-Theorem~\ref{thm:spatiotemporal_composition}. A broader theory should seek
-architecture laws directly in terms of such decision-relevant predictability
-functions rather than a particular Gaussian covariance family.
-
-Combinatorial decision spaces present a more substantial departure, since the
-set of feasible policies is no longer a linear subspace and the Hilbert-space
-projection argument does not apply directly. Developing analogous notions of
-architecture regret for discrete or constrained decisions is an important
-direction if the framework is to cover scheduling, routing, placement, and
-other common distributed-systems problems.
-
-\subsection{Beyond Static Information Structures}
-
-A second, more fundamental limitation is the restriction to static teams. The
-environment may be highly correlated across space and time, but current actions
-do not alter the law of future environmental states or the information later
-observed by other agents. This exclusion is consequential because many
-important networked systems operate precisely in the nonclassical regime.
-
-Queue lengths depend on past routing and service decisions, battery states
-depend on past energy expenditure, thermal states depend on previous
-computation, and mobility decisions affect future channel and sensing
-conditions. In these systems, the action is not merely a response to
-information; it also changes the future state on which subsequent decisions
-depend.
-
-A modest first extension is to allow weak local action--state coupling,
-\begin{equation}
-    \theta_{i,t+1}
-    =
-    g_i(\theta_{i,t},w_{i,t})
-    +
-    \epsilon
-    h_i(\theta_{i,t},x_{i,t},w_{i,t}),
-    \label{eq:weak_dynamic_coupling}
-\end{equation}
-where $\epsilon$ quantifies the strength of the feedback. At $\epsilon=0$ the
-present theory is exact. For small $\epsilon$, one may ask whether the
-architecture rankings and coordination-scale laws obtained here remain stable
-under perturbation. Such robustness results would extend the theory toward
-systems with locally controlled queues, batteries, or resource states without
-immediately confronting the full complexity of a general decentralized
-dynamic program.
-
-A sharper boundary is reached when one agent's actions influence what other
-agents later observe. Then actions can serve both as controls and as implicit
-signals, leading to the nonclassical dynamic-team phenomena highlighted by
-Witsenhausen's counterexample
-\cite{witsenhausen1968counterexample}. The static Hilbert-space projection
-characterization no longer directly solves the problem.
-
-Real backpressure routing illustrates this distinction. Queue lengths are
-functions of past arrivals and service decisions and therefore are not
-exogenous state variables in the sense assumed here. The present theory is most
-directly interpreted in the rate or fluid domain, where demand, capacity,
-channel state, or workload evolves externally and current decisions respond to
-those quantities. Queue-based algorithms may realize related information
-structures in practice, but their endogenous dynamics require additional
-analysis.
-
-Taken together, these extensions point toward a broader research question:
-\begin{quote}
-\emph{Given a distributed decision objective and an evolving environment, what
-information should each agent acquire, from where, at what freshness, in what
-representation, and at what cost before acting?}
-\end{quote}
-The present paper addresses a deliberately tractable first version of this
-question by characterizing how spatial scope and temporal freshness determine
-decision regret. Extending the framework to explicit information costs,
-nonstationary statistics, sparse and adaptive information topologies,
-sequential acquisition, non-quadratic and combinatorial decisions, and
-controlled state evolution provides a natural path toward a more general
-theory of information architecture for networked decisions.
-
-
-\section{Conclusion}
-\label{sec:conclusion}
-
-This paper has studied a basic design question for networked decision systems:
-how broad should the information available to each decision maker be when
-obtaining information from farther away also makes that information less
-fresh? We have formulated this question through information architectures that
-specify the spatial scope and temporal age of the state available to each
-agent.
-
-Using the classical static-team projection characterization as an analytical
-starting point, we have obtained two main results. First, we have derived an
-exact fresh-local versus stale-global crossover law: local information becomes
-preferable when the loss of temporal predictability in the delayed global
-state exceeds the decision-relevant information unavailable locally. Under a
-Gauss--Markov model, this has yielded a closed-form threshold in the ratio of
-information delay to environmental coherence time. Second, we have generalized
-the binary local--global comparison to radius-dependent information
-architectures and have characterized the optimal coordination radius by
-balancing marginal spatial information gain against marginal freshness loss.
-In a canonical spatio-temporal model, this has produced an explicit scaling law
-in terms of spatial correlation, temporal coherence, information-propagation
-speed, and the spatial range of decision relevance.
-
-The resulting picture is that the appropriate information architecture is
-neither intrinsically local nor global. It is determined jointly by how
-quickly the environment changes, how predictable remote state is from nearby
-observations, how strongly remote state influences the desired decision, and
-how quickly information can propagate through the network. Together, these
-quantities determine a natural spatial scale of coordination.
-
-The present theory has intentionally considered a tractable static-team setting
-with quadratic costs and structured spatio-temporal statistics. Extending the
-framework to explicit information-acquisition costs, adaptive and
-nonstationary architectures, sparse long-range information links, sequential
-act-or-wait decisions, non-quadratic or combinatorial objectives, and
-action-dependent state evolution offers a broader path toward a theory of
-information architecture for networked decisions.
-\fi
 
 \section{Discussion and Conclusions}
 \label{sec:discussion_conclusions}
@@ -4557,11 +3703,12 @@ information equals the marginal loss of freshness.
 In the canonical line model, the spatial correlation length $\ell_s$, the
 decision-relevance length $\ell_c$, and the temporal propagation length
 $L_T=vT$ determine the dimensionless radius and the transition
-$L_T>2\ell_s$. The numerical experiments verify the temporal collapse and
-local--global crossover, the zero-to-positive-radius threshold, the
-predicted movement of the optimum, and the same marginal-balance behavior on
+$L_T>2\ell_s$. The numerical consistency checks reproduce the temporal law and
+local--global crossover within the assumed model, provide finite-sample
+implementation checks for the zero-to-positive-radius threshold and predicted
+movement of the optimum, and illustrate consistent marginal-balance behavior on
 finite noncanonical graphs. Figures 1--4 provide implementation and
-finite-sample verification, while Figs. 5--6 illustrate decision relevance and
+finite-sample checks, while Figs. 5--6 illustrate decision relevance and
 finite-graph behavior. All experiments remain within the common-rate
 Gaussian-affine model.
 
@@ -4689,11 +3836,20 @@ The present theory suggests the following design heuristic: expand information
 scope only while the marginal decision value of broader information exceeds
 the predictive value lost while obtaining it.
 
-\paragraph{Code and data availability.}
-The complete manuscript source, numerical code, configurations, raw and
-processed results, and figure-generation pipeline are available in the TINA
-reproduction repository \cite{tina2026software}. The cited release records the
-exact submission version and immutable commit.
+\paragraph{AI Use Statement.}
+The development of this paper made substantial use of AI tools, including
+Claude Code, ChatGPT, Gemini, and Grok, for drafting and revising text,
+developing code and figures, exploring mathematical derivations, and assisting
+with the formulation and checking of proofs. The human authors have contributed
+significantly to the paper including the original problem formulation, been
+engaged at every step, have reviewed the writeup, and accept full responsibility
+for the contents.
+
+\paragraph{Code and Data Availability.}
+The manuscript source, numerical code, experiment configurations, processed
+reference results, and figure-generation pipeline are available in the public
+TINA repository at \url{https://github.com/ANRGUSC/TINA}
+\cite{tina2026software}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

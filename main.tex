@@ -38,27 +38,30 @@ Freshness, Locality, and Coordination}
 \maketitle
 
 \begin{abstract}
-Networked decisions often face a structural tradeoff: broader information
-improves coordination but generally arrives with greater delay. We formalize an
-\emph{information architecture} as specifying what each agent knows, from
-where, and at what age, and measure its performance by \emph{architecture
-regret}, the loss relative to the full-information decision. First, we compare
-fresh-local with stale-global information. The crossover is governed by
-decision-relevant temporal predictability and the share of decision-relevant
-variation captured by local information. Under a common-rate Gauss--Markov model with affine
+Networked decisions often face a tradeoff between information scope and
+freshness: broader information can improve coordination but may arrive with
+greater delay. We study this tradeoff for repeated quadratic static-team
+decisions in an exogenously evolving stochastic environment. An information
+architecture specifies what each agent knows, from where, and at what age, and
+its performance is measured by the loss relative to the current
+full-information decision. First, we compare the pure fresh-local and
+stale-global benchmarks. The crossover is governed by decision-relevant
+temporal predictability and the share of decision-relevant variation captured
+by local information; under a common-rate Gauss--Markov model with affine
 full-information decisions, this yields a closed-form threshold in the
 dimensionless delay $\tau/T$. Second, for a synchronized-snapshot radius family
-in which broader neighborhood snapshots arrive at greater age, we characterize
-the optimal radius within that family by balancing marginal spatial-information
-gain against marginal freshness loss. In a canonical field
+in which broader neighborhood snapshots arrive at greater age, we derive an
+exact composition law between spatial omission and temporal staleness and
+characterize the optimal radius within that family by balancing marginal
+spatial-information gain against marginal freshness loss. In a canonical field
 model, the resulting scaling depends on the spatial correlation length
 $\ell_s$, decision-relevance length $\ell_c$, and temporal propagation length
-$L_T=vT$. Numerical experiments recover the predicted local--global crossover,
+$L_T=vT$. Numerical experiments verify the predicted crossover,
 zero-to-positive-radius threshold, interior optimal-radius behavior, and
 corresponding shifts on finite noncanonical graphs. Within the analyzed
-exogenous-state quadratic framework, architecture performance is governed by
-predictability of the full-information decision rather than state-prediction
-accuracy alone.
+exogenous-state quadratic framework, the resulting laws are governed by
+predictability of the full-information decision rather than raw
+state-prediction accuracy alone.
 \end{abstract}
 
 \section{Introduction}
@@ -77,23 +80,50 @@ simply between centralized and distributed control, but between
 \emph{information architectures} that differ simultaneously in spatial scope
 and temporal freshness.
 
-This tension is familiar in several literatures, but its different aspects have
-largely been studied separately. Work on stale information in distributed
-systems has shown that old global state can lose much of its value and can even
-lead to poor load-balancing decisions \cite{mitzenmacher2000old}. The Age of
-Information literature formalizes freshness as a system resource and studies
-how communication and queueing determine the timeliness of available state
-\cite{kaul2012realtime}. Distributed optimization, in contrast, canonically
-studies how agents compute a global solution under a specified communication
-graph and information-exchange mechanism \cite{nedic2009distributed}.
-Organizational economics has identified a closely related
-adaptation--coordination tradeoff: decentralized decision makers adapt directly
-to local conditions, whereas centralized decisions facilitate coordination at
-the cost of communicating dispersed information
-\cite{alonso2008coordination}. These perspectives all suggest that neither
-``local'' nor ``global'' information is intrinsically preferable. What matters
-is whether the additional coordination enabled by broader information is worth
-the loss in freshness required to obtain it.
+This tension appears in several literatures, sometimes with scope and delay
+treated jointly but under substantially different performance models. Work on
+stale information in distributed systems shows that old global state can lose
+much of its value \cite{mitzenmacher2000old}; Age of Information formalizes
+freshness as a system resource \cite{kaul2012realtime}; distributed
+optimization studies computation under communication constraints
+\cite{nedic2009distributed}; organizational economics studies adaptation to
+local information versus coordination \cite{alonso2008coordination}; and
+networked-control work directly examines how communication scope, topology, and
+propagation delay interact with closed-loop performance.
+
+The closest control-theoretic precedents make the overlap particularly clear.
+Distributed-control work on spatially invariant systems establishes controller
+localization and imposes finite-speed or distance-dependent communication
+constraints through cone- and funnel-causal formulations and state-space models
+of finite communication speed
+\cite{bamieh2002spatial,voulgaris2003optimal,bamieh2005convex,
+fardad2011finite}. More directly, Ballotta, Jovanovi\'c, and Schenato
+parameterize a controller architecture by the number of communication hops
+available to each agent and assign the measurements in that scope an increasing
+architecture-dependent delay; after optimizing the feedback gains for each
+architecture, they show that sparse feedback can outperform all-to-all control
+\cite{ballotta2023latency}. Ballotta and Gupta obtain a related sparse optimum
+for consensus convergence speed \cite{ballotta2023sparser}, while Vanka, Gupta,
+and Haenggi study the connectivity--delay tradeoff induced by wireless
+communication radius and interference \cite{vanka2010power}. Subsequent work
+studies how spatially varying measurement delays reshape the locality of optimal
+feedback in spatially invariant plants \cite{ballotta2026role}. Thus neither
+scope-dependent communication delay nor the possibility that a sparse
+architecture outperforms a dense one is new in itself.
+
+The distinction pursued here is the decision problem and the resulting
+analytical object. The environment evolves exogenously, and each epoch is a
+static team decision rather than a dynamic feedback-control problem in which
+the controller changes future plant state. For a fixed information
+architecture, performance is the $Q$-weighted loss in reproducing the current
+full-information decision. We then vary spatial scope and information age
+jointly. Under the common-rate model, this prediction-theoretic formulation
+yields an exact composition identity for spatial omission and temporal
+staleness, a fresh-local/stale-global crossover in terms of decision-relevant
+predictability, and a marginal-balance characterization of the
+synchronized-snapshot radius. In the canonical field model, these quantities
+produce an explicit radius law involving temporal coherence, spatial
+correlation, decision-relevance length, and propagation speed.
 
 This paper develops a theory for this tradeoff. We consider a collection of
 agents operating in an exogenously evolving stochastic environment
@@ -124,9 +154,10 @@ subspace of implementable policies. Consequently, the architecture regret is
     \label{eq:intro_projection}
 \end{equation}
 where $\mathcal S(\mathcal A)$ denotes the admissible policy subspace. We use
-this fixed-architecture specialization as an analytical primitive and study an
-outer structured comparison/design problem in which spatial scope and
-information age vary jointly. Classical team and information-structure work
+the fixed-architecture static-team solution as the inner optimization primitive
+and study a particular outer design problem: comparison and selection within a
+structured family in which information scope and age vary jointly. Classical
+team and information-structure work
 has also treated information and organizational networks as design objects
 \cite{marschak1972economic,summers2017information}. The narrower question
 pursued here is how scope-dependent age changes the value of a
@@ -137,15 +168,11 @@ Classical team theory established fixed-information optimality conditions and
 also treated the value and organization of information, while later work has
 designed measurement or communication structures and studied radius-limited
 local information \cite{marschak1972economic,summers2017information,
-rusmevichientong2003decentralized}. Networked-control work has likewise
-examined controller scope coupled to architecture-dependent latency
-\cite{ballotta2023latency}. Our contribution is narrower: in an
-exogenous-state quadratic static-team model, we couple the scope of a
-synchronized snapshot to its age and value the resulting information through
-prediction error of the full-information decision. This yields the
-pure-benchmark crossover, the common-rate spatio-temporal composition identity,
-and the coordination-radius characterization for the structured
-scope--latency family.
+rusmevichientong2003decentralized}. The narrower contribution here is an exact
+prediction-theoretic characterization of a structured scope--age family in an
+exogenous-state quadratic static team, including the pure-benchmark crossover,
+the common-rate spatio-temporal composition identity, and the resulting radius
+scaling laws.
 
 Our first result answers the two extreme points of this tradeoff. We compare a
 \emph{fresh-local} architecture, in which each agent observes its current local
@@ -265,15 +292,15 @@ In summary, this paper makes two technical contributions and one conceptual
 contribution:
 \begin{enumerate}
     \item We derive an exact \emph{fresh-local versus stale-global crossover
-    law} that quantifies when the adaptation advantage of fresh-local
-    information exceeds the coordination advantage of delayed global
-    information.
+    law} for two pure information regimes, expressed through decision-relevant
+    temporal predictability and the share of decision variation captured
+    locally.
 
-    \item We develop a \emph{coordination-scale law} for the
-    synchronized-snapshot radius family under the stated common-rate model,
-    characterizing its optimal spatial scope as a function of temporal
-    predictability, spatial predictability, communication latency, and decision
-    coupling.
+    \item For a synchronized-snapshot radius family under the common-rate
+    model, we derive an exact spatio-temporal prediction-error composition law
+    and use it to characterize the optimal radius by a marginal balance between
+    spatial-information gain and freshness loss. In a canonical field model,
+    this yields an explicit scaling law in $\ell_s$, $\ell_c$, and $vT$.
 
     \item We show that, within the analyzed framework, architecture performance is governed by
     \emph{decision-relevant predictability}, not raw state predictability. The
@@ -533,6 +560,14 @@ consistency or a common decision epoch. If fresh local and delayed remote
 information can instead be freely combined, the resulting hybrid architecture
 contains more information and weakly dominates either source alone; such
 mixed-age architectures are outside the principal family analyzed here.
+
+A closely related common-delay-by-scope abstraction appears in
+Ballotta, Jovanovi\'c, and Schenato, where each agent receives measurements from
+nodes within a selected communication-hop radius and the measurements in that
+scope share an architecture-dependent delay that increases with the radius
+\cite{ballotta2023latency}. Their setting is dynamic feedback control rather
+than the exogenous-state static-team setting considered here, and their
+information structures are not identical to \eqref{eq:radius_arch}.
 
 Here $\tau(r)$ denotes the latency required to acquire information over
 radius $r$. We are particularly interested in systems for which
@@ -4063,11 +4098,57 @@ Classical team theory also treated information itself as an organizational desig
 
 Relative to these works, the distinctive object studied here is a structured family of information architectures in which spatial scope and temporal freshness are coupled through the scope--latency relation $\tau(r)$. Delayed information and timeliness--completeness tradeoffs are already present in classical team theory \cite{marschak1972economic}, while prior information-structure-design work selects additional information links \cite{summers2017information} and prior local-information models study performance as a function of information radius \cite{rusmevichientong2003decentralized}. Here, instead, each spatial scope induces an acquisition delay, and the resulting architecture is valued through its prediction error for the full-information decision. This coupling yields the freshness--locality crossover and coordination-scale laws developed in Sections~\ref{sec:fresh_local_global} and \ref{sec:optimal_coordination_scale}.
 
-\subsection{Distributed Optimization and Networked Control}
+\subsection{Distributed Optimization, Communication Constraints, and Scope}
 
 Distributed optimization studies how agents compute a common solution using local computation and message exchange. Classical asynchronous gradient methods allow delayed interprocessor communication while retaining convergence guarantees under suitable boundedness conditions \cite{tsitsiklis1986distributed}, while distributed subgradient methods establish convergence when agents exchange information locally over time-varying network topologies \cite{nedic2009distributed}. In these canonical formulations, the communication process constrains an iterative computation of an optimizer. Our setting separates that computational question from information architecture: the full-information decision at each epoch is the benchmark, and the object of design is the information available when that decision must be made.
 
-Networked and decentralized control instead place communication constraints directly in the feedback loop, including sampling, delay, and packet loss \cite{hespanha2007survey}. Spatially distributed control has long imposed finite-speed information propagation, including communication delay proportional to spatial distance \cite{voulgaris2003optimal}, and subsequent work has co-designed communication architecture and closed-loop performance \cite{matni2017communication}. Most directly, Ballotta, Jovanovi\'c, and Schenato parameterize controller architectures by communication scope together with an increasing architecture-dependent latency, and show that sparse nearest-neighbor feedback can outperform all-to-all control \cite{ballotta2023latency}; subsequent work studies how communication delays reshape the locality of optimal feedback \cite{ballotta2026role}. Thus the distinction here is not the existence of a scope--delay tradeoff. These works study dynamic plants in which feedback affects future state evolution, whereas our environment evolves exogenously and each epoch is a static team decision. Spatial scope induces information age through $\tau(r)$, and architectures are valued by the resulting prediction error for the current full-information decision. This yields the freshness--locality crossover and optimal coordination-scale laws in terms of decision-relevant predictability rather than closed-loop dynamics.
+Networked and decentralized control place communication restrictions directly
+in the feedback loop, including sampling, packet loss, communication topology,
+and delay \cite{hespanha2007survey}. For spatially invariant plants, early work
+showed that optimal controllers can exhibit inherent spatial localization
+\cite{bamieh2002spatial}, while subsequent work imposed explicit finite-speed
+communication structure. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
+under delayed communication requirements \cite{voulgaris2003optimal}; Bamieh
+and Voulgaris formulated distance-dependent information propagation through
+funnel causality \cite{bamieh2005convex}; and Fardad and Jovanovi\'c developed
+state-space models for distributed controllers with finite communication speed
+\cite{fardad2011finite}. These works are important antecedents to the present
+use of spatial scope and propagation time, but they optimize dynamic feedback
+controllers for controlled plants rather than information-constrained stage
+decisions in an exogenous environment.
+
+Communication structure has also been treated as a design variable. Langbort
+and Gupta study interconnection topology when communication is assigned a
+topology-dependent cost \cite{langbort2009minimal}, and Matni co-designs
+communication-delay structure and $H_2$ control using regularization
+\cite{matni2017communication}. In wireless consensus, Vanka, Gupta, and Haenggi
+explicitly trade communication radius against MAC/interference-induced delay
+and show that the preferred connectivity depends on network geometry
+\cite{vanka2010power}. Most directly, Ballotta, Jovanovi\'c, and Schenato
+parameterize control architectures by communication scope: each agent receives
+measurements from nodes within a chosen number of communication hops, with an
+architecture-dependent delay that increases with that scope. After optimizing
+the feedback gains for each scope, they show that sparse architectures can
+outperform all-to-all feedback \cite{ballotta2023latency}. Ballotta and Gupta
+obtain an analogous conclusion when maximizing consensus convergence speed
+under hop-dependent communication delay \cite{ballotta2023sparser}. These
+results establish that scope-dependent delay can itself induce a sparse or
+intermediate optimal control architecture.
+
+The distinction of the present paper is therefore \emph{not} the existence of
+a scope--latency tradeoff, architecture-dependent delay, or a
+sparse/intermediate optimum. Our setting is an exogenous-state static team. The
+current full-information action is the benchmark, and an architecture is valued
+by the prediction error it induces for that action. This yields the
+decision-relevant spatial omission function $\eta_S(r)$, temporal
+unpredictability $\eta_T(\tau)$, their exact common-rate composition law, and
+the fresh-local/stale-global and coordination-radius laws derived above.
+Ballotta, Arbelaiz, Gupta, Schenato, and Jovanovi\'c study a different but
+complementary question for spatially invariant dynamic plants: how delayed
+measurements from different spatial locations alter the spatial locality of the
+optimal feedback kernel \cite{ballotta2026role}. Their results operate through
+closed-loop plant dynamics and controller localization, whereas ours operate
+through prediction of an exogenously varying full-information decision.
 
 \subsection{Freshness and Age of Information}
 

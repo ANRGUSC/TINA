@@ -1,0 +1,8 @@
+experiment: temporal_scaling
+seed: 20260823
+samples: 20000
+rho_min: 0.0
+rho_max: 3.0
+rho_points: 25
+systems: [A, B, C, D]
+

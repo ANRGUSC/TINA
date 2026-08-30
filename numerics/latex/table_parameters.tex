@@ -1,0 +1,19 @@
+\begin{table}[H]
+\centering
+\caption{Reference numerical settings. All state variances, local stiffnesses,
+and unswept coherence times are normalized to one.}
+\label{tab:numerical-parameters}
+\small
+\begin{tabular}{llll}
+\toprule
+Experiment & principal sweep & size & Monte Carlo samples \\
+\midrule
+Temporal law & $\tau/T\in[0,3]$ & $n=8,20,32,50$ & $20{,}000$/point \\
+Local--global & $\gamma/q\in[0,10]$ & $n=5,10,25,100$ & $30{,}000$/setting \\
+Radius curves & $r/\ell_c\in[0,2]$ & three regimes & $50{,}000$/point \\
+Radius phase & $vT/\ell_c\in[0.1,20]$ & $72\times68$ grid & covariance \\
+Decision relevance & $\ell_c=0.7,2,6$ & 64-node ring & $12{,}000$/check \\
+General graphs & path, ring, grid, geometric & 64 nodes & covariance \\
+\bottomrule
+\end{tabular}
+\end{table}

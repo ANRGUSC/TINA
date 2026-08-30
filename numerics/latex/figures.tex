@@ -1,0 +1,68 @@
+% Standalone copies of the six figure environments used in Section 7.
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\linewidth]{numerics/figures/pdf/fig7_1_temporal_scaling.pdf}
+\caption{Temporal scaling collapse. Markers are Monte Carlo estimates for four
+systems with different dimensions, spatial covariances, objective matrices,
+and decision operators; bars are 95\% confidence intervals. The solid curve
+is the exact law $1-e^{-2\tau/T}$. Normalization by $R_\infty$ removes all
+system-specific scale.}
+\label{fig:temporal-scaling}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{numerics/figures/pdf/fig7_2_local_global_phase.pdf}
+\caption{Fresh-local versus stale-global crossover. Left: winning architecture
+for $n=100$; the solid finite-$n$ boundary and dashed large-$n$ boundary are
+Eqs.~\eqref{eq:aggregate_rho_star} and \eqref{eq:large_n_threshold}.
+Right: covariance boundaries (lines) and Monte Carlo estimates (crosses) for
+four system sizes. Stronger coupling makes older global information worth
+tolerating.}
+\label{fig:local-global-phase}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{numerics/figures/pdf/fig7_3_radius_regret.pdf}
+\caption{Emergence of local, interior, and boundary/global optima under
+$\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$. Curves show total regret
+and its temporal and residual-spatial terms from Eq.~\eqref{eq:R_decomposition};
+open circles are independent Monte Carlo estimates. Dash-dotted lines and
+crosses mark the analytical and grid minimizers.}
+\label{fig:radius-regret}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{numerics/figures/pdf/fig7_4_radius_phase.pdf}
+\caption{Dimensionless optimal-radius law. Left: numerical
+$r^\star/\ell_c$ over the $(\ell_s/\ell_c,vT/\ell_c)$ plane; the dashed line
+is the predicted transition $vT=2\ell_s$. Right: grid minimizers versus the
+closed form in Eq.~\eqref{eq:canonical_dimensionless_law}; the dashed line is
+equality.}
+\label{fig:radius-phase}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.94\linewidth]{numerics/figures/pdf/fig7_5_decision_relevance.pdf}
+\caption{Decision relevance with the graph and state covariance held fixed.
+Left: exact Gaussian spatial omission for three normalized decision operators;
+the dashed raw state correlation is identical in every case. Right: composed
+regret with the minimizing radius marked. Changing only the decision-relevance
+range moves the optimum from 1 to 5 hops.}
+\label{fig:decision-relevance}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.94\linewidth]{numerics/figures/pdf/fig7_6_general_graphs.pdf}
+\caption{Finite noncanonical graphs. Top: $\eta_S(r)$ computed from actual
+Gaussian conditional covariances and the resulting regret under one common
+normalized setting. Bottom: discrete optimal radius versus coherence time and
+decision-relevance range. The canonical line closed form is not used; the
+stepwise shifts are the discrete analogue of marginal balance.}
+\label{fig:general-graphs}
+\end{figure}
+

@@ -1,0 +1,263 @@
+{
+  "exp01": {
+    "max_abs_error": 0.01553703249833227,
+    "rmse": 0.004705238190215025,
+    "max_mc_cov_discrepancy": 0.01553703249833227,
+    "systems": 4,
+    "points": 100,
+    "samples_per_point": 20000
+  },
+  "exp02": {
+    "max_boundary_error": 0.005572283954237145,
+    "mean_boundary_error": 0.0011056605320260194,
+    "finite_n_gap_at_gamma10_n5": -0.10912678301000911,
+    "samples_per_setting": 30000
+  },
+  "exp03": {
+    "local": {
+      "rstar_theory_capped": 0,
+      "rstar_numeric": 0.0,
+      "rstar_abs_error": 0.0,
+      "mc_max_abs_error": 0.01997792755664629
+    },
+    "interior": {
+      "rstar_theory_capped": 0.626381484247684,
+      "rstar_numeric": 0.626,
+      "rstar_abs_error": 0.00038148424768402744,
+      "mc_max_abs_error": 0.011848352239051119,
+      "marginal_gap_at_numeric_optimum": 0.00047712831186208504
+    },
+    "broad": {
+      "rstar_theory_capped": 2.0,
+      "rstar_numeric": 2.0,
+      "rstar_abs_error": 0.0,
+      "mc_max_abs_error": 0.009263061349787605
+    }
+  },
+  "exp04": {
+    "mae": 0.00022478595111202415,
+    "max_error": 0.0008000517908905228,
+    "max_radius_grid_step": 0.0016,
+    "points": 4896,
+    "transition_misclassifications": 5,
+    "comparative_statics": {
+      "T": {
+        "expected": "increasing",
+        "observed_monotone": true,
+        "rstar": [
+          0.511,
+          0.679,
+          0.905,
+          1.123,
+          1.316
+        ]
+      },
+      "v": {
+        "expected": "increasing",
+        "observed_monotone": true,
+        "rstar": [
+          0.511,
+          0.679,
+          0.905,
+          1.092,
+          1.335
+        ]
+      },
+      "ell_s": {
+        "expected": "decreasing",
+        "observed_monotone": true,
+        "rstar": [
+          1.108,
+          1.031,
+          0.905,
+          0.721,
+          0.506
+        ]
+      },
+      "ell_c": {
+        "expected": "increasing",
+        "observed_monotone": true,
+        "rstar": [
+          0.432,
+          0.6880000000000001,
+          0.905,
+          1.312,
+          1.845
+        ]
+      }
+    }
+  },
+  "exp05": {
+    "0.7": {
+      "rstar": 1,
+      "eta0": 0.04601899199231013,
+      "max_mc_eta_error": 0.0001461353538286525
+    },
+    "2.0": {
+      "rstar": 2,
+      "eta0": 0.25805370569827935,
+      "max_mc_eta_error": 0.00020468914603050115
+    },
+    "6.0": {
+      "rstar": 5,
+      "eta0": 0.572391080898386,
+      "max_mc_eta_error": 0.00031239669703511663
+    },
+    "environment": {
+      "sigma_condition": 23.100454570673328,
+      "min_eigenvalue": 0.1724033661241748,
+      "psd": true
+    }
+  },
+  "exp06": {
+    "path": {
+      "rstar": 2,
+      "eta0": 0.26521050638607685,
+      "diameter": 63,
+      "sigma_condition": 19.506021273963064,
+      "min_eigenvalue": 0.1859929141560983,
+      "psd": true,
+      "rstar_by_latency": [
+        3,
+        2,
+        2,
+        1,
+        1
+      ],
+      "rstar_by_T": [
+        1,
+        1,
+        2,
+        2,
+        2,
+        3
+      ],
+      "rstar_by_ell_c": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ],
+      "rstar_by_kappa": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ]
+    },
+    "ring": {
+      "rstar": 2,
+      "eta0": 0.27244886277141184,
+      "diameter": 32,
+      "sigma_condition": 19.521222425862565,
+      "min_eigenvalue": 0.19098395915622057,
+      "psd": true,
+      "rstar_by_latency": [
+        3,
+        2,
+        2,
+        2,
+        1
+      ],
+      "rstar_by_T": [
+        1,
+        1,
+        2,
+        2,
+        2,
+        3
+      ],
+      "rstar_by_ell_c": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ],
+      "rstar_by_kappa": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ]
+    },
+    "grid": {
+      "rstar": 3,
+      "eta0": 0.47072449914084546,
+      "diameter": 14,
+      "sigma_condition": 47.003363835067255,
+      "min_eigenvalue": 0.16325800047436653,
+      "psd": true,
+      "rstar_by_latency": [
+        3,
+        3,
+        3,
+        2,
+        2
+      ],
+      "rstar_by_T": [
+        1,
+        2,
+        2,
+        3,
+        3,
+        4
+      ],
+      "rstar_by_ell_c": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "rstar_by_kappa": [
+        3,
+        3,
+        3,
+        2,
+        2
+      ]
+    },
+    "geometric": {
+      "rstar": 2,
+      "eta0": 0.4646998884013003,
+      "diameter": 8,
+      "sigma_condition": 152.39545588946845,
+      "min_eigenvalue": 0.10203713508020684,
+      "psd": true,
+      "rstar_by_latency": [
+        3,
+        3,
+        2,
+        2,
+        2
+      ],
+      "rstar_by_T": [
+        1,
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "rstar_by_ell_c": [
+        1,
+        2,
+        2,
+        3,
+        3
+      ],
+      "rstar_by_kappa": [
+        3,
+        3,
+        2,
+        2,
+        1
+      ]
+    }
+  },
+  "total_runtime_seconds": 50.40474699996412
+}

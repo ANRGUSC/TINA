@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this manuscript or reproduction package, please cite it as below."
+title: "TINA: A Theory of Information Architecture for Networked Decisions"
+type: software
+version: "1.0.0-submission"
+date-released: 2026-08-29
+license: BSD-3-Clause
+repository-code: "https://github.com/ANRGUSC/TINA"
+url: "https://github.com/ANRGUSC/TINA/releases/tag/v1.0.0-submission"
+authors:
+  - family-names: Moeller
+    given-names: Scott
+  - family-names: Krishnamachari
+    given-names: Bhaskar
+preferred-citation:
+  type: article
+  title: "A Theory of Information Architecture for Networked Decisions: Freshness, Locality, and Coordination"
+  authors:
+    - family-names: Moeller
+      given-names: Scott
+    - family-names: Krishnamachari
+      given-names: Bhaskar
+  year: 2026
+  status: preprint

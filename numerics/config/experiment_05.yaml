@@ -1,0 +1,10 @@
+experiment: decision_relevance
+seed: 20260827
+samples: 12000
+n: 64
+T: 6.0
+latency_per_hop: 0.12
+ell_c: [0.7, 2.0, 6.0]
+kappa: 0.75
+nu: 1.5
+

@@ -1,0 +1,31 @@
+# LaTeX intermediates
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Generated scratch and local review material
+tmp/
+output/
+rev1.md
+editpass.md
+*CHANGELOG.md
+*SUMMARY.md
+restructure.md
+numerics.md
+MATHEMATICAL_NOTATION_AUDIT.md
+main_before_*.tex
+main_older_*.tex
+main_older_*.pdf
+main_restructured.pdf
+Theory_of_Information_Architecture_for_Networked_Decisions*.pdf

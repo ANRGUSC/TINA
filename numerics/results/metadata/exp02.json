@@ -1,0 +1,44 @@
+{
+  "timestamp_utc": "2026-08-22T20:11:18.833860+00:00",
+  "seed": 20260824,
+  "monte_carlo_samples": 30000,
+  "runtime_seconds": 11.210418500006199,
+  "git_commit": null,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.4.3",
+    "scipy": "1.17.1",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  },
+  "config": {
+    "experiment": "local_global_crossover",
+    "seed": 20260824,
+    "samples": 30000,
+    "n": [
+      5,
+      10,
+      25,
+      100
+    ],
+    "gamma_over_q": [
+      0,
+      0.05,
+      0.1,
+      0.2,
+      0.5,
+      1,
+      2,
+      5,
+      10
+    ],
+    "rho_max": 1.5
+  },
+  "results": {
+    "max_boundary_error": 0.005572283954237145,
+    "mean_boundary_error": 0.0011056605320260194,
+    "finite_n_gap_at_gamma10_n5": -0.10912678301000911,
+    "samples_per_setting": 30000
+  }
+}

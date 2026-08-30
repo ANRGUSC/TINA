@@ -1,0 +1,52 @@
+{
+  "timestamp_utc": "2026-08-22T20:06:02.564931+00:00",
+  "seed": 20260827,
+  "monte_carlo_samples": 12000,
+  "runtime_seconds": 3.2692995999241248,
+  "git_commit": null,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.4.3",
+    "scipy": "1.17.1",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  },
+  "config": {
+    "experiment": "decision_relevance",
+    "seed": 20260827,
+    "samples": 12000,
+    "n": 64,
+    "T": 6.0,
+    "latency_per_hop": 0.12,
+    "ell_c": [
+      0.7,
+      2.0,
+      6.0
+    ],
+    "kappa": 0.75,
+    "nu": 1.5
+  },
+  "results": {
+    "0.7": {
+      "rstar": 1,
+      "eta0": 0.04601899199231013,
+      "max_mc_eta_error": 0.0001461353538286525
+    },
+    "2.0": {
+      "rstar": 2,
+      "eta0": 0.25805370569827935,
+      "max_mc_eta_error": 0.00020468914603050115
+    },
+    "6.0": {
+      "rstar": 5,
+      "eta0": 0.572391080898386,
+      "max_mc_eta_error": 0.00031239669703511663
+    },
+    "environment": {
+      "sigma_condition": 23.100454570673328,
+      "min_eigenvalue": 0.1724033661241748,
+      "psd": true
+    }
+  }
+}

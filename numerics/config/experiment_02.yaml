@@ -1,0 +1,7 @@
+experiment: local_global_crossover
+seed: 20260824
+samples: 30000
+n: [5, 10, 25, 100]
+gamma_over_q: [0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10]
+rho_max: 1.5
+

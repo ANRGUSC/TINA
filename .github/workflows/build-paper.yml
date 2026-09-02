@@ -1,0 +1,42 @@
+name: Build paper
+
+run-name: Build paper at ${{ github.sha }}
+
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install TeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-publishers
+
+      - name: Build paper
+        run: python3 scripts/build_paper.py
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v7
+        with:
+          name: tina-${{ github.sha }}
+          path: output/pdf/tina.pdf
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0

@@ -597,5 +597,5 @@
     ],
     "archive": "results/processed/robustness_mc.csv"
   },
-  "total_runtime_seconds": 18.769223749637604
+  "total_runtime_seconds": 17.636736332904547
 }

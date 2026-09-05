@@ -49,6 +49,11 @@ class PackageIntegrityTests(unittest.TestCase):
         self.assertTrue(all(path.is_file() and path.stat().st_size > 0 for path in expected))
         self.assertTrue((ROOT / "numerics/results/raw/exp01_system_matrices.npz").is_file())
 
+    def test_manuscript_figures_are_exact_archive_copies(self):
+        for figure in (ROOT / "figures").glob("fig7_*.pdf"):
+            archived = ROOT / "numerics/figures/pdf" / figure.name
+            self.assertEqual(figure.read_bytes(), archived.read_bytes(), figure.name)
+
 
 if __name__ == "__main__":
     unittest.main()

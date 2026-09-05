@@ -31,7 +31,7 @@ def save(fig, root, stem, paper_figures=None):
     (root / "figures" / "pdf").mkdir(parents=True, exist_ok=True)
     (root / "figures" / "png").mkdir(parents=True, exist_ok=True)
     pdf_path = root / "figures" / "pdf" / f"{stem}.pdf"
-    fig.savefig(pdf_path)
+    fig.savefig(pdf_path, dpi=350)
     fig.savefig(root / "figures" / "png" / f"{stem}.png", dpi=350)
     if paper_figures is not None:
         paper_figures = Path(paper_figures)

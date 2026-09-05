@@ -10,6 +10,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PackageIntegrityTests(unittest.TestCase):
+    def test_numerical_tex_extracts_match_manuscript(self):
+        completed = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/sync_numerical_latex.py"), "--check"],
+            cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stdout)
+
     def test_source_audit(self):
         completed = subprocess.run(
             [sys.executable, str(ROOT / "scripts/audit_sources.py")],

@@ -1,4 +1,4 @@
-"""Run all six experiments and regenerate Section 7 artifacts."""
+"""Run all six experiments and regenerate the numerical-section artifacts."""
 from __future__ import annotations
 
 import json
@@ -117,7 +117,7 @@ def system_matrices(name, seed):
 def exp01():
     c = cfg(1); start = time.perf_counter(); rng = np.random.default_rng(c["seed"])
     rhos = np.linspace(c["rho_min"], c["rho_max"], c["rho_points"])
-    # Trials are collected in radius-order below; archive labels in that same
+    # Trials are collected in delay order below; archive labels in that same
     # order, including when the configured selection is unsorted or repeated.
     trial_indices = np.unique(np.asarray(
         c.get("trial_rho_indices", [0, len(rhos)//2, len(rhos)-1]), dtype=int
@@ -570,6 +570,7 @@ def exp04():
         shading="auto",
         cmap=cmap,
         norm=norm,
+        rasterized=True,
     )
     contours = ax.contour(
         ls,

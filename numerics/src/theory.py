@@ -8,13 +8,20 @@ def temporal_fraction(rho):
     return 1.0 - np.exp(-2.0 * np.asarray(rho, dtype=float))
 
 
-def aggregate_eta_local(gamma, n, q=1.0):
+def aggregate_eta_omitted(gamma, n, q=1.0):
+    """Fresh-local omission share for the aggregate-coupling model."""
+    gamma = np.asarray(gamma, dtype=float)
+    return gamma**2 * (n - 1) / ((q + gamma) * (q + gamma * (n - 1)))
+
+
+def aggregate_eta_captured(gamma, n, q=1.0):
+    """Decision-relevant share captured by fresh-local information."""
     gamma = np.asarray(gamma, dtype=float)
     return q * (q + gamma * n) / ((q + gamma) * (q + gamma * (n - 1)))
 
 
 def aggregate_threshold(gamma, n, q=1.0):
-    return 0.5 * np.log(1.0 / aggregate_eta_local(gamma, n, q))
+    return 0.5 * np.log(1.0 / aggregate_eta_captured(gamma, n, q))
 
 
 def canonical_eta(radius, ell_s, ell_c):
@@ -34,4 +41,3 @@ def canonical_rstar(ell_s, ell_c, propagation_length):
         (ell_c + propagation_length) / (ell_c + 2.0 * ell_s)
     )
     return np.maximum(value, 0.0)
-

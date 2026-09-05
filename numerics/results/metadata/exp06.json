@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-08-22T20:06:12.262260+00:00",
+  "timestamp_utc": "2026-09-05T15:57:27.726503+00:00",
   "seed": 20260828,
   "monte_carlo_samples": 0,
-  "runtime_seconds": 9.642198899993673,
-  "git_commit": null,
-  "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "runtime_seconds": 4.313813500106335,
+  "git_commit": "a5ca1dbae03ab7e2204f83d764467794620e882c",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12 (main, Oct  9 2025, 11:07:00) [Clang 19.1.7 ]",
   "packages": {
     "numpy": "2.4.3",
     "scipy": "1.17.1",
@@ -15,12 +15,42 @@
   "config": {
     "experiment": "general_graphs",
     "seed": 20260828,
+    "graph_seed": 20260839,
     "n": 64,
     "T": 5.0,
     "latency_per_hop": 0.12,
     "ell_c": 2.0,
     "kappa": 0.8,
     "nu": 1.5,
+    "latency_sweep": [
+      0.05,
+      0.08,
+      0.12,
+      0.18,
+      0.28
+    ],
+    "T_sweep": [
+      1.5,
+      2.5,
+      4.0,
+      6.0,
+      9.0,
+      14.0
+    ],
+    "ell_c_sweep": [
+      0.7,
+      1.2,
+      2.0,
+      3.5,
+      6.0
+    ],
+    "kappa_sweep": [
+      1.5,
+      1.0,
+      0.7,
+      0.45,
+      0.3
+    ],
     "graphs": [
       "path",
       "ring",
@@ -31,11 +61,24 @@
   "results": {
     "path": {
       "rstar": 2,
-      "eta0": 0.26521050638607685,
+      "eta0": 0.26521050638607674,
       "diameter": 63,
-      "sigma_condition": 19.506021273963064,
-      "min_eigenvalue": 0.1859929141560983,
+      "sigma_condition": 19.50602127396302,
+      "min_eigenvalue": 0.1859929141560989,
       "psd": true,
+      "full_neighborhood_eta": 7.949566883179463e-17,
+      "eta_monotone_nonincreasing": true,
+      "rstar_regret": 0.12486827038385329,
+      "left_regret_gap": 0.018562537107772892,
+      "right_regret_gap": 0.0207383142463623,
+      "covariance_diagnostics": {
+        "min_eigenvalue": 0.1859929141560989,
+        "max_eigenvalue": 3.6279817403352412,
+        "condition": 19.50602127396302,
+        "max_abs_asymmetry": 0.0,
+        "psd": true
+      },
+      "graph_seed": 20260839,
       "rstar_by_latency": [
         3,
         2,
@@ -70,9 +113,22 @@
       "rstar": 2,
       "eta0": 0.27244886277141184,
       "diameter": 32,
-      "sigma_condition": 19.521222425862565,
-      "min_eigenvalue": 0.19098395915622057,
+      "sigma_condition": 19.521222425862597,
+      "min_eigenvalue": 0.19098395915621996,
       "psd": true,
+      "full_neighborhood_eta": 1.2279737018095071e-16,
+      "eta_monotone_nonincreasing": true,
+      "rstar_regret": 0.12695959222209086,
+      "left_regret_gap": 0.020832256521487458,
+      "right_regret_gap": 0.01957437610468704,
+      "covariance_diagnostics": {
+        "min_eigenvalue": 0.19098395915621996,
+        "max_eigenvalue": 3.728240346460426,
+        "condition": 19.521222425862597,
+        "max_abs_asymmetry": 0.0,
+        "psd": true
+      },
+      "graph_seed": 20260839,
       "rstar_by_latency": [
         3,
         2,
@@ -105,11 +161,24 @@
     },
     "grid": {
       "rstar": 3,
-      "eta0": 0.47072449914084546,
+      "eta0": 0.47072449914084563,
       "diameter": 14,
-      "sigma_condition": 47.003363835067255,
-      "min_eigenvalue": 0.16325800047436653,
+      "sigma_condition": 47.00336383506764,
+      "min_eigenvalue": 0.16325800047436687,
       "psd": true,
+      "full_neighborhood_eta": 1.5455164035637728e-17,
+      "eta_monotone_nonincreasing": true,
+      "rstar_regret": 0.1596918773087883,
+      "left_regret_gap": 0.005187156315426988,
+      "right_regret_gap": 0.02329511366194792,
+      "covariance_diagnostics": {
+        "min_eigenvalue": 0.16325800047436687,
+        "max_eigenvalue": 7.673675195282305,
+        "condition": 47.00336383506764,
+        "max_abs_asymmetry": 0.0,
+        "psd": true
+      },
+      "graph_seed": 20260839,
       "rstar_by_latency": [
         3,
         3,
@@ -142,11 +211,24 @@
     },
     "geometric": {
       "rstar": 2,
-      "eta0": 0.4646998884013003,
+      "eta0": 0.46469988840130005,
       "diameter": 8,
-      "sigma_condition": 152.39545588946845,
-      "min_eigenvalue": 0.10203713508020684,
+      "sigma_condition": 152.39545588946933,
+      "min_eigenvalue": 0.10203713508020665,
       "psd": true,
+      "full_neighborhood_eta": 3.530776334471612e-17,
+      "eta_monotone_nonincreasing": true,
+      "rstar_regret": 0.14175328079728855,
+      "left_regret_gap": 0.07390982693543657,
+      "right_regret_gap": 0.003615944074949251,
+      "covariance_diagnostics": {
+        "min_eigenvalue": 0.10203713508020665,
+        "max_eigenvalue": 15.549995718203409,
+        "condition": 152.39545588946933,
+        "max_abs_asymmetry": 0.0,
+        "psd": true
+      },
+      "graph_seed": 20260839,
       "rstar_by_latency": [
         3,
         3,
@@ -176,6 +258,39 @@
         2,
         1
       ]
-    }
+    },
+    "sampled_sweep_values": {
+      "latency_per_hop": [
+        0.05,
+        0.08,
+        0.12,
+        0.18,
+        0.28
+      ],
+      "T": [
+        1.5,
+        2.5,
+        4.0,
+        6.0,
+        9.0,
+        14.0
+      ],
+      "ell_c": [
+        0.7,
+        1.2,
+        2.0,
+        3.5,
+        6.0
+      ],
+      "kappa": [
+        1.5,
+        1.0,
+        0.7,
+        0.45,
+        0.3
+      ]
+    },
+    "sweep_archive": "results/processed/exp06_comparative_statics.csv",
+    "curve_archive": "results/processed/exp06_general_graphs.csv"
   }
 }

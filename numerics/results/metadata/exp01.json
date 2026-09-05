@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-08-22T20:05:32.674153+00:00",
+  "timestamp_utc": "2026-09-05T15:57:13.385337+00:00",
   "seed": 20260823,
   "monte_carlo_samples": 20000,
-  "runtime_seconds": 10.47811299993191,
-  "git_commit": null,
-  "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "runtime_seconds": 3.1843345421366394,
+  "git_commit": "a5ca1dbae03ab7e2204f83d764467794620e882c",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12 (main, Oct  9 2025, 11:07:00) [Clang 19.1.7 ]",
   "packages": {
     "numpy": "2.4.3",
     "scipy": "1.17.1",
@@ -19,6 +19,11 @@
     "rho_min": 0.0,
     "rho_max": 3.0,
     "rho_points": 25,
+    "trial_rho_indices": [
+      0,
+      12,
+      24
+    ],
     "systems": [
       "A",
       "B",
@@ -27,11 +32,104 @@
     ]
   },
   "results": {
-    "max_abs_error": 0.01553703249833227,
-    "rmse": 0.004705238190215025,
-    "max_mc_cov_discrepancy": 0.01553703249833227,
+    "max_abs_error": 0.015537032498406433,
+    "rmse": 0.004705238190200749,
+    "max_mc_cov_discrepancy": 0.015537032498406433,
     "systems": 4,
     "points": 100,
-    "samples_per_point": 20000
+    "samples_per_point": 20000,
+    "trial_rhos": [
+      0.0,
+      1.5,
+      3.0
+    ],
+    "matrix_archive": "results/raw/exp01_system_matrices.npz",
+    "trial_archive": "results/raw/exp01_trial_regret.npz",
+    "matrix_diagnostics": {
+      "A": {
+        "seed": 20260823,
+        "n": 8,
+        "rinf": 2.8123772510346567,
+        "Q": {
+          "min_eigenvalue": 1.0,
+          "max_eigenvalue": 1.0,
+          "condition": 1.0,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "sigma": {
+          "min_eigenvalue": 1.0,
+          "max_eigenvalue": 1.0,
+          "condition": 1.0,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "B_max_abs": 0.7488387311133966,
+        "K_max_abs": 0.7488387311133966
+      },
+      "B": {
+        "seed": 20260824,
+        "n": 20,
+        "rinf": 7.159866681915648,
+        "Q": {
+          "min_eigenvalue": 0.7022777849441573,
+          "max_eigenvalue": 5.173640358681105,
+          "condition": 7.3669429242909805,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "sigma": {
+          "min_eigenvalue": 0.2133492748580112,
+          "max_eigenvalue": 4.338859357758264,
+          "condition": 20.336883547628066,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "B_max_abs": 0.6355588402254607,
+        "K_max_abs": 0.5645486143535348
+      },
+      "C": {
+        "seed": 20260825,
+        "n": 50,
+        "rinf": 65.39193409851538,
+        "Q": {
+          "min_eigenvalue": 0.9999999999999997,
+          "max_eigenvalue": 1.48,
+          "condition": 1.4799999999999998,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "sigma": {
+          "min_eigenvalue": 0.18118835160932997,
+          "max_eigenvalue": 4.027176271521715,
+          "condition": 22.226463432952496,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "B_max_abs": 0.7831712841999399,
+        "K_max_abs": 0.7084346321478328
+      },
+      "D": {
+        "seed": 20260826,
+        "n": 32,
+        "rinf": 101.80607871736598,
+        "Q": {
+          "min_eigenvalue": 0.7000062957302701,
+          "max_eigenvalue": 4.024037875778809,
+          "condition": 5.748573834726447,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "sigma": {
+          "min_eigenvalue": 0.07304483975650476,
+          "max_eigenvalue": 10.188856319683094,
+          "condition": 139.48769486862716,
+          "max_abs_asymmetry": 0.0,
+          "psd": true
+        },
+        "B_max_abs": 0.5790154519460048,
+        "K_max_abs": 0.5509978803703361
+      }
+    }
   }
 }

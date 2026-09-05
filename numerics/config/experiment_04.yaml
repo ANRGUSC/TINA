@@ -3,4 +3,7 @@ seed: 20260826
 vT_over_lc: [0.1, 20.0, 72]
 ell_s_over_lc: [0.05, 5.0, 68]
 radius_grid_points: 2501
-
+radius_grid_min: 0.0
+radius_grid_max: 4.0
+cross_section_ell_s_over_lc: [0.1, 0.4, 1.0]
+transition_classification_tolerance: 1.0e-12

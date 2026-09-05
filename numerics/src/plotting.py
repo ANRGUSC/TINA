@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import shutil
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
@@ -29,10 +30,13 @@ def save(fig, root, stem, paper_figures=None):
     root = Path(root)
     (root / "figures" / "pdf").mkdir(parents=True, exist_ok=True)
     (root / "figures" / "png").mkdir(parents=True, exist_ok=True)
-    fig.savefig(root / "figures" / "pdf" / f"{stem}.pdf")
+    pdf_path = root / "figures" / "pdf" / f"{stem}.pdf"
+    fig.savefig(pdf_path, dpi=350)
     fig.savefig(root / "figures" / "png" / f"{stem}.png", dpi=350)
     if paper_figures is not None:
         paper_figures = Path(paper_figures)
         paper_figures.mkdir(parents=True, exist_ok=True)
-        fig.savefig(paper_figures / f"{stem}.pdf")
+        # Constrained layout can move axes on successive saves.  Copy the
+        # archived PDF so the manuscript uses that exact artifact.
+        shutil.copy2(pdf_path, paper_figures / f"{stem}.pdf")
     plt.close(fig)

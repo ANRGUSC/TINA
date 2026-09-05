@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-08-22T20:06:02.564931+00:00",
+  "timestamp_utc": "2026-09-05T15:57:23.401678+00:00",
   "seed": 20260827,
   "monte_carlo_samples": 12000,
-  "runtime_seconds": 3.2692995999241248,
-  "git_commit": null,
-  "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "runtime_seconds": 0.7939018332399428,
+  "git_commit": "a5ca1dbae03ab7e2204f83d764467794620e882c",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12 (main, Oct  9 2025, 11:07:00) [Clang 19.1.7 ]",
   "packages": {
     "numpy": "2.4.3",
     "scipy": "1.17.1",
@@ -25,28 +25,63 @@
       6.0
     ],
     "kappa": 0.75,
-    "nu": 1.5
+    "nu": 1.5,
+    "mc_check_radius_offset": 3
   },
   "results": {
     "0.7": {
       "rstar": 1,
-      "eta0": 0.04601899199231013,
-      "max_mc_eta_error": 0.0001461353538286525
+      "eta0": 0.04601899199231007,
+      "normalizer_analytic": 111.79293290051328,
+      "rinf_analytic": 55.89646645025664,
+      "check_radii": [
+        0,
+        1,
+        4,
+        32
+      ],
+      "max_mc_eta_error": 7.535103322311998e-05,
+      "mean_mc_eta_error": 1.990397459042499e-05,
+      "max_mc_eta_se": 8.679851746547152e-05,
+      "mc_check_count": 4
     },
     "2.0": {
       "rstar": 2,
-      "eta0": 0.25805370569827935,
-      "max_mc_eta_error": 0.00020468914603050115
+      "eta0": 0.25805370569827907,
+      "normalizer_analytic": 196.96019857741044,
+      "rinf_analytic": 98.48009928870522,
+      "check_radii": [
+        0,
+        2,
+        5,
+        32
+      ],
+      "max_mc_eta_error": 0.00030863414056081506,
+      "mean_mc_eta_error": 9.223817234381545e-05,
+      "max_mc_eta_se": 0.000751520454494096,
+      "mc_check_count": 4
     },
     "6.0": {
       "rstar": 5,
-      "eta0": 0.572391080898386,
-      "max_mc_eta_error": 0.00031239669703511663
+      "eta0": 0.5723910808983853,
+      "normalizer_analytic": 242.56781173459387,
+      "rinf_analytic": 121.28390586729694,
+      "check_radii": [
+        0,
+        5,
+        8,
+        32
+      ],
+      "max_mc_eta_error": 0.002392156657185285,
+      "mean_mc_eta_error": 0.0008494828099642093,
+      "max_mc_eta_se": 0.003198405856594236,
+      "mc_check_count": 4
     },
     "environment": {
-      "sigma_condition": 23.100454570673328,
-      "min_eigenvalue": 0.1724033661241748,
+      "sigma_condition": 23.10045457067332,
+      "min_eigenvalue": 0.1724033661241743,
       "psd": true
-    }
+    },
+    "mc_checks_archive": "results/processed/exp05_mc_checks.csv"
   }
 }

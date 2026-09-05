@@ -21,6 +21,24 @@ def load_yaml(path):
         return yaml.safe_load(handle)
 
 
+def sample_mean_ci(values, confidence_z=1.96):
+    """Return a sample mean, normal standard error, and confidence interval.
+
+    The input is the per-draw quantity whose expectation is being estimated,
+    rather than a pre-normalized aggregate.  Keeping the sample moments at
+    this level avoids silently treating a sampled denominator as exact.
+    """
+    values = numpy.asarray(values, dtype=float).reshape(-1)
+    if values.size < 2:
+        raise ValueError("at least two draws are required for a sample SE")
+    if not numpy.all(numpy.isfinite(values)):
+        raise ValueError("sample values must be finite")
+    mean = float(values.mean())
+    se = float(values.std(ddof=1) / numpy.sqrt(values.size))
+    margin = float(confidence_z * se)
+    return mean, se, mean - margin, mean + margin
+
+
 def write_csv(path, rows):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

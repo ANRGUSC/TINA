@@ -4,5 +4,5 @@ samples: 20000
 rho_min: 0.0
 rho_max: 3.0
 rho_points: 25
+trial_rho_indices: [0, 12, 24]
 systems: [A, B, C, D]
-

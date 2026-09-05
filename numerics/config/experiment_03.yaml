@@ -1,9 +1,9 @@
 experiment: radius_regret
 seed: 20260825
 samples: 50000
-D: 2.0
+D_over_ell_c: 2.0
+radius_grid_points: 1001
 regimes:
   local: {eta0: 0.25, ell_c: 1.0, vT: 0.2}
   interior: {eta0: 0.7, ell_c: 1.0, vT: 4.0}
   broad: {eta0: 0.9, ell_c: 1.0, vT: 100.0}
-

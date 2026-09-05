@@ -1,4 +1,5 @@
 import json
+import csv
 import subprocess
 import sys
 import unittest
@@ -27,13 +28,26 @@ class PackageIntegrityTests(unittest.TestCase):
         self.assertLessEqual(exp2["max_boundary_error"], 0.007)
         self.assertLessEqual(max(v["mc_max_abs_error"] for v in exp3.values()), 0.025)
         self.assertLessEqual(exp4["max_error"], exp4["max_radius_grid_step"] + 1e-12)
-        self.assertLessEqual(max(v["max_mc_eta_error"] for k, v in exp5.items() if k != "environment"), 5e-4)
+        checks_path = ROOT / "numerics/results/processed/exp05_mc_checks.csv"
+        self.assertTrue(checks_path.is_file())
+        with checks_path.open(newline="", encoding="utf-8") as handle:
+            checks = list(csv.DictReader(handle))
+        self.assertGreater(len(checks), 0)
+        # The analytical normalizer makes the check an ordinary sample-mean
+        # comparison.  Use a four-SE smoke threshold: a fixed absolute bound
+        # would incorrectly reject the high-variance ell_c=6, r=0 check.
+        self.assertTrue(all(
+            float(row["abs_error"]) <= 4.0 * float(row["eta_mc_se"]) + 1e-12
+            for row in checks
+        ))
+        self.assertTrue(all(float(row["normalizer_analytic"]) > 0 for row in checks))
 
     def test_all_declared_build_inputs_exist(self):
         expected = [ROOT / "main.tex", ROOT / "references.bib"]
         expected.extend((ROOT / "figures").glob("fig7_*.pdf"))
         self.assertEqual(len(expected), 8)
         self.assertTrue(all(path.is_file() and path.stat().st_size > 0 for path in expected))
+        self.assertTrue((ROOT / "numerics/results/raw/exp01_system_matrices.npz").is_file())
 
 
 if __name__ == "__main__":

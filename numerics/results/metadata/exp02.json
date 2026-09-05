@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-08-22T20:11:18.833860+00:00",
+  "timestamp_utc": "2026-09-05T15:46:46.714512+00:00",
   "seed": 20260824,
   "monte_carlo_samples": 30000,
-  "runtime_seconds": 11.210418500006199,
-  "git_commit": null,
-  "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "runtime_seconds": 6.9673388339579105,
+  "git_commit": "b8effbe0cc4f1192a63f1f5ad16f7439818573b2",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12 (main, Oct  9 2025, 11:07:00) [Clang 19.1.7 ]",
   "packages": {
     "numpy": "2.4.3",
     "scipy": "1.17.1",
@@ -36,9 +36,15 @@
     "rho_max": 1.5
   },
   "results": {
-    "max_boundary_error": 0.005572283954237145,
-    "mean_boundary_error": 0.0011056605320260194,
+    "max_boundary_error": 0.0055722839542377,
+    "mean_boundary_error": 0.0011056605320260847,
     "finite_n_gap_at_gamma10_n5": -0.10912678301000911,
-    "samples_per_setting": 30000
+    "samples_per_setting": 30000,
+    "paired_delta_method": true,
+    "zero_coupling_settings": 4,
+    "max_threshold_se": 0.003679410619096695,
+    "mean_threshold_se": 0.0012938883354634788,
+    "ci_contains_theory": 33,
+    "invalid_threshold_settings": 0
   }
 }

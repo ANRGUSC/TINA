@@ -1,0 +1,23 @@
+{
+  "base_seed": 9941,
+  "replicates": 8,
+  "sample_sizes": [
+    1000,
+    3000,
+    10000,
+    30000
+  ],
+  "rho": 0.8,
+  "theory": 0.7981034820053446,
+  "seed_values": [
+    9941,
+    9942,
+    9943,
+    9944,
+    9945,
+    9946,
+    9947,
+    9948
+  ],
+  "archive": "results/processed/robustness_mc.csv"
+}

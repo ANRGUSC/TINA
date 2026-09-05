@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-08-22T20:05:59.245939+00:00",
+  "timestamp_utc": "2026-09-05T15:46:49.603682+00:00",
   "seed": 20260826,
   "monte_carlo_samples": 0,
-  "runtime_seconds": 2.0067715999903157,
-  "git_commit": null,
-  "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "runtime_seconds": 0.8817886249162257,
+  "git_commit": "b8effbe0cc4f1192a63f1f5ad16f7439818573b2",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12 (main, Oct  9 2025, 11:07:00) [Clang 19.1.7 ]",
   "packages": {
     "numpy": "2.4.3",
     "scipy": "1.17.1",
@@ -25,14 +25,80 @@
       5.0,
       68
     ],
-    "radius_grid_points": 2501
+    "radius_grid_points": 2501,
+    "radius_grid_min": 0.0,
+    "radius_grid_max": 4.0,
+    "cross_section_ell_s_over_lc": [
+      0.1,
+      0.4,
+      1.0
+    ],
+    "transition_classification_tolerance": 1e-12
   },
   "results": {
     "mae": 0.00022478595111202415,
     "max_error": 0.0008000517908905228,
     "max_radius_grid_step": 0.0016,
     "points": 4896,
+    "radius_grid_min": 0.0,
+    "radius_grid_max": 4.0,
+    "radius_grid_points": 2501,
+    "radius_grid_independent_of_closed_form": true,
+    "transition_classification_tolerance": 1e-12,
+    "mean_error_in_grid_steps": 0.14049121944501508,
+    "max_error_in_grid_steps": 0.5000323693065767,
+    "p95_error_in_grid_steps": 0.45244083112994626,
+    "positive_region_points": 2764,
+    "zero_region_points": 2132,
+    "positive_region_mae_in_grid_steps": 0.2488585421138907,
+    "positive_region_max_error_in_grid_steps": 0.5000323693065767,
+    "zero_region_max_error_in_grid_steps": 0.0,
     "transition_misclassifications": 5,
+    "transition_misclassification_points": [
+      {
+        "ell_s_over_lc": 0.05355755600467134,
+        "vT_over_lc": 0.1077479145475366,
+        "theory_positive_radius": true,
+        "numeric_positive_radius": false,
+        "transition_gap_vT_over_lc": 0.0006328025381939217,
+        "theory_radius_in_grid_steps": 0.17856706820714122
+      },
+      {
+        "ell_s_over_lc": 0.057368236103870124,
+        "vT_over_lc": 0.11609613089343249,
+        "theory_positive_radius": true,
+        "numeric_positive_radius": false,
+        "transition_gap_vT_over_lc": 0.0013596586856922388,
+        "theory_radius_in_grid_steps": 0.3809280815603622
+      },
+      {
+        "ell_s_over_lc": 0.12218832343617667,
+        "vT_over_lc": 0.24485359123507788,
+        "theory_positive_radius": true,
+        "numeric_positive_radius": false,
+        "transition_gap_vT_over_lc": 0.00047694436272455176,
+        "theory_radius_in_grid_steps": 0.1197519722310505
+      },
+      {
+        "ell_s_over_lc": 0.29859972768287446,
+        "vT_over_lc": 0.5995328114071461,
+        "theory_positive_radius": true,
+        "numeric_positive_radius": false,
+        "transition_gap_vT_over_lc": 0.002333356041397172,
+        "theory_radius_in_grid_steps": 0.4561995385179062
+      },
+      {
+        "ell_s_over_lc": 1.6647846545594798,
+        "vT_over_lc": 3.3359308480646077,
+        "theory_positive_radius": true,
+        "numeric_positive_radius": false,
+        "transition_gap_vT_over_lc": 0.006361538945648171,
+        "theory_radius_in_grid_steps": 0.45882666703288394
+      }
+    ],
+    "transition_misclassification_max_gap_vT_over_lc": 0.006361538945648171,
+    "transition_misclassification_max_theory_radius_in_grid_steps": 0.45882666703288394,
+    "exact_transition_condition": "vT/ell_c > 2*(ell_s/ell_c)",
     "comparative_statics": {
       "T": {
         "expected": "increasing",

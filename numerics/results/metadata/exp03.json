@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-08-22T20:05:57.191233+00:00",
+  "timestamp_utc": "2026-09-05T15:46:48.711798+00:00",
   "seed": 20260825,
   "monte_carlo_samples": 50000,
-  "runtime_seconds": 9.075624700053595,
-  "git_commit": null,
-  "platform": "Windows-11-10.0.26200-SP0",
-  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "runtime_seconds": 1.983501040842384,
+  "git_commit": "b8effbe0cc4f1192a63f1f5ad16f7439818573b2",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12 (main, Oct  9 2025, 11:07:00) [Clang 19.1.7 ]",
   "packages": {
     "numpy": "2.4.3",
     "scipy": "1.17.1",
@@ -16,7 +16,8 @@
     "experiment": "radius_regret",
     "seed": 20260825,
     "samples": 50000,
-    "D": 2.0,
+    "D_over_ell_c": 2.0,
+    "radius_grid_points": 1001,
     "regimes": {
       "local": {
         "eta0": 0.25,
@@ -37,23 +38,62 @@
   },
   "results": {
     "local": {
-      "rstar_theory_capped": 0,
+      "rstar_theory_capped": 0.0,
       "rstar_numeric": 0.0,
+      "rstar_theory_capped_over_lc": 0.0,
+      "rstar_numeric_over_lc": 0.0,
+      "rstar_theory_capped_physical": 0,
+      "rstar_numeric_physical": 0.0,
       "rstar_abs_error": 0.0,
-      "mc_max_abs_error": 0.01997792755664629
+      "rstar_abs_error_over_lc": 0.0,
+      "mc_max_abs_error": 0.01997792755664629,
+      "mc_max_se": 0.006472656016077305,
+      "mc_max_ci_width": 0.025372811583023035,
+      "variance_check": "scalar Gaussian error decomposition",
+      "ell_c": 1.0,
+      "vT": 0.2,
+      "eta0": 0.25,
+      "radius_grid_points": 1001,
+      "radius_grid_step_over_lc": 0.002
     },
     "interior": {
       "rstar_theory_capped": 0.626381484247684,
       "rstar_numeric": 0.626,
+      "rstar_theory_capped_over_lc": 0.626381484247684,
+      "rstar_numeric_over_lc": 0.626,
+      "rstar_theory_capped_physical": 0.626381484247684,
+      "rstar_numeric_physical": 0.626,
       "rstar_abs_error": 0.00038148424768402744,
+      "rstar_abs_error_over_lc": 0.00038148424768402744,
       "mc_max_abs_error": 0.011848352239051119,
+      "mc_max_se": 0.004468387601470477,
+      "mc_max_ci_width": 0.017516079397764266,
+      "variance_check": "scalar Gaussian error decomposition",
+      "ell_c": 1.0,
+      "vT": 4.0,
+      "eta0": 0.7,
+      "radius_grid_points": 1001,
+      "radius_grid_step_over_lc": 0.002,
       "marginal_gap_at_numeric_optimum": 0.00047712831186208504
     },
     "broad": {
       "rstar_theory_capped": 2.0,
       "rstar_numeric": 2.0,
+      "rstar_theory_capped_over_lc": 2.0,
+      "rstar_numeric_over_lc": 2.0,
+      "rstar_theory_capped_physical": 2.0,
+      "rstar_numeric_physical": 2.0,
       "rstar_abs_error": 0.0,
-      "mc_max_abs_error": 0.009263061349787605
+      "rstar_abs_error_over_lc": 0.0,
+      "mc_max_abs_error": 0.009263061349787605,
+      "mc_max_se": 0.00573217651085153,
+      "mc_max_ci_width": 0.022470131922537995,
+      "variance_check": "scalar Gaussian error decomposition",
+      "ell_c": 1.0,
+      "vT": 100.0,
+      "eta0": 0.9,
+      "radius_grid_points": 1001,
+      "radius_grid_step_over_lc": 0.002
     }
   }
 }

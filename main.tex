@@ -21,8 +21,8 @@
 Freshness, Locality, and Coordination}
 \author{
 Scott Moeller\\
-\small Independent Researcher\\
-\small \texttt{electronjoe@gmail.com}
+\small Independent Researcher, Portsmouth, RI, USA\\
+\small \texttt{scott.h.moeller@gmail.com}
 \and
 Bhaskar Krishnamachari\\
 \small University of Southern California\\
@@ -278,6 +278,9 @@ therefore describes repeated information-constrained decisions against an
 exogenous environment. Under the fixed-information static-team
 formulation, the quadratic model used here has a constant, state-independent
 Hessian and admits the projection characterization developed below.
+
+Table~\ref{tab:core_notation} collects the principal notation used throughout
+the paper; we introduce each object in context below.
 
 \subsection{Network, Environment, and Decision Model}
 \label{subsec:decision_model}
@@ -771,8 +774,9 @@ Q_{ii}u_i^\star
 \label{eq:block_conditional_normal_equations}
 \end{equation}
 These are the coupled person-by-person stationarity equations associated with
-the classical static-team formulation. Strict convexity makes them sufficient
-for the unique team optimum here. With heterogeneous information and
+the classical static-team formulation \cite{radner1962team}. Strict convexity
+makes them sufficient for the unique team optimum here. With heterogeneous
+information and
 off-diagonal $Q$, one generally does not have
 $u_i^\star=\mathbb E[x_i^\star\mid\mathcal G_i]$. When all components share a
 common information sigma-algebra, deterministic $Q$ makes the joint solution
@@ -1195,6 +1199,7 @@ Let
 denote the dimensionless staleness ratio.
 
 The OU Markov property gives
+\cite[eqs.~(8)--(10), (14)]{ornee2021ou}
 \begin{align}
     \mathbb{E}
     \left[
@@ -2907,7 +2912,8 @@ By spatial stationarity, take $z=0$. Let
     \label{eq:kappa_lambda}
 \end{equation}
 At a fixed time, $\theta(\cdot,t)$ is a stationary one-dimensional
-Ornstein--Uhlenbeck field and hence is Markov in the spatial coordinate.
+Ornstein--Uhlenbeck field and hence is Markov in the spatial coordinate
+\cite{lindgren2011explicit}.
 Conditioned on the field over $[-r,r]$, uncertainty in the two exterior
 regions is carried by independent left and right spatial innovations.
 
@@ -3463,9 +3469,9 @@ and delay \cite{hespanha2007survey}. For spatially invariant plants, early work
 showed that optimal controllers can exhibit inherent spatial localization
 \cite{bamieh2002spatial}, while subsequent work imposed explicit finite-speed
 communication structure. Arbelaiz, Bamieh, Hosoi, and Jadbabaie characterize
-the spatial decay of optimal estimator gains and the extent over which
-measurements should be shared in a spatially distributed dynamic estimation
-problem \cite{arbelaiz2025estimation}. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
+the spatial decay of optimal estimator gains, using the decay rate as a proxy
+for the distance over which measurements are useful in a spatially distributed
+dynamic estimation problem \cite{arbelaiz2025estimation}. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
 under delayed communication requirements \cite{voulgaris2003optimal}; Bamieh
 and Voulgaris formulated distance-dependent information propagation through
 funnel causality \cite{bamieh2005convex}; and Fardad and Jovanovi\'c developed

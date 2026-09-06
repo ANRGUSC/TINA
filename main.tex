@@ -43,7 +43,8 @@ Bhaskar Krishnamachari\\
 \begin{abstract}
 Networked systems face a tradeoff between the scope of the information behind a
 decision and its freshness: a broader view of the system supports better
-coordination, but assembling it takes time, so it arrives older. We study this
+coordination, but assembling and communicating it takes time, so it arrives
+older. We study this
 tradeoff for a team of agents that repeatedly choose actions to minimize a
 shared quadratic cost driven by an environment that evolves on its own,
 unaffected by the agents' actions. An information architecture specifies what
@@ -3237,8 +3238,7 @@ check temporal prediction and the fresh-local--stale-global endpoints;
 Experiments 3 and 4 isolate and sweep the continuous radius tradeoff;
 Experiment 5 separates state statistics from decision-relevant omission; and
 Experiment 6 evaluates exact integer radii on several noncanonical graph
-instances.  Each experiment is a consistency check or a finite-instance
-illustration, not an empirical claim about a population of physical networks.
+instances.
 
 \subsection{Numerical Methodology and Synthetic Environments}
 \label{subsec:numerical-methodology}
@@ -3351,9 +3351,8 @@ the OU temporal law,
         {\widehat R_\infty-\widehat R_{\rm loc}}
     \right).
 \end{equation*}
-Thus Fig.~\ref{fig:local-global-phase} does not show a direct simulation of
-stale-global policy switches; it shows the temporal-law boundary inferred from
-paired local/open-loop losses.
+Accordingly, Fig.~\ref{fig:local-global-phase} reports the temporal-law boundary
+inferred from paired local/open-loop losses.
 
 The mean absolute boundary error was $0.00111$ and the maximum was $0.00557$.
 Finite size matters most under strong coupling: at $n=5$ and $\gamma/q=10$,
@@ -3729,9 +3728,10 @@ Witsenhausen's counterexample \cite{witsenhausen1968counterexample} explains
 why: once control and signaling interact, the fixed-subspace projection
 characterization generally no longer solves the team problem.
 
-This theory suggests the following design heuristic: expand information
-scope only while the marginal decision value of broader information exceeds
-the predictive value lost while obtaining it.
+\paragraph{Design implication.}
+Taken together, the theory yields a practical design heuristic: expand
+information scope as long as the marginal decision value of broader information
+exceeds the predictive value lost in obtaining it.
 
 \paragraph{AI Use Statement.}
 The development of this paper made substantial use of AI tools, including

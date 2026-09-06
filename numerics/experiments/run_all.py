@@ -464,7 +464,7 @@ def exp03():
         ax.axvline(rcap_over_lc,color=COLORS[3],ls="-.",label=r"theory $r^\star$ (capped)")
         ax.plot(rnum_over_lc,total.min(),"x",color="black",ms=5,label="grid minimum")
         regime_title={"local":"local","interior":"interior",
-                       "broad":"boundary (capped maximum)"}[name]
+                       "broad":"maximum allowed radius"}[name]
         ax.set(xlabel=r"dimensionless radius $r/\ell_c$",
                title=regime_title + "\n" +
                fr"$\eta_0={p['eta0']:g},\;vT/\ell_c={p['vT']/ell_c:g}$")

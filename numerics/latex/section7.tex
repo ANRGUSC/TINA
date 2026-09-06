@@ -135,7 +135,8 @@ first and hurt later: reduced spatial omission competes with increasing
 staleness.  We used
 $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$ on
 $0\le r\le D=2$, with local $(\eta_0,vT)=(0.25,0.2)$, interior
-$(0.7,4)$, and broad $(0.9,100)$ regimes (all with $\ell_c=1$).  At each
+$(0.7,4)$, and maximum allowed radius $(0.9,100)$ regimes (all with
+$\ell_c=1$). At each
 radius, independent standard-normal draws were scaled by the two prescribed
 component variances and added before squaring.  This is a scalar loss check:
 no spatial field, graph, or neighborhood conditional distribution is sampled.
@@ -145,7 +146,7 @@ minima after imposing the cap were $0$, $0.62638$, and $2$.  At the interior
 grid minimum, the marginal-slope gap was
 \mbox{$|m_S(\hat r^\star)-m_T(\hat r^\star)|=4.77\times10^{-4}$}, and the largest
 Monte Carlo deviation from the prescribed scalar curve was about $0.020$.
-The broad case is a capped-radius regime, not a global endpoint: its
+The maximum allowed radius case is not a global endpoint: its
 unconstrained minimizer lies beyond $D$, while
 $\eta_S(D)=\eta_0e^{-2D/\ell_c}>0$.  Thus the cap still omits
 decision-relevant state.  The three curves distinguish immediate dominance of
@@ -155,12 +156,13 @@ allowed range.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{numerics/figures/pdf/fig7_3_radius_regret.pdf}
-\caption{Emergence of local, interior, and capped-radius optima under
+\caption{Emergence of local, interior, and maximum allowed radius optima under
 $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$. Curves show total regret
 and its temporal and residual-spatial terms from Eq.~\eqref{eq:R_decomposition};
 open markers with 95\% intervals are independent scalar-innovation estimates.
 Dash-dotted lines and crosses mark the analytical constrained and grid
-minimizers. At the cap, positive omission remains: $\eta_S(D)>0$.}
+minimizers. At the maximum allowed radius, positive omission remains:
+$\eta_S(D)>0$.}
 \label{fig:radius-regret}
 \end{figure}
 

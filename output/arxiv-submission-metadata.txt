@@ -1,0 +1,41 @@
+ARXIV SUBMISSION METADATA
+
+Title
+A Theory of Information Architecture for Networked Decisions: Freshness, Locality, and Coordination
+
+Authors
+Scott Moeller, Bhaskar Krishnamachari
+
+Abstract
+Networked systems face a tradeoff between the scope of the information behind a decision and its freshness: a broader view of the system supports better coordination, but assembling and communicating it takes time, so it arrives older. We study this tradeoff for a team of agents that repeatedly choose actions to minimize a shared quadratic cost driven by an environment that evolves on its own, unaffected by the agents' actions. An information architecture specifies what each agent observes, from where, and with what delay; we measure an architecture by the cost it loses relative to a decision made with complete, current information. We first compare fresh local observations with a complete but delayed global view. When every component of the environment decorrelates at a common exponential rate, this comparison reduces to a closed-form threshold on the ratio of delay to coherence time. We then study intermediate architectures in which each agent acts on a time-aligned, and therefore older, snapshot of a wider neighborhood. The optimal neighborhood radius occurs where the marginal value of added scope equals the marginal cost of lost freshness. In a canonical spatial model, this radius is set by the spatial-correlation, decision-relevance, and temporal-propagation lengths. Throughout, architecture performance is governed by the predictability of the optimal decision rather than of the raw state.
+
+Comments
+44 pages, 6 figures. Manuscript source and complete reproduction materials are available at https://github.com/ANRGUSC/TINA
+
+Recommended primary category
+eess.SY (Systems and Control)
+
+Recommended cross-lists
+cs.MA (Multiagent Systems)
+math.OC (Optimization and Control)
+
+Optional additional cross-list
+cs.IT (Information Theory), only if the authors want to emphasize the information-theoretic framing.
+
+Journal reference
+Leave blank unless the paper has already been accepted or published.
+
+DOI
+Leave blank unless one has been assigned.
+
+Report number
+Leave blank unless the authors have an institutional report number.
+
+License
+Suggested: CC BY 4.0, if compatible with the intended journal and funder requirements. Otherwise use arXiv's perpetual, non-exclusive license.
+
+Source format
+LaTeX / PDFLaTeX. Upload tina-arxiv-source.zip.
+
+Submission notes
+The source archive contains main.tex, references.bib, main.bbl, and six PDF figures. The abstract field should not include the heading “Abstract.” Add author ORCID identifiers through the authors' arXiv accounts if available.

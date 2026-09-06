@@ -2338,7 +2338,7 @@ be a nondecreasing information-propagation law satisfying
 Architecture $\mathcal{A}_{r,\tau(r)}$ provides each agent with information
 from a synchronized radius-$r$ snapshot delayed by $\tau(r)$.
 
-\begin{proposition}[Nested information cannot create an interior optimum without explicit cost]
+\begin{proposition}[Nested information cannot create a strict interior minimum without explicit cost]
 \label{prop:nested_radius_monotonicity}
 If radius-indexed information sets satisfy
 $\mathcal G_i(r_1)\subseteq\mathcal G_i(r_2)$ for every agent $i$ whenever
@@ -2346,8 +2346,8 @@ $r_1\le r_2$, then
 \begin{equation}
 R(r_2)\le R(r_1).
 \end{equation}
-Therefore, without an explicit information-acquisition cost, an interior radius
-optimum requires a non-nested architecture such as the synchronized-snapshot
+Therefore, without an explicit information-acquisition cost, a strict interior
+minimum requires a non-nested architecture such as the synchronized-snapshot
 family studied here.
 \end{proposition}
 
@@ -2360,7 +2360,7 @@ the claim.
 
 The synchronized-snapshot family is non-nested in radius: increasing $r$
 replaces a narrower, fresher snapshot with a broader, older one, and this
-replacement is what permits an interior optimum without an explicit
+replacement is what permits a strict interior minimum without an explicit
 information-acquisition cost.
 
 Define
@@ -3385,7 +3385,8 @@ first and hurt later: reduced spatial omission competes with increasing
 staleness.  We used
 $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$ on
 $0\le r\le D=2$, with local $(\eta_0,vT)=(0.25,0.2)$, interior
-$(0.7,4)$, and broad $(0.9,100)$ regimes (all with $\ell_c=1$).  At each
+$(0.7,4)$, and maximum allowed radius $(0.9,100)$ regimes (all with
+$\ell_c=1$). At each
 radius, independent standard-normal draws were scaled by the two prescribed
 component variances and added before squaring.  This is a scalar loss check:
 no spatial field, graph, or neighborhood conditional distribution is sampled.
@@ -3395,7 +3396,7 @@ minima after imposing the cap were $0$, $0.62638$, and $2$.  At the interior
 grid minimum, the marginal-slope gap was
 \mbox{$|m_S(\hat r^\star)-m_T(\hat r^\star)|=4.77\times10^{-4}$}, and the largest
 Monte Carlo deviation from the prescribed scalar curve was about $0.020$.
-The broad case is a capped-radius regime, not a global endpoint: its
+The maximum allowed radius case is not a global endpoint: its
 unconstrained minimizer lies beyond $D$, while
 $\eta_S(D)=\eta_0e^{-2D/\ell_c}>0$.  Thus the cap still omits
 decision-relevant state.  The three curves distinguish immediate dominance of
@@ -3405,12 +3406,13 @@ allowed range.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig7_3_radius_regret.pdf}
-\caption{Emergence of local, interior, and capped-radius optima under
+\caption{Emergence of local, interior, and maximum allowed radius optima under
 $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$. Curves show total regret
 and its temporal and residual-spatial terms from Eq.~\eqref{eq:R_decomposition};
 open markers with 95\% intervals are independent scalar-innovation estimates.
 Dash-dotted lines and crosses mark the analytical constrained and grid
-minimizers. At the cap, positive omission remains: $\eta_S(D)>0$.}
+minimizers. At the maximum allowed radius, positive omission remains:
+$\eta_S(D)>0$.}
 \label{fig:radius-regret}
 \end{figure}
 
@@ -3732,11 +3734,12 @@ scope only while the marginal decision value of broader information exceeds
 the predictive value lost while obtaining it.
 
 \paragraph{AI Use Statement.}
-The authors have used several AI tools including Claude Code, Codex, ChatGPT,
-Grok and Gemini) for several aspects of resarch and writing of this paper:
-brainstorming, mathematical formulation and proofs, identifying related prior
-work, numerical simulations, writing, editing, and formatting.  The
-human authors accept full responsibility for the contents of this work.
+The development of this paper made substantial use of AI tools, including
+Claude Code, ChatGPT/Codex, Gemini, and Grok, for drafting and revising text,
+developing code and figures, mathematical formulation and proofs.
+The human authors formulated the original problem, made substantial
+contributions throughout the paper's development, reviewed the manuscript, and
+accept full responsibility for its contents.
 
 \paragraph{Code and Data Availability.}
 The manuscript source, numerical code, experiment configurations, processed

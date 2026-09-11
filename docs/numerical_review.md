@@ -1,6 +1,6 @@
 # Numerical section review and revision plan
 
-Review scope: the numerical section in `main.tex`, all six experiment drivers,
+Review scope: the numerical section in `papers/full/main.tex`, all six experiment drivers,
 shared numerical routines, configurations, archived results, and figures.
 The implementation is concentrated in `numerics/experiments/run_all.py`;
 the six named drivers are entry points into that module.
@@ -36,7 +36,7 @@ the six named drivers are entry points into that module.
   sparse integer optima with lines that can be mistaken for fractional optima or
   measured transition locations. Exact graph sweeps need interpretation limited
   to the sampled cases.
-- The standalone TeX extracts are stale relative to `main.tex`. Settings and
+- The standalone TeX extracts are stale relative to `papers/full/main.tex`. Settings and
   provenance claims also exceed what is actually archived in some experiments.
 
 ## Planned commit sequence
@@ -109,7 +109,7 @@ check preventing stale standalone TeX extracts. The six experiments were run
 in full; all stated optima, grid errors, and neighboring-regret differences
 were checked against the regenerated tables. Source auditing passed for all
 49 citations and six figures. The isolated pdflatex/BibTeX build produced the
-44-page `tina.pdf` without undefined citations or references. All 39 fonts are
+44-page `papers/full/tina.pdf` without undefined citations or references. All 39 fonts are
 embedded. The revised numerical-section pages (29--35) and all six figures
 were visually inspected at manuscript scale.
 

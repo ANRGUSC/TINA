@@ -1,7 +1,8 @@
 # Clean-room reproduction checklist
 
-1. Clone the tagged release and verify that `main.tex`, `references.bib`, and
-   the six `figures/fig7_*.pdf` files are present.
+1. Clone the tagged release and verify that `papers/full/main.tex`,
+   `papers/full/references.bib`, and the six
+   `papers/full/figures/fig7_*.pdf` files are present.
 2. Create a Python 3.12 virtual environment (the final reference run used
    Python 3.12.12) and install `requirements-lock.txt`.
 3. Run the full unit suite:
@@ -43,7 +44,7 @@
 
 7. Run `python scripts/audit_sources.py` to verify citation keys and the local
    TeX input closure. Run `python scripts/sync_numerical_latex.py --check` to
-   verify that standalone extracts match `main.tex`; after a manuscript edit,
+   verify that standalone extracts match `papers/full/main.tex`; after a manuscript edit,
    omit `--check` to refresh them. Manuscript figure PDFs must be byte-for-byte
    copies of their archived counterparts under `numerics/figures/pdf`.
 8. Run `python scripts/build_paper.py`; the isolated build should produce

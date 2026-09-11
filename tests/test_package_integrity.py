@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+FULL_PAPER = ROOT / "papers/full"
 
 
 class PackageIntegrityTests(unittest.TestCase):
@@ -50,14 +51,14 @@ class PackageIntegrityTests(unittest.TestCase):
         self.assertTrue(all(float(row["normalizer_analytic"]) > 0 for row in checks))
 
     def test_all_declared_build_inputs_exist(self):
-        expected = [ROOT / "main.tex", ROOT / "references.bib"]
-        expected.extend((ROOT / "figures").glob("fig7_*.pdf"))
+        expected = [FULL_PAPER / "main.tex", FULL_PAPER / "references.bib"]
+        expected.extend((FULL_PAPER / "figures").glob("fig7_*.pdf"))
         self.assertEqual(len(expected), 8)
         self.assertTrue(all(path.is_file() and path.stat().st_size > 0 for path in expected))
         self.assertTrue((ROOT / "numerics/results/raw/exp01_system_matrices.npz").is_file())
 
     def test_manuscript_figures_are_exact_archive_copies(self):
-        for figure in (ROOT / "figures").glob("fig7_*.pdf"):
+        for figure in (FULL_PAPER / "figures").glob("fig7_*.pdf"):
             archived = ROOT / "numerics/figures/pdf" / figure.name
             self.assertEqual(figure.read_bytes(), archived.read_bytes(), figure.name)
 

@@ -1,6 +1,6 @@
 # Reference audit record
 
-The bibliography is maintained in `references.bib` and compiled with
+The bibliography is maintained in `papers/full/references.bib` and compiled with
 `IEEEtran.bst`. The submission audit applies these checks:
 
 - every active `\cite{...}` key exists exactly once;

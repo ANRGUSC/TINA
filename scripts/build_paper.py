@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+PAPER = ROOT / "papers/full"
 FIGURES = [
     "fig7_1_temporal_scaling.pdf",
     "fig7_2_local_global_phase.pdf",
@@ -46,10 +47,10 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="tina-build-", dir=scratch) as name:
         build = Path(name)
         (build / "figures").mkdir()
-        shutil.copy2(ROOT / "main.tex", build / "main.tex")
-        shutil.copy2(ROOT / "references.bib", build / "references.bib")
+        shutil.copy2(PAPER / "main.tex", build / "main.tex")
+        shutil.copy2(PAPER / "references.bib", build / "references.bib")
         for figure in FIGURES:
-            shutil.copy2(ROOT / "figures" / figure, build / "figures" / figure)
+            shutil.copy2(PAPER / "figures" / figure, build / "figures" / figure)
 
         latex = ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
                  "-file-line-error", "-jobname=tina", "main.tex"]
@@ -71,7 +72,7 @@ def main() -> int:
         destination = args.output.resolve()
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(build / "tina.pdf", destination)
-        shutil.copy2(build / "tina.pdf", ROOT / "tina.pdf")
+        shutil.copy2(build / "tina.pdf", PAPER / "tina.pdf")
         print(f"built {destination}")
     return 0
 

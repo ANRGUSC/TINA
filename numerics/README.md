@@ -1,7 +1,7 @@
 # Numerical consistency checks and finite-graph illustrations
 
 This directory reproduces the synthetic consistency checks and finite-graph
-illustrations integrated into `main.tex`.  The common environment is exogenous:
+illustrations integrated into `papers/full/main.tex`.  The common environment is exogenous:
 actions do not change later states.  Experiment-specific parameters and artifact
 provenance are listed in [`docs/experiment_parameters.md`](../docs/experiment_parameters.md);
 the estimators, safeguards, and acceptance checks are specified in
@@ -66,7 +66,7 @@ python numerics/experiments/exp06_general_graphs.py
   `figures/supplementary/mc_convergence.pdf` is the convergence diagnostic.
 - `latex`: the synchronized numerical-section extract, figure environments, and
   parameter table.
-- `../figures`: top-level copies of the PDFs cited by `main.tex`; these are
+- `../papers/full/figures`: copies of the PDFs cited by the full manuscript; these are
   refreshed unless `--no-paper-copy` is supplied.
 
 ## Figure provenance
@@ -87,7 +87,7 @@ shows selected slices plus a grid-step residual diagnostic.  Figure 5 keeps
 raw state correlation separate from decision-weighted omission, and Figure 6
 marks sampled integer optima without implying fractional transition locations.
 
-After editing the numerical section in `main.tex`, run
+After editing the numerical section in `papers/full/main.tex`, run
 `python scripts/sync_numerical_latex.py` to refresh its standalone TeX extracts;
 `--check` verifies synchronization without writing. Historical `fig7_*` and
 `section7.tex` filenames are retained, although the section number is assigned

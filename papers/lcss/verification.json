@@ -1,0 +1,2606 @@
+{
+  "seed": 260906351,
+  "model": "Independent stationary Gaussian common and local OU components; all single-mode rates equal lambda.",
+  "baseline": {
+    "n": 8,
+    "a": 1,
+    "b": 1,
+    "kappa": 1,
+    "v": 1.125,
+    "d": 2.875,
+    "J_local": 0.6521739130434783,
+    "J_pooled": 0.11111111111111116,
+    "Delta": 0.5410628019323671
+  },
+  "gaussian_team_checks_summary": {
+    "number_of_linear_systems": 126,
+    "maximum_coefficient_error": 1.5432100042289676e-14,
+    "maximum_conditional_normal_equation_residual": 5.329070518200751e-15,
+    "maximum_objective_error": 5.2735593669694936e-15,
+    "all_quadratic_matrices_positive_definite": true
+  },
+  "gaussian_team_checks": [
+    {
+      "architecture": "local",
+      "n": 10,
+      "a": 0.3218647491812115,
+      "b": 0.23729750578865821,
+      "kappa": 0.042651841990779246,
+      "rho": 0.3247308853624495,
+      "max_coefficient_error": 4.440892098500626e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.13956289023849763,
+      "formula_objective": 0.13956289023849772,
+      "objective_error": 8.326672684688674e-17,
+      "minimum_quadratic_eigenvalue": 0.5682713131194034
+    },
+    {
+      "architecture": "hybrid",
+      "n": 10,
+      "a": 0.3218647491812115,
+      "b": 0.23729750578865821,
+      "kappa": 0.042651841990779246,
+      "rho": 0.3247308853624495,
+      "max_coefficient_error": 8.881784197001252e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.1271764512967425,
+      "formula_objective": 0.1271764512967425,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.09306396364488935
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 10,
+      "a": 0.3218647491812115,
+      "b": 0.23729750578865821,
+      "kappa": 0.042651841990779246,
+      "rho": 0.3247308853624495,
+      "max_coefficient_error": 6.661338147750939e-16,
+      "conditional_normal_equation_residual": 1.6653345369377348e-16,
+      "computed_objective": 0.13437668138442652,
+      "formula_objective": 0.13437668138442657,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.29884831488680946
+    },
+    {
+      "architecture": "local",
+      "n": 10,
+      "a": 3.1515799856944255,
+      "b": 0.19496776842360655,
+      "kappa": 0.23923865224650123,
+      "rho": 0.5881448009476055,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.22037836715310366,
+      "formula_objective": 0.22037836715310233,
+      "objective_error": 1.3322676295501878e-15,
+      "minimum_quadratic_eigenvalue": 3.38852719765229
+    },
+    {
+      "architecture": "hybrid",
+      "n": 10,
+      "a": 3.1515799856944255,
+      "b": 0.19496776842360655,
+      "kappa": 0.23923865224650123,
+      "rho": 0.5881448009476055,
+      "max_coefficient_error": 7.66053886991358e-15,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.15084908552729326,
+      "formula_objective": 0.15084908552729248,
+      "objective_error": 7.771561172376096e-16,
+      "minimum_quadratic_eigenvalue": 0.10424128585330784
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 10,
+      "a": 3.1515799856944255,
+      "b": 0.19496776842360655,
+      "kappa": 0.23923865224650123,
+      "rho": 0.5881448009476055,
+      "max_coefficient_error": 9.992007221626409e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.21378073647239004,
+      "formula_objective": 0.2137807364723886,
+      "objective_error": 1.4432899320127035e-15,
+      "minimum_quadratic_eigenvalue": 1.4115832303792433
+    },
+    {
+      "architecture": "local",
+      "n": 12,
+      "a": 0.19739341287122936,
+      "b": 7.445067895583515,
+      "kappa": 2.550298747206539,
+      "rho": 0.7784286658090672,
+      "max_coefficient_error": 5.204170427930421e-18,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.19583779261159157,
+      "formula_objective": 0.19583779261159157,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 25.047346358181187
+    },
+    {
+      "architecture": "hybrid",
+      "n": 12,
+      "a": 0.19739341287122936,
+      "b": 7.445067895583515,
+      "kappa": 2.550298747206539,
+      "rho": 0.7784286658090672,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 1.3877787807814457e-16,
+      "computed_objective": 0.16791037565781114,
+      "formula_objective": 0.16791037565781114,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.7901934641560139
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 12,
+      "a": 0.19739341287122936,
+      "b": 7.445067895583515,
+      "kappa": 2.550298747206539,
+      "rho": 0.7784286658090672,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 1.6653345369377348e-16,
+      "computed_objective": 0.16827694243027955,
+      "formula_objective": 0.16827694243027955,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.8011008264657268
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 1.9035436473964475,
+      "b": 5.771738973018763,
+      "kappa": 5.915921131442207,
+      "rho": 0.38897948491548934,
+      "max_coefficient_error": 1.3877787807814457e-17,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 1.8070521069134318,
+      "formula_objective": 1.8070521069134318,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 37.55229110660918
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 1.9035436473964475,
+      "b": 5.771738973018763,
+      "kappa": 5.915921131442207,
+      "rho": 0.38897948491548934,
+      "max_coefficient_error": 2.7755575615628914e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.6127952892297341,
+      "formula_objective": 1.6127952892297341,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 2.4286557721367874
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 1.9035436473964475,
+      "b": 5.771738973018763,
+      "kappa": 5.915921131442207,
+      "rho": 0.38897948491548934,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.62444299600931,
+      "formula_objective": 1.6244429960093099,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 2.595186036663554
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 2.2521444787018825,
+      "b": 9.655557234559172,
+      "kappa": 0.40823821704925595,
+      "rho": 0.05045134682859026,
+      "max_coefficient_error": 8.326672684688674e-17,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.921856147440516,
+      "formula_objective": 1.921856147440516,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 15.356748249557862
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 2.2521444787018825,
+      "b": 9.655557234559172,
+      "kappa": 0.40823821704925595,
+      "rho": 0.05045134682859026,
+      "max_coefficient_error": 8.326672684688674e-17,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.918964545360661,
+      "formula_objective": 1.9189645453606612,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 2.526417696629956
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 2.2521444787018825,
+      "b": 9.655557234559172,
+      "kappa": 0.40823821704925595,
+      "rho": 0.05045134682859026,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 1.3877787807814457e-17,
+      "computed_objective": 1.9196145901006152,
+      "formula_objective": 1.919614590100615,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 3.4565298748192435
+    },
+    {
+      "architecture": "local",
+      "n": 4,
+      "a": 0.37530886545809483,
+      "b": 1.7184956483317788,
+      "kappa": 0.03172783424104907,
+      "rho": 0.6292898940449984,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.3093244642012196,
+      "formula_objective": 0.3093244642012196,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 2.1346976225955503
+    },
+    {
+      "architecture": "hybrid",
+      "n": 4,
+      "a": 0.37530886545809483,
+      "b": 1.7184956483317788,
+      "kappa": 0.03172783424104907,
+      "rho": 0.6292898940449984,
+      "max_coefficient_error": 9.71445146547012e-17,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.2661568516833625,
+      "formula_objective": 0.2661568516833625,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.40848806758230405
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 4,
+      "a": 0.37530886545809483,
+      "b": 1.7184956483317788,
+      "kappa": 0.03172783424104907,
+      "rho": 0.6292898940449984,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.27771395598484916,
+      "formula_objective": 0.2777139559848491,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.633963886623047
+    },
+    {
+      "architecture": "local",
+      "n": 9,
+      "a": 0.5715463042049472,
+      "b": 0.6578427613163259,
+      "kappa": 9.074093376395632,
+      "rho": 0.6893552075812587,
+      "max_coefficient_error": 4.163336342344337e-17,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.5215627807551987,
+      "formula_objective": 0.5215627807551987,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 6.535457192783742
+    },
+    {
+      "architecture": "hybrid",
+      "n": 9,
+      "a": 0.5715463042049472,
+      "b": 0.6578427613163259,
+      "kappa": 9.074093376395632,
+      "rho": 0.6893552075812587,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 7.771561172376096e-16,
+      "computed_objective": 0.3045070153934115,
+      "formula_objective": 0.3045070153934114,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 0.5742128047858223
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 9,
+      "a": 0.5715463042049472,
+      "b": 0.6578427613163259,
+      "kappa": 9.074093376395632,
+      "rho": 0.6893552075812587,
+      "max_coefficient_error": 6.661338147750939e-16,
+      "conditional_normal_equation_residual": 2.7755575615628914e-16,
+      "computed_objective": 0.3162952038679918,
+      "formula_objective": 0.3162952038679917,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 0.6113054117839531
+    },
+    {
+      "architecture": "local",
+      "n": 5,
+      "a": 0.19446232741489908,
+      "b": 0.8813488878477076,
+      "kappa": 0.3202361432626262,
+      "rho": 0.3643390301416849,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.16540923218904802,
+      "formula_objective": 0.16540923218904804,
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 1.3016030302331307
+    },
+    {
+      "architecture": "hybrid",
+      "n": 5,
+      "a": 0.19446232741489908,
+      "b": 0.8813488878477076,
+      "kappa": 0.3202361432626262,
+      "rho": 0.3643390301416849,
+      "max_coefficient_error": 8.326672684688674e-17,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.15572571624151776,
+      "formula_objective": 0.15572571624151776,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.24014808618984038
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 5,
+      "a": 0.19446232741489908,
+      "b": 0.8813488878477076,
+      "kappa": 0.3202361432626262,
+      "rho": 0.3643390301416849,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.15821171663424793,
+      "formula_objective": 0.15821171663424796,
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 0.3515288748879059
+    },
+    {
+      "architecture": "local",
+      "n": 10,
+      "a": 3.324269426755751,
+      "b": 0.14836674403665936,
+      "kappa": 4.009153049903121,
+      "rho": 0.17616759640351462,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 2.6645352591003757e-15,
+      "computed_objective": 0.5670772937219004,
+      "formula_objective": 0.5670772937219009,
+      "objective_error": 4.440892098500626e-16,
+      "minimum_quadratic_eigenvalue": 4.007978656715304
+    },
+    {
+      "architecture": "hybrid",
+      "n": 10,
+      "a": 3.324269426755751,
+      "b": 0.14836674403665936,
+      "kappa": 4.009153049903121,
+      "rho": 0.17616759640351462,
+      "max_coefficient_error": 1.0824674490095276e-15,
+      "conditional_normal_equation_residual": 2.6645352591003757e-15,
+      "computed_objective": 0.5499364479898028,
+      "formula_objective": 0.5499364479898025,
+      "objective_error": 3.3306690738754696e-16,
+      "minimum_quadratic_eigenvalue": 0.3018357927732912
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 10,
+      "a": 3.324269426755751,
+      "b": 0.14836674403665936,
+      "kappa": 4.009153049903121,
+      "rho": 0.17616759640351462,
+      "max_coefficient_error": 6.661338147750939e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-15,
+      "computed_objective": 0.5641408144163256,
+      "formula_objective": 0.5641408144163252,
+      "objective_error": 3.3306690738754696e-16,
+      "minimum_quadratic_eigenvalue": 2.9968765657984577
+    },
+    {
+      "architecture": "local",
+      "n": 11,
+      "a": 0.5446880558596091,
+      "b": 1.2889807610685493,
+      "kappa": 16.945674861807603,
+      "rho": 0.3221721974167523,
+      "max_coefficient_error": 1.0408340855860843e-17,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.5310100214774817,
+      "formula_objective": 0.5310100214774817,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 21.690622344376305
+    },
+    {
+      "architecture": "hybrid",
+      "n": 11,
+      "a": 0.5446880558596091,
+      "b": 1.2889807610685493,
+      "kappa": 16.945674861807603,
+      "rho": 0.3221721974167523,
+      "max_coefficient_error": 8.326672684688674e-16,
+      "conditional_normal_equation_residual": 6.106226635438361e-16,
+      "computed_objective": 0.485903234962817,
+      "formula_objective": 0.485903234962817,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.6410545475604407
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 11,
+      "a": 0.5446880558596091,
+      "b": 1.2889807610685493,
+      "kappa": 16.945674861807603,
+      "rho": 0.3221721974167523,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 5.828670879282072e-16,
+      "computed_objective": 0.4871406814335385,
+      "formula_objective": 0.4871406814335386,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 0.6597060993209898
+    },
+    {
+      "architecture": "local",
+      "n": 6,
+      "a": 1.5073862307464905,
+      "b": 1.1619555637496786,
+      "kappa": 13.623975973144313,
+      "rho": 0.12480370384015202,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 1.3641318484770837,
+      "formula_objective": 1.3641318484770837,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 15.86138736315199
+    },
+    {
+      "architecture": "hybrid",
+      "n": 6,
+      "a": 1.5073862307464905,
+      "b": 1.1619555637496786,
+      "kappa": 13.623975973144313,
+      "rho": 0.12480370384015202,
+      "max_coefficient_error": 1.5265566588595902e-16,
+      "conditional_normal_equation_residual": 3.885780586188048e-16,
+      "computed_objective": 1.3455571969366042,
+      "formula_objective": 1.3455571969366042,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.499535501989866
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 6,
+      "a": 1.5073862307464905,
+      "b": 1.1619555637496786,
+      "kappa": 13.623975973144313,
+      "rho": 0.12480370384015202,
+      "max_coefficient_error": 4.163336342344337e-17,
+      "conditional_normal_equation_residual": 2.498001805406602e-16,
+      "computed_objective": 1.3475214783541951,
+      "formula_objective": 1.347521478354195,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 1.69786337921608
+    },
+    {
+      "architecture": "local",
+      "n": 7,
+      "a": 6.5936159584245235,
+      "b": 1.1400688287393828,
+      "kappa": 0.35505861408731987,
+      "rho": 0.8494648046013791,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 2.6645352591003757e-15,
+      "computed_objective": 1.2133831456466257,
+      "formula_objective": 1.2133831456466266,
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 8.080648722846504
+    },
+    {
+      "architecture": "hybrid",
+      "n": 7,
+      "a": 6.5936159584245235,
+      "b": 1.1400688287393828,
+      "kappa": 0.35505861408731987,
+      "rho": 0.8494648046013791,
+      "max_coefficient_error": 2.886579864025407e-15,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.4525077731977527,
+      "formula_objective": 0.45250777319775104,
+      "objective_error": 1.6653345369377348e-15,
+      "minimum_quadratic_eigenvalue": 0.5526107349370513
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 7,
+      "a": 6.5936159584245235,
+      "b": 1.1400688287393828,
+      "kappa": 0.35505861408731987,
+      "rho": 0.8494648046013791,
+      "max_coefficient_error": 6.661338147750939e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.8990457894510513,
+      "formula_objective": 0.8990457894510516,
+      "objective_error": 3.3306690738754696e-16,
+      "minimum_quadratic_eigenvalue": 1.6411094267926845
+    },
+    {
+      "architecture": "local",
+      "n": 5,
+      "a": 7.437612245558423,
+      "b": 2.438179935769211,
+      "kappa": 0.024420006980354906,
+      "rho": 0.7182880572953635,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.8631176709303574,
+      "formula_objective": 1.8631176709303556,
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 9.923424478168304
+    },
+    {
+      "architecture": "hybrid",
+      "n": 5,
+      "a": 7.437612245558423,
+      "b": 2.438179935769211,
+      "kappa": 0.024420006980354906,
+      "rho": 0.7182880572953635,
+      "max_coefficient_error": 7.771561172376096e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.1379745921327444,
+      "formula_objective": 1.137974592132744,
+      "objective_error": 4.440892098500626e-16,
+      "minimum_quadratic_eigenvalue": 0.8827231652674927
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 5,
+      "a": 7.437612245558423,
+      "b": 2.438179935769211,
+      "kappa": 0.024420006980354906,
+      "rho": 0.7182880572953635,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.6147731357583588,
+      "formula_objective": 1.6147731357583566,
+      "objective_error": 2.220446049250313e-15,
+      "minimum_quadratic_eigenvalue": 3.1447170896159466
+    },
+    {
+      "architecture": "local",
+      "n": 7,
+      "a": 3.534672036913672,
+      "b": 0.22595670871387033,
+      "kappa": 0.07021529424545409,
+      "rho": 0.7403961382487172,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 0.2243508482587928,
+      "formula_objective": 0.22435084825879192,
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 3.774227845732468
+    },
+    {
+      "architecture": "hybrid",
+      "n": 7,
+      "a": 3.534672036913672,
+      "b": 0.22595670871387033,
+      "kappa": 0.07021529424545409,
+      "rho": 0.7403961382487172,
+      "max_coefficient_error": 1.1213252548714081e-14,
+      "conditional_normal_equation_residual": 1.3322676295501878e-15,
+      "computed_objective": 0.11889982097107588,
+      "formula_objective": 0.118899820971074,
+      "objective_error": 1.8735013540549517e-15,
+      "minimum_quadratic_eigenvalue": 0.0995396058001622
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 7,
+      "a": 3.534672036913672,
+      "b": 0.22595670871387033,
+      "kappa": 0.07021529424545409,
+      "rho": 0.7403961382487172,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.21233379581140532,
+      "formula_objective": 0.21233379581140405,
+      "objective_error": 1.27675647831893e-15,
+      "minimum_quadratic_eigenvalue": 1.0275998059380493
+    },
+    {
+      "architecture": "local",
+      "n": 7,
+      "a": 5.2134765251300825,
+      "b": 1.3844991492419194,
+      "kappa": 0.15585666052932054,
+      "rho": 0.2566139025010646,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.2063106083018154,
+      "formula_objective": 1.2063106083018136,
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 6.782932886291886
+    },
+    {
+      "architecture": "hybrid",
+      "n": 7,
+      "a": 5.2134765251300825,
+      "b": 1.3844991492419194,
+      "kappa": 0.15585666052932054,
+      "rho": 0.2566139025010646,
+      "max_coefficient_error": 7.771561172376096e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.1394224867596225,
+      "formula_objective": 1.1394224867596223,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 0.6327596820774847
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 7,
+      "a": 5.2134765251300825,
+      "b": 1.3844991492419194,
+      "kappa": 0.15585666052932054,
+      "rho": 0.2566139025010646,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 1.1920342387523037,
+      "formula_objective": 1.1920342387523029,
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 4.548357927823606
+    },
+    {
+      "architecture": "local",
+      "n": 9,
+      "a": 2.6893214055322505,
+      "b": 3.44591700991592,
+      "kappa": 0.05566251698122542,
+      "rho": 0.559613409719565,
+      "max_coefficient_error": 2.7755575615628914e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.542357590759006,
+      "formula_objective": 1.5423575907590061,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 6.305734783519577
+    },
+    {
+      "architecture": "hybrid",
+      "n": 9,
+      "a": 2.6893214055322505,
+      "b": 3.44591700991592,
+      "kappa": 0.05566251698122542,
+      "rho": 0.559613409719565,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.1643037117536745,
+      "formula_objective": 1.1643037117536745,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.1751860156087286
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 9,
+      "a": 2.6893214055322505,
+      "b": 3.44591700991592,
+      "kappa": 0.05566251698122542,
+      "rho": 0.559613409719565,
+      "max_coefficient_error": 4.440892098500626e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.3135895567124056,
+      "formula_objective": 1.3135895567124058,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 2.3289386591510444
+    },
+    {
+      "architecture": "local",
+      "n": 9,
+      "a": 0.169355055849713,
+      "b": 1.0396897456039107,
+      "kappa": 0.06727333535429,
+      "rho": 0.5115716850778462,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.1467931002679971,
+      "formula_objective": 0.1467931002679971,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.2712167098273373
+    },
+    {
+      "architecture": "hybrid",
+      "n": 9,
+      "a": 0.169355055849713,
+      "b": 1.0396897456039107,
+      "kappa": 0.06727333535429,
+      "rho": 0.5115716850778462,
+      "max_coefficient_error": 2.7755575615628914e-16,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.12634935030979114,
+      "formula_objective": 0.1263493503097911,
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 0.20738020283965727
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 9,
+      "a": 0.169355055849713,
+      "b": 1.0396897456039107,
+      "kappa": 0.06727333535429,
+      "rho": 0.5115716850778462,
+      "max_coefficient_error": 2.7755575615628914e-16,
+      "conditional_normal_equation_residual": 8.326672684688674e-17,
+      "computed_objective": 0.12994249197822916,
+      "formula_objective": 0.12994249197822916,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.2637940597711972
+    },
+    {
+      "architecture": "local",
+      "n": 3,
+      "a": 2.027546139756417,
+      "b": 3.9344029923691206,
+      "kappa": 0.018567166254958925,
+      "rho": 0.4172617016168418,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.343602869620037,
+      "formula_objective": 1.3436028696200373,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 6.010649608441087
+    },
+    {
+      "architecture": "hybrid",
+      "n": 3,
+      "a": 2.027546139756417,
+      "b": 3.9344029923691206,
+      "kappa": 0.018567166254958925,
+      "rho": 0.4172617016168418,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.2483240933012527,
+      "formula_objective": 1.2483240933012527,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.058499987526081
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 3,
+      "a": 2.027546139756417,
+      "b": 3.9344029923691206,
+      "kappa": 0.018567166254958925,
+      "rho": 0.4172617016168418,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 1.296718362010434,
+      "formula_objective": 1.296718362010434,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 2.7446673714366363
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 3.52597693125832,
+      "b": 0.3525535187620486,
+      "kappa": 0.03692053805253548,
+      "rho": 0.9144580505729948,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.32989223659919853,
+      "formula_objective": 0.32989223659919853,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 3.8899198574247507
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 3.52597693125832,
+      "b": 0.3525535187620486,
+      "kappa": 0.03692053805253548,
+      "rho": 0.9144580505729948,
+      "max_coefficient_error": 3.6637359812630166e-15,
+      "conditional_normal_equation_residual": 2.6645352591003757e-15,
+      "computed_objective": 0.09042251400439039,
+      "formula_objective": 0.09042251400439058,
+      "objective_error": 1.942890293094024e-16,
+      "minimum_quadratic_eigenvalue": 0.1368918929749373
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 3.52597693125832,
+      "b": 0.3525535187620486,
+      "kappa": 0.03692053805253548,
+      "rho": 0.9144580505729948,
+      "max_coefficient_error": 1.0547118733938987e-15,
+      "conditional_normal_equation_residual": 1.3322676295501878e-15,
+      "computed_objective": 0.24520706519554603,
+      "formula_objective": 0.24520706519554672,
+      "objective_error": 6.938893903907228e-16,
+      "minimum_quadratic_eigenvalue": 0.4614102352946654
+    },
+    {
+      "architecture": "local",
+      "n": 7,
+      "a": 0.5900071455885637,
+      "b": 0.14802712236414384,
+      "kappa": 0.1415174319844398,
+      "rho": 0.17301960162903296,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.1295401995704859,
+      "formula_objective": 0.12954019957048585,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.7559900549992963
+    },
+    {
+      "architecture": "hybrid",
+      "n": 7,
+      "a": 0.5900071455885637,
+      "b": 0.14802712236414384,
+      "kappa": 0.1415174319844398,
+      "rho": 0.17301960162903296,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.12627345213100805,
+      "formula_objective": 0.12627345213100805,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.06724446047094473
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 7,
+      "a": 0.5900071455885637,
+      "b": 0.14802712236414384,
+      "kappa": 0.1415174319844398,
+      "rho": 0.17301960162903296,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.12889881876374726,
+      "formula_objective": 0.12889881876374729,
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 0.5554093131047401
+    },
+    {
+      "architecture": "local",
+      "n": 5,
+      "a": 4.3609399989281705,
+      "b": 0.3407746250894616,
+      "kappa": 0.07131418428038049,
+      "rho": 0.2795140594871723,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.33273238107120573,
+      "formula_objective": 0.33273238107120573,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 4.721156275547
+    },
+    {
+      "architecture": "hybrid",
+      "n": 5,
+      "a": 4.3609399989281705,
+      "b": 0.3407746250894616,
+      "kappa": 0.07131418428038049,
+      "rho": 0.2795140594871723,
+      "max_coefficient_error": 2.4424906541753444e-15,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.3119795063515731,
+      "formula_objective": 0.3119795063515717,
+      "objective_error": 1.4432899320127035e-15,
+      "minimum_quadratic_eigenvalue": 0.14125953400855032
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 5,
+      "a": 4.3609399989281705,
+      "b": 0.3407746250894616,
+      "kappa": 0.07131418428038049,
+      "rho": 0.2795140594871723,
+      "max_coefficient_error": 4.440892098500626e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.331347021724544,
+      "formula_objective": 0.33134702172454356,
+      "objective_error": 4.440892098500626e-16,
+      "minimum_quadratic_eigenvalue": 3.328548345753189
+    },
+    {
+      "architecture": "local",
+      "n": 4,
+      "a": 0.681062339954509,
+      "b": 0.5760795023711728,
+      "kappa": 0.07752494156705089,
+      "rho": 0.3647610409880886,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 3.3306690738754696e-16,
+      "computed_objective": 0.32166940082636264,
+      "formula_objective": 0.32166940082636236,
+      "objective_error": 2.7755575615628914e-16,
+      "minimum_quadratic_eigenvalue": 1.2906372396451584
+    },
+    {
+      "architecture": "hybrid",
+      "n": 4,
+      "a": 0.681062339954509,
+      "b": 0.5760795023711728,
+      "kappa": 0.07752494156705089,
+      "rho": 0.3647610409880886,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 3.3306690738754696e-16,
+      "computed_objective": 0.29468826520074215,
+      "formula_objective": 0.2946882652007419,
+      "objective_error": 2.7755575615628914e-16,
+      "minimum_quadratic_eigenvalue": 0.19656732351121609
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 4,
+      "a": 0.681062339954509,
+      "b": 0.5760795023711728,
+      "kappa": 0.07752494156705089,
+      "rho": 0.3647610409880886,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 3.3306690738754696e-16,
+      "computed_objective": 0.31103206183554355,
+      "formula_objective": 0.3110320618355434,
+      "objective_error": 1.6653345369377348e-16,
+      "minimum_quadratic_eigenvalue": 0.6773850289703476
+    },
+    {
+      "architecture": "local",
+      "n": 2,
+      "a": 0.37443088941245795,
+      "b": 0.5376549655461006,
+      "kappa": 3.9398427111681773,
+      "rho": 0.3071887668877702,
+      "max_coefficient_error": 0.0,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.3033083273068943,
+      "formula_objective": 0.3033083273068943,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.9712238535236493
+    },
+    {
+      "architecture": "hybrid",
+      "n": 2,
+      "a": 0.37443088941245795,
+      "b": 0.5376549655461006,
+      "kappa": 3.9398427111681773,
+      "rho": 0.3071887668877702,
+      "max_coefficient_error": 3.0531133177191805e-16,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.28945291693566716,
+      "formula_objective": 0.28945291693566716,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.131310436626052
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 2,
+      "a": 0.37443088941245795,
+      "b": 0.5376549655461006,
+      "kappa": 3.9398427111681773,
+      "rho": 0.3071887668877702,
+      "max_coefficient_error": 4.163336342344337e-17,
+      "conditional_normal_equation_residual": 1.3877787807814457e-17,
+      "computed_objective": 0.2936777138742505,
+      "formula_objective": 0.2936777138742505,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.614478866492425
+    },
+    {
+      "architecture": "local",
+      "n": 2,
+      "a": 9.517792228340188,
+      "b": 1.0882517816034787,
+      "kappa": 0.5507958571086032,
+      "rho": 0.5935694261603199,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 1.2113117326191922,
+      "formula_objective": 1.211311732619194,
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 10.905746296342793
+    },
+    {
+      "architecture": "hybrid",
+      "n": 2,
+      "a": 9.517792228340188,
+      "b": 1.0882517816034787,
+      "kappa": 0.5507958571086032,
+      "rho": 0.5935694261603199,
+      "max_coefficient_error": 3.1086244689504383e-15,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.9658785154955591,
+      "formula_objective": 0.9658785154955601,
+      "objective_error": 9.992007221626409e-16,
+      "minimum_quadratic_eigenvalue": 0.2684556819366889
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 2,
+      "a": 9.517792228340188,
+      "b": 1.0882517816034787,
+      "kappa": 0.5507958571086032,
+      "rho": 0.5935694261603199,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 3.552713678800501e-15,
+      "computed_objective": 1.1831752912826339,
+      "formula_objective": 1.183175291282635,
+      "objective_error": 1.1102230246251565e-15,
+      "minimum_quadratic_eigenvalue": 4.49650106301987
+    },
+    {
+      "architecture": "local",
+      "n": 5,
+      "a": 1.7872996208617244,
+      "b": 1.3968090479802382,
+      "kappa": 29.38747383978954,
+      "rho": 0.3384329331515174,
+      "max_coefficient_error": 6.938893903907228e-18,
+      "conditional_normal_equation_residual": 6.661338147750939e-16,
+      "computed_objective": 1.6986219815646142,
+      "formula_objective": 1.6986219815646144,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 36.02306015420244
+    },
+    {
+      "architecture": "hybrid",
+      "n": 5,
+      "a": 1.7872996208617244,
+      "b": 1.3968090479802382,
+      "kappa": 29.38747383978954,
+      "rho": 0.3384329331515174,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 1.887379141862766e-15,
+      "computed_objective": 1.5317391541726164,
+      "formula_objective": 1.5317391541726166,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 1.941289145345391
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 5,
+      "a": 1.7872996208617244,
+      "b": 1.3968090479802382,
+      "kappa": 29.38747383978954,
+      "rho": 0.3384329331515174,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 1.1102230246251565e-15,
+      "computed_objective": 1.5402727890092545,
+      "formula_objective": 1.5402727890092547,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 2.0522609116095802
+    },
+    {
+      "architecture": "local",
+      "n": 5,
+      "a": 6.627717883274224,
+      "b": 0.924332604973202,
+      "kappa": 0.4784467297173838,
+      "rho": 0.39890610379190616,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 1.0714944932023016,
+      "formula_objective": 1.0714944932023007,
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 7.905845617863893
+    },
+    {
+      "architecture": "hybrid",
+      "n": 5,
+      "a": 6.627717883274224,
+      "b": 0.924332604973202,
+      "kappa": 0.4784467297173838,
+      "rho": 0.39890610379190616,
+      "max_coefficient_error": 8.881784197001252e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.9296105968762376,
+      "formula_objective": 0.9296105968762398,
+      "objective_error": 2.220446049250313e-15,
+      "minimum_quadratic_eigenvalue": 0.4878270692532885
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 5,
+      "a": 6.627717883274224,
+      "b": 0.924332604973202,
+      "kappa": 0.4784467297173838,
+      "rho": 0.39890610379190616,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 1.0487561419947218,
+      "formula_objective": 1.0487561419947207,
+      "objective_error": 1.1102230246251565e-15,
+      "minimum_quadratic_eigenvalue": 4.587202342017488
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 7.844064138393752,
+      "b": 0.2846122540446144,
+      "kappa": 0.3164911393052171,
+      "rho": 0.8960754847771483,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.347337090179213,
+      "formula_objective": 0.347337090179213,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 8.207493991913324
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 7.844064138393752,
+      "b": 0.2846122540446144,
+      "kappa": 0.3164911393052171,
+      "rho": 0.8960754847771483,
+      "max_coefficient_error": 1.27675647831893e-14,
+      "conditional_normal_equation_residual": 5.329070518200751e-15,
+      "computed_objective": 0.09687957615567022,
+      "formula_objective": 0.09687957615566495,
+      "objective_error": 5.2735593669694936e-15,
+      "minimum_quadratic_eigenvalue": 0.15209632049540506
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 7.844064138393752,
+      "b": 0.2846122540446144,
+      "kappa": 0.3164911393052171,
+      "rho": 0.8960754847771483,
+      "max_coefficient_error": 1.27675647831893e-15,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.3036720160231514,
+      "formula_objective": 0.30367201602315114,
+      "objective_error": 2.7755575615628914e-16,
+      "minimum_quadratic_eigenvalue": 0.9809118443079352
+    },
+    {
+      "architecture": "local",
+      "n": 10,
+      "a": 0.555176789320453,
+      "b": 0.12732231507997854,
+      "kappa": 1.8797559482927506,
+      "rho": 0.8534634737698016,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.21190794282015668,
+      "formula_objective": 0.21190794282015657,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 0.8979004956102272
+    },
+    {
+      "architecture": "hybrid",
+      "n": 10,
+      "a": 0.555176789320453,
+      "b": 0.12732231507997854,
+      "kappa": 1.8797559482927506,
+      "rho": 0.8534634737698016,
+      "max_coefficient_error": 1.7763568394002505e-15,
+      "conditional_normal_equation_residual": 6.106226635438361e-16,
+      "computed_objective": 0.06662045254084414,
+      "formula_objective": 0.06662045254084428,
+      "objective_error": 1.3877787807814457e-16,
+      "minimum_quadratic_eigenvalue": 0.10085185639673952
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 10,
+      "a": 0.555176789320453,
+      "b": 0.12732231507997854,
+      "kappa": 1.8797559482927506,
+      "rho": 0.8534634737698016,
+      "max_coefficient_error": 4.440892098500626e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.11289904900351089,
+      "formula_objective": 0.1128990490035111,
+      "objective_error": 2.0816681711721685e-16,
+      "minimum_quadratic_eigenvalue": 0.22090123554376495
+    },
+    {
+      "architecture": "local",
+      "n": 6,
+      "a": 0.8065682183256664,
+      "b": 4.704710047084105,
+      "kappa": 0.3976340838774513,
+      "rho": 0.4905774355622556,
+      "max_coefficient_error": 4.163336342344337e-17,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.7145554481209007,
+      "formula_objective": 0.7145554481209008,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 7.0702391566442095
+    },
+    {
+      "architecture": "hybrid",
+      "n": 6,
+      "a": 0.8065682183256664,
+      "b": 4.704710047084105,
+      "kappa": 0.3976340838774513,
+      "rho": 0.4905774355622556,
+      "max_coefficient_error": 1.3877787807814457e-16,
+      "conditional_normal_equation_residual": 1.6653345369377348e-16,
+      "computed_objective": 0.6382731564048149,
+      "formula_objective": 0.6382731564048149,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.1567926152664694
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 6,
+      "a": 0.8065682183256664,
+      "b": 4.704710047084105,
+      "kappa": 0.3976340838774513,
+      "rho": 0.4905774355622556,
+      "max_coefficient_error": 8.326672684688674e-17,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.6520510495572489,
+      "formula_objective": 0.6520510495572489,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.4817213836895613
+    },
+    {
+      "architecture": "local",
+      "n": 5,
+      "a": 3.223032200728899,
+      "b": 6.330253018591566,
+      "kappa": 0.15847916394745443,
+      "rho": 0.30448906432487305,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 2.2199343608676685,
+      "formula_objective": 2.2199343608676685,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 10.35585578409026
+    },
+    {
+      "architecture": "hybrid",
+      "n": 5,
+      "a": 3.223032200728899,
+      "b": 6.330253018591566,
+      "kappa": 0.15847916394745443,
+      "rho": 0.30448906432487305,
+      "max_coefficient_error": 1.3877787807814457e-16,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 2.0983918059847215,
+      "formula_objective": 2.0983918059847215,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 2.047601765422506
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 5,
+      "a": 3.223032200728899,
+      "b": 6.330253018591566,
+      "kappa": 0.15847916394745443,
+      "rho": 0.30448906432487305,
+      "max_coefficient_error": 8.326672684688674e-17,
+      "conditional_normal_equation_residual": 4.440892098500626e-16,
+      "computed_objective": 2.148195206166453,
+      "formula_objective": 2.148195206166453,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 4.186251130944018
+    },
+    {
+      "architecture": "local",
+      "n": 12,
+      "a": 7.970361529583593,
+      "b": 1.865637134804516,
+      "kappa": 0.034016406480456986,
+      "rho": 0.20118923737158967,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.5497474285668815,
+      "formula_objective": 1.5497474285668833,
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 9.894172412917106
+    },
+    {
+      "architecture": "hybrid",
+      "n": 12,
+      "a": 7.970361529583593,
+      "b": 1.865637134804516,
+      "kappa": 0.034016406480456986,
+      "rho": 0.20118923737158967,
+      "max_coefficient_error": 5.828670879282072e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-15,
+      "computed_objective": 1.4931906971651587,
+      "formula_objective": 1.4931906971651576,
+      "objective_error": 1.1102230246251565e-15,
+      "minimum_quadratic_eigenvalue": 0.8339909418155113
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 12,
+      "a": 7.970361529583593,
+      "b": 1.865637134804516,
+      "kappa": 0.034016406480456986,
+      "rho": 0.20118923737158967,
+      "max_coefficient_error": 1.1102230246251565e-15,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 1.5392917200632477,
+      "formula_objective": 1.5392917200632459,
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 7.151393217072066
+    },
+    {
+      "architecture": "local",
+      "n": 2,
+      "a": 4.754750921201199,
+      "b": 0.1489260718348418,
+      "kappa": 0.1002906203267648,
+      "rho": 0.39389474073278474,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.15141369287351836,
+      "formula_objective": 0.15141369287351925,
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 4.911144937099613
+    },
+    {
+      "architecture": "hybrid",
+      "n": 2,
+      "a": 4.754750921201199,
+      "b": 0.1489260718348418,
+      "kappa": 0.1002906203267648,
+      "rho": 0.39389474073278474,
+      "max_coefficient_error": 3.885780586188048e-15,
+      "conditional_normal_equation_residual": 8.881784197001252e-16,
+      "computed_objective": 0.13929642083737637,
+      "formula_objective": 0.1392964208373775,
+      "objective_error": 1.1379786002407855e-15,
+      "minimum_quadratic_eigenvalue": 0.03707759496405519
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 2,
+      "a": 4.754750921201199,
+      "b": 0.1489260718348418,
+      "kappa": 0.1002906203267648,
+      "rho": 0.39389474073278474,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.1511751515053108,
+      "formula_objective": 0.15117515150531008,
+      "objective_error": 7.216449660063518e-16,
+      "minimum_quadratic_eigenvalue": 2.967536405838026
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 0.20800762166437833,
+      "b": 0.13469004890722952,
+      "kappa": 0.06354077563872455,
+      "rho": 0.7161122466923819,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.08445286233444084,
+      "formula_objective": 0.08445286233444085,
+      "objective_error": 1.3877787807814457e-17,
+      "minimum_quadratic_eigenvalue": 0.35018619197769313
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 0.20800762166437833,
+      "b": 0.13469004890722952,
+      "kappa": 0.06354077563872455,
+      "rho": 0.7161122466923819,
+      "max_coefficient_error": 8.881784197001252e-16,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.04913142865725176,
+      "formula_objective": 0.04913142865725178,
+      "objective_error": 2.0816681711721685e-17,
+      "minimum_quadratic_eigenvalue": 0.04927527303797041
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 0.20800762166437833,
+      "b": 0.13469004890722952,
+      "kappa": 0.06354077563872455,
+      "rho": 0.7161122466923819,
+      "max_coefficient_error": 2.7755575615628914e-16,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.06560398890151259,
+      "formula_objective": 0.06560398890151264,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.11473480900462729
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 0.10660080982470554,
+      "b": 8.09106615223089,
+      "kappa": 0.017924984830576505,
+      "rho": 0.4667253376524003,
+      "max_coefficient_error": 6.938893903907228e-18,
+      "conditional_normal_equation_residual": 1.3877787807814457e-17,
+      "computed_objective": 0.10523572641225881,
+      "formula_objective": 0.10523572641225883,
+      "objective_error": 1.3877787807814457e-17,
+      "minimum_quadratic_eigenvalue": 8.324570170342284
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 0.10660080982470554,
+      "b": 8.09106615223089,
+      "kappa": 0.017924984830576505,
+      "rho": 0.4667253376524003,
+      "max_coefficient_error": 1.214306433183765e-17,
+      "conditional_normal_equation_residual": 2.0816681711721685e-17,
+      "computed_objective": 0.10331893035707328,
+      "formula_objective": 0.10331893035707328,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.947707477881239
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 0.10660080982470554,
+      "b": 8.09106615223089,
+      "kappa": 0.017924984830576505,
+      "rho": 0.4667253376524003,
+      "max_coefficient_error": 2.0816681711721685e-17,
+      "conditional_normal_equation_residual": 6.938893903907228e-18,
+      "computed_objective": 0.1035263472775655,
+      "formula_objective": 0.1035263472775655,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.0803998759762803
+    },
+    {
+      "architecture": "local",
+      "n": 12,
+      "a": 0.5700331488522228,
+      "b": 0.5606436222685741,
+      "kappa": 0.9336037947303761,
+      "rho": 0.8096505978700718,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.36826827844580756,
+      "formula_objective": 0.36826827844580756,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.6104775332586785
+    },
+    {
+      "architecture": "hybrid",
+      "n": 12,
+      "a": 0.5700331488522228,
+      "b": 0.5606436222685741,
+      "kappa": 0.9336037947303761,
+      "rho": 0.8096505978700718,
+      "max_coefficient_error": 9.992007221626409e-16,
+      "conditional_normal_equation_residual": 6.661338147750939e-16,
+      "computed_objective": 0.15516258068191552,
+      "formula_objective": 0.15516258068191577,
+      "objective_error": 2.498001805406602e-16,
+      "minimum_quadratic_eigenvalue": 0.2532978487556379
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 12,
+      "a": 0.5700331488522228,
+      "b": 0.5606436222685741,
+      "kappa": 0.9336037947303761,
+      "rho": 0.8096505978700718,
+      "max_coefficient_error": 4.440892098500626e-16,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.1926981243868468,
+      "formula_objective": 0.19269812438684694,
+      "objective_error": 1.3877787807814457e-16,
+      "minimum_quadratic_eigenvalue": 0.4091816026456753
+    },
+    {
+      "architecture": "local",
+      "n": 6,
+      "a": 9.158834303164602,
+      "b": 1.0224185305216207,
+      "kappa": 0.014816657971674694,
+      "rho": 0.5717311302921654,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.9299487687042927,
+      "formula_objective": 0.9299487687042891,
+      "objective_error": 3.552713678800501e-15,
+      "minimum_quadratic_eigenvalue": 10.193876855078418
+    },
+    {
+      "architecture": "hybrid",
+      "n": 6,
+      "a": 9.158834303164602,
+      "b": 1.0224185305216207,
+      "kappa": 0.014816657971674694,
+      "rho": 0.5717311302921654,
+      "max_coefficient_error": 3.1086244689504383e-15,
+      "conditional_normal_equation_residual": 3.552713678800501e-15,
+      "computed_objective": 0.6806537445741228,
+      "formula_objective": 0.6806537445741209,
+      "objective_error": 1.887379141862766e-15,
+      "minimum_quadratic_eigenvalue": 0.4170092565286985
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 6,
+      "a": 9.158834303164602,
+      "b": 1.0224185305216207,
+      "kappa": 0.014816657971674694,
+      "rho": 0.5717311302921654,
+      "max_coefficient_error": 7.771561172376096e-16,
+      "conditional_normal_equation_residual": 1.7763568394002505e-15,
+      "computed_objective": 0.8997781083941199,
+      "formula_objective": 0.8997781083941215,
+      "objective_error": 1.6653345369377348e-15,
+      "minimum_quadratic_eigenvalue": 4.410250041497397
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 0.16919763914291103,
+      "b": 0.5089580919574643,
+      "kappa": 4.035894385545287,
+      "rho": 0.4513143913390019,
+      "max_coefficient_error": 1.3877787807814457e-17,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.1576331438163768,
+      "formula_objective": 0.1576331438163768,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 2.475494198683228
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 0.16919763914291103,
+      "b": 0.5089580919574643,
+      "kappa": 4.035894385545287,
+      "rho": 0.4513143913390019,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 8.326672684688674e-17,
+      "computed_objective": 0.13494304937249324,
+      "formula_objective": 0.13494304937249324,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.20884904644606833
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 0.16919763914291103,
+      "b": 0.5089580919574643,
+      "kappa": 4.035894385545287,
+      "rho": 0.4513143913390019,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 4.163336342344337e-17,
+      "computed_objective": 0.13667555676344295,
+      "formula_objective": 0.13667555676344295,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.22790524241175553
+    },
+    {
+      "architecture": "local",
+      "n": 4,
+      "a": 1.6695014394556191,
+      "b": 1.3842187074119097,
+      "kappa": 0.010589209921622794,
+      "rho": 0.6212182708138275,
+      "max_coefficient_error": 0.0,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.7600412007904978,
+      "formula_objective": 0.7600412007904979,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 3.064713483720194
+    },
+    {
+      "architecture": "hybrid",
+      "n": 4,
+      "a": 1.6695014394556191,
+      "b": 1.3842187074119097,
+      "kappa": 0.010589209921622794,
+      "rho": 0.6212182708138275,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.5773498874215488,
+      "formula_objective": 0.5773498874215488,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.4352583266016147
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 4,
+      "a": 1.6695014394556191,
+      "b": 1.3842187074119097,
+      "kappa": 0.010589209921622794,
+      "rho": 0.6212182708138275,
+      "max_coefficient_error": 1.1102230246251565e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.676227689771628,
+      "formula_objective": 0.6762276897716282,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 1.1825863036981477
+    },
+    {
+      "architecture": "local",
+      "n": 10,
+      "a": 0.2458299610599199,
+      "b": 0.27844865980267947,
+      "kappa": 3.220566993190742,
+      "rho": 0.6052161231791896,
+      "max_coefficient_error": 8.326672684688674e-17,
+      "conditional_normal_equation_residual": 8.326672684688674e-17,
+      "computed_objective": 0.20043867238975777,
+      "formula_objective": 0.2004386723897578,
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 1.3313649276154356
+    },
+    {
+      "architecture": "hybrid",
+      "n": 10,
+      "a": 0.2458299610599199,
+      "b": 0.27844865980267947,
+      "kappa": 3.220566993190742,
+      "rho": 0.6052161231791896,
+      "max_coefficient_error": 2.220446049250313e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.1361821705675268,
+      "formula_objective": 0.13618217056752677,
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 0.20548689402555675
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 10,
+      "a": 0.2458299610599199,
+      "b": 0.27844865980267947,
+      "kappa": 3.220566993190742,
+      "rho": 0.6052161231791896,
+      "max_coefficient_error": 3.3306690738754696e-16,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.14523415773289577,
+      "formula_objective": 0.14523415773289583,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.24834374553312302
+    },
+    {
+      "architecture": "local",
+      "n": 8,
+      "a": 0.4640197677717489,
+      "b": 3.3601659533644983,
+      "kappa": 0.023193351132219563,
+      "rho": 0.039760283971868565,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.4087028457631723,
+      "formula_objective": 0.4087028457631723,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 3.892377541352799
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 0.4640197677717489,
+      "b": 3.3601659533644983,
+      "kappa": 0.023193351132219563,
+      "rho": 0.039760283971868565,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.4084052605937158,
+      "formula_objective": 0.40840526059371574,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.6434743410706094
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 0.4640197677717489,
+      "b": 3.3601659533644983,
+      "kappa": 0.023193351132219563,
+      "rho": 0.039760283971868565,
+      "max_coefficient_error": 4.163336342344337e-17,
+      "conditional_normal_equation_residual": 5.551115123125783e-17,
+      "computed_objective": 0.4084727658117311,
+      "formula_objective": 0.4084727658117311,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.8836298754670562
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 1,
+      "b": 1,
+      "kappa": 0,
+      "rho": 0,
+      "max_coefficient_error": 0.0,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.5,
+      "formula_objective": 0.5,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.35542450526075225
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 1,
+      "b": 1,
+      "kappa": 0,
+      "rho": 0.5,
+      "max_coefficient_error": 0.0,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.4027777777777777,
+      "formula_objective": 0.4027777777777778,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 0.34639137768871636
+    },
+    {
+      "architecture": "hybrid",
+      "n": 8,
+      "a": 1,
+      "b": 1,
+      "kappa": 0,
+      "rho": 0.999,
+      "max_coefficient_error": 1.5432100042289676e-14,
+      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "computed_objective": 0.11188849999999984,
+      "formula_objective": 0.11188850000000006,
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 0.0019987090434300837
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 1,
+      "b": 1,
+      "kappa": 0,
+      "rho": 0,
+      "max_coefficient_error": 0.0,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.5,
+      "formula_objective": 0.5,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 1.125
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 1,
+      "b": 1,
+      "kappa": 0,
+      "rho": 0.5,
+      "max_coefficient_error": 0.0,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.4505050505050505,
+      "formula_objective": 0.4505050505050505,
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 0.8498903593130388
+    },
+    {
+      "architecture": "current_and_pool",
+      "n": 8,
+      "a": 1,
+      "b": 1,
+      "kappa": 0,
+      "rho": 1,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 0.0,
+      "computed_objective": 0.11111111111111116,
+      "formula_objective": 0.1111111111111111,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.35542450526075225
+    }
+  ],
+  "monte_carlo_samples_per_point": 120000,
+  "monte_carlo": [
+    {
+      "parameters": {
+        "n": 8,
+        "a": 1,
+        "b": 1,
+        "kappa": 1,
+        "v": 1.125,
+        "d": 2.875,
+        "J_local": 0.6521739130434783,
+        "J_pooled": 0.11111111111111116,
+        "Delta": 0.5410628019323671
+      },
+      "points": [
+        {
+          "lambda_age": 0,
+          "rho": 1.0,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.11082059534458667,
+            "standard_error": 0.0004544011997645578
+          },
+          "local": {
+            "mean": 0.6529828478627087,
+            "standard_error": 0.0018283028361688164
+          },
+          "pooled": {
+            "mean": 0.11082059534458667,
+            "standard_error": 0.0004544011997645578
+          },
+          "delayed_pool_only": {
+            "mean": 0.11082059534458667,
+            "standard_error": 0.0004544011997645578
+          },
+          "gain": {
+            "mean": 0.5421622525181219,
+            "standard_error": 0.0017695035921776014
+          },
+          "hybrid_exact": 0.11111111111111116,
+          "delayed_pool_only_exact": 0.11111111111111116,
+          "normalized_gain_exact": 1.0,
+          "normalized_gain": 1.002032020279029,
+          "normalized_gain_standard_error": 0.0032704218176853885,
+          "hybrid_standardized_error": -0.6393375868615991,
+          "delayed_pool_only_standardized_error": -0.6393375868615991
+        },
+        {
+          "lambda_age": 0.25,
+          "rho": 0.7788007830714049,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.32356675251533423,
+            "standard_error": 0.0009871991588881334
+          },
+          "local": {
+            "mean": 0.6498522907229884,
+            "standard_error": 0.0018261559082308626
+          },
+          "pooled": {
+            "mean": 0.1113033487048259,
+            "standard_error": 0.000454793828663484
+          },
+          "delayed_pool_only": {
+            "mean": 0.4602486839332863,
+            "standard_error": 0.001871384755888014
+          },
+          "gain": {
+            "mean": 0.3262855382076543,
+            "standard_error": 0.0015327011263538675
+          },
+          "hybrid_exact": 0.32400273484147374,
+          "delayed_pool_only_exact": 0.4608616358109925,
+          "normalized_gain_exact": 0.6065306597126334,
+          "normalized_gain": 0.6030455929373612,
+          "normalized_gain_standard_error": 0.0028327601174575946,
+          "hybrid_standardized_error": -0.4416356337160433,
+          "delayed_pool_only_standardized_error": -0.3275392063431415
+        },
+        {
+          "lambda_age": 0.5,
+          "rho": 0.6065306597126334,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.45088447251485947,
+            "standard_error": 0.001306041044028647
+          },
+          "local": {
+            "mean": 0.6502043739002944,
+            "standard_error": 0.0018095825757012637
+          },
+          "pooled": {
+            "mean": 0.11055464431817867,
+            "standard_error": 0.000450388193932106
+          },
+          "delayed_pool_only": {
+            "mean": 0.6671967641679122,
+            "standard_error": 0.002712693993236463
+          },
+          "gain": {
+            "mean": 0.19931990138543484,
+            "standard_error": 0.0012560141843269874
+          },
+          "hybrid_exact": 0.45312803182994427,
+          "delayed_pool_only_exact": 0.6729960522920513,
+          "normalized_gain_exact": 0.36787944117144233,
+          "normalized_gain": 0.36838588916772336,
+          "normalized_gain_standard_error": 0.0023213833585329145,
+          "hybrid_standardized_error": -1.7178321656448547,
+          "delayed_pool_only_standardized_error": -2.1378335111141977
+        },
+        {
+          "lambda_age": 0.75,
+          "rho": 0.4723665527410147,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.5326021214794231,
+            "standard_error": 0.0015175419368434672
+          },
+          "local": {
+            "mean": 0.654762605047042,
+            "standard_error": 0.0018364112726561234
+          },
+          "pooled": {
+            "mean": 0.11162195537176937,
+            "standard_error": 0.0004547761522190333
+          },
+          "delayed_pool_only": {
+            "mean": 0.802926511216946,
+            "standard_error": 0.0032659945032963147
+          },
+          "gain": {
+            "mean": 0.12216048356761897,
+            "standard_error": 0.001023678242484206
+          },
+          "hybrid_exact": 0.5314464833979511,
+          "delayed_pool_only_exact": 0.8016620798680624,
+          "normalized_gain_exact": 0.22313016014842982,
+          "normalized_gain": 0.22577875087943863,
+          "normalized_gain_standard_error": 0.0018919767517342023,
+          "hybrid_standardized_error": 0.761519700652077,
+          "delayed_pool_only_standardized_error": 0.3871504828337845
+        },
+        {
+          "lambda_age": 1,
+          "rho": 0.36787944117144233,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.5785772653300976,
+            "standard_error": 0.0016244551617889539
+          },
+          "local": {
+            "mean": 0.6521479173753957,
+            "standard_error": 0.0018187477049747744
+          },
+          "pooled": {
+            "mean": 0.11073477331661058,
+            "standard_error": 0.0004550777504494587
+          },
+          "delayed_pool_only": {
+            "mean": 0.8789068485528392,
+            "standard_error": 0.003556490282720463
+          },
+          "gain": {
+            "mean": 0.07357065204529806,
+            "standard_error": 0.0008052930247305585
+          },
+          "hybrid_exact": 0.5789490254951661,
+          "delayed_pool_only_exact": 0.8797019704563442,
+          "normalized_gain_exact": 0.1353352832366127,
+          "normalized_gain": 0.1359743301194348,
+          "normalized_gain_standard_error": 0.0014883540724930859,
+          "hybrid_standardized_error": -0.22885221692371158,
+          "delayed_pool_only_standardized_error": -0.22356926078730807
+        },
+        {
+          "lambda_age": 1.5,
+          "rho": 0.22313016014842982,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.6242946287922514,
+            "standard_error": 0.00175182545177924
+          },
+          "local": {
+            "mean": 0.6522113163497264,
+            "standard_error": 0.0018243761753876874
+          },
+          "pooled": {
+            "mean": 0.11037362507331193,
+            "standard_error": 0.00045293003975223773
+          },
+          "delayed_pool_only": {
+            "mean": 0.9560729598235966,
+            "standard_error": 0.0039003450121780823
+          },
+          "gain": {
+            "mean": 0.02791668755747502,
+            "standard_error": 0.0005000983617008965
+          },
+          "hybrid_exact": 0.6252359823323634,
+          "delayed_pool_only_exact": 0.9557448281174543,
+          "normalized_gain_exact": 0.04978706836786394,
+          "normalized_gain": 0.051596020753547585,
+          "normalized_gain_standard_error": 0.000924288936357907,
+          "hybrid_standardized_error": -0.5373557845936988,
+          "delayed_pool_only_standardized_error": 0.08412889247433035
+        },
+        {
+          "lambda_age": 2,
+          "rho": 0.1353352832366127,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.6416501276375345,
+            "standard_error": 0.0017903615414489181
+          },
+          "local": {
+            "mean": 0.6515625895259733,
+            "standard_error": 0.0018147134923163406
+          },
+          "pooled": {
+            "mean": 0.11073100676859941,
+            "standard_error": 0.0004524869312043172
+          },
+          "delayed_pool_only": {
+            "mean": 0.9828617587865087,
+            "standard_error": 0.0039926745370178944
+          },
+          "gain": {
+            "mean": 0.009912461888438867,
+            "standard_error": 0.0003033900216005606
+          },
+          "hybrid_exact": 0.6422640021471583,
+          "delayed_pool_only_exact": 0.983719432098903,
+          "normalized_gain_exact": 0.018315638888734182,
+          "normalized_gain": 0.018320353668811122,
+          "normalized_gain_standard_error": 0.0005607297720653219,
+          "hybrid_standardized_error": -0.3428773995709272,
+          "delayed_pool_only_standardized_error": -0.21481172693701991
+        },
+        {
+          "lambda_age": 2.5,
+          "rho": 0.0820849986238988,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.6520767891538526,
+            "standard_error": 0.001840079285157336
+          },
+          "local": {
+            "mean": 0.6555367486768608,
+            "standard_error": 0.001848716051141483
+          },
+          "pooled": {
+            "mean": 0.11126489746246031,
+            "standard_error": 0.00045535917042651694
+          },
+          "delayed_pool_only": {
+            "mean": 1.0013058448297916,
+            "standard_error": 0.004104234304357644
+          },
+          "gain": {
+            "mean": 0.0034599595230081956,
+            "standard_error": 0.00018508449415204878
+          },
+          "hybrid_exact": 0.6485282605608813,
+          "delayed_pool_only_exact": 0.9940107137785907,
+          "normalized_gain_exact": 0.006737946999085468,
+          "normalized_gain": 0.006394746618416934,
+          "normalized_gain_standard_error": 0.00034207580615601874,
+          "hybrid_standardized_error": 1.9284650512588437,
+          "delayed_pool_only_standardized_error": 1.7774645671313827
+        }
+      ]
+    },
+    {
+      "parameters": {
+        "n": 2,
+        "a": 1,
+        "b": 1,
+        "kappa": 0,
+        "v": 1.5,
+        "d": 2.0,
+        "J_local": 0.5,
+        "J_pooled": 0.33333333333333337,
+        "Delta": 0.16666666666666663
+      },
+      "points": [
+        {
+          "lambda_age": 0.1,
+          "rho": 0.9048374180359595,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.3614649713688206,
+            "standard_error": 0.0013926379217971076
+          },
+          "local": {
+            "mean": 0.49696849544057325,
+            "standard_error": 0.001606050827246242
+          },
+          "pooled": {
+            "mean": 0.3311367259425805,
+            "standard_error": 0.0013600141499874384
+          },
+          "delayed_pool_only": {
+            "mean": 0.4524426610736972,
+            "standard_error": 0.0018507751277807992
+          },
+          "gain": {
+            "mean": 0.13550352407175267,
+            "standard_error": 0.0008095164682595916
+          },
+          "hybrid_exact": 0.36354487448700307,
+          "delayed_pool_only_exact": 0.45417949794801216,
+          "normalized_gain_exact": 0.8187307530779817,
+          "normalized_gain": 0.8130211444305162,
+          "normalized_gain_standard_error": 0.004857098809557551,
+          "hybrid_standardized_error": -1.493498838160661,
+          "delayed_pool_only_standardized_error": -0.9384375488109971
+        },
+        {
+          "lambda_age": 0.35,
+          "rho": 0.7046880897187134,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.4172552556391319,
+            "standard_error": 0.0014624625447566182
+          },
+          "local": {
+            "mean": 0.49992361499479976,
+            "standard_error": 0.0016105991310962047
+          },
+          "pooled": {
+            "mean": 0.33351698155547815,
+            "standard_error": 0.0013587232598720846
+          },
+          "delayed_pool_only": {
+            "mean": 0.668608758136122,
+            "standard_error": 0.002721932270682495
+          },
+          "gain": {
+            "mean": 0.08266835935566784,
+            "standard_error": 0.0006706557952951634
+          },
+          "hybrid_exact": 0.41723578270143175,
+          "delayed_pool_only_exact": 0.668943130805727,
+          "normalized_gain_exact": 0.4965853037914095,
+          "normalized_gain": 0.4960101561340071,
+          "normalized_gain_standard_error": 0.004023934771770981,
+          "hybrid_standardized_error": 0.01331517020382959,
+          "delayed_pool_only_standardized_error": -0.12284386103448837
+        },
+        {
+          "lambda_age": 0.6,
+          "rho": 0.5488116360940264,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.45175866214884475,
+            "standard_error": 0.0015287542966138958
+          },
+          "local": {
+            "mean": 0.501982857407793,
+            "standard_error": 0.001624197395858225
+          },
+          "pooled": {
+            "mean": 0.33411919786430916,
+            "standard_error": 0.001366517893036181
+          },
+          "delayed_pool_only": {
+            "mean": 0.8031312332747677,
+            "standard_error": 0.003284912993136556
+          },
+          "gain": {
+            "mean": 0.0502241952589483,
+            "standard_error": 0.0005393701044689331
+          },
+          "hybrid_exact": 0.44980096468129965,
+          "delayed_pool_only_exact": 0.7992038587251986,
+          "normalized_gain_exact": 0.301194211912202,
+          "normalized_gain": 0.30134517155368984,
+          "normalized_gain_standard_error": 0.0032362206268135994,
+          "hybrid_standardized_error": 1.2805834605870174,
+          "delayed_pool_only_standardized_error": 1.1955794743345816
+        },
+        {
+          "lambda_age": 0.9,
+          "rho": 0.4065696597405991,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.4702116322991774,
+            "standard_error": 0.0015611330960537688
+          },
+          "local": {
+            "mean": 0.49800985804014103,
+            "standard_error": 0.0016143874213821032
+          },
+          "pooled": {
+            "mean": 0.332329556757965,
+            "standard_error": 0.001364219653346872
+          },
+          "delayed_pool_only": {
+            "mean": 0.8858291587706235,
+            "standard_error": 0.003613088718161431
+          },
+          "gain": {
+            "mean": 0.027798225740963578,
+            "standard_error": 0.0004015951043870059
+          },
+          "hybrid_exact": 0.47245018529640226,
+          "delayed_pool_only_exact": 0.889800741185609,
+          "normalized_gain_exact": 0.16529888822158653,
+          "normalized_gain": 0.1667893544457815,
+          "normalized_gain_standard_error": 0.002409570626322036,
+          "hybrid_standardized_error": -1.4339283453047507,
+          "delayed_pool_only_standardized_error": -1.0992208397823435
+        },
+        {
+          "lambda_age": 1.25,
+          "rho": 0.2865047968601901,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.48655362658268175,
+            "standard_error": 0.0015872279754889581
+          },
+          "local": {
+            "mean": 0.5004389405205388,
+            "standard_error": 0.0016141981106133517
+          },
+          "pooled": {
+            "mean": 0.33510026633677176,
+            "standard_error": 0.001367666408780069
+          },
+          "delayed_pool_only": {
+            "mean": 0.9425424928524674,
+            "standard_error": 0.003836576103880704
+          },
+          "gain": {
+            "mean": 0.013885313937857155,
+            "standard_error": 0.00028882210094760053
+          },
+          "hybrid_exact": 0.4863191668960169,
+          "delayed_pool_only_exact": 0.9452766675840675,
+          "normalized_gain_exact": 0.08208499862389879,
+          "normalized_gain": 0.08331188362714295,
+          "normalized_gain_standard_error": 0.0017329326056856036,
+          "hybrid_standardized_error": 0.14771645301465225,
+          "delayed_pool_only_standardized_error": -0.7126601056693412
+        },
+        {
+          "lambda_age": 1.75,
+          "rho": 0.17377394345044514,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.4938400164316532,
+            "standard_error": 0.001600615769589828
+          },
+          "local": {
+            "mean": 0.4986645154106979,
+            "standard_error": 0.0016093102000857768
+          },
+          "pooled": {
+            "mean": 0.3329334102454268,
+            "standard_error": 0.00136286608935745
+          },
+          "delayed_pool_only": {
+            "mean": 0.9812690957996941,
+            "standard_error": 0.003988702301305199
+          },
+          "gain": {
+            "mean": 0.004824498979044625,
+            "standard_error": 0.0001765071066633915
+          },
+          "hybrid_exact": 0.4949671027629469,
+          "delayed_pool_only_exact": 0.9798684110517877,
+          "normalized_gain_exact": 0.030197383422318504,
+          "normalized_gain": 0.028946993874267756,
+          "normalized_gain_standard_error": 0.0010590426399803494,
+          "hybrid_standardized_error": -0.7041579576480994,
+          "delayed_pool_only_standardized_error": 0.351163020476135
+        },
+        {
+          "lambda_age": 2.25,
+          "rho": 0.10539922456186433,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.4937039002595816,
+            "standard_error": 0.0015982867368042849
+          },
+          "local": {
+            "mean": 0.4955328966505456,
+            "standard_error": 0.0016017114225844748
+          },
+          "pooled": {
+            "mean": 0.3298529728023749,
+            "standard_error": 0.0013524391158721235
+          },
+          "delayed_pool_only": {
+            "mean": 0.9862977602969845,
+            "standard_error": 0.004042996502137184
+          },
+          "gain": {
+            "mean": 0.001828996390964034,
+            "standard_error": 0.00010720973542703819
+          },
+          "hybrid_exact": 0.49814850057695964,
+          "delayed_pool_only_exact": 0.9925940023078385,
+          "normalized_gain_exact": 0.011108996538242306,
+          "normalized_gain": 0.010973978345784206,
+          "normalized_gain_standard_error": 0.0006432584125622293,
+          "hybrid_standardized_error": -2.780852906447092,
+          "delayed_pool_only_standardized_error": -1.5573206673628608
+        }
+      ]
+    },
+    {
+      "parameters": {
+        "n": 32,
+        "a": 1,
+        "b": 1,
+        "kappa": 4,
+        "v": 1.03125,
+        "d": 5.875,
+        "J_local": 0.8297872340425532,
+        "J_pooled": 0.030303030303030276,
+        "Delta": 0.7994842037395229
+      },
+      "points": [
+        {
+          "lambda_age": 0.18,
+          "rho": 0.835270211411272,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.2714768528261831,
+            "standard_error": 0.0009396304872303943
+          },
+          "local": {
+            "mean": 0.8355742770549506,
+            "standard_error": 0.002846580035751282
+          },
+          "pooled": {
+            "mean": 0.03058589665081564,
+            "standard_error": 0.0001247345187897252
+          },
+          "delayed_pool_only": {
+            "mean": 0.32246680059993943,
+            "standard_error": 0.0013224505300178373
+          },
+          "gain": {
+            "mean": 0.5640974242287673,
+            "standard_error": 0.0026873047294624615
+          },
+          "hybrid_exact": 0.27200603202573914,
+          "delayed_pool_only_exact": 0.3234653807796063,
+          "normalized_gain_exact": 0.697676326071031,
+          "normalized_gain": 0.705576697563563,
+          "normalized_gain_standard_error": 0.003361298093061514,
+          "hybrid_standardized_error": -0.5631779797990698,
+          "delayed_pool_only_standardized_error": -0.755098324663528
+        },
+        {
+          "lambda_age": 0.43,
+          "rho": 0.6505090947233165,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.4903603637792861,
+            "standard_error": 0.0016700320292345715
+          },
+          "local": {
+            "mean": 0.8287442939792063,
+            "standard_error": 0.002803424648066453
+          },
+          "pooled": {
+            "mean": 0.030320052388177882,
+            "standard_error": 0.00012363376633464169
+          },
+          "delayed_pool_only": {
+            "mean": 0.5877504527666293,
+            "standard_error": 0.002395284807108461
+          },
+          "gain": {
+            "mean": 0.33838393019992014,
+            "standard_error": 0.0022585908296547668
+          },
+          "hybrid_exact": 0.49147583360798935,
+          "delayed_pool_only_exact": 0.5896610110858194,
+          "normalized_gain_exact": 0.4231620823177488,
+          "normalized_gain": 0.42325280301619045,
+          "normalized_gain_standard_error": 0.002825059981285922,
+          "hybrid_standardized_error": -0.6679331947989692,
+          "delayed_pool_only_standardized_error": -0.797633047026444
+        },
+        {
+          "lambda_age": 0.68,
+          "rho": 0.5066169923655895,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.6251158027711473,
+            "standard_error": 0.0021239017879560907
+          },
+          "local": {
+            "mean": 0.8330312299088459,
+            "standard_error": 0.0028280607589204394
+          },
+          "pooled": {
+            "mean": 0.030341626489527894,
+            "standard_error": 0.00012365561280510006
+          },
+          "delayed_pool_only": {
+            "mean": 0.7517484010378799,
+            "standard_error": 0.0030651255186759157
+          },
+          "gain": {
+            "mean": 0.20791542713769862,
+            "standard_error": 0.0018496501150211235
+          },
+          "hybrid_exact": 0.6245909971486723,
+          "delayed_pool_only_exact": 0.7511168223480671,
+          "normalized_gain_exact": 0.2566607769535558,
+          "normalized_gain": 0.26006195765368595,
+          "normalized_gain_standard_error": 0.00231355429709497,
+          "hybrid_standardized_error": 0.24709505187623243,
+          "delayed_pool_only_standardized_error": 0.20605312440373263
+        },
+        {
+          "lambda_age": 1.08,
+          "rho": 0.3395955256449391,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.7371702815564591,
+            "standard_error": 0.0025150221073368772
+          },
+          "local": {
+            "mean": 0.8308833054658605,
+            "standard_error": 0.002839879764888946
+          },
+          "pooled": {
+            "mean": 0.03025315581468282,
+            "standard_error": 0.00012387534384364856
+          },
+          "delayed_pool_only": {
+            "mean": 0.8874633508656709,
+            "standard_error": 0.003641296841344852
+          },
+          "gain": {
+            "mean": 0.09371302390940127,
+            "standard_error": 0.001290265645398667
+          },
+          "hybrid_exact": 0.7375866214782737,
+          "delayed_pool_only_exact": 0.8881695795994545,
+          "normalized_gain_exact": 0.1153251210380625,
+          "normalized_gain": 0.11721685490603335,
+          "normalized_gain_standard_error": 0.0016138725935591393,
+          "hybrid_standardized_error": -0.16554125731141728,
+          "delayed_pool_only_standardized_error": -0.193949783430137
+        },
+        {
+          "lambda_age": 1.4,
+          "rho": 0.2465969639416065,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.7797580277934008,
+            "standard_error": 0.002634908154122556
+          },
+          "local": {
+            "mean": 0.8277619856276874,
+            "standard_error": 0.0027960219494339226
+          },
+          "pooled": {
+            "mean": 0.030258594329802505,
+            "standard_error": 0.00012403878162456402
+          },
+          "delayed_pool_only": {
+            "mean": 0.9391070487141447,
+            "standard_error": 0.003815629021232477
+          },
+          "gain": {
+            "mean": 0.048003957834286695,
+            "standard_error": 0.0009461799451719348
+          },
+          "hybrid_exact": 0.7811705495452802,
+          "delayed_pool_only_exact": 0.9410326665452432,
+          "normalized_gain_exact": 0.06081006262521797,
+          "normalized_gain": 0.06004366016207957,
+          "normalized_gain_standard_error": 0.0011834879798077991,
+          "hybrid_standardized_error": -0.5360800715840617,
+          "delayed_pool_only_standardized_error": -0.5046658939805604
+        },
+        {
+          "lambda_age": 1.9,
+          "rho": 0.14956861922263506,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.8074538376290525,
+            "standard_error": 0.002741294175637643
+          },
+          "local": {
+            "mean": 0.8253170130487665,
+            "standard_error": 0.002802528902450839
+          },
+          "pooled": {
+            "mean": 0.030400059190431192,
+            "standard_error": 0.0001239242197652493
+          },
+          "delayed_pool_only": {
+            "mean": 0.9718291514488223,
+            "standard_error": 0.003970201691225363
+          },
+          "gain": {
+            "mean": 0.01786317541971402,
+            "standard_error": 0.0005783999221115126
+          },
+          "hybrid_exact": 0.8119021553180881,
+          "delayed_pool_only_exact": 0.978307130321294,
+          "normalized_gain_exact": 0.022370771856165598,
+          "normalized_gain": 0.022343375061271327,
+          "normalized_gain_standard_error": 0.0007234663541894807,
+          "hybrid_standardized_error": -1.6227071609346058,
+          "delayed_pool_only_standardized_error": -1.63164981940057
+        },
+        {
+          "lambda_age": 2.4,
+          "rho": 0.09071795328941251,
+          "samples": 120000,
+          "hybrid": {
+            "mean": 0.8290258680627847,
+            "standard_error": 0.002825936513406474
+          },
+          "local": {
+            "mean": 0.835117518811312,
+            "standard_error": 0.002844767463166166
+          },
+          "pooled": {
+            "mean": 0.030178108536099157,
+            "standard_error": 0.00012287127607989452
+          },
+          "delayed_pool_only": {
+            "mean": 1.0001240016825432,
+            "standard_error": 0.004092125127225155
+          },
+          "gain": {
+            "mean": 0.006091650748527379,
+            "standard_error": 0.00035288401934249975
+          },
+          "hybrid_exact": 0.8232076812760897,
+          "delayed_pool_only_exact": 0.9920196392251927,
+          "normalized_gain_exact": 0.00822974704902003,
+          "normalized_gain": 0.007619476057230616,
+          "normalized_gain_standard_error": 0.0004413896080646912,
+          "hybrid_standardized_error": 2.0588526172095643,
+          "delayed_pool_only_standardized_error": 1.98047767489605
+        }
+      ]
+    }
+  ],
+  "maximum_absolute_hybrid_monte_carlo_z_score": 2.780852906447092,
+  "maximum_absolute_delayed_pool_only_monte_carlo_z_score": 2.1378335111141977,
+  "delayed_pool_crossover": {
+    "lambda_age": 0.4691348192964651,
+    "formula": "lambda*tau_cross = log(d/v)/2",
+    "cost_at_crossover": 0.6521739130434783,
+    "objective_equality_error": 0.0,
+    "fresh_local_better_for": "lambda*age > lambda*tau_cross"
+  },
+  "costs_at_lambda_age_1": {
+    "fresh_local": 0.6521739130434783,
+    "fresh_pooled": 0.11111111111111116,
+    "hybrid": 0.5789490254951661,
+    "delayed_pool_only": 0.8797019704563442
+  },
+  "refresh": {
+    "lambda": 1,
+    "latency": 0.1,
+    "A": 0.44298475528856984,
+    "critical_refresh_cost": 0.22149237764428492,
+    "scenarios": [
+      {
+        "cost_ratio": 0.1,
+        "cost_per_refresh": 0.022149237764428495,
+        "optimal_period": 0.26590580419480603,
+        "minimum_average_cost": 0.39190282123549136,
+        "optimality_equation_residual": 1.734723475976807e-17
+      },
+      {
+        "cost_ratio": 0.5,
+        "cost_per_refresh": 0.11074618882214246,
+        "optimal_period": 0.8391734950083303,
+        "minimum_average_cost": 0.569476496140485,
+        "optimality_equation_residual": 0.0
+      },
+      {
+        "cost_ratio": 0.9,
+        "cost_per_refresh": 0.19934313987985644,
+        "optimal_period": 1.9448600849337132,
+        "minimum_average_cost": 0.6431144016624706,
+        "optimality_equation_residual": 5.551115123125783e-17
+      },
+      {
+        "cost_ratio": 1.1,
+        "cost_per_refresh": 0.24364161540871343,
+        "optimal_period": null,
+        "minimum_average_cost": 0.6521739130434783
+      }
+    ]
+  },
+  "multirate_check": {
+    "rates": [
+      1.0,
+      0.12
+    ],
+    "latency": 0.1,
+    "amplitudes": [
+      0.44298475528856984,
+      0.23019789366923338
+    ],
+    "critical_refresh_cost": 1.1806502679327573,
+    "refresh_cost": 0.5903251339663786,
+    "optimal_period": 5.551290824452944,
+    "minimum_average_cost": 0.9072150640659108,
+    "closed_form_minimum_error": 1.1102230246251565e-16
+  }
+}

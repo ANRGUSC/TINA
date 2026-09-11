@@ -7,6 +7,7 @@ import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MANUSCRIPT = ROOT / "papers/full/main.tex"
 
 
 def extracts(source: str) -> dict[str, str]:
@@ -35,7 +36,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="check without writing")
     args = parser.parse_args()
-    expected = extracts((ROOT / "main.tex").read_text(encoding="utf-8"))
+    expected = extracts(MANUSCRIPT.read_text(encoding="utf-8"))
     stale = []
     for name, text in expected.items():
         path = ROOT / "numerics/latex" / name

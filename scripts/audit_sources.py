@@ -7,8 +7,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TEX = ROOT / "main.tex"
-BIB = ROOT / "references.bib"
+PAPER = ROOT / "papers/full"
+TEX = PAPER / "main.tex"
+BIB = PAPER / "references.bib"
 
 
 def active_tex(text: str) -> str:
@@ -47,7 +48,7 @@ def main() -> int:
     missing_graphics: list[str] = []
     resolved_graphics: list[Path] = []
     for graphic in graphics:
-        path = ROOT / graphic
+        path = PAPER / graphic
         candidates = [path] if path.suffix else [path.with_suffix(ext) for ext in (".pdf", ".png", ".jpg")]
         match = next((candidate for candidate in candidates if candidate.is_file()), None)
         if match is None:
@@ -56,7 +57,7 @@ def main() -> int:
             resolved_graphics.append(match)
 
     bibliographies = values(r"\\bibliography\{([^}]*)\}", source)
-    missing_bibs = [name for name in bibliographies if not (ROOT / f"{name}.bib").is_file()]
+    missing_bibs = [name for name in bibliographies if not (PAPER / f"{name}.bib").is_file()]
 
     print(f"active citations: {len(citations)}")
     print(f"bibliography entries: {len(bib_keys)}")

@@ -12,9 +12,15 @@ and processed numerical results, and deterministic build/test entry points.
 
 ## Repository map
 
-- `main.tex`, `references.bib`: canonical manuscript sources.
-- `figures/`: the six PDF figures consumed by `main.tex`.
-- `tina.pdf`: canonical compiled preprint.
+- `papers/full/`: canonical full manuscript, bibliography, figures, and compiled
+  preprint.
+- `papers/lcss/`: six-page L-CSS manuscript, compiled PDF, IEEE class file,
+  figures, and numerical verification materials.
+- `papers/acc/`: reserved for the six-page ACC manuscript; intentionally empty
+  for now except for Git's directory placeholder.
+- `submissions/arxiv/`: the verified arXiv source closure, metadata, and upload
+  ZIP for the full manuscript.
+- `submissions/lcss/`: stable copies of the L-CSS submission PDF and source ZIP.
 - `numerics/config/`: fixed experiment parameters and seeds.
 - `numerics/experiments/`: six experiment drivers and the all-experiment runner.
 - `numerics/src/`: covariance, process, regret, theory, graph, and plotting code.
@@ -49,7 +55,7 @@ errors in `numerics/results/metadata`.
 ## Build the paper
 
 A TeX installation containing `pdflatex`, `bibtex`, the standard packages used
-by `main.tex`, and `IEEEtran.bst` is required.
+by `papers/full/main.tex`, and `IEEEtran.bst` is required.
 
 ```powershell
 python scripts/audit_sources.py
@@ -58,7 +64,8 @@ python scripts/build_paper.py
 
 The build script copies only the declared source closure to a temporary build
 directory, runs `pdflatex`/`bibtex`/`pdflatex`/`pdflatex`, rejects undefined
-citations or references, and writes `output/pdf/tina.pdf`.
+citations or references, updates `papers/full/tina.pdf`, and writes the build
+artifact to `output/pdf/tina.pdf`.
 
 ## Scope and license
 

@@ -245,7 +245,7 @@ def main():
                 markeredgewidth=.8, elinewidth=.7, capsize=1.6)
     crossover_age = .5 * float(np.log(base["d"] / base["v"]))
     ax.plot(crossover_age, base["J_local"], "o", color="0.2", markersize=3.3)
-    ax.annotate(r"$\tau_\times$", xy=(crossover_age, base["J_local"]),
+    ax.annotate(r"$\lambda\tau_{\mathrm{cross}}$", xy=(crossover_age, base["J_local"]),
                 xytext=(.29, .78), fontsize=7, ha="center",
                 arrowprops={"arrowstyle": "-", "color": "0.35", "lw": .6})
     ax.set_ylim(.065, 1.04)

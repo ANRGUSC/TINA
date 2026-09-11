@@ -14,13 +14,12 @@ and processed numerical results, and deterministic build/test entry points.
 
 - `papers/full/`: canonical full manuscript, bibliography, figures, and compiled
   preprint.
-- `papers/lcss/`: six-page L-CSS manuscript, compiled PDF, IEEE class file,
+- `papers/lcss/`: six-page joint L-CSS/ACC Paper 1 manuscript, compiled PDF, IEEE class file,
   figures, and numerical verification materials.
-- `papers/acc/`: reserved for the six-page ACC manuscript; intentionally empty
-  for now except for Git's directory placeholder.
+- `papers/acc/`: pointer to the shared L-CSS/ACC Paper 1 source.
 - `submissions/arxiv/`: the verified arXiv source closure, metadata, and upload
   ZIP for the full manuscript.
-- `submissions/lcss/`: stable copies of the L-CSS submission PDF and source ZIP.
+- `submissions/lcss/`: current joint L-CSS/ACC submission PDF and source ZIP.
 - `numerics/config/`: fixed experiment parameters and seeds.
 - `numerics/experiments/`: six experiment drivers and the all-experiment runner.
 - `numerics/src/`: covariance, process, regret, theory, graph, and plotting code.

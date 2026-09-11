@@ -1,4 +1,4 @@
-# Delayed-pooling letter: first draft
+# Deciding Without Waiting: Delay Thresholds for Decentralized Decisions
 
 ## Files
 
@@ -36,7 +36,9 @@ The letter studies a common latent signal, independent temporally correlated sen
 
 A retained local measurement from the pooling time is part of the optimal implementation. The manuscript also derives the exact loss for a device limited to its current measurement and the old pooled mean. During pipelined transmission, timestamped local measurements must remain available until their associated summary arrives.
 
-The letter identifies two conditions for choosing local operation. Fresh-local decisions have lower team loss than decisions based only on a delayed pool when its age exceeds the crossover threshold. With fresh local observations retained, pooled information has positive decision value at every finite age. In this hybrid architecture, the communication price and latency determine whether refreshing improves the total average cost. The introduction lists the seven main results, and the conclusion links to https://github.com/anrgusc/TINA for the planned simulation code, extended proofs, and proof verification reports.
+The letter identifies two conditions for choosing local operation. Fresh-local decisions have lower team loss than decisions based only on a delayed pool when its age exceeds the crossover threshold. With fresh local observations retained, pooled information has positive decision value at every finite age. In this hybrid architecture, the communication price and latency determine whether refreshing improves the total average cost. The introduction groups the results into four contributions. Theorem 1 checks the team optimality equations directly under the full local observation path. The common-rate Gaussian covariance factorization also gives the discrete-time pooling law for stationary AR(1) processes; the refresh integrals require sums in discrete time.
+
+The public project repository is https://github.com/anrgusc/TINA. It includes simulation code and extended analysis. Lamport-style proof-review reports identify theorem assumptions, logical dependencies, and unresolved obligations. Such reports are mathematical reviews, not proof-assistant certificates.
 
 The supplied TINA source provides the information-architecture framing. The common-signal hybrid and refresh results were developed for this draft. The introduction and bibliography identify the arXiv preprint as the longer version, and the introduction describes its broader coverage of local/global information, spatial predictability, and neighborhood-radius selection. All proofs needed to assess this draft are inside the six-page manuscript.
 

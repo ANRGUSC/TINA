@@ -13,10 +13,10 @@
     "Delta": 0.5410628019323671
   },
   "gaussian_team_checks_summary": {
-    "number_of_linear_systems": 126,
+    "number_of_linear_systems": 83,
     "maximum_coefficient_error": 1.5432100042289676e-14,
     "maximum_conditional_normal_equation_residual": 5.329070518200751e-15,
-    "maximum_objective_error": 5.2735593669694936e-15,
+    "maximum_objective_error": 2.609024107869118e-15,
     "all_quadratic_matrices_positive_definite": true
   },
   "gaussian_team_checks": [
@@ -29,9 +29,9 @@
       "rho": 0.3247308853624495,
       "max_coefficient_error": 4.440892098500626e-16,
       "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.13956289023849763,
+      "computed_objective": 0.13956289023849772,
       "formula_objective": 0.13956289023849772,
-      "objective_error": 8.326672684688674e-17,
+      "objective_error": 0.0,
       "minimum_quadratic_eigenvalue": 0.5682713131194034
     },
     {
@@ -46,21 +46,7 @@
       "computed_objective": 0.1271764512967425,
       "formula_objective": 0.1271764512967425,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.09306396364488935
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 10,
-      "a": 0.3218647491812115,
-      "b": 0.23729750578865821,
-      "kappa": 0.042651841990779246,
-      "rho": 0.3247308853624495,
-      "max_coefficient_error": 6.661338147750939e-16,
-      "conditional_normal_equation_residual": 1.6653345369377348e-16,
-      "computed_objective": 0.13437668138442652,
-      "formula_objective": 0.13437668138442657,
-      "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.29884831488680946
+      "minimum_quadratic_eigenvalue": 0.09306396364488921
     },
     {
       "architecture": "local",
@@ -83,32 +69,18 @@
       "b": 0.19496776842360655,
       "kappa": 0.23923865224650123,
       "rho": 0.5881448009476055,
-      "max_coefficient_error": 7.66053886991358e-15,
+      "max_coefficient_error": 1.0103029524088925e-14,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.15084908552729326,
+      "computed_objective": 0.15084908552729281,
       "formula_objective": 0.15084908552729248,
-      "objective_error": 7.771561172376096e-16,
-      "minimum_quadratic_eigenvalue": 0.10424128585330784
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 10,
-      "a": 3.1515799856944255,
-      "b": 0.19496776842360655,
-      "kappa": 0.23923865224650123,
-      "rho": 0.5881448009476055,
-      "max_coefficient_error": 9.992007221626409e-16,
-      "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 0.21378073647239004,
-      "formula_objective": 0.2137807364723886,
-      "objective_error": 1.4432899320127035e-15,
-      "minimum_quadratic_eigenvalue": 1.4115832303792433
+      "objective_error": 3.3306690738754696e-16,
+      "minimum_quadratic_eigenvalue": 0.10424128585330905
     },
     {
       "architecture": "local",
       "n": 12,
       "a": 0.19739341287122936,
-      "b": 7.445067895583515,
+      "b": 7.445067895583516,
       "kappa": 2.550298747206539,
       "rho": 0.7784286658090672,
       "max_coefficient_error": 5.204170427930421e-18,
@@ -116,35 +88,21 @@
       "computed_objective": 0.19583779261159157,
       "formula_objective": 0.19583779261159157,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 25.047346358181187
+      "minimum_quadratic_eigenvalue": 25.047346358181183
     },
     {
       "architecture": "hybrid",
       "n": 12,
       "a": 0.19739341287122936,
-      "b": 7.445067895583515,
+      "b": 7.445067895583516,
       "kappa": 2.550298747206539,
       "rho": 0.7784286658090672,
       "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 1.3877787807814457e-16,
+      "conditional_normal_equation_residual": 8.326672684688674e-17,
       "computed_objective": 0.16791037565781114,
       "formula_objective": 0.16791037565781114,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.7901934641560139
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 12,
-      "a": 0.19739341287122936,
-      "b": 7.445067895583515,
-      "kappa": 2.550298747206539,
-      "rho": 0.7784286658090672,
-      "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 1.6653345369377348e-16,
-      "computed_objective": 0.16827694243027955,
-      "formula_objective": 0.16827694243027955,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.8011008264657268
+      "minimum_quadratic_eigenvalue": 0.7901934641560281
     },
     {
       "architecture": "local",
@@ -167,26 +125,12 @@
       "b": 5.771738973018763,
       "kappa": 5.915921131442207,
       "rho": 0.38897948491548934,
-      "max_coefficient_error": 2.7755575615628914e-16,
+      "max_coefficient_error": 2.220446049250313e-16,
       "conditional_normal_equation_residual": 4.440892098500626e-16,
       "computed_objective": 1.6127952892297341,
       "formula_objective": 1.6127952892297341,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 2.4286557721367874
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 1.9035436473964475,
-      "b": 5.771738973018763,
-      "kappa": 5.915921131442207,
-      "rho": 0.38897948491548934,
-      "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 1.62444299600931,
-      "formula_objective": 1.6244429960093099,
-      "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 2.595186036663554
+      "minimum_quadratic_eigenvalue": 2.428655772136743
     },
     {
       "architecture": "local",
@@ -197,10 +141,10 @@
       "rho": 0.05045134682859026,
       "max_coefficient_error": 8.326672684688674e-17,
       "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 1.921856147440516,
+      "computed_objective": 1.9218561474405158,
       "formula_objective": 1.921856147440516,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 15.356748249557862
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 15.356748249557858
     },
     {
       "architecture": "hybrid",
@@ -214,21 +158,7 @@
       "computed_objective": 1.918964545360661,
       "formula_objective": 1.9189645453606612,
       "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 2.526417696629956
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 2.2521444787018825,
-      "b": 9.655557234559172,
-      "kappa": 0.40823821704925595,
-      "rho": 0.05045134682859026,
-      "max_coefficient_error": 5.551115123125783e-17,
-      "conditional_normal_equation_residual": 1.3877787807814457e-17,
-      "computed_objective": 1.9196145901006152,
-      "formula_objective": 1.919614590100615,
-      "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 3.4565298748192435
+      "minimum_quadratic_eigenvalue": 2.526417696629954
     },
     {
       "architecture": "local",
@@ -251,68 +181,40 @@
       "b": 1.7184956483317788,
       "kappa": 0.03172783424104907,
       "rho": 0.6292898940449984,
-      "max_coefficient_error": 9.71445146547012e-17,
+      "max_coefficient_error": 5.551115123125783e-17,
       "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.2661568516833625,
+      "computed_objective": 0.26615685168336245,
       "formula_objective": 0.2661568516833625,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.40848806758230405
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 4,
-      "a": 0.37530886545809483,
-      "b": 1.7184956483317788,
-      "kappa": 0.03172783424104907,
-      "rho": 0.6292898940449984,
-      "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 2.7755575615628914e-17,
-      "computed_objective": 0.27771395598484916,
-      "formula_objective": 0.2777139559848491,
       "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.633963886623047
+      "minimum_quadratic_eigenvalue": 0.40848806758230494
     },
     {
       "architecture": "local",
       "n": 9,
       "a": 0.5715463042049472,
-      "b": 0.6578427613163259,
+      "b": 0.657842761316326,
       "kappa": 9.074093376395632,
       "rho": 0.6893552075812587,
-      "max_coefficient_error": 4.163336342344337e-17,
-      "conditional_normal_equation_residual": 1.1102230246251565e-16,
+      "max_coefficient_error": 5.551115123125783e-17,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
       "computed_objective": 0.5215627807551987,
-      "formula_objective": 0.5215627807551987,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 6.535457192783742
+      "formula_objective": 0.5215627807551988,
+      "objective_error": 1.1102230246251565e-16,
+      "minimum_quadratic_eigenvalue": 6.53545719278374
     },
     {
       "architecture": "hybrid",
       "n": 9,
       "a": 0.5715463042049472,
-      "b": 0.6578427613163259,
+      "b": 0.657842761316326,
       "kappa": 9.074093376395632,
       "rho": 0.6893552075812587,
-      "max_coefficient_error": 3.3306690738754696e-16,
-      "conditional_normal_equation_residual": 7.771561172376096e-16,
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 6.106226635438361e-16,
       "computed_objective": 0.3045070153934115,
-      "formula_objective": 0.3045070153934114,
-      "objective_error": 1.1102230246251565e-16,
-      "minimum_quadratic_eigenvalue": 0.5742128047858223
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 9,
-      "a": 0.5715463042049472,
-      "b": 0.6578427613163259,
-      "kappa": 9.074093376395632,
-      "rho": 0.6893552075812587,
-      "max_coefficient_error": 6.661338147750939e-16,
-      "conditional_normal_equation_residual": 2.7755575615628914e-16,
-      "computed_objective": 0.3162952038679918,
-      "formula_objective": 0.3162952038679917,
-      "objective_error": 1.1102230246251565e-16,
-      "minimum_quadratic_eigenvalue": 0.6113054117839531
+      "formula_objective": 0.30450701539341146,
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.574212804785823
     },
     {
       "architecture": "local",
@@ -340,21 +242,7 @@
       "computed_objective": 0.15572571624151776,
       "formula_objective": 0.15572571624151776,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.24014808618984038
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 5,
-      "a": 0.19446232741489908,
-      "b": 0.8813488878477076,
-      "kappa": 0.3202361432626262,
-      "rho": 0.3643390301416849,
-      "max_coefficient_error": 5.551115123125783e-17,
-      "conditional_normal_equation_residual": 2.7755575615628914e-17,
-      "computed_objective": 0.15821171663424793,
-      "formula_objective": 0.15821171663424796,
-      "objective_error": 2.7755575615628914e-17,
-      "minimum_quadratic_eigenvalue": 0.3515288748879059
+      "minimum_quadratic_eigenvalue": 0.24014808618983982
     },
     {
       "architecture": "local",
@@ -365,10 +253,10 @@
       "rho": 0.17616759640351462,
       "max_coefficient_error": 5.551115123125783e-16,
       "conditional_normal_equation_residual": 2.6645352591003757e-15,
-      "computed_objective": 0.5670772937219004,
+      "computed_objective": 0.5670772937219,
       "formula_objective": 0.5670772937219009,
-      "objective_error": 4.440892098500626e-16,
-      "minimum_quadratic_eigenvalue": 4.007978656715304
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 4.0079786567153
     },
     {
       "architecture": "hybrid",
@@ -377,26 +265,12 @@
       "b": 0.14836674403665936,
       "kappa": 4.009153049903121,
       "rho": 0.17616759640351462,
-      "max_coefficient_error": 1.0824674490095276e-15,
+      "max_coefficient_error": 2.6645352591003757e-15,
       "conditional_normal_equation_residual": 2.6645352591003757e-15,
-      "computed_objective": 0.5499364479898028,
+      "computed_objective": 0.5499364479898015,
       "formula_objective": 0.5499364479898025,
-      "objective_error": 3.3306690738754696e-16,
-      "minimum_quadratic_eigenvalue": 0.3018357927732912
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 10,
-      "a": 3.324269426755751,
-      "b": 0.14836674403665936,
-      "kappa": 4.009153049903121,
-      "rho": 0.17616759640351462,
-      "max_coefficient_error": 6.661338147750939e-16,
-      "conditional_normal_equation_residual": 4.440892098500626e-15,
-      "computed_objective": 0.5641408144163256,
-      "formula_objective": 0.5641408144163252,
-      "objective_error": 3.3306690738754696e-16,
-      "minimum_quadratic_eigenvalue": 2.9968765657984577
+      "objective_error": 9.992007221626409e-16,
+      "minimum_quadratic_eigenvalue": 0.30183579277328915
     },
     {
       "architecture": "local",
@@ -410,7 +284,7 @@
       "computed_objective": 0.5310100214774817,
       "formula_objective": 0.5310100214774817,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 21.690622344376305
+      "minimum_quadratic_eigenvalue": 21.690622344376308
     },
     {
       "architecture": "hybrid",
@@ -419,26 +293,12 @@
       "b": 1.2889807610685493,
       "kappa": 16.945674861807603,
       "rho": 0.3221721974167523,
-      "max_coefficient_error": 8.326672684688674e-16,
+      "max_coefficient_error": 6.106226635438361e-16,
       "conditional_normal_equation_residual": 6.106226635438361e-16,
-      "computed_objective": 0.485903234962817,
+      "computed_objective": 0.4859032349628169,
       "formula_objective": 0.485903234962817,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.6410545475604407
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 11,
-      "a": 0.5446880558596091,
-      "b": 1.2889807610685493,
-      "kappa": 16.945674861807603,
-      "rho": 0.3221721974167523,
-      "max_coefficient_error": 5.551115123125783e-16,
-      "conditional_normal_equation_residual": 5.828670879282072e-16,
-      "computed_objective": 0.4871406814335385,
-      "formula_objective": 0.4871406814335386,
       "objective_error": 1.1102230246251565e-16,
-      "minimum_quadratic_eigenvalue": 0.6597060993209898
+      "minimum_quadratic_eigenvalue": 0.641054547560453
     },
     {
       "architecture": "local",
@@ -452,7 +312,7 @@
       "computed_objective": 1.3641318484770837,
       "formula_objective": 1.3641318484770837,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 15.86138736315199
+      "minimum_quadratic_eigenvalue": 15.861387363151989
     },
     {
       "architecture": "hybrid",
@@ -461,26 +321,12 @@
       "b": 1.1619555637496786,
       "kappa": 13.623975973144313,
       "rho": 0.12480370384015202,
-      "max_coefficient_error": 1.5265566588595902e-16,
+      "max_coefficient_error": 1.6653345369377348e-16,
       "conditional_normal_equation_residual": 3.885780586188048e-16,
-      "computed_objective": 1.3455571969366042,
+      "computed_objective": 1.3455571969366045,
       "formula_objective": 1.3455571969366042,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.499535501989866
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 6,
-      "a": 1.5073862307464905,
-      "b": 1.1619555637496786,
-      "kappa": 13.623975973144313,
-      "rho": 0.12480370384015202,
-      "max_coefficient_error": 4.163336342344337e-17,
-      "conditional_normal_equation_residual": 2.498001805406602e-16,
-      "computed_objective": 1.3475214783541951,
-      "formula_objective": 1.347521478354195,
       "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 1.69786337921608
+      "minimum_quadratic_eigenvalue": 1.4995355019898615
     },
     {
       "architecture": "local",
@@ -491,10 +337,10 @@
       "rho": 0.8494648046013791,
       "max_coefficient_error": 3.3306690738754696e-16,
       "conditional_normal_equation_residual": 2.6645352591003757e-15,
-      "computed_objective": 1.2133831456466257,
+      "computed_objective": 1.2133831456466249,
       "formula_objective": 1.2133831456466266,
-      "objective_error": 8.881784197001252e-16,
-      "minimum_quadratic_eigenvalue": 8.080648722846504
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 8.080648722846503
     },
     {
       "architecture": "hybrid",
@@ -503,26 +349,12 @@
       "b": 1.1400688287393828,
       "kappa": 0.35505861408731987,
       "rho": 0.8494648046013791,
-      "max_coefficient_error": 2.886579864025407e-15,
+      "max_coefficient_error": 5.88418203051333e-15,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.4525077731977527,
+      "computed_objective": 0.4525077731977518,
       "formula_objective": 0.45250777319775104,
-      "objective_error": 1.6653345369377348e-15,
-      "minimum_quadratic_eigenvalue": 0.5526107349370513
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 7,
-      "a": 6.5936159584245235,
-      "b": 1.1400688287393828,
-      "kappa": 0.35505861408731987,
-      "rho": 0.8494648046013791,
-      "max_coefficient_error": 6.661338147750939e-16,
-      "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 0.8990457894510513,
-      "formula_objective": 0.8990457894510516,
-      "objective_error": 3.3306690738754696e-16,
-      "minimum_quadratic_eigenvalue": 1.6411094267926845
+      "objective_error": 7.771561172376096e-16,
+      "minimum_quadratic_eigenvalue": 0.5526107349370477
     },
     {
       "architecture": "local",
@@ -533,10 +365,10 @@
       "rho": 0.7182880572953635,
       "max_coefficient_error": 2.220446049250313e-16,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 1.8631176709303574,
+      "computed_objective": 1.8631176709303547,
       "formula_objective": 1.8631176709303556,
-      "objective_error": 1.7763568394002505e-15,
-      "minimum_quadratic_eigenvalue": 9.923424478168304
+      "objective_error": 8.881784197001252e-16,
+      "minimum_quadratic_eigenvalue": 9.923424478168306
     },
     {
       "architecture": "hybrid",
@@ -545,26 +377,12 @@
       "b": 2.438179935769211,
       "kappa": 0.024420006980354906,
       "rho": 0.7182880572953635,
-      "max_coefficient_error": 7.771561172376096e-16,
+      "max_coefficient_error": 4.440892098500626e-16,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 1.1379745921327444,
+      "computed_objective": 1.1379745921327435,
       "formula_objective": 1.137974592132744,
       "objective_error": 4.440892098500626e-16,
-      "minimum_quadratic_eigenvalue": 0.8827231652674927
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 5,
-      "a": 7.437612245558423,
-      "b": 2.438179935769211,
-      "kappa": 0.024420006980354906,
-      "rho": 0.7182880572953635,
-      "max_coefficient_error": 2.220446049250313e-16,
-      "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 1.6147731357583588,
-      "formula_objective": 1.6147731357583566,
-      "objective_error": 2.220446049250313e-15,
-      "minimum_quadratic_eigenvalue": 3.1447170896159466
+      "minimum_quadratic_eigenvalue": 0.8827231652674917
     },
     {
       "architecture": "local",
@@ -575,9 +393,9 @@
       "rho": 0.7403961382487172,
       "max_coefficient_error": 2.220446049250313e-16,
       "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 0.2243508482587928,
+      "computed_objective": 0.22435084825879192,
       "formula_objective": 0.22435084825879192,
-      "objective_error": 8.881784197001252e-16,
+      "objective_error": 0.0,
       "minimum_quadratic_eigenvalue": 3.774227845732468
     },
     {
@@ -587,26 +405,12 @@
       "b": 0.22595670871387033,
       "kappa": 0.07021529424545409,
       "rho": 0.7403961382487172,
-      "max_coefficient_error": 1.1213252548714081e-14,
+      "max_coefficient_error": 1.3433698597964394e-14,
       "conditional_normal_equation_residual": 1.3322676295501878e-15,
-      "computed_objective": 0.11889982097107588,
+      "computed_objective": 0.11889982097107454,
       "formula_objective": 0.118899820971074,
-      "objective_error": 1.8735013540549517e-15,
-      "minimum_quadratic_eigenvalue": 0.0995396058001622
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 7,
-      "a": 3.534672036913672,
-      "b": 0.22595670871387033,
-      "kappa": 0.07021529424545409,
-      "rho": 0.7403961382487172,
-      "max_coefficient_error": 5.551115123125783e-16,
-      "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 0.21233379581140532,
-      "formula_objective": 0.21233379581140405,
-      "objective_error": 1.27675647831893e-15,
-      "minimum_quadratic_eigenvalue": 1.0275998059380493
+      "objective_error": 5.412337245047638e-16,
+      "minimum_quadratic_eigenvalue": 0.09953960580016238
     },
     {
       "architecture": "local",
@@ -617,9 +421,9 @@
       "rho": 0.2566139025010646,
       "max_coefficient_error": 2.220446049250313e-16,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 1.2063106083018154,
+      "computed_objective": 1.2063106083018136,
       "formula_objective": 1.2063106083018136,
-      "objective_error": 1.7763568394002505e-15,
+      "objective_error": 0.0,
       "minimum_quadratic_eigenvalue": 6.782932886291886
     },
     {
@@ -629,26 +433,12 @@
       "b": 1.3844991492419194,
       "kappa": 0.15585666052932054,
       "rho": 0.2566139025010646,
-      "max_coefficient_error": 7.771561172376096e-16,
+      "max_coefficient_error": 6.938893903907228e-16,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
       "computed_objective": 1.1394224867596225,
       "formula_objective": 1.1394224867596223,
       "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 0.6327596820774847
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 7,
-      "a": 5.2134765251300825,
-      "b": 1.3844991492419194,
-      "kappa": 0.15585666052932054,
-      "rho": 0.2566139025010646,
-      "max_coefficient_error": 3.3306690738754696e-16,
-      "conditional_normal_equation_residual": 2.220446049250313e-16,
-      "computed_objective": 1.1920342387523037,
-      "formula_objective": 1.1920342387523029,
-      "objective_error": 8.881784197001252e-16,
-      "minimum_quadratic_eigenvalue": 4.548357927823606
+      "minimum_quadratic_eigenvalue": 0.6327596820774852
     },
     {
       "architecture": "local",
@@ -659,10 +449,10 @@
       "rho": 0.559613409719565,
       "max_coefficient_error": 2.7755575615628914e-16,
       "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 1.542357590759006,
+      "computed_objective": 1.5423575907590064,
       "formula_objective": 1.5423575907590061,
       "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 6.305734783519577
+      "minimum_quadratic_eigenvalue": 6.305734783519578
     },
     {
       "architecture": "hybrid",
@@ -671,26 +461,12 @@
       "b": 3.44591700991592,
       "kappa": 0.05566251698122542,
       "rho": 0.559613409719565,
-      "max_coefficient_error": 5.551115123125783e-16,
+      "max_coefficient_error": 4.996003610813204e-16,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 1.1643037117536745,
+      "computed_objective": 1.1643037117536743,
       "formula_objective": 1.1643037117536745,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.1751860156087286
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 9,
-      "a": 2.6893214055322505,
-      "b": 3.44591700991592,
-      "kappa": 0.05566251698122542,
-      "rho": 0.559613409719565,
-      "max_coefficient_error": 4.440892098500626e-16,
-      "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 1.3135895567124056,
-      "formula_objective": 1.3135895567124058,
       "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 2.3289386591510444
+      "minimum_quadratic_eigenvalue": 1.17518601560872
     },
     {
       "architecture": "local",
@@ -718,21 +494,7 @@
       "computed_objective": 0.12634935030979114,
       "formula_objective": 0.1263493503097911,
       "objective_error": 2.7755575615628914e-17,
-      "minimum_quadratic_eigenvalue": 0.20738020283965727
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 9,
-      "a": 0.169355055849713,
-      "b": 1.0396897456039107,
-      "kappa": 0.06727333535429,
-      "rho": 0.5115716850778462,
-      "max_coefficient_error": 2.7755575615628914e-16,
-      "conditional_normal_equation_residual": 8.326672684688674e-17,
-      "computed_objective": 0.12994249197822916,
-      "formula_objective": 0.12994249197822916,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.2637940597711972
+      "minimum_quadratic_eigenvalue": 0.20738020283965652
     },
     {
       "architecture": "local",
@@ -757,24 +519,10 @@
       "rho": 0.4172617016168418,
       "max_coefficient_error": 1.1102230246251565e-16,
       "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 1.2483240933012527,
+      "computed_objective": 1.2483240933012525,
       "formula_objective": 1.2483240933012527,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.058499987526081
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 3,
-      "a": 2.027546139756417,
-      "b": 3.9344029923691206,
-      "kappa": 0.018567166254958925,
-      "rho": 0.4172617016168418,
-      "max_coefficient_error": 5.551115123125783e-17,
-      "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 1.296718362010434,
-      "formula_objective": 1.296718362010434,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 2.7446673714366363
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 1.0584999875260805
     },
     {
       "architecture": "local",
@@ -785,9 +533,9 @@
       "rho": 0.9144580505729948,
       "max_coefficient_error": 3.3306690738754696e-16,
       "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.32989223659919853,
+      "computed_objective": 0.3298922365991994,
       "formula_objective": 0.32989223659919853,
-      "objective_error": 0.0,
+      "objective_error": 8.881784197001252e-16,
       "minimum_quadratic_eigenvalue": 3.8899198574247507
     },
     {
@@ -797,26 +545,12 @@
       "b": 0.3525535187620486,
       "kappa": 0.03692053805253548,
       "rho": 0.9144580505729948,
-      "max_coefficient_error": 3.6637359812630166e-15,
+      "max_coefficient_error": 5.440092820663267e-15,
       "conditional_normal_equation_residual": 2.6645352591003757e-15,
-      "computed_objective": 0.09042251400439039,
+      "computed_objective": 0.09042251400439127,
       "formula_objective": 0.09042251400439058,
-      "objective_error": 1.942890293094024e-16,
-      "minimum_quadratic_eigenvalue": 0.1368918929749373
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 3.52597693125832,
-      "b": 0.3525535187620486,
-      "kappa": 0.03692053805253548,
-      "rho": 0.9144580505729948,
-      "max_coefficient_error": 1.0547118733938987e-15,
-      "conditional_normal_equation_residual": 1.3322676295501878e-15,
-      "computed_objective": 0.24520706519554603,
-      "formula_objective": 0.24520706519554672,
       "objective_error": 6.938893903907228e-16,
-      "minimum_quadratic_eigenvalue": 0.4614102352946654
+      "minimum_quadratic_eigenvalue": 0.13689189297493637
     },
     {
       "architecture": "local",
@@ -830,7 +564,7 @@
       "computed_objective": 0.1295401995704859,
       "formula_objective": 0.12954019957048585,
       "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.7559900549992963
+      "minimum_quadratic_eigenvalue": 0.7559900549992967
     },
     {
       "architecture": "hybrid",
@@ -839,26 +573,12 @@
       "b": 0.14802712236414384,
       "kappa": 0.1415174319844398,
       "rho": 0.17301960162903296,
-      "max_coefficient_error": 3.3306690738754696e-16,
+      "max_coefficient_error": 4.440892098500626e-16,
       "conditional_normal_equation_residual": 2.220446049250313e-16,
-      "computed_objective": 0.12627345213100805,
+      "computed_objective": 0.1262734521310081,
       "formula_objective": 0.12627345213100805,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.06724446047094473
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 7,
-      "a": 0.5900071455885637,
-      "b": 0.14802712236414384,
-      "kappa": 0.1415174319844398,
-      "rho": 0.17301960162903296,
-      "max_coefficient_error": 5.551115123125783e-16,
-      "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.12889881876374726,
-      "formula_objective": 0.12889881876374729,
-      "objective_error": 2.7755575615628914e-17,
-      "minimum_quadratic_eigenvalue": 0.5554093131047401
+      "objective_error": 5.551115123125783e-17,
+      "minimum_quadratic_eigenvalue": 0.06724446047094507
     },
     {
       "architecture": "local",
@@ -869,9 +589,9 @@
       "rho": 0.2795140594871723,
       "max_coefficient_error": 2.220446049250313e-16,
       "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.33273238107120573,
+      "computed_objective": 0.3327323810712075,
       "formula_objective": 0.33273238107120573,
-      "objective_error": 0.0,
+      "objective_error": 1.7763568394002505e-15,
       "minimum_quadratic_eigenvalue": 4.721156275547
     },
     {
@@ -881,26 +601,12 @@
       "b": 0.3407746250894616,
       "kappa": 0.07131418428038049,
       "rho": 0.2795140594871723,
-      "max_coefficient_error": 2.4424906541753444e-15,
+      "max_coefficient_error": 1.887379141862766e-15,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 0.3119795063515731,
+      "computed_objective": 0.31197950635157223,
       "formula_objective": 0.3119795063515717,
-      "objective_error": 1.4432899320127035e-15,
-      "minimum_quadratic_eigenvalue": 0.14125953400855032
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 5,
-      "a": 4.3609399989281705,
-      "b": 0.3407746250894616,
-      "kappa": 0.07131418428038049,
-      "rho": 0.2795140594871723,
-      "max_coefficient_error": 4.440892098500626e-16,
-      "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.331347021724544,
-      "formula_objective": 0.33134702172454356,
-      "objective_error": 4.440892098500626e-16,
-      "minimum_quadratic_eigenvalue": 3.328548345753189
+      "objective_error": 5.551115123125783e-16,
+      "minimum_quadratic_eigenvalue": 0.14125953400855065
     },
     {
       "architecture": "local",
@@ -911,9 +617,9 @@
       "rho": 0.3647610409880886,
       "max_coefficient_error": 3.3306690738754696e-16,
       "conditional_normal_equation_residual": 3.3306690738754696e-16,
-      "computed_objective": 0.32166940082636264,
+      "computed_objective": 0.32166940082636253,
       "formula_objective": 0.32166940082636236,
-      "objective_error": 2.7755575615628914e-16,
+      "objective_error": 1.6653345369377348e-16,
       "minimum_quadratic_eigenvalue": 1.2906372396451584
     },
     {
@@ -925,24 +631,10 @@
       "rho": 0.3647610409880886,
       "max_coefficient_error": 5.551115123125783e-16,
       "conditional_normal_equation_residual": 3.3306690738754696e-16,
-      "computed_objective": 0.29468826520074215,
+      "computed_objective": 0.2946882652007421,
       "formula_objective": 0.2946882652007419,
-      "objective_error": 2.7755575615628914e-16,
-      "minimum_quadratic_eigenvalue": 0.19656732351121609
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 4,
-      "a": 0.681062339954509,
-      "b": 0.5760795023711728,
-      "kappa": 0.07752494156705089,
-      "rho": 0.3647610409880886,
-      "max_coefficient_error": 3.3306690738754696e-16,
-      "conditional_normal_equation_residual": 3.3306690738754696e-16,
-      "computed_objective": 0.31103206183554355,
-      "formula_objective": 0.3110320618355434,
-      "objective_error": 1.6653345369377348e-16,
-      "minimum_quadratic_eigenvalue": 0.6773850289703476
+      "objective_error": 2.220446049250313e-16,
+      "minimum_quadratic_eigenvalue": 0.19656732351121642
     },
     {
       "architecture": "local",
@@ -965,26 +657,12 @@
       "b": 0.5376549655461006,
       "kappa": 3.9398427111681773,
       "rho": 0.3071887668877702,
-      "max_coefficient_error": 3.0531133177191805e-16,
+      "max_coefficient_error": 2.498001805406602e-16,
       "conditional_normal_equation_residual": 5.551115123125783e-17,
       "computed_objective": 0.28945291693566716,
       "formula_objective": 0.28945291693566716,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.131310436626052
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 2,
-      "a": 0.37443088941245795,
-      "b": 0.5376549655461006,
-      "kappa": 3.9398427111681773,
-      "rho": 0.3071887668877702,
-      "max_coefficient_error": 4.163336342344337e-17,
-      "conditional_normal_equation_residual": 1.3877787807814457e-17,
-      "computed_objective": 0.2936777138742505,
-      "formula_objective": 0.2936777138742505,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.614478866492425
+      "minimum_quadratic_eigenvalue": 0.1313104366260509
     },
     {
       "architecture": "local",
@@ -995,9 +673,9 @@
       "rho": 0.5935694261603199,
       "max_coefficient_error": 1.1102230246251565e-16,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 1.2113117326191922,
+      "computed_objective": 1.211311732619194,
       "formula_objective": 1.211311732619194,
-      "objective_error": 1.7763568394002505e-15,
+      "objective_error": 0.0,
       "minimum_quadratic_eigenvalue": 10.905746296342793
     },
     {
@@ -1007,68 +685,40 @@
       "b": 1.0882517816034787,
       "kappa": 0.5507958571086032,
       "rho": 0.5935694261603199,
-      "max_coefficient_error": 3.1086244689504383e-15,
+      "max_coefficient_error": 2.7755575615628914e-15,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.9658785154955591,
+      "computed_objective": 0.9658785154955627,
       "formula_objective": 0.9658785154955601,
-      "objective_error": 9.992007221626409e-16,
-      "minimum_quadratic_eigenvalue": 0.2684556819366889
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 2,
-      "a": 9.517792228340188,
-      "b": 1.0882517816034787,
-      "kappa": 0.5507958571086032,
-      "rho": 0.5935694261603199,
-      "max_coefficient_error": 2.220446049250313e-16,
-      "conditional_normal_equation_residual": 3.552713678800501e-15,
-      "computed_objective": 1.1831752912826339,
-      "formula_objective": 1.183175291282635,
-      "objective_error": 1.1102230246251565e-15,
-      "minimum_quadratic_eigenvalue": 4.49650106301987
+      "objective_error": 2.55351295663786e-15,
+      "minimum_quadratic_eigenvalue": 0.26845568193669034
     },
     {
       "architecture": "local",
       "n": 5,
-      "a": 1.7872996208617244,
+      "a": 1.7872996208617247,
       "b": 1.3968090479802382,
       "kappa": 29.38747383978954,
       "rho": 0.3384329331515174,
-      "max_coefficient_error": 6.938893903907228e-18,
-      "conditional_normal_equation_residual": 6.661338147750939e-16,
-      "computed_objective": 1.6986219815646142,
+      "max_coefficient_error": 2.7755575615628914e-17,
+      "conditional_normal_equation_residual": 1.1102230246251565e-15,
+      "computed_objective": 1.6986219815646144,
       "formula_objective": 1.6986219815646144,
-      "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 36.02306015420244
+      "objective_error": 0.0,
+      "minimum_quadratic_eigenvalue": 36.02306015420243
     },
     {
       "architecture": "hybrid",
       "n": 5,
-      "a": 1.7872996208617244,
+      "a": 1.7872996208617247,
       "b": 1.3968090479802382,
       "kappa": 29.38747383978954,
       "rho": 0.3384329331515174,
-      "max_coefficient_error": 2.220446049250313e-16,
-      "conditional_normal_equation_residual": 1.887379141862766e-15,
+      "max_coefficient_error": 8.326672684688674e-16,
+      "conditional_normal_equation_residual": 1.9984014443252818e-15,
       "computed_objective": 1.5317391541726164,
       "formula_objective": 1.5317391541726166,
       "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 1.941289145345391
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 5,
-      "a": 1.7872996208617244,
-      "b": 1.3968090479802382,
-      "kappa": 29.38747383978954,
-      "rho": 0.3384329331515174,
-      "max_coefficient_error": 5.551115123125783e-17,
-      "conditional_normal_equation_residual": 1.1102230246251565e-15,
-      "computed_objective": 1.5402727890092545,
-      "formula_objective": 1.5402727890092547,
-      "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 2.0522609116095802
+      "minimum_quadratic_eigenvalue": 1.9412891453453784
     },
     {
       "architecture": "local",
@@ -1091,26 +741,12 @@
       "b": 0.924332604973202,
       "kappa": 0.4784467297173838,
       "rho": 0.39890610379190616,
-      "max_coefficient_error": 8.881784197001252e-16,
+      "max_coefficient_error": 5.551115123125783e-16,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.9296105968762376,
+      "computed_objective": 0.9296105968762411,
       "formula_objective": 0.9296105968762398,
-      "objective_error": 2.220446049250313e-15,
-      "minimum_quadratic_eigenvalue": 0.4878270692532885
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 5,
-      "a": 6.627717883274224,
-      "b": 0.924332604973202,
-      "kappa": 0.4784467297173838,
-      "rho": 0.39890610379190616,
-      "max_coefficient_error": 2.220446049250313e-16,
-      "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 1.0487561419947218,
-      "formula_objective": 1.0487561419947207,
-      "objective_error": 1.1102230246251565e-15,
-      "minimum_quadratic_eigenvalue": 4.587202342017488
+      "objective_error": 1.3322676295501878e-15,
+      "minimum_quadratic_eigenvalue": 0.48782706925329267
     },
     {
       "architecture": "local",
@@ -1121,10 +757,10 @@
       "rho": 0.8960754847771483,
       "max_coefficient_error": 3.3306690738754696e-16,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.347337090179213,
+      "computed_objective": 0.34733709017921477,
       "formula_objective": 0.347337090179213,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 8.207493991913324
+      "objective_error": 1.7763568394002505e-15,
+      "minimum_quadratic_eigenvalue": 8.207493991913326
     },
     {
       "architecture": "hybrid",
@@ -1133,68 +769,40 @@
       "b": 0.2846122540446144,
       "kappa": 0.3164911393052171,
       "rho": 0.8960754847771483,
-      "max_coefficient_error": 1.27675647831893e-14,
+      "max_coefficient_error": 1.3988810110276972e-14,
       "conditional_normal_equation_residual": 5.329070518200751e-15,
-      "computed_objective": 0.09687957615567022,
+      "computed_objective": 0.09687957615566756,
       "formula_objective": 0.09687957615566495,
-      "objective_error": 5.2735593669694936e-15,
-      "minimum_quadratic_eigenvalue": 0.15209632049540506
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 7.844064138393752,
-      "b": 0.2846122540446144,
-      "kappa": 0.3164911393052171,
-      "rho": 0.8960754847771483,
-      "max_coefficient_error": 1.27675647831893e-15,
-      "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 0.3036720160231514,
-      "formula_objective": 0.30367201602315114,
-      "objective_error": 2.7755575615628914e-16,
-      "minimum_quadratic_eigenvalue": 0.9809118443079352
+      "objective_error": 2.609024107869118e-15,
+      "minimum_quadratic_eigenvalue": 0.1520963204954052
     },
     {
       "architecture": "local",
       "n": 10,
-      "a": 0.555176789320453,
+      "a": 0.5551767893204531,
       "b": 0.12732231507997854,
       "kappa": 1.8797559482927506,
       "rho": 0.8534634737698016,
-      "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.21190794282015668,
-      "formula_objective": 0.21190794282015657,
-      "objective_error": 1.1102230246251565e-16,
-      "minimum_quadratic_eigenvalue": 0.8979004956102272
+      "max_coefficient_error": 5.551115123125783e-16,
+      "conditional_normal_equation_residual": 2.220446049250313e-16,
+      "computed_objective": 0.21190794282015646,
+      "formula_objective": 0.21190794282015663,
+      "objective_error": 1.6653345369377348e-16,
+      "minimum_quadratic_eigenvalue": 0.8979004956102274
     },
     {
       "architecture": "hybrid",
       "n": 10,
-      "a": 0.555176789320453,
+      "a": 0.5551767893204531,
       "b": 0.12732231507997854,
       "kappa": 1.8797559482927506,
       "rho": 0.8534634737698016,
-      "max_coefficient_error": 1.7763568394002505e-15,
-      "conditional_normal_equation_residual": 6.106226635438361e-16,
-      "computed_objective": 0.06662045254084414,
-      "formula_objective": 0.06662045254084428,
-      "objective_error": 1.3877787807814457e-16,
-      "minimum_quadratic_eigenvalue": 0.10085185639673952
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 10,
-      "a": 0.555176789320453,
-      "b": 0.12732231507997854,
-      "kappa": 1.8797559482927506,
-      "rho": 0.8534634737698016,
-      "max_coefficient_error": 4.440892098500626e-16,
-      "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.11289904900351089,
-      "formula_objective": 0.1128990490035111,
-      "objective_error": 2.0816681711721685e-16,
-      "minimum_quadratic_eigenvalue": 0.22090123554376495
+      "max_coefficient_error": 2.4424906541753444e-15,
+      "conditional_normal_equation_residual": 6.661338147750939e-16,
+      "computed_objective": 0.0666204525408437,
+      "formula_objective": 0.06662045254084437,
+      "objective_error": 6.661338147750939e-16,
+      "minimum_quadratic_eigenvalue": 0.1008518563967411
     },
     {
       "architecture": "local",
@@ -1205,9 +813,9 @@
       "rho": 0.4905774355622556,
       "max_coefficient_error": 4.163336342344337e-17,
       "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.7145554481209007,
+      "computed_objective": 0.7145554481209008,
       "formula_objective": 0.7145554481209008,
-      "objective_error": 1.1102230246251565e-16,
+      "objective_error": 0.0,
       "minimum_quadratic_eigenvalue": 7.0702391566442095
     },
     {
@@ -1217,26 +825,12 @@
       "b": 4.704710047084105,
       "kappa": 0.3976340838774513,
       "rho": 0.4905774355622556,
-      "max_coefficient_error": 1.3877787807814457e-16,
+      "max_coefficient_error": 9.71445146547012e-17,
       "conditional_normal_equation_residual": 1.6653345369377348e-16,
       "computed_objective": 0.6382731564048149,
       "formula_objective": 0.6382731564048149,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.1567926152664694
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 6,
-      "a": 0.8065682183256664,
-      "b": 4.704710047084105,
-      "kappa": 0.3976340838774513,
-      "rho": 0.4905774355622556,
-      "max_coefficient_error": 8.326672684688674e-17,
-      "conditional_normal_equation_residual": 5.551115123125783e-17,
-      "computed_objective": 0.6520510495572489,
-      "formula_objective": 0.6520510495572489,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.4817213836895613
+      "minimum_quadratic_eigenvalue": 1.1567926152664636
     },
     {
       "architecture": "local",
@@ -1250,7 +844,7 @@
       "computed_objective": 2.2199343608676685,
       "formula_objective": 2.2199343608676685,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 10.35585578409026
+      "minimum_quadratic_eigenvalue": 10.355855784090261
     },
     {
       "architecture": "hybrid",
@@ -1265,20 +859,6 @@
       "formula_objective": 2.0983918059847215,
       "objective_error": 0.0,
       "minimum_quadratic_eigenvalue": 2.047601765422506
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 5,
-      "a": 3.223032200728899,
-      "b": 6.330253018591566,
-      "kappa": 0.15847916394745443,
-      "rho": 0.30448906432487305,
-      "max_coefficient_error": 8.326672684688674e-17,
-      "conditional_normal_equation_residual": 4.440892098500626e-16,
-      "computed_objective": 2.148195206166453,
-      "formula_objective": 2.148195206166453,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 4.186251130944018
     },
     {
       "architecture": "local",
@@ -1301,26 +881,12 @@
       "b": 1.865637134804516,
       "kappa": 0.034016406480456986,
       "rho": 0.20118923737158967,
-      "max_coefficient_error": 5.828670879282072e-16,
+      "max_coefficient_error": 5.551115123125783e-16,
       "conditional_normal_equation_residual": 1.1102230246251565e-15,
       "computed_objective": 1.4931906971651587,
       "formula_objective": 1.4931906971651576,
       "objective_error": 1.1102230246251565e-15,
-      "minimum_quadratic_eigenvalue": 0.8339909418155113
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 12,
-      "a": 7.970361529583593,
-      "b": 1.865637134804516,
-      "kappa": 0.034016406480456986,
-      "rho": 0.20118923737158967,
-      "max_coefficient_error": 1.1102230246251565e-15,
-      "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 1.5392917200632477,
-      "formula_objective": 1.5392917200632459,
-      "objective_error": 1.7763568394002505e-15,
-      "minimum_quadratic_eigenvalue": 7.151393217072066
+      "minimum_quadratic_eigenvalue": 0.8339909418155088
     },
     {
       "architecture": "local",
@@ -1343,26 +909,12 @@
       "b": 0.1489260718348418,
       "kappa": 0.1002906203267648,
       "rho": 0.39389474073278474,
-      "max_coefficient_error": 3.885780586188048e-15,
+      "max_coefficient_error": 4.107825191113079e-15,
       "conditional_normal_equation_residual": 8.881784197001252e-16,
-      "computed_objective": 0.13929642083737637,
+      "computed_objective": 0.13929642083737725,
       "formula_objective": 0.1392964208373775,
-      "objective_error": 1.1379786002407855e-15,
-      "minimum_quadratic_eigenvalue": 0.03707759496405519
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 2,
-      "a": 4.754750921201199,
-      "b": 0.1489260718348418,
-      "kappa": 0.1002906203267648,
-      "rho": 0.39389474073278474,
-      "max_coefficient_error": 2.220446049250313e-16,
-      "conditional_normal_equation_residual": 2.220446049250313e-16,
-      "computed_objective": 0.1511751515053108,
-      "formula_objective": 0.15117515150531008,
-      "objective_error": 7.216449660063518e-16,
-      "minimum_quadratic_eigenvalue": 2.967536405838026
+      "objective_error": 2.498001805406602e-16,
+      "minimum_quadratic_eigenvalue": 0.037077594964056014
     },
     {
       "architecture": "local",
@@ -1373,9 +925,9 @@
       "rho": 0.7161122466923819,
       "max_coefficient_error": 1.1102230246251565e-16,
       "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.08445286233444084,
+      "computed_objective": 0.08445286233444083,
       "formula_objective": 0.08445286233444085,
-      "objective_error": 1.3877787807814457e-17,
+      "objective_error": 2.7755575615628914e-17,
       "minimum_quadratic_eigenvalue": 0.35018619197769313
     },
     {
@@ -1385,7 +937,7 @@
       "b": 0.13469004890722952,
       "kappa": 0.06354077563872455,
       "rho": 0.7161122466923819,
-      "max_coefficient_error": 8.881784197001252e-16,
+      "max_coefficient_error": 1.3877787807814457e-15,
       "conditional_normal_equation_residual": 5.551115123125783e-17,
       "computed_objective": 0.04913142865725176,
       "formula_objective": 0.04913142865725178,
@@ -1393,60 +945,32 @@
       "minimum_quadratic_eigenvalue": 0.04927527303797041
     },
     {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 0.20800762166437833,
-      "b": 0.13469004890722952,
-      "kappa": 0.06354077563872455,
-      "rho": 0.7161122466923819,
-      "max_coefficient_error": 2.7755575615628914e-16,
-      "conditional_normal_equation_residual": 5.551115123125783e-17,
-      "computed_objective": 0.06560398890151259,
-      "formula_objective": 0.06560398890151264,
-      "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.11473480900462729
-    },
-    {
       "architecture": "local",
       "n": 8,
-      "a": 0.10660080982470554,
+      "a": 0.10660080982470556,
       "b": 8.09106615223089,
       "kappa": 0.017924984830576505,
       "rho": 0.4667253376524003,
       "max_coefficient_error": 6.938893903907228e-18,
       "conditional_normal_equation_residual": 1.3877787807814457e-17,
-      "computed_objective": 0.10523572641225881,
-      "formula_objective": 0.10523572641225883,
+      "computed_objective": 0.10523572641225883,
+      "formula_objective": 0.10523572641225884,
       "objective_error": 1.3877787807814457e-17,
-      "minimum_quadratic_eigenvalue": 8.324570170342284
+      "minimum_quadratic_eigenvalue": 8.324570170342277
     },
     {
       "architecture": "hybrid",
       "n": 8,
-      "a": 0.10660080982470554,
+      "a": 0.10660080982470556,
       "b": 8.09106615223089,
       "kappa": 0.017924984830576505,
       "rho": 0.4667253376524003,
-      "max_coefficient_error": 1.214306433183765e-17,
-      "conditional_normal_equation_residual": 2.0816681711721685e-17,
-      "computed_objective": 0.10331893035707328,
-      "formula_objective": 0.10331893035707328,
+      "max_coefficient_error": 1.3877787807814457e-17,
+      "conditional_normal_equation_residual": 2.7755575615628914e-17,
+      "computed_objective": 0.10331893035707329,
+      "formula_objective": 0.10331893035707329,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.947707477881239
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 0.10660080982470554,
-      "b": 8.09106615223089,
-      "kappa": 0.017924984830576505,
-      "rho": 0.4667253376524003,
-      "max_coefficient_error": 2.0816681711721685e-17,
-      "conditional_normal_equation_residual": 6.938893903907228e-18,
-      "computed_objective": 0.1035263472775655,
-      "formula_objective": 0.1035263472775655,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.0803998759762803
+      "minimum_quadratic_eigenvalue": 0.9477074778812408
     },
     {
       "architecture": "local",
@@ -1455,11 +979,11 @@
       "b": 0.5606436222685741,
       "kappa": 0.9336037947303761,
       "rho": 0.8096505978700718,
-      "max_coefficient_error": 2.220446049250313e-16,
+      "max_coefficient_error": 1.6653345369377348e-16,
       "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.36826827844580756,
+      "computed_objective": 0.3682682784458075,
       "formula_objective": 0.36826827844580756,
-      "objective_error": 0.0,
+      "objective_error": 5.551115123125783e-17,
       "minimum_quadratic_eigenvalue": 1.6104775332586785
     },
     {
@@ -1469,26 +993,12 @@
       "b": 0.5606436222685741,
       "kappa": 0.9336037947303761,
       "rho": 0.8096505978700718,
-      "max_coefficient_error": 9.992007221626409e-16,
+      "max_coefficient_error": 7.771561172376096e-16,
       "conditional_normal_equation_residual": 6.661338147750939e-16,
-      "computed_objective": 0.15516258068191552,
+      "computed_objective": 0.15516258068191574,
       "formula_objective": 0.15516258068191577,
-      "objective_error": 2.498001805406602e-16,
-      "minimum_quadratic_eigenvalue": 0.2532978487556379
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 12,
-      "a": 0.5700331488522228,
-      "b": 0.5606436222685741,
-      "kappa": 0.9336037947303761,
-      "rho": 0.8096505978700718,
-      "max_coefficient_error": 4.440892098500626e-16,
-      "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.1926981243868468,
-      "formula_objective": 0.19269812438684694,
-      "objective_error": 1.3877787807814457e-16,
-      "minimum_quadratic_eigenvalue": 0.4091816026456753
+      "objective_error": 2.7755575615628914e-17,
+      "minimum_quadratic_eigenvalue": 0.2532978487556366
     },
     {
       "architecture": "local",
@@ -1499,9 +1009,9 @@
       "rho": 0.5717311302921654,
       "max_coefficient_error": 3.3306690738754696e-16,
       "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.9299487687042927,
+      "computed_objective": 0.9299487687042909,
       "formula_objective": 0.9299487687042891,
-      "objective_error": 3.552713678800501e-15,
+      "objective_error": 1.7763568394002505e-15,
       "minimum_quadratic_eigenvalue": 10.193876855078418
     },
     {
@@ -1511,26 +1021,12 @@
       "b": 1.0224185305216207,
       "kappa": 0.014816657971674694,
       "rho": 0.5717311302921654,
-      "max_coefficient_error": 3.1086244689504383e-15,
+      "max_coefficient_error": 3.3306690738754696e-15,
       "conditional_normal_equation_residual": 3.552713678800501e-15,
-      "computed_objective": 0.6806537445741228,
+      "computed_objective": 0.6806537445741192,
       "formula_objective": 0.6806537445741209,
-      "objective_error": 1.887379141862766e-15,
-      "minimum_quadratic_eigenvalue": 0.4170092565286985
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 6,
-      "a": 9.158834303164602,
-      "b": 1.0224185305216207,
-      "kappa": 0.014816657971674694,
-      "rho": 0.5717311302921654,
-      "max_coefficient_error": 7.771561172376096e-16,
-      "conditional_normal_equation_residual": 1.7763568394002505e-15,
-      "computed_objective": 0.8997781083941199,
-      "formula_objective": 0.8997781083941215,
       "objective_error": 1.6653345369377348e-15,
-      "minimum_quadratic_eigenvalue": 4.410250041497397
+      "minimum_quadratic_eigenvalue": 0.41700925652869336
     },
     {
       "architecture": "local",
@@ -1544,7 +1040,7 @@
       "computed_objective": 0.1576331438163768,
       "formula_objective": 0.1576331438163768,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 2.475494198683228
+      "minimum_quadratic_eigenvalue": 2.4754941986832284
     },
     {
       "architecture": "hybrid",
@@ -1553,26 +1049,12 @@
       "b": 0.5089580919574643,
       "kappa": 4.035894385545287,
       "rho": 0.4513143913390019,
-      "max_coefficient_error": 2.220446049250313e-16,
+      "max_coefficient_error": 1.1102230246251565e-16,
       "conditional_normal_equation_residual": 8.326672684688674e-17,
       "computed_objective": 0.13494304937249324,
       "formula_objective": 0.13494304937249324,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.20884904644606833
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 0.16919763914291103,
-      "b": 0.5089580919574643,
-      "kappa": 4.035894385545287,
-      "rho": 0.4513143913390019,
-      "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 4.163336342344337e-17,
-      "computed_objective": 0.13667555676344295,
-      "formula_objective": 0.13667555676344295,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.22790524241175553
+      "minimum_quadratic_eigenvalue": 0.208849046446068
     },
     {
       "architecture": "local",
@@ -1586,7 +1068,7 @@
       "computed_objective": 0.7600412007904978,
       "formula_objective": 0.7600412007904979,
       "objective_error": 1.1102230246251565e-16,
-      "minimum_quadratic_eigenvalue": 3.064713483720194
+      "minimum_quadratic_eigenvalue": 3.0647134837201957
     },
     {
       "architecture": "hybrid",
@@ -1595,26 +1077,12 @@
       "b": 1.3842187074119097,
       "kappa": 0.010589209921622794,
       "rho": 0.6212182708138275,
-      "max_coefficient_error": 2.220446049250313e-16,
+      "max_coefficient_error": 2.7755575615628914e-16,
       "conditional_normal_equation_residual": 2.220446049250313e-16,
       "computed_objective": 0.5773498874215488,
       "formula_objective": 0.5773498874215488,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.4352583266016147
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 4,
-      "a": 1.6695014394556191,
-      "b": 1.3842187074119097,
-      "kappa": 0.010589209921622794,
-      "rho": 0.6212182708138275,
-      "max_coefficient_error": 1.1102230246251565e-16,
-      "conditional_normal_equation_residual": 2.220446049250313e-16,
-      "computed_objective": 0.676227689771628,
-      "formula_objective": 0.6762276897716282,
-      "objective_error": 2.220446049250313e-16,
-      "minimum_quadratic_eigenvalue": 1.1825863036981477
+      "minimum_quadratic_eigenvalue": 0.43525832660161495
     },
     {
       "architecture": "local",
@@ -1628,7 +1096,7 @@
       "computed_objective": 0.20043867238975777,
       "formula_objective": 0.2004386723897578,
       "objective_error": 2.7755575615628914e-17,
-      "minimum_quadratic_eigenvalue": 1.3313649276154356
+      "minimum_quadratic_eigenvalue": 1.3313649276154358
     },
     {
       "architecture": "hybrid",
@@ -1637,26 +1105,12 @@
       "b": 0.27844865980267947,
       "kappa": 3.220566993190742,
       "rho": 0.6052161231791896,
-      "max_coefficient_error": 2.220446049250313e-16,
+      "max_coefficient_error": 5.551115123125783e-16,
       "conditional_normal_equation_residual": 2.220446049250313e-16,
       "computed_objective": 0.1361821705675268,
       "formula_objective": 0.13618217056752677,
       "objective_error": 2.7755575615628914e-17,
-      "minimum_quadratic_eigenvalue": 0.20548689402555675
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 10,
-      "a": 0.2458299610599199,
-      "b": 0.27844865980267947,
-      "kappa": 3.220566993190742,
-      "rho": 0.6052161231791896,
-      "max_coefficient_error": 3.3306690738754696e-16,
-      "conditional_normal_equation_residual": 2.7755575615628914e-17,
-      "computed_objective": 0.14523415773289577,
-      "formula_objective": 0.14523415773289583,
-      "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.24834374553312302
+      "minimum_quadratic_eigenvalue": 0.20548689402555773
     },
     {
       "architecture": "local",
@@ -1670,7 +1124,7 @@
       "computed_objective": 0.4087028457631723,
       "formula_objective": 0.4087028457631723,
       "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 3.892377541352799
+      "minimum_quadratic_eigenvalue": 3.892377541352797
     },
     {
       "architecture": "hybrid",
@@ -1679,26 +1133,12 @@
       "b": 3.3601659533644983,
       "kappa": 0.023193351132219563,
       "rho": 0.039760283971868565,
-      "max_coefficient_error": 2.7755575615628914e-17,
+      "max_coefficient_error": 4.163336342344337e-17,
       "conditional_normal_equation_residual": 5.551115123125783e-17,
       "computed_objective": 0.4084052605937158,
       "formula_objective": 0.40840526059371574,
       "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.6434743410706094
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 0.4640197677717489,
-      "b": 3.3601659533644983,
-      "kappa": 0.023193351132219563,
-      "rho": 0.039760283971868565,
-      "max_coefficient_error": 4.163336342344337e-17,
-      "conditional_normal_equation_residual": 5.551115123125783e-17,
-      "computed_objective": 0.4084727658117311,
-      "formula_objective": 0.4084727658117311,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.8836298754670562
+      "minimum_quadratic_eigenvalue": 0.643474341070608
     },
     {
       "architecture": "hybrid",
@@ -1737,52 +1177,10 @@
       "rho": 0.999,
       "max_coefficient_error": 1.5432100042289676e-14,
       "conditional_normal_equation_residual": 1.1102230246251565e-16,
-      "computed_objective": 0.11188849999999984,
+      "computed_objective": 0.11188849999999995,
       "formula_objective": 0.11188850000000006,
-      "objective_error": 2.220446049250313e-16,
+      "objective_error": 1.1102230246251565e-16,
       "minimum_quadratic_eigenvalue": 0.0019987090434300837
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 1,
-      "b": 1,
-      "kappa": 0,
-      "rho": 0,
-      "max_coefficient_error": 0.0,
-      "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.5,
-      "formula_objective": 0.5,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 1.125
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 1,
-      "b": 1,
-      "kappa": 0,
-      "rho": 0.5,
-      "max_coefficient_error": 0.0,
-      "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.4505050505050505,
-      "formula_objective": 0.4505050505050505,
-      "objective_error": 0.0,
-      "minimum_quadratic_eigenvalue": 0.8498903593130388
-    },
-    {
-      "architecture": "current_and_pool",
-      "n": 8,
-      "a": 1,
-      "b": 1,
-      "kappa": 0,
-      "rho": 1,
-      "max_coefficient_error": 2.7755575615628914e-17,
-      "conditional_normal_equation_residual": 0.0,
-      "computed_objective": 0.11111111111111116,
-      "formula_objective": 0.1111111111111111,
-      "objective_error": 5.551115123125783e-17,
-      "minimum_quadratic_eigenvalue": 0.35542450526075225
     }
   ],
   "monte_carlo_samples_per_point": 120000,
@@ -2568,7 +1966,7 @@
       {
         "cost_ratio": 0.5,
         "cost_per_refresh": 0.11074618882214246,
-        "optimal_period": 0.8391734950083303,
+        "optimal_period": 0.8391734950083304,
         "minimum_average_cost": 0.569476496140485,
         "optimality_equation_residual": 0.0
       },
@@ -2600,7 +1998,7 @@
     "critical_refresh_cost": 1.1806502679327573,
     "refresh_cost": 0.5903251339663786,
     "optimal_period": 5.551290824452944,
-    "minimum_average_cost": 0.9072150640659108,
-    "closed_form_minimum_error": 1.1102230246251565e-16
+    "minimum_average_cost": 0.9072150640659109,
+    "closed_form_minimum_error": 0.0
   }
 }

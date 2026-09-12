@@ -1,4 +1,4 @@
-# Deciding Without Waiting: Delay Thresholds for Decentralized Decisions
+# Too Late to Coordinate: When Local Information Beats Global Sharing
 
 ## Files
 
@@ -28,19 +28,19 @@ python -m pip install -r requirements.txt
 python generate_figures.py
 ```
 
-The script uses a fixed seed and 120,000 independent stationary Gaussian sample pairs per Monte Carlo point. It solves 126 Gaussian-team systems directly from observation covariances, including the restricted current-reading-plus-old-pool architecture. The maximum reported expected-cost discrepancy is about 5.3e-15. These calculations check the scalar policies independently of the displayed formulas. Figure 1 also shows the exact delay at which fresh-local operation outperforms delayed-pool-only operation, with Monte Carlo checks of the latter's loss. The unequal-sensor and full-history results are established by the proofs in the manuscript. The experiments are synthetic evaluations of the stated model.
+The script uses a fixed seed and 120,000 independent stationary Gaussian sample pairs per Monte Carlo point. It solves 83 Gaussian-team systems directly from observation covariances for the local and hybrid architectures. The maximum expected-cost discrepancy is below 2.7e-15. These calculations check the scalar policies independently of the displayed formulas. Figure 1 also shows the exact delay at which fresh-local operation outperforms delayed-pool-only operation, with Monte Carlo checks of the latter's loss. The unequal-sensor and full-history results are established by the proofs in the manuscript. The experiments are synthetic evaluations of the stated model.
 
 ## Scope of the draft
 
 The letter studies a common latent signal, independent temporally correlated sensor disturbances, and a team objective that prices tracking error and disagreement. Its exact hybrid law requires the signal and disturbances within each component to share a temporal decay rate. It covers unequal sensor disturbance variances, and independent components with different rates. The refresh theorem covers schedules independent of the observations, fixed communication latency, and a cost for each complete pooled refresh. Each pooled scalar is modeled as an exact real number.
 
-A retained local measurement from the pooling time is part of the optimal implementation. The manuscript also derives the exact loss for a device limited to its current measurement and the old pooled mean. During pipelined transmission, timestamped local measurements must remain available until their associated summary arrives.
+A retained local measurement from the pooling time is part of the optimal implementation. During pipelined transmission, timestamped local measurements must remain available until their associated summary arrives.
 
 The letter identifies two conditions for choosing local operation. Fresh-local decisions have lower team loss than decisions based only on a delayed pool when its age exceeds the crossover threshold. With fresh local observations retained, pooled information has positive decision value at every finite age. In this hybrid architecture, the communication price and latency determine whether refreshing improves the total average cost. The introduction groups the results into four contributions. Theorem 1 checks the team optimality equations directly under the full local observation path. The common-rate Gaussian covariance factorization also gives the discrete-time pooling law for stationary AR(1) processes; the refresh integrals require sums in discrete time.
 
-The public project repository is https://github.com/anrgusc/TINA. It includes simulation code and extended analysis. Lamport-style proof-review reports identify theorem assumptions, logical dependencies, and unresolved obligations. Such reports are mathematical reviews, not proof-assistant certificates.
+The public project repository is https://github.com/ANRGUSC/TINA. It includes simulation code and extended analysis. Lamport-style proof-review reports identify theorem assumptions, logical dependencies, and unresolved obligations. Such reports are mathematical reviews, not proof-assistant certificates.
 
-The supplied TINA source provides the information-architecture framing. The common-signal hybrid and refresh results were developed for this draft. The introduction and bibliography identify the arXiv preprint as the longer version, and the introduction describes its broader coverage of local/global information, spatial predictability, and neighborhood-radius selection. All proofs needed to assess this draft are inside the six-page manuscript.
+The letter builds on TINA (arXiv:2609.06351v1), which provides the general information-architecture framework, fresh-local versus delayed-global crossover, spatial predictability, and neighborhood-radius theory. The letter specializes the crossover to a common-signal Gaussian sensor team and derives explicit policies, posterior variances, and costs. It develops additional results on exact hybrid value, a scalar summary achieving complete delayed sharing, unequal sensor quality, independent components with different temporal rates, and optimal refresh scheduling. These additional results are not contained in the cited arXiv v1. All proofs needed to assess the letter are included within its six pages.
 
 ## Submission keywords
 

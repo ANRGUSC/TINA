@@ -66,20 +66,17 @@ def block_check(n: int, a: float, b: float, kappa: float,
     """
     p = parameters(n, a, b, kappa)
     h = (1 + kappa) * np.eye(n) - kappa * np.ones((n, n)) / n
-    dimension = {"local": 1, "current_and_pool": 2, "hybrid": 3}[architecture]
+    dimension = {"local": 1, "hybrid": 3}[architecture]
     q = np.zeros((n * dimension, n * dimension))
     rhs = np.empty(n * dimension)
     for i in range(n):
         ii = slice(dimension * i, dimension * (i + 1))
-        rhs[ii] = {1: [a], 2: [a, rho * a], 3: [a, rho * a, rho * a]}[dimension]
+        rhs[ii] = {1: [a], 3: [a, rho * a, rho * a]}[dimension]
         for j in range(n):
             jj = slice(dimension * j, dimension * (j + 1))
             cij = a + (b if i == j else 0)
             if dimension == 1:
                 cov = np.array([[cij]])
-            elif dimension == 2:
-                cov = np.array([[cij, rho * p["v"]],
-                                [rho * p["v"], p["v"]]])
             else:
                 cov = np.array([
                     [cij, rho * cij, rho * p["v"]],
@@ -91,16 +88,12 @@ def block_check(n: int, a: float, b: float, kappa: float,
     z = rho * rho
     single_policy = {
         1: [a / p["d"]],
-        2: [a * (1 - z) / (p["d"] - p["v"] * z),
-            rho * a * (p["d"] - p["v"]) / (p["v"] * (p["d"] - p["v"] * z))],
         3: [a / p["d"], -rho * a / p["d"], rho * a / p["v"]],
     }[dimension]
     claimed_theta = np.tile(single_policy, n)
     objective = a - 2 * rhs @ theta / n + theta @ q @ theta / n
     claimed_objective = {
         1: p["J_local"],
-        2: p["J_local"] - a * a * z * (p["d"] - p["v"])**2 /
-           (p["v"] * p["d"] * (p["d"] - p["v"] * z)),
         3: p["J_local"] - p["Delta"] * z,
     }[dimension]
     return {
@@ -196,13 +189,11 @@ def main():
         a, b = 10 ** rng.uniform(-1, 1, 2)
         kappa = float(10 ** rng.uniform(-2, 1.5))
         rho = float(rng.uniform(0.01, 0.98))
-        for architecture in ("local", "hybrid", "current_and_pool"):
+        for architecture in ("local", "hybrid"):
             checks.append(block_check(n, float(a), float(b), kappa, rho, architecture))
     # Include coordination-free teams and a nearly fresh snapshot explicitly.
     for rho in (0, 0.5, 0.999):
         checks.append(block_check(8, 1, 1, 0, rho, "hybrid"))
-    for rho in (0, 0.5, 1):
-        checks.append(block_check(8, 1, 1, 0, rho, "current_and_pool"))
     summary = {
         "number_of_linear_systems": len(checks),
         "maximum_coefficient_error": max(c["max_coefficient_error"] for c in checks),

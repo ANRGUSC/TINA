@@ -6,7 +6,7 @@
 \usepackage{amsthm}
 \usepackage{graphicx,booktabs,cite}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={Deciding Without Waiting: Delay Thresholds for Decentralized Decisions},pdfauthor={Scott Moeller and Bhaskar Krishnamachari},pdfsubject={IEEE Control Systems Letters manuscript},pdfkeywords={Decentralized control, Sensor fusion, Control system architecture}}
+\hypersetup{pdftitle={Too Late to Coordinate: When Local Information Beats Global Sharing},pdfauthor={Scott Moeller and Bhaskar Krishnamachari},pdfsubject={IEEE Control Systems Letters manuscript},pdfkeywords={Decentralized control, Sensor fusion, Control system architecture}}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
@@ -14,7 +14,7 @@
 \newcommand{\E}{\mathbb E}
 \newcommand{\Var}{\operatorname{Var}}
 \newcommand{\Cov}{\operatorname{Cov}}
-\title{Deciding Without Waiting:\\Delay Thresholds for Decentralized Decisions}
+\title{Too Late to Coordinate:\\When Local Information Beats Global Sharing}
 \author{Scott Moeller and Bhaskar Krishnamachari%
 \thanks{S. Moeller is an independent researcher, Portsmouth, RI, USA
 (\texttt{scott.h.moeller@gmail.com}).}%
@@ -25,29 +25,29 @@ Los Angeles, CA, USA (\texttt{bkrishna@usc.edu}), and is the corresponding autho
 \thispagestyle{empty}
 \pagestyle{empty}
 \begin{abstract}
-Fresh local measurements can yield better team decisions than a delayed pool containing every sensor's data. We derive the exact delay threshold in a Gaussian team that tracks a changing signal and penalizes disagreement among agents. The signal and sensor errors share a temporal decay rate. When agents retain fresh local observations, a single pooled scalar achieves the optimal performance of full delayed sharing. Its coordination value decays at twice the signal's correlation decay rate, so the value half-life is half the signal's correlation half-life. We derive the optimal policies, posterior variances, and the value of retaining one local sample from the pooling time. The pooling law extends to unequal sensor quality and independent components with different temporal rates. With a cost per pooled update, an explicit communication-price threshold, or equivalent latency threshold, determines when no refreshing is optimal. Below this threshold, the optimal periodic interval is unique, and periodic refreshing is optimal among all schedules independent of the sensor processes.
+Networked sensor fusion must balance the benefit of shared measurements against the delay and cost of communication. We study this tradeoff for a Gaussian team tracking a changing signal with a penalty for disagreement, assuming a common temporal decay rate for the signal and sensor errors. An exact delay threshold identifies when fresh local decisions outperform decisions based only on a complete delayed pool. When agents retain fresh local observations and their local sample from the pooling time, one shared scalar achieves the same performance as full delayed sharing. The resulting benefit over local operation decays exponentially at twice the signal's correlation decay rate. Integrating that benefit gives the maximum update price for which refreshing can improve long-run average cost at a given communication latency. At or above this price, no refreshing is optimal. Below it, periodic refreshing has a unique optimal interval and is optimal among all schedules independent of the sensor processes. The pooling law extends to unequal sensor quality and independent components with different temporal rates.
 \end{abstract}
 \noindent\textbf{Index Terms---}Decentralized control, sensor fusion, control system architecture.
 
 \section{Introduction}
-Sharing every sensor's data can lead to worse team decisions than acting locally. Collecting and distributing the data takes time, and a changing environment can make a broad view outdated before it is used. We identify the exact delay beyond which fresh local measurements outperform a complete delayed observation pool. Both decision rules are optimized for their available information. In an eight-sensor example, local operation has about $26\%$ lower team loss than decisions based on a pool one coherence time ($1/\lambda$) old, before any communication charge is included.
+In networked sensor fusion, agents share measurements to improve the accuracy and consistency of their decisions. Collecting and distributing those measurements takes time. With enough delay, using all sensors' data can yield worse decisions than acting on fresh local measurements. We identify the exact delay beyond which this occurs in a Gaussian sensor model, optimizing both decision rules for their available information.
 
-We consider agents tracking a common changing signal through noisy local sensors. Their shared objective penalizes tracking error and disagreement among their actions. The signal and sensor errors evolve as Gaussian processes with a common temporal decay rate $\lambda$. Agents can use fresh local information, a delayed pool, or a hybrid of both. Actions do not affect future observations, so each decision is a static team problem.
+We consider agents tracking a common changing signal through noisy local sensors. Their shared objective penalizes tracking error and disagreement among their actions. Agents relying only on the delayed pool agree perfectly. Beyond the delay threshold, their tracking error outweighs this agreement benefit, and fresh local decisions achieve lower total loss. The signal and sensor errors evolve as Gaussian processes with a common temporal decay rate $\lambda$. Agents can use fresh local information, a delayed pool, or a hybrid of both. Actions do not affect future observations, so each decision is a static team problem.
 
-The main results are:
+Our main results are the following:
 \begin{enumerate}
-\item \emph{Optimal decisions and a delay threshold.} We derive fresh-local and fresh-pooled policies, posterior variances, and costs, then identify exactly when local decisions outperform a delayed pool (Proposition~\ref{prop:endpoints}, Corollary~\ref{cor:crossover}).
-\item \emph{Hybrid pooling and local memory.} We derive the optimal hybrid policy, its posterior variance, and its exponentially decaying coordination value. We also quantify the loss from discarding the local sample taken at the pooling time (Theorem~\ref{thm:hybrid}, Proposition~\ref{prop:current}).
+\item \emph{Optimal decisions and a delay threshold.} We derive explicit fresh-local and fresh-pooled policies, posterior variances, and costs, and evaluate the local-versus-delayed-global crossover for this sensor model (Proposition~\ref{prop:endpoints}, Corollary~\ref{cor:crossover}).
+\item \emph{Hybrid sharing and exact decay.} With fresh local observations and the local sample from the pooling time retained, a single shared scalar achieves the same optimal team loss as sharing every sensor's delayed measurements. We derive the optimal policy and posterior variance. The improvement over local operation decays as $e^{-2\lambda\tau}$ (Theorem~\ref{thm:hybrid}).
 \item \emph{Unequal quality and temporal rates.} We extend the law to unequal sensor variances and to independent components with different rates (Proposition~\ref{prop:hetero}, Corollary~\ref{cor:modes}).
-\item \emph{When and how often to refresh.} We derive price and latency thresholds for choosing no refreshes and prove periodic optimality among all schedules independent of the observations (Theorem~\ref{thm:refresh}).
+\item \emph{When and how often to refresh.} Each pooled update provides a positive benefit at every finite age. Its total benefit over time is finite and determines the critical update price for a given communication latency. We characterize when no refreshing is optimal and prove that below the critical price, periodic refreshing has a unique optimal interval and is optimal among all schedules independent of the observations (Theorem~\ref{thm:refresh}).
 \end{enumerate}
 Static team theory gives optimality conditions for agents with different observations \cite{radner1962team}, and common-information methods separate shared and private information \cite{afshari2017static}. The hybrid is a compressed delayed-sharing architecture, following the information pattern introduced by Witsenhausen \cite{witsenhausen1971separation} and studied by Nayyar, Mahajan, and Teneketzis \cite{nayyar2011sharing}. Theorem~\ref{thm:hybrid} shows that a single scalar broadcast achieves the value of full delayed sensor sharing in this model.
 
 Age of information \cite{yates2021aoi}, nonlinear age penalties \cite{sun2017update}, and remote estimation \cite{ornee2021ou} connect freshness to performance. Ballotta and coauthors show that communication latency can make sparse consensus controllers outperform centralized control \cite{ballotta2023latency}, and study optimal feedback locality in spatially invariant systems \cite{ballotta2026role}. Here, a static team driven by an Ornstein--Uhlenbeck signal yields a closed-form delay crossover, an exact hybrid pooling law, and optimal refresh scheduling.
 
-Kar and Varshney study sensor collaboration and sampling of an Ornstein--Uhlenbeck signal under a power budget \cite{kar2012controlled}. Nayyar, Ba\c{s}ar, Teneketzis, and Veeravalli jointly optimize communication and remote estimation under communication costs and energy constraints \cite{nayyar2013optimal}. Their transmission decisions can depend on sensor observations. Our setting gives every agent fresh private observations between pooled updates and penalizes disagreement among decisions. The exact age law quantifies the value of the shared update in this team, and the refresh theorem optimizes schedules chosen independently of observed values.
+Kar and Varshney study sensor collaboration and sampling of an Ornstein--Uhlenbeck signal under a power budget \cite{kar2012controlled}. Nayyar, Ba\c{s}ar, Teneketzis, and Veeravalli jointly optimize communication and remote estimation under communication costs and energy constraints \cite{nayyar2013optimal}. Their transmission decisions can depend on sensor observations. Our setting gives every agent fresh private observations between pooled updates and penalizes disagreement among decisions. Our refresh schedules are independent of observed values.
 
-A longer version of this paper \cite{tina2026} develops a broader theory of information architecture, covering local versus delayed-global information, spatial predictability, and neighborhood-radius selection. This letter gives a self-contained analysis of common-signal Gaussian teams, including all proofs of the pooling and refresh results.
+The broader study \cite{tina2026} establishes the general freshness--locality crossover and develops spatial predictability and neighborhood-radius selection. This letter specializes that crossover to a common-signal Gaussian sensor team. We extend that work with the exact hybrid value and a proof that one shared scalar achieves the value of complete delayed sharing. Further results cover unequal sensor variances and independent components with different rates, and characterize optimal refresh schedules.
 
 \section{The Team and Its Information}
 \subsection{Signal, observations, and objective}
@@ -82,7 +82,7 @@ Its pool is $\tau$ time units old and its local information is current. Let $J_L
 We call $J_L-J_H(\tau)$ the \emph{coordination value} of the delayed pool. It includes reductions in tracking error and disagreement. Its age-zero value is $\Delta=J_L-J_P$.
 
 \begin{table}[t]
-\caption{Data sufficient to implement the optimal policies. The last row restricts each device to its current local reading.}
+\caption{Data sufficient to implement the optimal policies.}
 \label{tab:information}
 \centering
 \begin{tabular}{@{}lll@{}}
@@ -93,7 +93,6 @@ Fresh-local & $Y_i(t)$ & None \\
 Fresh-pooled & None & $\bar Y(t)$ \\
 Delayed pool only & None & $\bar Y(s)$ \\
 Hybrid & $Y_i(t),Y_i(s)$ & $\bar Y(s)$ \\
-Current reading + pool & $Y_i(t)$ & $\bar Y(s)$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -152,7 +151,7 @@ Pooling removes this additional cost and reduces posterior variance.
 
 \section{An Exact Law for Delayed Pooling}
 \subsection{When local decisions outperform pooling}
-Pooling provides a common estimate from all sensors. Its age determines whether that estimate supports better decisions than current local measurements.
+The general freshness--locality crossover in \cite{tina2026} compares current local information with complete delayed global information. For this sensor model, it takes the following explicit form.
 \begin{corollary}[The delay crossover]\label{cor:crossover}
 Under delayed-pool-only information, the optimal policy and loss are
 \begin{equation}
@@ -220,34 +219,6 @@ Retaining at least a fraction $\alpha\in(0,1)$ of the fresh-pooling value requir
 This age budget is independent of $n$, $a$, $b$, and $\kappa$. Those parameters determine the amount $\Delta$ of value available to preserve. The value half-life $\log 2/(2\lambda)$ is half the signal's correlation half-life.
 
 The endpoint and pooling results also hold for independent stationary Gaussian AR(1) signal and disturbance processes with a common one-step coefficient $q\in(0,1)$. At age $k$ steps, replace $e^{-\lambda\tau}$ by $q^k$ throughout: the covariance factorization and normal equations are unchanged, and the hybrid gain is $\Delta q^{2k}$. The continuous-time refresh integrals in Section~V become sums in discrete time.
-
-\subsection{The value of retaining a local sample}\label{subsec:memory}
-The retained sample permits an exact local innovation calculation. To quantify its value, consider a device that uses only its current reading and the last pooled mean. Its information is $\sigma\{Y_i(t),\bar Y(s)\}$, and let its optimal team cost be $J_C(\tau)$.
-\begin{proposition}[Current reading and old pool]\label{prop:current}
-Put $z=e^{-2\lambda\tau}$. The coordination value of this architecture is
-\begin{equation}
- J_L-J_C(\tau)=\Delta\,\frac{z(d-v)}{d-vz}.\label{eq:currentgain}
-\end{equation}
-For every $0<\tau<\infty$, it is strictly smaller than the retained-sample value $\Delta z$.
-\end{proposition}
-\begin{proof}
-Let $M=\bar Y(s)$, $R_i=Y_i(t)-\sqrt zM$, and $\widetilde X=X(t)-\sqrt z(a/v)M$. Gaussian regression makes $(\widetilde X,R)$ independent of $M$, with
-\begin{align*}
- \Cov(\widetilde X,R_i)&=a(1-z),\\
- \Var(R_i)&=a+b-zv,\qquad
- \Cov(R_i,\bar R)=v(1-z).
-\end{align*}
-Since $d-zv=(d-v)+(1-z)v>0$, conditioning on $M$ and applying Lemma~\ref{lem:normal} gives the unique optimal policy
-\begin{equation}
- u_i=\sqrt z\frac avM+\frac{a(1-z)}{d-zv}R_i.\label{eq:currentpolicy}
-\end{equation}
-Substitution into the conditional quadratic cost yields
-\begin{equation}
- J_C=a-\frac{a^2z}{v}-\frac{a^2(1-z)^2}{d-zv}.\label{eq:currentcost}
-\end{equation}
-Subtracting this expression from $J_L$ and using \eqref{eq:delta} gives \eqref{eq:currentgain}. For $0<z<1$, $(d-v)/(d-vz)<1$, which proves the strict comparison.
-\end{proof}
-As age increases, the ratio $(d-v)/(d-vz)$ decreases from $1$ to $1-v/d$. Discarding the stored sample therefore forfeits at most the fraction $v/d$ of the hybrid coordination value, about $39.1\%$ in Section~VI's example.
 
 \section{Unequal Sensor Quality and Temporal Rates}
 \subsection{Sensors with different disturbance variances}
@@ -353,16 +324,16 @@ Consider $n=8$, $a=b=1$, $\kappa=1$, and $\lambda=1$. Then $P_1=0.5$, $J_P=P_n=1
 \begin{figure}[t]
  \centering
  \includegraphics[width=\columnwidth]{figures/pooling_decay.pdf}
- \caption{The delay crossover and hybrid value. A delayed pool used alone becomes worse than fresh-local operation beyond $\tau_{\rm cross}$. The hybrid retains fresh local information and improves on local operation. Its normalized gain follows the exponential law. Markers use stationary Gaussian sample pairs.}
+ \caption{The delay crossover and hybrid value. (a) Expected team loss under four information architectures. Beyond the crossover age, fresh-local operation outperforms the delayed pool used alone. The hybrid achieves lower loss than fresh-local operation at every finite age. (b) The hybrid's improvement over fresh-local operation, normalized by the improvement from fresh pooling, equals $e^{-2\lambda\tau}$ across the illustrated parameter settings. Markers show Monte Carlo estimates.}
  \label{fig:decay}
 \end{figure}
-Figure~\ref{fig:decay} uses 120,000 independent stationary Gaussian sample pairs per marker. We also solve the Gaussian team normal equations directly from observation covariances. Across 40 random parameter sets with $2\le n\le12$, $0.1\le a,b\le10$, $0.01\le\kappa\le10^{1.5}$, and $0.01\le\rho\le0.98$, three architectures give 120 systems. Six additional $\kappa=0$ cases check boundary ages. The maximum cost discrepancy across all 126 systems is $5.3\times10^{-15}$.
+Figure~\ref{fig:decay} uses 120,000 independent stationary Gaussian sample pairs per marker. We also solve the Gaussian team normal equations directly from observation covariances. Across 40 random parameter sets with $2\le n\le12$, $0.1\le a,b\le10$, $0.01\le\kappa\le10^{1.5}$, and $0.01\le\rho\le0.98$, the local and hybrid architectures give 80 systems. Three additional hybrid cases with $\kappa=0$ check $\rho\in\{0,0.5,0.999\}$. The maximum cost discrepancy across all 83 systems is below $2.7\times10^{-15}$.
 
 For latency $\delta=0.1$, the critical communication cost is $\Delta e^{-0.2}/2\simeq0.2215$. Figure~\ref{fig:refresh} shows the effect of communication price. At half this cost, \eqref{eq:dimensionless} gives $2\lambda T^*\simeq1.6783$, hence $T^*\simeq0.8392$. The average cost is approximately $0.5695$. 
 \begin{figure}[t]
  \centering
  \includegraphics[width=\columnwidth]{figures/refresh_cost.pdf}
- \caption{Average team loss plus communication cost with periodic refreshing. Below the critical communication cost, each curve has a unique finite minimizer. Above it, fresh-local operation attains the minimum average cost.}
+ \caption{Average team loss plus communication cost for the hybrid architecture with periodic pooled updates and continued access to fresh local observations. The dashed line shows fresh-local operation without updates. Below the critical update price, each cost curve has a unique finite minimizer. At or above that price, no refreshing is optimal.}
  \label{fig:refresh}
 \end{figure}
 
@@ -371,11 +342,11 @@ To illustrate unequal rates, add an independent component with $a_2=0.4$, $b_2=0
 \section{Conclusion}
 Fresh local readings yield lower team loss than a complete delayed pool once its age exceeds an explicit threshold. Retaining fresh local observations preserves a positive pooling benefit at every finite age. This benefit decays at twice the signal's correlation decay rate, and its finite lifetime value determines when communication is worth its price and how often to refresh. The pooling law extends to unequal sensor quality and independent components with different rates. Different signal and sensor-error rates within a component, or observation-dependent refresh schedules, require further analysis.
 
-Simulation code and extended analysis are available at \url{https://github.com/anrgusc/TINA}. Supplementary proof-review reports use Lamport-style hierarchies to record assumptions and logical dependencies.
+Simulation code and extended analysis are available at \url{https://github.com/ANRGUSC/TINA}. Supplementary proof-review reports use Lamport-style hierarchies to record assumptions and logical dependencies.
 
 \begin{samepage}
 \section*{Acknowledgment}
-OpenAI ChatGPT (Codex, \url{https://chatgpt.com}) was used to generate the abstract, text in Sections I--VII, and captions, and to assist with mathematical derivations and numerical code.
+Generative AI (OpenAI ChatGPT) was used to assist with drafting and copy-editing the paper, mathematical proofs and numerical simulations. All technical claims and proofs have been verified. The authors take full responsibility for the manuscript.
 \end{samepage}
 
 \begin{thebibliography}{13}

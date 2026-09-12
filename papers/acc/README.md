@@ -1,7 +1,7 @@
 # Joint L-CSS/ACC Paper 1
 
-The joint submission, **Deciding Without Waiting: Delay Thresholds for
-Decentralized Decisions**, uses the shared source in [../lcss/](../lcss/).
+The joint submission, **Too Late to Coordinate: When Local Information Beats
+Global Sharing**, uses the shared source in [../lcss/](../lcss/).
 
 The compiled manuscript is [../lcss/main.pdf](../lcss/main.pdf). Submission
 copies of the PDF and source ZIP are in [../../submissions/lcss/](../../submissions/lcss/).

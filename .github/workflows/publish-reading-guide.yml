@@ -8,7 +8,7 @@ on:
       - 'papers/lcss/main.tex'
       - 'papers/lcss/main.pdf'
       - 'submissions/lcss/lcss-paper.pdf'
-      - 'proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.pdf'
+      - 'proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.pdf'
       - '.github/workflows/publish-reading-guide.yml'
   workflow_dispatch:
 

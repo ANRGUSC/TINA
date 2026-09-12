@@ -1,0 +1,1976 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem,xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr,needspace}
+\usepackage{pdflscape}
+\definecolor{ink}{HTML}{173C54}
+\definecolor{lightline}{HTML}{D9E3E8}
+\hypersetup{pdftitle={LCSS Submission: Expanded Lamport Proof Review},pdfauthor={Model-assisted mathematical review prepared for Bhaskar Krishnamachari}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\one}{\mathbf1}
+\newcommand{\G}{\mathcal G}
+\newcommand{\F}{\mathcal F}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\iid}{\perp\!\!\!\perp}
+\newenvironment{proofstep}[2]{%
+  \begin{list}{}{\leftmargin=\dimexpr 0.17in*#2\relax%
+  \setlength{\rightmargin}{0pt}\setlength{\topsep}{5pt}\setlength{\parsep}{2pt}}%
+  \item[]\textbf{\textcolor{ink}{#1.}}\ }{\end{list}}
+\newcommand{\calculation}[2]{\subsection{#1: #2}}
+\setlist[itemize]{topsep=4pt,itemsep=2pt,leftmargin=1.35em}
+\setlist[enumerate]{topsep=4pt,itemsep=3pt,leftmargin=1.7em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\setcounter{tocdepth}{1}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{ink}{TINA pooling letter: proof review}}
+\fancyhead[R]{\small September 12, 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{14pt}
+\emergencystretch=2em
+
+\allowdisplaybreaks[1]
+\newcommand{\stepref}[1]{\hyperref[step:#1]{\texttt{#1}}}
+
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries\textcolor{ink}{Expanded Lamport Proof Report}}\\[12pt]
+{\Large Too Late to Coordinate:\\When Local Information Beats Global Sharing}\\[12pt]
+{\large Scott Moeller and Bhaskar Krishnamachari}\\[8pt]
+Worked mathematical review of the six-page L-CSS submission\\[3pt]
+Submitted for review; not yet accepted for publication\\[5pt]
+September 12, 2026
+\end{center}
+\bigskip
+\textbf{Main finding.} The expanded arguments below establish the seven formal results under the letter's stated model. Every original labeled proof claim now has its supporting reasoning directly underneath it. The additional calculations cover the remaining analytic claims, including age budgets, discrete time, multirate decay, and the latency cutoff.
+
+The review distinguishes three tasks: identifying a statement in the manuscript, deriving that statement, and checking that it supplies the needed conclusion. A source reference performs only the first task. The worked proof text performs the second and third.
+
+\textbf{Reading guide.} Start with the mathematical background, then read each theorem statement and its numbered proof. The team optimality lemma contains the full perturbation and conditional-expectation derivations. The hybrid theorem checks every observation time explicitly. The refresh theorem proves a bound for arbitrary independent schedules in addition to optimizing the periodic formula.
+
+\textbf{Review limits.} This is an expanded model-assisted mathematical verification report, not a machine-checked proof. No proof kernel was used. The numerical checks corroborate finite-dimensional consequences; the written arguments carry the infinite-history and all-schedules conclusions.
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{How to read this report}
+Each original claim label is followed immediately by a worked justification. The explanations show intermediate algebra, conditional-expectation steps, and the information restrictions that make a proposed policy feasible. Case and closing labels explain which conclusions their subproofs establish. Later proofs may invoke a completed earlier theorem; they do not require the reader to locate a separate calculations appendix.
+
+The supporting text is an expanded mathematical derivation prepared for this report. It is not presented as a quotation of the manuscript. Source line references identify the manuscript claim being explained, not the location of the added explanation. The proof route is unchanged: variation for team optimality, Gaussian projection for information reduction, and an interval lower bound for refreshing.
+
+\textbf{Scope of verification.} The seven formal results and the additional analytic claims are checked below under the stated assumptions. This is a model-assisted mathematical review with explicit calculations. It is not a proof-assistant certification. Elementary algebra, integration, conditional expectation, and finite-dimensional Gaussian distribution theory are the stated background. Their exact applications and side conditions are shown. Numerical checks are supplementary and do not prove the full-history or all-schedules statements.
+
+\section{Model, information, and mathematical background}
+\subsection{The problem being optimized}
+There are $n\ge2$ agents observing $Y_i(t)=X(t)+E_i(t)$. The signal $X$ and the errors $E_1,\ldots,E_n$ are mutually independent centered stationary Gaussian processes. For the equal-quality model,
+\[
+\Cov(X(t),X(r))=a e^{-\lambda|t-r|},\qquad
+\Cov(E_i(t),E_i(r))=b e^{-\lambda|t-r|},
+\]
+where $a,b,\lambda>0$. Gaussian means that every finite collection has a joint Gaussian distribution. The signal and the errors share the same temporal rate. In the unequal-quality result, $b$ becomes $b_i>0$ while that rate remains common.
+
+Agent $i$ chooses a real action $u_i$. With $\bar u=n^{-1}\sum_i u_i$ and $\kappa\ge0$, the objective is
+\[
+J(u)=\frac1n\sum_i\E[(u_i-X)^2+\kappa(u_i-\bar u)^2].
+\]
+The first term penalizes tracking error; the second penalizes disagreement. Actions do not affect future signals or information. Each action is in $L^2(\G_i)$: it is determined by the assigned information field $\G_i$ and has finite second moment. A sigma-field records what events the observations can distinguish. Statements about policies are up to almost-sure equality.
+
+The local history is $\F_i(t)=\sigma\{Y_i(r):r\le t\}$ and complete history is $\F(t)=\bigvee_i\F_i(t)$. With $s=t-\tau$ and $\tau\ge0$, the four information architectures are:
+\begin{itemize}
+\item Local: $\F_i(t)$.
+\item Fresh pooled: $\F(t)$ for every agent.
+\item Delayed only: $\F(s)$ for every agent, with no newer local data.
+\item Hybrid: $\HH_i(t;s)=\F_i(t)\vee\sigma\{\bar Y(r):r\le s\}$.
+\end{itemize}
+Theorem 1 compares the hybrid with $\F_i(t)\vee\F(s)$, which also contains fresh local data. Its conclusion is an equality of optimal values under these two fields.
+
+\subsection{Conditional expectation: the rules used in the proofs}
+For $R\in L^2$ and an information field $\G$, let $q=\E[R\mid\G]$. It is $\G$-measurable and satisfies the tower identity $\E[q]=\E[R]$. For any $\G$-measurable $W\in L^2$, conditioning first gives
+\[
+\E[WR]=\E[Wq],\qquad \E[W(R-q)]=0.
+\]
+The product is integrable by Cauchy--Schwarz. For unbounded $W$, truncate it and use $L^2$ convergence to justify the pull-out rule. Conditional Jensen gives the contraction
+\[
+\E[q^2]\le\E[\E[R^2\mid\G]]=\E[R^2].
+\]
+For any feasible estimator $U\in L^2(\G)$, expand $R-U=(R-q)+(q-U)$. Orthogonality removes the cross term:
+\[
+\E[(R-U)^2]=\E[(R-q)^2]+\E[(q-U)^2].
+\]
+This proves the mean squared error minimizing property and its uniqueness. If a known term $M$ is $\G$-measurable, then $\E[M\mid\G]=M$; knowing the information means knowing that term already.
+
+\subsection{Why zero covariance works for Gaussian histories}
+For a centered jointly Gaussian scalar $R$ and finite observation vector $O$ with zero cross-covariance, the characteristic function is
+\[
+\E[e^{i(tR+z^\top O)}]
+=\exp[-\tfrac12(t^2\Var(R)+z^\top\Cov(O)z)]
+=\E[e^{itR}]\E[e^{iz^\top O}].
+\]
+Factorization proves independence. This argument does not require inversion of the observation covariance, so redundant observations cause no difficulty.
+
+For a whole history, establish zero covariance with every observation generator. The scalar and each finite set of generators are then independent. Finite-coordinate cylinder events form a generating family closed under finite intersections; the monotone-class (or pi--lambda) theorem extends independence to their generated sigma-field. This is the precise background extension used below. It is not a claim that a numerical time grid represents the whole history.
+
+If $R=X-M$ is centered and independent of a field containing $M$, then $\E[X\mid\G]=M$ and $\Var(X\mid\G)=\Var(R)$. This is why the residual calculations prove both a conditional mean and a constant posterior variance. Zero covariance without joint Gaussianity would not suffice for this independence argument.
+
+\subsection{Covariance and quadratic identities}
+Write $\Sigma=a\one\one^\top+bI$. Independence of the errors gives
+\[
+\Cov(Y_i(t),Y_j(r))=(a+b\mathbf1_{i=j})e^{-\lambda|t-r|}
+=\Sigma_{ij}e^{-\lambda|t-r|}.
+\]
+Covariance is bilinear: expanding two differences gives four terms. For centered $Y$, $\E[(c^\top Y)^2]=c^\top\Cov(Y)c$. Consequently multiplying a covariance matrix by $q\ge0$ multiplies the expectation of every homogeneous quadratic form by $q$. This is the exact scaling used in the hybrid cost proof.
+
+We use $v=a+b/n$, $d=a+b[1+\kappa(1-1/n)]$, and $\Delta=J_L-J_P$. The proof below derives their roles and the sign $\Delta>0$. In the positive-age hybrid branch, $\rho=e^{-\lambda\tau}$ and $q=1-\rho^2$. In the discrete-time discussion only, a separately declared $q$ denotes the AR coefficient.
+
+\clearpage
+\section{Lemma 1: Team optimality}\label{contract-L}
+
+\textbf{Statement being checked.}
+For the information fields $\mathcal G_i$, optimize over $u_i\in L^2(\mathcal G_i)$, with $X\in L^2$, $n\ge2$, and $\kappa\ge0$. A feasible $u$ is optimal exactly when
+\[
+(1+\kappa)u_i-\kappa\E[\bar u\mid\mathcal G_i]=\E[X\mid\mathcal G_i]\quad(i=1,\ldots,n).
+\]
+Two optimal feasible policies agree almost surely.
+\noindent Source: letter (3), (5), lines 102--112.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{L.1}{0}
+\phantomsection\label{step:L.1}
+For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\sum_i\E[w_i((1+\kappa)u_i-\kappa\bar u-X)]$ and a quadratic remainder.
+
+\textbf{Supporting reasoning.}
+Write $\bar w=n^{-1}\sum_iw_i$. Feasibility means $w_i\in L^2(\G_i)$, so $u_i+w_i$ is still an allowed action. Its average is $\bar u+\bar w$.
+\begin{enumerate}
+\item Expand tracking error, using $(A+B)^2-A^2=2AB+B^2$:
+\[
+(u_i+w_i-X)^2-(u_i-X)^2=2w_i(u_i-X)+w_i^2.
+\]
+\item Expand disagreement, remembering that the average also changes:
+\begin{align*}
+&[(u_i-\bar u)+(w_i-\bar w)]^2-(u_i-\bar u)^2\\
+&\qquad=2(u_i-\bar u)(w_i-\bar w)+(w_i-\bar w)^2.
+\end{align*}
+\item The term involving $\bar w$ cancels in the sum because
+\[
+\sum_i(u_i-\bar u)=\sum_i u_i-n\bar u=0.
+\]
+In particular,
+\[
+\sum_i(u_i-\bar u)(w_i-\bar w)=\sum_iw_i(u_i-\bar u).
+\]
+\item Add the two expansions, take expectations, and divide by $n$:
+\begin{align*}
+J(u+w)-J(u)&=L_u(w)+Q(w),\\
+L_u(w)&=\frac2n\sum_i\E[w_i r_i],\\
+r_i&=(u_i-X)+\kappa(u_i-\bar u)\\
+&=(1+\kappa)u_i-\kappa\bar u-X,\\
+Q(w)&=\frac1n\sum_i\E[w_i^2+\kappa(w_i-\bar w)^2].
+\end{align*}
+\end{enumerate}
+All products are integrable by Cauchy--Schwarz since the variables are in $L^2$. This is an exact identity, not an approximation: there are no terms of degree three or higher. ``Linear'' describes dependence on the change $w$, with the original policy $u$ fixed.
+\par\smallskip{\small Source claim: \texttt{SRC-001}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{L.2}{0}
+\phantomsection\label{step:L.2}
+The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold.
+
+\textbf{Supporting reasoning.}
+We must prove both directions, with the information restriction kept explicit.
+\begin{enumerate}
+\item Since $w_i$ is $\G_i$-measurable, the tower and pull-out rules give
+\begin{align*}
+\E[w_ir_i]&=\E[\E[w_ir_i\mid\G_i]]\\
+&=\E[w_i\E[r_i\mid\G_i]].
+\end{align*}
+For unbounded $w_i\in L^2$, apply the bounded pull-out rule first to its truncations; Cauchy--Schwarz justifies passage to the limit. Thus no boundedness assumption is hidden here.
+\item Suppose $L_u(w)=0$ for every feasible vector $w$. Set every component except $i$ to zero. With $q_i=\E[r_i\mid\G_i]$, this gives $\E[w_iq_i]=0$ for every $w_i\in L^2(\G_i)$.
+\item We may choose $w_i=q_i$. It is measurable in $\G_i$, and conditional Jensen gives
+\[
+\E[q_i^2]\le\E[\E[r_i^2\mid\G_i]]=\E[r_i^2]<\infty.
+\]
+That choice yields $\E[q_i^2]=0$. A nonnegative random variable with zero expectation is zero almost surely, so $q_i=0$ almost surely.
+\item Because the agent knows its own action, $\E[u_i\mid\G_i]=u_i$. Therefore
+\[
+0=q_i=(1+\kappa)u_i-\kappa\E[\bar u\mid\G_i]-\E[X\mid\G_i].
+\]
+Rearranging gives the claimed equations.
+\item Conversely, those equations say $q_i=0$ for every $i$. The identity in item 1 then makes every $\E[w_ir_i]$ zero, hence $L_u(w)=0$.
+\end{enumerate}
+The actual residual need not be zero. Only its predictable part, given the agent's information, must vanish. Unknown fluctuations cannot be used to choose a better feasible action.
+\par\smallskip{\small Source claim: \texttt{SRC-002}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{L.3}{0}
+\phantomsection\label{step:L.3}
+The remainder is $n^{-1}\sum_i\E[w_i^2]+\kappa n^{-1}\sum_i\E[(w_i-\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$.
+
+\textbf{Supporting reasoning.}
+The expression for $Q$ was obtained in L.1. Since $\kappa\ge0$, both sums are nonnegative:
+\[
+Q(w)\ge\frac1n\sum_i\E[w_i^2]\ge0.
+\]
+If $w$ is nonzero as a vector in $\prod_iL^2(\G_i)$, at least one component is nonzero with positive probability. Its squared expectation is strictly positive. Hence $Q(w)>0$. Equality holds exactly when every $w_i=0$ almost surely. This remains true at $\kappa=0$ because the tracking term alone supplies strict positivity.
+\par\smallskip{\small Source claim: \texttt{SRC-003}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{L.4}{0}
+\phantomsection\label{step:L.4}
+Q.E.D. Necessity, sufficiency, and uniqueness follow.
+
+\textbf{Supporting reasoning.}
+\begin{enumerate}
+\item \emph{Necessity.} Suppose a feasible direction has $L=L_u(w)\ne0$. By L.3, $Q=Q(w)>0$. Scaling the direction gives
+\[
+J(u+\epsilon w)-J(u)=\epsilon L+\epsilon^2Q.
+\]
+Choose $\epsilon=-L/(2Q)$. This is a feasible real multiple of $w$ and its cost change is $-L^2/(4Q)<0$. Thus an optimum cannot have such a direction. Its linear functional must vanish, and L.2 yields the normal equations.
+\item \emph{Sufficiency.} If the equations hold, L.2 makes $L_u(w)=0$. For any other feasible policy $v$, the difference $w=v-u$ is feasible. L.1 gives $J(v)-J(u)=Q(w)\ge0$.
+\item \emph{Uniqueness.} If $v$ is also optimal, that difference is zero. L.3 forces $v_i=u_i$ almost surely for each agent.
+\end{enumerate}
+This proves the characterization and at-most-one optimum. The later propositions construct feasible policies satisfying the equations and therefore establish attainment in the sensor models. The argument allows every measurable square-integrable competitor, not just linear policies.
+\par\smallskip{\small Source claim: \texttt{SRC-004}.}
+\end{proofstep}
+
+\clearpage
+\section{Proposition 1: Fresh endpoints}\label{contract-P}
+
+\textbf{Statement being checked.}
+Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\kappa(1-1/n)]$. For complete local and pooled histories,
+\[
+P_1=\frac{ab}{a+b},\quad P_n=\frac{ab}{b+na},\quad
+u_i^L=\frac adY_i(t),\quad u_i^P=\frac av\bar Y(t).
+\]
+The optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.
+\noindent Source: letter (6)--(11), lines 117--145.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.1}{0}
+\phantomsection\label{step:P.1}
+$X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\le t$, so it is independent of the local history.
+
+\textbf{Supporting reasoning.}
+Put $c_{tr}=e^{-\lambda|t-r|}$ and $\beta=a/(a+b)$. Independence of $X$ and $E_i$ gives
+\[
+\Cov(X(t),Y_i(r))=a c_{tr},\qquad
+\Cov(Y_i(t),Y_i(r))=(a+b)c_{tr}.
+\]
+For $R_i=X(t)-\beta Y_i(t)$, subtract:
+\[
+\Cov(R_i,Y_i(r))=a c_{tr}-\frac{a}{a+b}(a+b)c_{tr}=0.
+\]
+This holds for every $r\le t$, not only the current sample. For any finite collection of such times, $R_i$ and the observations are jointly Gaussian with zero cross-covariances. The Gaussian independence rule stated in the background section makes the residual independent of that collection, and extension to the generated sigma-field makes it independent of $\F_i(t)$. It is centered. As $Y_i(t)$ is available,
+\[
+\E[X(t)\mid\F_i(t)]=\beta Y_i(t)+\E[R_i\mid\F_i(t)]=\beta Y_i(t).
+\]
+The shared temporal factor is what makes all older readings redundant for this conditional mean.
+\par\smallskip{\small Source claim: \texttt{SRC-005}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.2}{0}
+\phantomsection\label{step:P.2}
+Define $\eta(t)=X(t)-(a/v)\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process.
+
+\textbf{Supporting reasoning.}
+First average the sensor covariances. For any sensor $j$ and time $r$,
+\begin{align*}
+\Cov(\bar Y(t),Y_j(r))
+&=\frac1n\sum_i(a+b\mathbf1_{i=j})c_{tr}\\
+&=(a+b/n)c_{tr}=v c_{tr}.
+\end{align*}
+Also $\Var(\bar Y(t))=v$, since the average noise has variance $b/n$. With $h=a/v$,
+\[
+\Cov(\eta(t),Y_j(r))=a c_{tr}-h v c_{tr}=0.
+\]
+This calculation holds for all $r$, even $r>t$. The residual and every finite sensor collection are jointly Gaussian. Consequently $\eta(t)$ is independent of the entire sensor process and is centered. In particular
+\[
+\E[X(t)\mid\F(t)]=h\bar Y(t).
+\]
+This stronger, all-times residual property is part of the established result used by the hybrid theorem. It is stronger than independence only from past observations.
+\par\smallskip{\small Source claim: \texttt{SRC-006}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.3}{0}
+\phantomsection\label{step:P.3}
+The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\bar Y(t)$.
+
+\textbf{Supporting reasoning.}
+Use $\Var(A-cB)=\Var(A)-2c\Cov(A,B)+c^2\Var(B)$. For the local residual,
+\begin{align*}
+\Var(R_i)&=a-2\frac{a^2}{a+b}+\frac{a^2}{(a+b)^2}(a+b)\\
+&=a-\frac{a^2}{a+b}=\frac{ab}{a+b}=P_1.
+\end{align*}
+For the pooled residual,
+\begin{align*}
+\Var(\eta)&=a-2\frac{a^2}{v}+\frac{a^2}{v^2}v
+=a-\frac{a^2}{v}\\
+&=\frac{a(v-a)}v=\frac{ab}{na+b}=P_n.
+\end{align*}
+P.1 and P.2 established independence from the relevant histories. Conditional residual variances therefore equal these constant unconditional variances. This proves posterior-variance statements, not merely mean squared errors of candidate estimators. All denominators are positive because $a,b>0$ and $n\ge2$.
+\par\smallskip{\small Source claim: \texttt{SRC-007}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.4}{0}
+\phantomsection\label{step:P.4}
+For the candidate $u_i=kY_i(t)$, $\E[\bar u\mid\mathcal F_i(t)]=kvY_i(t)/(a+b)$.
+
+\textbf{Supporting reasoning.}
+For the common coefficient $k$, averaging gives $\bar u=k\bar Y(t)$. To condition this on the full local history, set $D_i=\bar Y(t)-vY_i(t)/(a+b)$. For every $r\le t$,
+\[
+\Cov(D_i,Y_i(r))=v c_{tr}-\frac{v}{a+b}(a+b)c_{tr}=0.
+\]
+Gaussianity, as in P.1, gives $\E[D_i\mid\F_i(t)]=0$. Hence
+\[
+\E[\bar u\mid\F_i(t)]=k\E[\bar Y(t)\mid\F_i(t)]
+=\frac{kv}{a+b}Y_i(t).
+\]
+This computes what one agent can predict about the team's mean action from its own observations.
+\par\smallskip{\small Source claim: \texttt{SRC-008}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.5}{0}
+\phantomsection\label{step:P.5}
+Equation (5) gives $k[(1+\kappa)(a+b)-\kappa v]=a$. The bracket equals $d$, so $k=a/d$.
+
+\textbf{Supporting reasoning.}
+Insert P.1 and P.4 into the normal equations of Lemma 1:
+\[
+(1+\kappa)kY_i-\frac{\kappa kv}{a+b}Y_i
+=\frac{a}{a+b}Y_i.
+\]
+Equality of the coefficients suffices. It is also necessary within this candidate family because $\Var(Y_i)=a+b>0$. Multiplying by $a+b$ yields
+\[
+k[(1+\kappa)(a+b)-\kappa v]=a.
+\]
+Expand the bracket using $v=a+b/n$:
+\begin{align*}
+(1+\kappa)(a+b)-\kappa(a+b/n)
+&=a+b+\kappa b-\kappa b/n\\
+&=a+b[1+\kappa(1-1/n)]=d>0.
+\end{align*}
+Thus $k=a/d$. We have constructed a candidate satisfying the equations; Lemma 1, rather than an assumption of linear optimality, justifies its use against all competitors.
+\par\smallskip{\small Source claim: \texttt{SRC-009}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.6}{0}
+\phantomsection\label{step:P.6}
+The local loss is $a-2ak+dk^2=a-a^2/d$.
+
+\textbf{Supporting reasoning.}
+For tracking error,
+\[
+\E[(kY_i-X)^2]=k^2(a+b)-2ka+a.
+\]
+The common signal cancels from disagreement: $Y_i-\bar Y=E_i-\bar E$. Independence of the noises gives
+\[
+\Var(E_i-\bar E)=b+b/n-2b/n=b(1-1/n).
+\]
+Therefore the full loss is
+\begin{align*}
+J(kY)&=a-2ak+k^2(a+b)+\kappa k^2b(1-1/n)\\
+&=a-2ak+dk^2.
+\end{align*}
+Substitute $k=a/d$ to obtain
+\[
+J_L=a-2a^2/d+d(a^2/d^2)=a-a^2/d.
+\]
+Every disagreement term has been included; computing only the posterior variance would miss its contribution.
+\par\smallskip{\small Source claim: \texttt{SRC-010}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.7}{0}
+\phantomsection\label{step:P.7}
+With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.
+
+\textbf{Supporting reasoning.}
+Let $m=\E[X\mid\F(t)]=h\bar Y$. For any pooled-information action $u_i$, expand $u_i-X=(u_i-m)+(m-X)$. The cross term vanishes since
+\[
+\E[(u_i-m)(m-X)]=\E[(u_i-m)\E[m-X\mid\F(t)]]=0.
+\]
+Thus $\E[(u_i-X)^2]=\E[(u_i-m)^2]+P_n\ge P_n$ for every agent. The disagreement penalty is nonnegative. Choosing $u_i=m$ for all $i$ achieves every tracking lower bound and makes $u_i-\bar u=0$. The full optimum is therefore $P_n$.
+\par\smallskip{\small Source claim: \texttt{SRC-011}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.8}{0}
+\phantomsection\label{step:P.8}
+The displayed feasible policies are optimal by Lemma 1.
+
+\textbf{Supporting reasoning.}
+Both constructed policies are finite linear combinations of available Gaussian observations, so they are feasible and in $L^2$. P.5 checked the normal equations for the local candidate. For the pooled candidate $u_i=\bar u=m$, those equations read
+\[
+(1+\kappa)m-\kappa\E[m\mid\F(t)]=m=\E[X\mid\F(t)].
+\]
+Lemma 1 certifies unique optimality in each information class. The cost calculation alone did not establish optimality over nonlinear history-dependent rules; this application supplies that conclusion.
+\par\smallskip{\small Source claim: \texttt{SRC-012}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.9}{0}
+\phantomsection\label{step:P.9}
+$d-v=b(1+\kappa)(1-1/n)>0$ and subtraction yields the formula for $\Delta$.
+
+\textbf{Supporting reasoning.}
+Subtract the two optimal costs and put the fractions over a common denominator:
+\[
+\Delta=(a-a^2/d)-(a-a^2/v)
+=a^2\left(\frac1v-\frac1d\right)=\frac{a^2(d-v)}{vd}.
+\]
+Next,
+\[
+d-v=b+\kappa b(1-1/n)-b/n=b(1+\kappa)(1-1/n)>0.
+\]
+Each factor is positive for $b>0$, $\kappa\ge0$, and $n\ge2$. Also $v,d>0$. Thus $\Delta>0$, including when $\kappa=0$. Pooling helps estimation even without an agreement penalty.
+\par\smallskip{\small Source claim: \texttt{SRC-013}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{P.10}{0}
+\phantomsection\label{step:P.10}
+Q.E.D. All endpoint claims follow.
+
+\textbf{Supporting reasoning.}
+P.1--P.3 establish the conditional means and variances for full histories; P.4--P.8 establish feasible, globally optimal actions and their losses; P.9 gives the strictly positive improvement. These are all the stated endpoint claims. The all-sensor residual property in P.2 is available as part of this completed result for later proofs.
+\par\smallskip{\small Source claim: \texttt{SRC-013}.}
+\end{proofstep}
+
+\clearpage
+\section{Corollary 1: The delay crossover}\label{contract-D}
+
+\textbf{Statement being checked.}
+Let $\tau\ge0$ and $s=t-\tau$. Every agent has $\mathcal F(s)$ and no post-$s$ measurements. The optimal common action is $u_i^D=e^{-\lambda\tau}(a/v)\bar Y(s)$ and
+\[
+J_D(\tau)=a-\frac{a^2}{v}e^{-2\lambda\tau}.
+\]
+Then $J_L<J_D(\tau)$ exactly when $\tau>(2\lambda)^{-1}\log(d/v)$, with equality at that age.
+\noindent Source: letter (13), (14), lines 155--170.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{D.1}{0}
+\phantomsection\label{step:D.1}
+The Markov property and Proposition 1 give $\E[X(t)\mid\mathcal F(s)]=e^{-\lambda\tau}(a/v)\bar Y(s)$.
+
+\textbf{Supporting reasoning.}
+Let $\rho=e^{-\lambda(t-s)}$ and $\xi=X(t)-\rho X(s)$. For $r\le s$,
+\[
+\Cov(\xi,X(r))=a[e^{-\lambda(t-r)}-\rho e^{-\lambda(s-r)}]=0.
+\]
+The covariance with every disturbance observation is also zero by independence. Gaussianity makes $\xi$ independent of all sensor histories through $s$, with mean zero. Consequently
+\begin{align*}
+\E[X(t)\mid\F(s)]
+&=\rho\E[X(s)\mid\F(s)]+\E[\xi\mid\F(s)]\\
+&=\rho(a/v)\bar Y(s).
+\end{align*}
+The final equality uses the fresh pooled result at time $s$. It does not assume access to observations after $s$.
+\par\smallskip{\small Source claim: \texttt{SRC-014}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{D.2}{0}
+\phantomsection\label{step:D.2}
+Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss.
+
+\textbf{Supporting reasoning.}
+Every agent now has the same information $\F(s)$. Put $m_D=\E[X(t)\mid\F(s)]$. For any feasible action, conditioning makes the cross term in the following decomposition zero:
+\[
+\E[(u_i-X)^2]=\E[(u_i-m_D)^2]+\E[(m_D-X)^2].
+\]
+Thus each tracking term is minimized by $u_i=m_D$. Choosing it simultaneously for every agent also makes disagreement zero. Since $\kappa\ge0$, no alternative can compensate for a larger tracking loss through a negative disagreement penalty. This proves team optimality.
+\par\smallskip{\small Source claim: \texttt{SRC-015}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{D.3}{0}
+\phantomsection\label{step:D.3}
+The error variance is the displayed $J_D(\tau)$.
+
+\textbf{Supporting reasoning.}
+The conditional mean is an orthogonal projection, so
+\[
+\Var(X(t))=\Var(m_D)+\E[(X(t)-m_D)^2].
+\]
+Here all means are zero and
+\[
+\Var(m_D)=\rho^2(a/v)^2\Var(\bar Y(s))=\rho^2a^2/v.
+\]
+Disagreement is zero by D.2. Hence $J_D=a-\rho^2a^2/v$. At $\tau=0$ it equals $J_P$; as $\tau\to\infty$ it tends to $a$, the loss of the zero action with no useful observation.
+\par\smallskip{\small Source claim: \texttt{SRC-016}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{D.4}{0}
+\phantomsection\label{step:D.4}
+Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\lambda\tau}<v/d$.
+
+\textbf{Supporting reasoning.}
+Substitute the two costs and perform each order operation explicitly:
+\begin{align*}
+J_L<J_D
+&\iff a-a^2/d<a-a^2\rho^2/v\\
+&\iff -a^2/d<-a^2\rho^2/v\\
+&\iff 1/d>\rho^2/v\\
+&\iff \rho^2<v/d.
+\end{align*}
+The third line reverses the inequality on division by $-a^2<0$. The last line multiplies by $v>0$. Since $d>v>0$, the right side is strictly between zero and one.
+\par\smallskip{\small Source claim: \texttt{SRC-017}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{D.5}{0}
+\phantomsection\label{step:D.5}
+Taking logarithms gives the exact threshold (14), including its equality case.
+
+\textbf{Supporting reasoning.}
+The logarithm is strictly increasing on positive numbers, so
+\begin{align*}
+e^{-2\lambda\tau}<v/d
+&\iff -2\lambda\tau<\log(v/d)\\
+&\iff \tau>\frac{-\log(v/d)}{2\lambda}
+=\frac{\log(d/v)}{2\lambda}.
+\end{align*}
+The second operation divides by the negative number $-2\lambda$ and reverses the inequality. Replacing both strict inequalities by equality proves the equality case. The threshold is positive because $d/v>1$.
+\par\smallskip{\small Source claim: \texttt{SRC-018}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{D.6}{0}
+\phantomsection\label{step:D.6}
+Q.E.D.
+
+\textbf{Supporting reasoning.}
+D.1--D.3 give the optimal delayed-only policy and cost; D.4--D.5 solve its comparison with local operation exactly. The two information sets are not nested: one supplies others' old data and the other supplies one's own fresh data. This conclusion does not assert that adding a delayed pool to fresh local observations can hurt.
+\par\smallskip{\small Source claim: \texttt{SRC-018}.}
+\end{proofstep}
+
+\clearpage
+\section{Theorem 1: Hybrid policy and exponential value}\label{contract-H}
+
+\textbf{Statement being checked.}
+Under (1)--(4), put $\rho=e^{-\lambda\tau}$ and $s=t-\tau$. The unique optimal hybrid action is
+\[
+u_i^H=\rho\frac av\bar Y(s)+\frac ad[Y_i(t)-\rho Y_i(s)].
+\]
+It also attains the optimum with the larger information $\mathcal F(s)\vee\mathcal F_i(t)$. Its posterior variance and team loss satisfy
+\[
+P_H=\rho^2P_n+(1-\rho^2)P_1,\qquad
+J_H=\rho^2J_P+(1-\rho^2)J_L,
+\]
+and $J_L-J_H=\Delta e^{-2\lambda\tau}$.
+\noindent Source: letter (15)--(21), lines 175--214.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.1}{0}
+\phantomsection\label{step:H.1}
+CASE $\tau=0$. The formula is the pooled policy.
+
+\textbf{Supporting reasoning.}
+When $\tau=0$, $s=t$ and $\rho=1$. Thus $Y_i(t)-\rho Y_i(s)=0$ and the proposed action reduces to $(a/v)\bar Y(t)$. Proposition 1 gives its optimal cost $J_P$ and posterior variance $P_n$, even with complete pooled history. The displayed mixtures also reduce to $J_P$ and $P_n$, and the improvement is $J_L-J_P=\Delta$. The scalar is available in the smaller hybrid information set. Thus this case covers every conclusion, without dividing by the zero innovation variance.
+\par\smallskip{\small Source claim: \texttt{SRC-019}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2}{0}
+\phantomsection\label{step:H.2}
+CASE $\tau>0$. Prove the remaining claims under this assumption.
+
+\textbf{Supporting reasoning.}
+For this branch $\tau>0$, so $0<\rho<1$ and $q=1-\rho^2>0$. The goal is the full hybrid theorem: feasibility, optimality under the larger information class, equality of the two information values, posterior variance, and team cost. H.2.1--H.2.14 below prove these statements under this branch assumption. The symbol $q$ here denotes the innovation variance factor, not a discrete-time AR coefficient.
+\par\smallskip{\small Source claim: \texttt{SRC-020}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.1}{1}
+\phantomsection\label{step:H.2.1}
+Enlarge each information field to $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\rho Y_i(s)$, $h=a/v$, $k=a/d$.
+
+\textbf{Supporting reasoning.}
+The original field is $\HH_i=\F_i(t)\vee\sigma\{\bar Y(r):r\le s\}$. Each old mean is a function of the individual old measurements, so $\HH_i\subseteq\G_i=\F(s)\vee\F_i(t)$. Enlarging the information can only reduce the infimum of the loss, because it enlarges the feasible policy set.
+
+Define $Z_i=Y_i(t)-\rho Y_i(s)$. Both readings are in the local history. This subtracts the prediction of the current reading from the old one, leaving its new information since $s$. The constants $h=a/v$ and $k=a/d$ are finite by $v,d>0$. The proof will first optimize with the larger field, then show its optimizer uses only the smaller field's three required numbers.
+\par\smallskip{\small Source claim: \texttt{SRC-021}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.2}{1}
+\phantomsection\label{step:H.2.2}
+$Z$ is independent of $\mathcal F(s)$ and has covariance $(1-\rho^2)(a\mathbf1\mathbf1^\top+bI)$.
+
+\textbf{Supporting reasoning.}
+Let $\Sigma_{ij}=a+b\mathbf1_{i=j}$. For any old reading at $r\le s$,
+\begin{align*}
+\Cov(Z_i,Y_j(r))
+&=\Sigma_{ij}e^{-\lambda(t-r)}-\rho\Sigma_{ij}e^{-\lambda(s-r)}\\
+&=0,
+\end{align*}
+since $t-r=(t-s)+(s-r)$. The vector $Z$ and every finite old observation collection are jointly Gaussian, so zero cross-covariances imply independence from $\F(s)$.
+
+For its endpoint covariance, expand all four terms:
+\begin{align*}
+\Cov(Z_i,Z_j)
+&=\Cov(Y_i(t),Y_j(t))-\rho\Cov(Y_i(t),Y_j(s))\\
+&\quad-\rho\Cov(Y_i(s),Y_j(t))+\rho^2\Cov(Y_i(s),Y_j(s))\\
+&=\Sigma_{ij}-\rho^2\Sigma_{ij}-\rho^2\Sigma_{ij}+\rho^2\Sigma_{ij}\\
+&=(1-\rho^2)\Sigma_{ij}=q\Sigma_{ij}.
+\end{align*}
+Thus the innovations have the fresh observation covariance multiplied by the same scalar $q$. This common scaling later controls the quadratic cost.
+\par\smallskip{\small Source claim: \texttt{SRC-022}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.3}{1}
+\phantomsection\label{step:H.2.3}
+$X(t)=\rho h\bar Y(s)+h\bar Z+\eta(t)$, where $\eta(t)$ is independent of all sensor data and has variance $P_n$.
+
+\textbf{Supporting reasoning.}
+Averaging the definitions of the innovations gives $\bar Y(t)=\rho\bar Y(s)+\bar Z$. Proposition 1 established the all-times identity $X(t)=h\bar Y(t)+\eta(t)$, with $\eta(t)$ centered, independent of every sensor observation, and of variance $P_n$. Substitute the average identity:
+\[
+X(t)=\underbrace{\rho h\bar Y(s)}_{m}
++\underbrace{h\bar Z+\eta(t)}_{T}.
+\]
+Here $m$ is known to every agent. The random variable $T$ denotes the remaining target in this proof only; it is unrelated to the refresh period used later. The independence statement applies to both old and fresh readings, so $\eta(t)$ is independent of every $Z_i$ and every local innovation path as well.
+\par\smallskip{\small Source claim: \texttt{SRC-023}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.4}{1}
+\phantomsection\label{step:H.2.4}
+For $s<r\le t$, define $Z_i(r)=Y_i(r)-e^{-\lambda(r-s)}Y_i(s)$. Then $\Cov(\bar Z,Z_i(r))=[v/(a+b)]\Cov(Z_i,Z_i(r))$.
+
+\textbf{Supporting reasoning.}
+For $s<r\le t$, put $p=e^{-\lambda(r-s)}$ and $\ell=e^{-\lambda(t-r)}$, so $\rho=\ell p$. Expanding both innovations gives
+\[
+\Cov(Z_j,Z_i(r))=\Sigma_{ji}[\ell-p\rho-\rho p+\rho p]\,=\Sigma_{ji}\ell(1-p^2).
+\]
+Write $f(r)=\ell(1-p^2)$. The four terms are respectively the $t,r$ covariance, the subtracted $t,s$ covariance times $p$, the subtracted $s,r$ covariance times $\rho$, and the restored $s,s$ covariance times $\rho p$. To see the covariance ratio, average these coefficients over $j$:
+\[
+\frac1n\sum_j\Sigma_{ji}=\frac{(a+b)+(n-1)a}{n}=a+b/n=v.
+\]
+Consequently
+\[
+\Cov(\bar Z,Z_i(r))=vf(r),\quad
+\Cov(Z_i,Z_i(r))=(a+b)f(r).
+\]
+Since $a+b>0$, the first is $v/(a+b)$ times the second. No division by $f(r)$ is needed. The pooled coefficient is $v/(a+b)$; for an individual different sensor it would be $a/(a+b)$.
+\par\smallskip{\small Source claim: \texttt{SRC-024}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.5}{1}
+\phantomsection\label{step:H.2.5}
+Both covariances have the temporal factor $e^{-\lambda(t-r)}(1-e^{-2\lambda(r-s)})$.
+
+\textbf{Supporting reasoning.}
+For clarity, write out the covariance calculation with its original arguments:
+\begin{align*}
+\Cov(Z_j,Z_i(r))
+&=\Cov(Y_j(t),Y_i(r))-p\Cov(Y_j(t),Y_i(s))\\
+&\quad-\rho\Cov(Y_j(s),Y_i(r))+\rho p\Cov(Y_j(s),Y_i(s))\\
+&=\Sigma_{ji}[\ell-p\rho-\rho p+\rho p]\\
+&=\Sigma_{ji}[\ell-\rho p]
+=\Sigma_{ji}\ell(1-p^2).
+\end{align*}
+The second equality uses $\Cov(Y_j(s),Y_i(r))=\Sigma_{ji}p$ and $\rho=\ell p$. Substituting back gives
+\[
+f(r)=e^{-\lambda(t-r)}(1-e^{-2\lambda(r-s)}).
+\]
+The factor depends on time, but not on the sensor index. At $r=t$ it is $q=1-\rho^2$; at $r=s$ its continuous extension is zero. This verifies that the same projection coefficient works at every intermediate time.
+\par\smallskip{\small Source claim: \texttt{SRC-025}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.6}{1}
+\phantomsection\label{step:H.2.6}
+$\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\mathcal F(s)$.
+
+\textbf{Supporting reasoning.}
+Define $W_i=\bar Z-vZ_i/(a+b)$. H.2.4 gives, for every $s<r\le t$,
+\[
+\Cov(W_i,Z_i(r))=vf(r)-\frac{v}{a+b}(a+b)f(r)=0.
+\]
+H.2.2 gives zero covariance between both $\bar Z$ and $Z_i$ and every old observation. Their linear combination $W_i$ also has zero covariance with each old observation.
+
+These generators cover the entire information field: for $r>s$,
+\[
+Y_i(r)=Z_i(r)+e^{-\lambda(r-s)}Y_i(s),
+\]
+and $Y_i(s)$ is already in $\F(s)$. Conversely $Z_i(r)$ is a function of these available readings. Therefore
+\[
+\G_i=\F(s)\vee\sigma\{Z_i(r):s<r\le t\}.
+\]
+At this stage we have shown orthogonality to every Gaussian observation generator. The Gaussian argument in the next step upgrades this to independence from the entire generated field; covariance cancellation alone would not suffice for arbitrary non-Gaussian histories.
+\par\smallskip{\small Source claim: \texttt{SRC-026}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.7}{1}
+\phantomsection\label{step:H.2.7}
+Gaussianity gives $\E[\bar Z\mid\mathcal G_i]=vZ_i/(a+b)$.
+
+\textbf{Supporting reasoning.}
+Take any finite list of generators from H.2.6 and collect them in $O$. The pair $(W_i,O)$ is jointly Gaussian and $\Cov(W_i,O)=0$. Its characteristic function factors into the product for $W_i$ and for $O$, so they are independent, even if $O$ has a singular covariance matrix.
+
+Cylinder events depending on finite lists generate $\G_i$. The class of events $A$ satisfying $\Pr(W_i\in D,A)=\Pr(W_i\in D)\Pr(A)$, for a fixed Borel set $D$, is closed under the monotone-class extension from these cylinders. Hence $W_i$ is independent of $\G_i$. Since it is centered,
+\[
+\E[W_i\mid\G_i]=0.
+\]
+Now $Z_i$ is $\G_i$-measurable. Using $\bar Z=vZ_i/(a+b)+W_i$ gives
+\[
+\E[\bar Z\mid\G_i]=\frac{v}{a+b}Z_i.
+\]
+This establishes conditioning on a whole path, not an approximation using finitely many sample times.
+\par\smallskip{\small Source claim: \texttt{SRC-027}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.8}{1}
+\phantomsection\label{step:H.2.8}
+Independence of $\eta(t)$ gives $\E[h\bar Z+\eta(t)\mid\mathcal G_i]=aZ_i/(a+b)$ and $\E[k\bar Z\mid\mathcal G_i]=kvZ_i/(a+b)$.
+
+\textbf{Supporting reasoning.}
+By H.2.3, $\eta(t)$ is independent of $\G_i$ and has zero mean, so $\E[\eta(t)\mid\G_i]=0$. Linearity of conditional expectation and H.2.7 then give
+\begin{align*}
+\E[h\bar Z+\eta(t)\mid\G_i]
+&=h\frac{v}{a+b}Z_i+0=\frac{a}{a+b}Z_i,\\
+\E[k\bar Z\mid\G_i]&=\frac{kv}{a+b}Z_i.
+\end{align*}
+The identity $hv=a$ was used in the first line. The common prediction $m$ from H.2.3 is known, so the complete target conditional mean is $m+aZ_i/(a+b)$.
+\par\smallskip{\small Source claim: \texttt{SRC-028}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.9}{1}
+\phantomsection\label{step:H.2.9}
+Subtract the common prediction. Since $(1+\kappa)(a+b)-\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality.
+
+\textbf{Supporting reasoning.}
+Propose $u_i=m+kZ_i$ with $m=\rho h\bar Y(s)$. Its average is $\bar u=m+k\bar Z$. Conditional expectation keeps $m$ unchanged because it is common information. Thus
+\begin{align*}
+(1+\kappa)u_i-\kappa\E[\bar u\mid\G_i]
+&=(1+\kappa)(m+kZ_i)-\kappa\left(m+\frac{kv}{a+b}Z_i\right)\\
+&=m+\frac{k[(1+\kappa)(a+b)-\kappa v]}{a+b}Z_i\\
+&=m+\frac{kd}{a+b}Z_i=m+\frac{a}{a+b}Z_i\\
+&=\E[X(t)\mid\G_i].
+\end{align*}
+Here the bracket identity was proved in Proposition 1 and $k=a/d$. Every candidate action is measurable and square-integrable under $\G_i$. Lemma 1 therefore certifies its unique optimality against all policies using full delayed sharing and full own-sensor history. The common prediction cancels from the disagreement term and has coefficient one in these equations.
+\par\smallskip{\small Source claim: \texttt{SRC-029}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.10}{1}
+\phantomsection\label{step:H.2.10}
+The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing.
+
+\textbf{Supporting reasoning.}
+Let $J_E^*$ be the optimum for the enlarged fields and $J_H^*$ the optimum for the hybrid fields. Inclusion $\HH_i\subseteq\G_i$ implies $J_E^*\le J_H^*$. The enlarged optimizer just proved uses only
+\[
+\bar Y(s),\qquad Y_i(s),\qquad Y_i(t).
+\]
+All three belong to $\HH_i$. Its cost $J_E^*$ is therefore achievable by a hybrid policy, giving $J_H^*\le J_E^*$. The two inequalities imply equality.
+
+Both architectures retain fresh local readings. The equality concerns replacing the detailed old shared data with one old mean; it does not compare the hybrid with delayed information used alone. Retaining $Y_i(s)$ lets the agent form the new local innovation without counting old local information again.
+\par\smallskip{\small Source claim: \texttt{SRC-030}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.11}{1}
+\phantomsection\label{step:H.2.11}
+The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\rho^2$. Thus $J_H=P_n+(1-\rho^2)(J_L-P_n)$.
+
+\textbf{Supporting reasoning.}
+First expand the hybrid tracking error using H.2.3:
+\[
+u_i-X=kZ_i-h\bar Z-\eta.
+\]
+The expectation of the cross term with $\eta$ is zero because $\eta$ is centered and independent of $Z$. Also $u_i-\bar u=k(Z_i-\bar Z)$. Hence
+\[
+J_H=P_n+\frac1n\sum_i\E[(kZ_i-h\bar Z)^2]
++\frac\kappa n\sum_i\E[k^2(Z_i-\bar Z)^2].
+\]
+Write $F(z)$ for the two homogeneous quadratic sums in this expression. For any fixed coefficients $c_j$,
+\[
+\E[(\sum_jc_jZ_j)^2]=\sum_{j,l}c_jc_l\Cov(Z_j,Z_l)
+=q\sum_{j,l}c_jc_l\Sigma_{jl}.
+\]
+Therefore $\E[F(Z)]=q\E[F(Y)]$. At the fresh endpoint the same residual decomposition gives $J_L=P_n+\E[F(Y)]$. Substitution yields
+\begin{align*}
+J_H&=P_n+q(J_L-P_n)\\
+&=(1-q)P_n+qJ_L=\rho^2J_P+(1-\rho^2)J_L.
+\end{align*}
+Only the quadratic part involving sensor data scales. The independent residual $\eta(t)$ still has variance $P_n$, which explains why multiplying the entire local loss by $q$ would be wrong.
+\par\smallskip{\small Source claim: \texttt{SRC-031}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.12}{1}
+\phantomsection\label{step:H.2.12}
+The enlarged-information posterior mean is $\rho h\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\rho^2)(P_1-P_n)$.
+
+\textbf{Supporting reasoning.}
+By H.2.8 the enlarged-field posterior mean is $\widehat X=m+\beta Z_i$, with $\beta=a/(a+b)$. It uses only the three hybrid observations. Since $\HH_i\subseteq\G_i$, the tower property gives
+\[
+\E[X\mid\HH_i]=\E[\E[X\mid\G_i]\mid\HH_i]=\E[\widehat X\mid\HH_i]=\widehat X.
+\]
+Compute its error directly. With $T=h\bar Z+\eta$, H.2.2 and independence of $\eta$ give
+\[
+\Var(T)=h^2qv+P_n=q a^2/v+P_n,
+\quad\Cov(T,Z_i)=hqv=qa,
+\quad\Var(Z_i)=q(a+b).
+\]
+Consequently
+\begin{align*}
+\Var(T-\beta Z_i)
+&=P_n+q a^2/v-2\beta qa+\beta^2q(a+b)\\
+&=P_n+q\left(\frac{a^2}{v}-\frac{a^2}{a+b}\right)\\
+&=P_n+q[(a-P_n)-(a-P_1)]\\
+&=P_n+q(P_1-P_n)=\rho^2P_n+(1-\rho^2)P_1.
+\end{align*}
+The Gaussian error is orthogonal to every generator of $\G_i$, hence independent of $\G_i$ and $\HH_i$. Its conditional variance is the constant above. The posterior coefficient $\beta$ differs from the team coefficient $k$ when disagreement is penalized.
+\par\smallskip{\small Source claim: \texttt{SRC-032}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.13}{1}
+\phantomsection\label{step:H.2.13}
+Subtracting the cost from $J_L$ yields $\Delta e^{-2\lambda\tau}$.
+
+\textbf{Supporting reasoning.}
+Subtract the proved cost identity:
+\begin{align*}
+J_L-J_H
+&=J_L-[\rho^2J_P+(1-\rho^2)J_L]\\
+&=\rho^2(J_L-J_P)=\rho^2\Delta
+=\Delta e^{-2\lambda\tau}.
+\end{align*}
+For every finite age, $\rho^2>0$ and Proposition 1 gives $\Delta>0$. Thus the hybrid strictly improves on local operation at each finite age. The improvement tends to zero as age grows without bound.
+\par\smallskip{\small Source claim: \texttt{SRC-033}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{H.2.14}{1}
+\phantomsection\label{step:H.2.14}
+Q.E.D. The positive-age branch is established.
+
+\textbf{Supporting reasoning.}
+H.2.9--H.2.10 prove optimality and scalar sufficiency; H.2.11--H.2.13 prove the cost, posterior variance, and gain. Together they establish every claimed conclusion under the active assumption $\tau>0$, closing this case.
+\par\smallskip{\small Source claim: \texttt{SRC-033}.}
+\end{proofstep}
+
+\Needspace{3\baselineskip}
+\begin{proofstep}{H.3}{0}
+\phantomsection\label{step:H.3}
+Q.E.D. The two cases cover every $\tau\ge0$.
+
+\textbf{Supporting reasoning.}
+The domain $\tau\ge0$ is exhausted by the completed cases H.1 ($\tau=0$) and H.2 ($\tau>0$). Both prove every conclusion, so the theorem follows on its entire domain.
+\par\smallskip{\small Source claim: \texttt{SRC-033}.}
+\end{proofstep}
+
+\clearpage
+\section{Proposition 2: Unequal sensor quality}\label{contract-U}
+
+\textbf{Statement being checked.}
+Replace $b$ by $b_i>0$, retaining independence, stationarity, Gaussianity, and a common temporal rate. Define
+\[
+C_i=(1+\kappa)a+b_i[1+\kappa(1-1/n)],\qquad \theta=n^{-1}\sum_i C_i^{-1}.
+\]
+Then $k_i=a/[C_i(1-\kappa a\theta)]$, $J_L=a-a^2\theta/(1-\kappa a\theta)$,
+\[
+P=(a^{-1}+\sum_i b_i^{-1})^{-1},\quad
+\mu_P(t)=P\sum_iY_i(t)/b_i,\quad J_P=P.
+\]
+The hybrid action is $u_i^H=\rho\mu_P(s)+k_i[Y_i(t)-\rho Y_i(s)]$ and $J_H=\rho^2J_P+(1-\rho^2)J_L$.
+\noindent Source: letter (23)--(25), lines 230--248.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.1}{0}
+\phantomsection\label{step:U.1}
+Substitution into (5) gives $C_i k_i-\kappa a\bar k=a$, where $\bar k=n^{-1}\sum_i k_i$.
+
+\textbf{Supporting reasoning.}
+For unequal variances, $\Sigma_{ji}=a+b_i\mathbf1_{j=i}$ and $\Sigma_{ii}=a+b_i$. For every $r\le t$, the residual
+\[
+Y_j(t)-\frac{\Sigma_{ji}}{a+b_i}Y_i(t)
+\]
+has covariance $[\Sigma_{ji}-\Sigma_{ji}(a+b_i)/(a+b_i)]e^{-\lambda(t-r)}=0$ with $Y_i(r)$. Joint Gaussianity gives its independence from $\F_i(t)$, so
+\[
+\E[Y_j(t)\mid\F_i(t)]=\frac{\Sigma_{ji}}{a+b_i}Y_i(t).
+\]
+For $u_j=k_jY_j$, let $\bar k=n^{-1}\sum_jk_j$. Average the last identity with these coefficients:
+\[
+\E[\bar u\mid\F_i(t)]
+=\frac{a\bar k+b_ik_i/n}{a+b_i}Y_i(t).
+\]
+The target conditional mean is $aY_i(t)/(a+b_i)$, by the same residual argument. Substitution in Lemma 1 and multiplication by $a+b_i>0$ give
+\[
+[(1+\kappa)(a+b_i)-\kappa b_i/n]k_i-\kappa a\bar k=a.
+\]
+The bracket is $(1+\kappa)a+b_i[1+\kappa(1-1/n)]=C_i$. This proves the stated system using complete local histories.
+\par\smallskip{\small Source claim: \texttt{SRC-034}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.2}{0}
+\phantomsection\label{step:U.2}
+Averaging $k_i=(a+\kappa a\bar k)/C_i$ yields the displayed coefficients.
+
+\textbf{Supporting reasoning.}
+Each $C_i>0$, so solve U.1 for each coefficient:
+\[
+k_i=\frac{a+\kappa a\bar k}{C_i}.
+\]
+Average and use $\theta=n^{-1}\sum_iC_i^{-1}$:
+\[
+\bar k=(a+\kappa a\bar k)\theta,
+\qquad (1-\kappa a\theta)\bar k=a\theta.
+\]
+The factor is positive: $C_i>(1+\kappa)a$ implies $\kappa a\theta<\kappa/(1+\kappa)<1$ when $\kappa>0$, while it is zero when $\kappa=0$. Hence division is valid and
+\[
+\bar k=\frac{a\theta}{1-\kappa a\theta}.
+\]
+Substitute into $k_i$ and combine the numerator:
+\[
+a+\kappa a\bar k
+=a+\frac{\kappa a^2\theta}{1-\kappa a\theta}
+=\frac{a}{1-\kappa a\theta}.
+\]
+Thus $k_i=a/[C_i(1-\kappa a\theta)]$.
+\par\smallskip{\small Source claim: \texttt{SRC-035}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.3}{0}
+\phantomsection\label{step:U.3}
+The denominator is positive because $C_i>(1+\kappa)a$.
+
+\textbf{Supporting reasoning.}
+The sign check can be written with each premise visible:
+\[
+b_i>0,\quad 1+\kappa(1-1/n)\ge1
+\quad\Longrightarrow\quad C_i>(1+\kappa)a>0.
+\]
+Taking reciprocals reverses the first inequality, so
+\[
+0<\theta<\frac1{(1+\kappa)a}.
+\]
+If $\kappa>0$, multiplication gives $0<\kappa a\theta<\kappa/(1+\kappa)<1$. If $\kappa=0$, $1-\kappa a\theta=1$. Thus the formulas in U.2 are finite and well-defined throughout the parameter domain. This verifies an applicability condition, rather than simply assuming the linear system can be inverted.
+\par\smallskip{\small Source claim: \texttt{SRC-036}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.4}{0}
+\phantomsection\label{step:U.4}
+Lemma 1 certifies optimality of the local policy.
+
+\textbf{Supporting reasoning.}
+The finite coefficients from U.2 multiply available square-integrable readings, so $u_i=k_iY_i(t)$ is feasible. U.1 computed conditional expectations under the entire local history, and U.2 solves exactly the resulting normal equations. Lemma 1 therefore proves unique optimality over all measurable square-integrable local policies. Searching a linear family only constructs the solution; the lemma certifies its optimality in the full class.
+\par\smallskip{\small Source claim: \texttt{SRC-037}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.5}{0}
+\phantomsection\label{step:U.5}
+The quadratic term equals $a\bar k$, so $J_L=a-a\bar k$.
+
+\textbf{Supporting reasoning.}
+Expand the objective into its constant, linear, and quadratic parts:
+\[
+J=a-\frac2n\sum_i\E[Xu_i]+Q_u,
+\quad Q_u=\frac{1+\kappa}{n}\sum_i\E[u_i^2]-\kappa\E[\bar u^2].
+\]
+For $u_i=k_iY_i$, $\E[Xu_i]=ak_i$, hence the linear term is $-2a\bar k$. Also
+\[
+\E[\bar u^2]=a\bar k^2+\frac1{n^2}\sum_i b_i k_i^2,
+\]
+since the noises are independent. Therefore
+\begin{align*}
+Q_u&=\frac1n\sum_i[(1+\kappa)(a+b_i)-\kappa b_i/n]k_i^2-\kappa a\bar k^2\\
+&=\frac1n\sum_iC_i k_i^2-\kappa a\bar k^2.
+\end{align*}
+Multiply each equation $C_i k_i-\kappa a\bar k=a$ by $k_i$, then average:
+\[
+\frac1n\sum_iC_i k_i^2-\kappa a\bar k\left(\frac1n\sum_i k_i\right)=a\bar k.
+\]
+The left side is exactly $Q_u$. Thus
+\[
+J_L=a-2a\bar k+a\bar k=a-a\bar k
+=a-\frac{a^2\theta}{1-\kappa a\theta}.
+\]
+This explains which quadratic term is meant and why it equals $a\bar k$.
+\par\smallskip{\small Source claim: \texttt{SRC-038}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.6}{0}
+\phantomsection\label{step:U.6}
+Gaussian conditioning gives $P$ and $\mu_P$.
+
+\textbf{Supporting reasoning.}
+At a fixed time let $S=\sum_i b_i^{-1}$ and condition on the vector $Y=y$. Independence gives a density in $x$ proportional to
+\[
+\exp\left[-\frac12\left(\frac{x^2}{a}+\sum_i\frac{(y_i-x)^2}{b_i}\right)\right].
+\]
+Expand the expression inside:
+\[
+(a^{-1}+S)x^2-2x\sum_i y_i/b_i+\sum_i y_i^2/b_i.
+\]
+With $P=(a^{-1}+S)^{-1}>0$ and $\mu=P\sum_i y_i/b_i$, completing the square gives $P^{-1}(x-\mu)^2$ plus a term independent of $x$. Thus $X\mid Y=y$ is Gaussian with mean $\mu$ and variance $P$.
+
+To ensure full pooled history gives the same posterior, compute for any $j,r$, writing $c_{tr}=e^{-\lambda|t-r|}$:
+\[
+\Cov(\mu_P(t),Y_j(r))=P(aS+1)c_{tr}=a c_{tr},
+\]
+because $P(a^{-1}+S)=1$. The residual $X(t)-\mu_P(t)$ therefore has zero covariance with every history generator and is jointly Gaussian with them. It is independent of the full history. This makes the endpoint posterior also the full-history posterior. All agents taking $\mu_P$ gives zero disagreement and the minimum tracking loss $P$, hence $J_P=P$.
+\par\smallskip{\small Source claim: \texttt{SRC-039}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.7}{0}
+\phantomsection\label{step:U.7}
+$X(t)-\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor.
+
+\textbf{Supporting reasoning.}
+The covariance calculation just used holds for every real $r$, not only $r\le t$:
+\begin{align*}
+\Cov(X(t)-\mu_P(t),Y_j(r))
+&=[a-P\sum_i(a+b_j\mathbf1_{i=j})/b_i]c_{tr}\\
+&=[a-P(aS+1)]c_{tr}=0.
+\end{align*}
+The summand with $i=j$ contributes $b_j/b_j=1$. Joint Gaussianity then gives independence from the entire sensor process, exactly as in Proposition 1. The residual is centered and has variance $P$ by U.6. This all-times property is what permits separation of the residual from future innovations in the hybrid proof.
+\par\smallskip{\small Source claim: \texttt{SRC-040}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.8}{0}
+\phantomsection\label{step:U.8}
+Innovations have covariance $(1-\rho^2)\Sigma$, where $\Sigma=a\mathbf1\mathbf1^\top+\operatorname{diag}(b_i)$.
+
+\textbf{Supporting reasoning.}
+Define $Z_i=Y_i(t)-\rho Y_i(s)$ with $\rho=e^{-\lambda(t-s)}$. For an old reading $Y_j(r)$, $r\le s$, its covariance with $Z_i$ is
+\[
+\Sigma_{ij}[e^{-\lambda(t-r)}-\rho e^{-\lambda(s-r)}]=0.
+\]
+Thus $Z$ is independent of the old sensor history. Its covariance expands as
+\[
+\Cov(Z_i,Z_j)=\Sigma_{ij}-2\rho^2\Sigma_{ij}+\rho^2\Sigma_{ij}
+=(1-\rho^2)\Sigma_{ij}.
+\]
+Only the diagonal entries of $\Sigma$ have changed from the equal-quality case. The common temporal rate still supplies the same factor for all sensor pairs.
+\par\smallskip{\small Source claim: \texttt{SRC-041}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.9}{0}
+\phantomsection\label{step:U.9}
+For $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$, the covariance argument in (21) gives $\E[Z_j\mid\mathcal G_i]=\Sigma_{ji}Z_i/\Sigma_{ii}$.
+
+\textbf{Supporting reasoning.}
+Assume first $\tau>0$. For $s<r\le t$, set $Z_i(r)=Y_i(r)-pY_i(s)$, where $p=e^{-\lambda(r-s)}$, and $\ell=e^{-\lambda(t-r)}$. Since $\rho=\ell p$, expanding as in the hybrid calculation yields
+\[
+\Cov(Z_j,Z_i(r))=\Sigma_{ji}[\ell-p\rho-\rho p+\rho p]
+=\Sigma_{ji}\ell(1-p^2).
+\]
+Subtract $(\Sigma_{ji}/\Sigma_{ii})Z_i$ from $Z_j$. The resulting residual has covariance zero with each $Z_i(r)$ because its coefficient is $\Sigma_{ji}-(\Sigma_{ji}/\Sigma_{ii})\Sigma_{ii}=0$. It also has zero covariance with old observations by U.8. Since $\Sigma_{ii}=a+b_i>0$, the coefficient is well-defined.
+
+The old observations and innovation path generate $\G_i$. Gaussian independence from those generators, followed by the conditional-mean decomposition, gives
+\[
+\E[Z_j\mid\G_i]=\frac{\Sigma_{ji}}{\Sigma_{ii}}Z_i.
+\]
+At zero age every $Z_j=0$, so the identity holds directly without a variance division.
+\par\smallskip{\small Source claim: \texttt{SRC-042}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.10}{0}
+\phantomsection\label{step:U.10}
+After subtracting $\rho\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$.
+
+\textbf{Supporting reasoning.}
+Linearity of the weighted mean gives
+\[
+\mu_P(t)=\rho\mu_P(s)+\mu_Z,\qquad \mu_Z=P\sum_j Z_j/b_j.
+\]
+By U.7, $X(t)=\rho\mu_P(s)+\mu_Z+\eta$, with $\eta$ independent of the data and centered. Use U.9 to condition the remaining target:
+\begin{align*}
+\E[\mu_Z+\eta\mid\G_i]
+&=\frac{P}{a+b_i}\left(\sum_j\frac{\Sigma_{ji}}{b_j}\right)Z_i\\
+&=\frac{P(aS+1)}{a+b_i}Z_i
+=\frac{a}{a+b_i}Z_i.
+\end{align*}
+The own-sensor term contributes one in $aS+1$, and $P(aS+1)=a$. Thus the target's private correction has the same conditional coefficient as in the fresh-local problem.
+\par\smallskip{\small Source claim: \texttt{SRC-043}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.11}{0}
+\phantomsection\label{step:U.11}
+The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal.
+
+\textbf{Supporting reasoning.}
+Set $m=\rho\mu_P(s)$ and propose $u_i=m+k_iZ_i$. Its mean action is $m+n^{-1}\sum_jk_jZ_j$. By U.9,
+\[
+\E[\bar u\mid\G_i]=m+\frac{a\bar k+b_ik_i/n}{a+b_i}Z_i.
+\]
+Insert this in the left side of Lemma 1:
+\begin{align*}
+(1+\kappa)u_i-\kappa\E[\bar u\mid\G_i]
+&=m+\frac{C_i k_i-\kappa a\bar k}{a+b_i}Z_i\\
+&=m+\frac{a}{a+b_i}Z_i
+=\E[X(t)\mid\G_i].
+\end{align*}
+The middle equality is U.1--U.2. The candidate is feasible and square-integrable, so Lemma 1 proves enlarged-information optimality. It uses only the common weighted scalar $\mu_P(s)$ and own readings at $s,t$. It is therefore feasible for the smaller summary hybrid too. Information inclusion gives one inequality between the optima; this feasible optimizer gives the reverse inequality. At zero age it is the pooled rule, so that case is included.
+\par\smallskip{\small Source claim: \texttt{SRC-044}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.12}{0}
+\phantomsection\label{step:U.12}
+Scaling the remaining quadratic cost by $1-\rho^2$ gives $J_H=\rho^2J_P+(1-\rho^2)J_L$.
+
+\textbf{Supporting reasoning.}
+Let $L(y)=P\sum_jy_j/b_j$ and define the homogeneous quadratic expression
+\[
+F(y)=\frac1n\sum_i(k_i y_i-L(y))^2+
+\frac\kappa n\sum_i\left(k_iy_i-\frac1n\sum_jk_jy_j\right)^2.
+\]
+The residual decomposition $X=L(Y)+\eta$, with $\eta$ independent and of variance $P$, gives $J_L=P+\E[F(Y)]$. For the hybrid, subtracting the common term $m$ gives $J_H=P+\E[F(Z)]$. Every squared linear form in $F$ has expectation determined by covariance. U.8 gives $\Cov(Z)=q\Cov(Y)$, so $\E[F(Z)]=q\E[F(Y)]$. Consequently
+\[
+J_H=P+q(J_L-P)=\rho^2J_P+(1-\rho^2)J_L.
+\]
+At $q=0$ the same formula yields $J_P$ directly. No equality of the individual sensor variances is used in this scaling argument.
+\par\smallskip{\small Source claim: \texttt{SRC-045}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{U.13}{0}
+\phantomsection\label{step:U.13}
+Q.E.D.
+
+\textbf{Supporting reasoning.}
+U.1--U.5 give feasible optimal local coefficients and their cost, with every denominator checked. U.6--U.7 give the pooled posterior and all-times residual. U.8--U.12 establish the hybrid optimum and its cost under full local histories, including zero age. These are precisely the claims of the unequal-quality proposition.
+\par\smallskip{\small Source claim: \texttt{SRC-046}.}
+\end{proofstep}
+
+\clearpage
+\section{Corollary 2: Additive coordination value}\label{contract-C}
+
+\textbf{Statement being checked.}
+There are finitely many independent components $m=1,\ldots,M$ and positive weights $w_m$. Within component $m$, the signal and all disturbances share $\lambda_m>0$. Each component has a pooled summary of age $\tau_m\ge0$. Then
+\[
+J_L^{\rm tot}-J_H^{\rm tot}=\sum_mw_m\Delta_m e^{-2\lambda_m\tau_m},\qquad
+J_L^{\rm tot}=\sum_mw_mJ_{L,m},
+\]
+and each component uses the corresponding hybrid policy (15).
+\noindent Source: letter (26), lines 252--261.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{C.1}{0}
+\phantomsection\label{step:C.1}
+Other components are independent of component $m$ and its observations.
+
+\textbf{Supporting reasoning.}
+Fix component $m$. Let $O_m$ denote its entire observation collection, and let $B$ denote the collections of all other components. The model assumes independence of the complete component processes, not just their values at a single time. Therefore $B$ is independent of $(X_m,O_m)$, and so are any measurable subcollections of $B$. At this stage the component ages are fixed. The schedule proof later conditions on schedules that are independent of these processes.
+\par\smallskip{\small Source claim: \texttt{SRC-047}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{C.2}{0}
+\phantomsection\label{step:C.2}
+Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss.
+
+\textbf{Supporting reasoning.}
+Write an arbitrary feasible action for component $m$ as $u_{im}=f_i(O_{im},B_i)$, where $O_{im}$ is agent $i$'s permitted information for this component and $B_i$ is its permitted information about the others. Integrate out the other components:
+\[
+\widetilde u_{im}(O_{im})=\int f_i(O_{im},b_i)\,d\Pr_{B_i}(b_i).
+\]
+This depends only on $O_{im}$, so it preserves the information restriction. Jensen gives square integrability: $\E[\widetilde u_{im}^2]\le\E[u_{im}^2]<\infty$.
+
+To check the team loss, hold $(X_m,O_m)$ fixed and average the \emph{whole action vector} over the joint law of $B$. Independence makes this law unchanged by the conditioning. For fixed $x$, convexity of the component loss follows from the quadratic remainder
+\[
+\frac1n\sum_i z_i^2+\frac{\kappa_m}{n}\sum_i(z_i-\bar z)^2\ge0.
+\]
+Conditional Jensen therefore gives
+\[
+\ell_m(\widetilde u_m,X_m)
+\le\E[\ell_m(u_m,X_m)\mid X_m,O_m].
+\]
+Taking expectation proves that removing the unrelated information cannot increase loss. Although $B_i$ and $B_j$ may be correlated, the joint averaging handles that correlation; it does not incorrectly average the disagreement terms independently.
+\par\smallskip{\small Source claim: \texttt{SRC-048}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{C.3}{0}
+\phantomsection\label{step:C.3}
+Optimization separates across components. Apply Theorem 1 to each.
+
+\textbf{Supporting reasoning.}
+For any joint feasible policy, C.2 supplies a component-only policy with no larger loss for each fixed component. Its loss cannot be below that component's minimum $J_{H,m}$. Thus every joint policy has total loss at least $\sum_m w_mJ_{H,m}$.
+
+For the reverse inequality, choose for every component its own optimal hybrid rule from Theorem 1. The resulting vector is feasible because the problem imposes no cross-component action constraint, and the number of components is finite. Its total loss is exactly $\sum_mw_mJ_{H,m}$. The lower bound is attained. The same argument gives $J_L^{\rm tot}=\sum_mw_mJ_{L,m}$ for local operation.
+\par\smallskip{\small Source claim: \texttt{SRC-049}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{C.4}{0}
+\phantomsection\label{step:C.4}
+Q.E.D. Sum with the positive weights $w_m$.
+
+\textbf{Supporting reasoning.}
+Subtract the two achieved sums and apply the scalar law separately:
+\begin{align*}
+J_L^{\rm tot}-J_H^{\rm tot}
+&=\sum_mw_m(J_{L,m}-J_{H,m})\\
+&=\sum_mw_m\Delta_m e^{-2\lambda_m\tau_m}.
+\end{align*}
+The positive weights preserve the lower-bound comparison in C.3. Finiteness of $M$ removes any issue of exchanging infinite sums or limits. Rates may differ across components; each component still requires its own signal and sensor errors to share its rate.
+\par\smallskip{\small Source claim: \texttt{SRC-050}.}
+\end{proofstep}
+
+\clearpage
+\section{Theorem 2: Optimal refresh period}\label{contract-R}
+
+\textbf{Statement being checked.}
+Assume fixed finite latency $\delta\ge0$, an exact joint pooled-vector refresh with price $c>0$, and locally finite schedules independent of all signal and disturbance processes. Let $\gamma_m=2\lambda_m$, $A_m=w_m\Delta_m e^{-\gamma_m\delta}>0$,
+\[
+B(T)=\sum_m\frac{A_m}{\gamma_m}(1-e^{-\gamma_mT}),\qquad
+c_{\rm crit}=\sum_mA_m/\gamma_m.
+\]
+For $c\ge c_{\rm crit}$, no refreshing minimizes the limiting upper average cost at $J_L^{\rm tot}$. For $0<c<c_{\rm crit}$, a periodic schedule is optimal among all admissible schedules. Its unique period solves $B(T^*)-T^*B'(T^*)=c$, and its cost is $J_L^{\rm tot}-\sum_m A_m e^{-\gamma_mT^*}$.
+\noindent Source: letter (28)--(33), lines 284--311.
+
+\subsection*{Expanded proof}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.1}{0}
+\phantomsection\label{step:R.1}
+Define $V_\delta(T)=B^{\prime}(T)=\sum_m A_m e^{-\gamma_mT}$.
+
+\textbf{Supporting reasoning.}
+A reception delivers a summary already $\delta$ old. At elapsed time $r\ge0$ after reception its age is $\delta+r$. Corollary 2 gives the instantaneous improvement
+\[
+\sum_m w_m\Delta_m e^{-\gamma_m(\delta+r)}
+=\sum_m A_m e^{-\gamma_mr}=V_\delta(r).
+\]
+Older received summaries cannot improve this value: all such data are contained in complete sharing through the latest sampling time, and Theorem 1 shows that the latest scalar and own history already attain that larger-field optimum.
+
+Integrate each finite exponential sum over an interval of length $T$:
+\[
+\int_0^T A_m e^{-\gamma_mr}\,dr
+=\frac{A_m}{\gamma_m}(1-e^{-\gamma_mT}).
+\]
+Summation gives $B(T)$, and differentiation gives $B'(T)=V_\delta(T)$. One reception interval incurs baseline loss $TJ_L^{\rm tot}$, gains $B(T)$, and costs one price $c$. Its average is therefore $C(T)=J_L^{\rm tot}+[c-B(T)]/T$. Each $A_m>0$, because all weights, gains, and exponential factors are positive.
+\par\smallskip{\small Source claim: \texttt{SRC-051}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.2}{0}
+\phantomsection\label{step:R.2}
+Differentiate (29): $C^{\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\delta(T)$.
+
+\textbf{Supporting reasoning.}
+Apply the quotient rule to $[c-B(T)]/T$, for $T>0$:
+\begin{align*}
+C'(T)&=\frac{(-B'(T))T-(c-B(T))}{T^2}\\
+&=\frac{B(T)-TB'(T)-c}{T^2}
+=\frac{H(T)-c}{T^2},\\
+H(T)&=B(T)-TV_\delta(T).
+\end{align*}
+Since the denominator is positive, the sign of $C'$ is exactly the sign of $H-c$. Expanding $H$ component by component gives
+\[
+H(T)=\sum_m\frac{A_m}{\gamma_m}
+[1-(1+\gamma_mT)e^{-\gamma_mT}].
+\]
+This is the left side of the proposed period equation.
+\par\smallskip{\small Source claim: \texttt{SRC-052}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.3}{0}
+\phantomsection\label{step:R.3}
+$H^{\prime}(T)=-TV_\delta^{\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\rm crit}$.
+
+\textbf{Supporting reasoning.}
+Differentiate using the product rule and $B'=V_\delta$:
+\begin{align*}
+H'(T)&=B'(T)-[V_\delta(T)+TV_\delta'(T)]\\
+&=-TV_\delta'(T)=T\sum_m\gamma_m A_m e^{-\gamma_mT}>0
+\end{align*}
+for $T>0$. Every term is positive. At zero, $B(0)=0$ and $0V_\delta(0)=0$, hence $H(0)=0$. As $T\to\infty$, each exponential and each $Te^{-\gamma_mT}$ tends to zero. Using the finite sum gives
+\[
+\lim_{T\to\infty}H(T)=\sum_m A_m/\gamma_m=c_{\rm crit}.
+\]
+Thus $H$ is continuous, strictly increasing on positive periods, and has range $(0,c_{\rm crit})$ there. In particular it never reaches its upper limiting value at a finite period.
+\par\smallskip{\small Source claim: \texttt{SRC-053}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.4}{0}
+\phantomsection\label{step:R.4}
+ASSUME $0<c<c_{\rm crit}$. PROVE a unique minimizing positive period and its displayed value.
+
+\textbf{Supporting reasoning.}
+For this case assume $0<c<c_{\rm crit}$. We first optimize among finite positive periods. R.4.1--R.4.4 prove existence, uniqueness, and the cost of that periodic optimum. The comparison with nonperiodic schedules is a separate obligation, proved in R.6; it is not inferred merely from differentiating $C$.
+\par\smallskip{\small Source claim: \texttt{SRC-054}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.4.1}{1}
+\phantomsection\label{step:R.4.1}
+There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.
+
+\textbf{Supporting reasoning.}
+Since $H(0)=0<c$ and $H(T)\to c_{\rm crit}>c$, some finite $T_1$ has $H(T_1)>c$. Continuity and the intermediate value theorem give a root in $(0,T_1)$. Strict increase makes it unique; only now denote it by $T^*$. Then
+\[
+T<T^*\Rightarrow H(T)<c\Rightarrow C'(T)<0,
+\]
+\[
+T>T^*\Rightarrow H(T)>c\Rightarrow C'(T)>0.
+\]
+Thus the cost decreases up to the root and increases afterward. The equation for $T^*$ is R.2's expanded formula for $H(T^*)=c$.
+\par\smallskip{\small Source claim: \texttt{SRC-054}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.4.2}{1}
+\phantomsection\label{step:R.4.2}
+$C(T)\to\infty$ as $T\downarrow0$ and $C(T)\to J_L^{\rm tot}$ as $T\to\infty$, proving the unique global periodic minimum.
+
+\textbf{Supporting reasoning.}
+The expansion $e^{-\gamma_mT}=1-\gamma_mT+O(T^2)$ gives
+\[
+B(T)=T\sum_mA_m+O(T^2),
+\quad C(T)=J_L^{\rm tot}+c/T-\sum_mA_m+O(T).
+\]
+Since $c>0$, this tends to $+\infty$ as $T\downarrow0$. At the other end, $0\le B(T)\le c_{\rm crit}$, so $[c-B(T)]/T\to0$ and $C(T)\to J_L^{\rm tot}$ as $T\to\infty$. Together with strict decrease then increase, these boundary calculations establish the unique global minimum over positive finite periods. They also identify the no-refresh value as the infinite-period limit.
+\par\smallskip{\small Source claim: \texttt{SRC-055}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.4.3}{1}
+\phantomsection\label{step:R.4.3}
+At the root, $c-B(T^*)=-T^*V_\delta(T^*)$, giving the optimal-cost formula.
+
+\textbf{Supporting reasoning.}
+The root identity is $B(T^*)-T^*V_\delta(T^*)=c$. Rearrange it and divide by $T^*>0$:
+\[
+\frac{c-B(T^*)}{T^*}=-V_\delta(T^*).
+\]
+Substitution into $C$ gives
+\[
+C(T^*)=J_L^{\rm tot}-\sum_mA_m e^{-\gamma_mT^*}.
+\]
+The subtracted sum is strictly positive. Thus the optimum is strictly better than no refreshing in this price regime. The formula is the achieved average cost, rather than just a stationary value of an unconstrained expression.
+\par\smallskip{\small Source claim: \texttt{SRC-056}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.4.4}{1}
+\phantomsection\label{step:R.4.4}
+Q.E.D. The below-threshold periodic claims hold.
+
+\textbf{Supporting reasoning.}
+The completed substeps prove a unique positive minimizing period, its stated equation, and its cost below the local baseline. These are the periodic conclusions under $0<c<c_{\rm crit}$. They do not assert uniqueness among all possible schedules; schedules differing by a finite transient can have the same average cost.
+\par\smallskip{\small Source claim: \texttt{SRC-057}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.5}{0}
+\phantomsection\label{step:R.5}
+If $c\ge c_{\rm crit}$, then $c-B(T)\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing.
+
+\textbf{Supporting reasoning.}
+For finite $T$, each factor $1-e^{-\gamma_mT}$ is strictly less than one. Therefore
+\[
+B(T)<\sum_mA_m/\gamma_m=c_{\rm crit}\le c.
+\]
+It follows that $C(T)=J_L^{\rm tot}+[c-B(T)]/T>J_L^{\rm tot}$ for every positive finite period, including when $c=c_{\rm crit}$. No refreshing attains $J_L^{\rm tot}$. The next argument is still needed to exclude improvement by irregular schedules. The theorem claims optimality of no refreshing, not uniqueness: finitely many refreshes also have a vanishing long-run average contribution.
+\par\smallskip{\small Source claim: \texttt{SRC-058}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6}{0}
+\phantomsection\label{step:R.6}
+Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound.
+
+\textbf{Supporting reasoning.}
+The goal is a bound for every admissible schedule, not just a constant interval. The following subproof bounds each complete reception interval separately, treats the incomplete last interval with a uniform constant, and then averages. It proves that the best periodic or no-refresh value is a lower bound on every independent schedule and that the stated candidates attain it.
+\par\smallskip{\small Source claim: \texttt{SRC-059}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.1}{1}
+\phantomsection\label{step:R.6.1}
+Define $g=\min\{0,\inf_{T>0}(c-B(T))/T\}$ and condition on a realization of the reception schedule.
+
+\textbf{Supporting reasoning.}
+Define $f(T)=[c-B(T)]/T$ and $g=\min\{0,\inf_{T>0}f(T)\}$. This is finite: since $e^{-\gamma_m r}\le1$,
+\[
+B(T)=\int_0^T V_\delta(r)\,dr\le T\sum_m A_m,
+\quad f(T)\ge-\sum_m A_m.
+\]
+Thus $-\sum_m A_m\le g\le0$. By definition $f(T)\ge g$ for every $T>0$.
+
+Now condition on one realization of the schedule. Because the entire schedule is independent of the sensor processes, their joint distribution is unchanged by this conditioning. Reception times and ages become deterministic, and the instantaneous optimal loss from Corollary 2 applies at those ages. Local finiteness guarantees only finitely many receptions in a bounded horizon. This reasoning would not apply to an observation-triggered schedule, whose timing itself may reveal information about the signal.
+\par\smallskip{\small Source claim: \texttt{SRC-060}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.2}{1}
+\phantomsection\label{step:R.6.2}
+Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price.
+
+\textbf{Supporting reasoning.}
+Take a complete interval from one reception to the next, of length $T_j>0$. The optimal achievable expected sensing loss is $T_jJ_L^{\rm tot}-B(T_j)$, and any other feasible decision policy has at least that loss. Assign the cost of the reception at the interval's start to it. Relative to local operation the total is therefore at least
+\[
+c-B(T_j)=T_jf(T_j)\ge T_jg.
+\]
+The inequality multiplies by $T_j>0$. Each reception is assigned at most once. If simultaneous redundant receptions are allowed, a zero-length interval has $c-B(0)=c\ge0$ and satisfies the same lower-bound role without defining $f(0)$.
+\par\smallskip{\small Source claim: \texttt{SRC-061}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.3}{1}
+\phantomsection\label{step:R.6.3}
+The last incomplete interval contributes at least $-c_{\rm crit}$, and the initial interval before the first reception has zero gain.
+
+\textbf{Supporting reasoning.}
+Let $r_N$ be the last reception before the horizon endpoint $R$ and $L=R-r_N\ge0$. The gain on this final interval is bounded by
+\[
+B(L)\le\int_0^\infty V_\delta(r)\,dr=c_{\rm crit}.
+\]
+Dropping the last reception's nonnegative price can only lower the cost, so the interval's excess over local operation is at least $-c_{\rm crit}$. Before the first reception there is no shared update and the best available loss is the local baseline, so that initial interval has no gain. With zero receptions the entire excess is nonnegative; with one reception the final-interval bound alone applies. These cases therefore obey the same uniform estimate.
+\par\smallskip{\small Source claim: \texttt{SRC-062}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.4}{1}
+\phantomsection\label{step:R.6.4}
+Because $g\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\rm tot}+g)-c_{\rm crit}$.
+
+\textbf{Supporting reasoning.}
+Let $S_R=\sum_jT_j$ be the total length of complete intervals in the horizon. It satisfies $0\le S_R\le R$. Summing R.6.2 and adding R.6.3 gives conditional expected accumulated cost at least
+\[
+RJ_L^{\rm tot}+gS_R-c_{\rm crit}.
+\]
+Since $g\le0$, multiplying $S_R\le R$ by $g$ reverses the inequality: $gS_R\ge gR$. Hence
+\[
+\E[\mathrm{Cost}(R)\mid\mathrm{schedule}]
+\ge R(J_L^{\rm tot}+g)-c_{\rm crit}.
+\]
+The constant does not depend on the number, placement, or lengths of receptions. This uniformity is essential for taking expectation over randomized schedules later.
+\par\smallskip{\small Source claim: \texttt{SRC-063}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.5}{1}
+\phantomsection\label{step:R.6.5}
+Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages.
+
+\textbf{Supporting reasoning.}
+A message received by $R$ was generated at a time at most $R$, because the fixed latency $\delta$ is nonnegative. Starting without messages in flight gives
+\[
+N_{\rm sent}(R)\ge N_{\rm received}(R).
+\]
+Thus charging $c$ at generation produces at least the reception charges used in the lower bound. Messages still in flight add a nonnegative cost and cannot invalidate it. The initial condition is the paper's initially unshared operation. A fixed finite initial history of already acquired updates changes only a bounded transient, not the long-run conclusion, but no such history is needed for this proof.
+\par\smallskip{\small Source claim: \texttt{SRC-064}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.6}{1}
+\phantomsection\label{step:R.6.6}
+The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound.
+
+\textbf{Supporting reasoning.}
+Apply the tower property to the uniform bound, then divide by $R>0$:
+\begin{align*}
+\E[\mathrm{Cost}(R)]
+&\ge R(J_L^{\rm tot}+g)-c_{\rm crit},\\
+\frac{\E[\mathrm{Cost}(R)]}{R}
+&\ge J_L^{\rm tot}+g-\frac{c_{\rm crit}}R.
+\end{align*}
+The last term tends to zero. Therefore even the limiting lower average is at least $J_L^{\rm tot}+g$, and in particular the specified limiting upper average satisfies
+\[
+\limsup_{R\to\infty}\frac{\E[\mathrm{Cost}(R)]}{R}
+\ge J_L^{\rm tot}+g.
+\]
+Expectation was taken before the limit. No interchange of expectation and $\limsup$ has been used. If an independent locally finite random schedule has infinite expected transmission count in a bounded horizon, its expected price is infinite; it cannot improve a finite optimum. Otherwise the preceding expectations are well-defined, allowing nonnegative extended costs if necessary.
+\par\smallskip{\small Source claim: \texttt{SRC-065}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.7}{1}
+\phantomsection\label{step:R.6.7}
+Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound.
+
+\textbf{Supporting reasoning.}
+Below threshold, the completed periodic case gives $g=f(T^*)=-V_\delta(T^*)<0$. Use receptions spaced $T^*$ apart, after the initial fixed latency. Every complete interval has cost $T^*C(T^*)$. There are $R/T^*+O(1)$ such intervals by time $R$; the initial latency and final partial interval contribute only a bounded amount for this fixed period. Division by $R$ yields average $C(T^*)=J_L^{\rm tot}+g$.
+
+At or above threshold, R.5 gives $f(T)>0$ for finite $T$, and $f(T)\to0$ as $T\to\infty$. Thus $g=0$. No transmissions, with local optimal decisions, attain $J_L^{\rm tot}=J_L^{\rm tot}+g$. Both candidate schedules are locally finite and independent of observations.
+\par\smallskip{\small Source claim: \texttt{SRC-066}.}
+\end{proofstep}
+
+\Needspace{7\baselineskip}
+\begin{proofstep}{R.6.8}{1}
+\phantomsection\label{step:R.6.8}
+Q.E.D. The all-schedules optimum is attained by the stated candidates.
+
+\textbf{Supporting reasoning.}
+R.6.1--R.6.6 bound every permitted schedule below by $J_L^{\rm tot}+g$. R.6.7 attains that value with a permitted schedule in each price regime. Lower bound plus attainment proves the asserted all-schedules optimum.
+\par\smallskip{\small Source claim: \texttt{SRC-067}.}
+\end{proofstep}
+
+\Needspace{3\baselineskip}
+\begin{proofstep}{R.7}{0}
+\phantomsection\label{step:R.7}
+Q.E.D. Both price regimes and every stated policy class are covered.
+
+\textbf{Supporting reasoning.}
+The cases $0<c<c_{\rm crit}$ and $c\ge c_{\rm crit}$ exhaust $c>0$. Completed R.4 gives the unique finite optimal period below threshold; R.5 and completed R.6 establish the remaining comparisons and attainment. Thus all conclusions hold on the stated domain.
+\par\smallskip{\small Source claim: \texttt{SRC-067}.}
+\end{proofstep}
+
+\clearpage
+\section{Additional analytic claims, with their calculations}
+These claims occur outside the seven formal result environments. They are included so the report covers the manuscript's explanatory formulas as well as its labeled theorems.
+
+\subsection{A.1: Local disagreement gap (equation 12)}
+\textbf{Claim.} $J_L-P_1=\kappa a^2b(1-1/n)/[(a+b)d]$.
+
+\textbf{Supporting calculation.} Substitute the established costs and combine fractions:
+\begin{align*}
+J_L-P_1&=(a-a^2/d)-(a-a^2/(a+b))\\
+&=a^2\frac{d-(a+b)}{(a+b)d}
+=\frac{\kappa a^2b(1-1/n)}{(a+b)d}.
+\end{align*}
+The denominator is positive. The difference is zero at $\kappa=0$ and strictly positive at $\kappa>0$. Also $d>a+b$ when $\kappa>0$, so $a/d<a/(a+b)$: the team action shrinks the individual posterior mean to reduce disagreement.
+
+\subsection{A.2: How the crossover changes with parameters}
+\textbf{Claim.} A larger disagreement penalty increases delay tolerance; faster temporal change decreases it.
+
+\textbf{Supporting calculation.} In $\tau_{\rm cross}=\log(d/v)/(2\lambda)$, $v$ is independent of $\kappa$ and $\partial d/\partial\kappa=b(1-1/n)>0$. Thus
+\[
+\frac{\partial\tau_{\rm cross}}{\partial\kappa}
+=\frac{b(1-1/n)}{2\lambda d}>0.
+\]
+For fixed $a,b,n,\kappa$, $d/v>1$ and
+\[
+\frac{\partial\tau_{\rm cross}}{\partial\lambda}
+=-\frac{\log(d/v)}{2\lambda^2}<0.
+\]
+These derivatives specify which parameters are held fixed and justify each sign.
+
+\subsection{A.3: Age budget and half-life (equation 22)}
+\textbf{Claim.} Retaining at least a fraction $\alpha\in(0,1)$ of the initial value requires $\tau\le\log(1/\alpha)/(2\lambda)$.
+
+\textbf{Supporting calculation.} Since $\Delta>0$,
+\begin{align*}
+\Delta e^{-2\lambda\tau}\ge\alpha\Delta
+&\iff e^{-2\lambda\tau}\ge\alpha\\
+&\iff -2\lambda\tau\ge\log\alpha\\
+&\iff \tau\le\frac{\log(1/\alpha)}{2\lambda}.
+\end{align*}
+The last step reverses the inequality on division by a negative number. Setting $\alpha=1/2$ gives the value half-life $\log2/(2\lambda)$. The signal's normalized correlation is $e^{-\lambda\tau}$, whose half-life solves $e^{-\lambda\tau}=1/2$ and is $\log2/\lambda$. The coherence time $1/\lambda$ instead marks correlation $e^{-1}$. Only the fractional age budget is independent of $n,a,b,\kappa$; the absolute amount $\Delta$ depends on them.
+
+\subsection{A.4: Discrete-time endpoint and pooling laws}
+\textbf{Claim.} For independent stationary Gaussian AR(1) signal and errors sharing $q\in(0,1)$, replace $e^{-\lambda\tau}$ by $q^k$ at integer age $k$.
+
+\textbf{Supporting calculation.} For a stationary process $S_{t+1}=qS_t+\xi_t$ with variance $\sigma^2$ and independent innovations, iteration gives $\Cov(S_t,S_{t-k})=\sigma^2q^k$ for $k\ge0$. Symmetry gives $\sigma^2q^{|k|}$. Thus all endpoint residual covariance cancellations in Proposition 1 remain valid.
+
+For integers $s<r\le t$, let $Z_i(r)=Y_i(r)-q^{r-s}Y_i(s)$. Expand the four covariances:
+\begin{align*}
+\Cov(Z_j(t),Z_i(r))/\Sigma_{ji}
+&=q^{t-r}-q^{r-s}q^{t-s}-q^{t-s}q^{r-s}+q^{t-s}q^{r-s}\\
+&=q^{t-r}-q^{t+r-2s}\\
+&=q^{t-r}(1-q^{2(r-s)}).
+\end{align*}
+This notation represents the common temporal factor; equivalently multiply each line by $\Sigma_{ji}$, avoiding division if a coefficient were zero. The same sensor coefficient ratio gives the full-history conditional means. The endpoint covariance is $(1-q^{2(t-s)})\Sigma$, so the cost proof gives
+\[
+J_H(k)=q^{2k}J_P+(1-q^{2k})J_L,\qquad J_L-J_H(k)=\Delta q^{2k}.
+\]
+At $k=0$ the policy is pooled. The innovation and projection calculations also hold with unequal diagonal variances. The continuous-time refresh theorem is not copied to integer periods: over $N$ slots a component's gain is the geometric sum
+\[
+\sum_{r=0}^{N-1}A_mq_m^{2r}=A_m\frac{1-q_m^{2N}}{1-q_m^2}.
+\]
+Integer period optimization must use that sum instead of the integral.
+
+\subsection{A.5: Effective multirate decay (equation 27)}
+\textbf{Claim.} The logarithmic decay rate is a weighted average of the component rates, and slower components gain relative importance.
+
+\textbf{Supporting calculation.} Let $D_m=w_m\Delta_m>0$ and $V(\tau)=\sum_mD_me^{-2\lambda_m\tau}>0$. Differentiating the finite sum yields
+\[
+-V'(\tau)/V(\tau)
+=\sum_m\underbrace{\frac{D_me^{-2\lambda_m\tau}}{V(\tau)}}_{p_m(\tau)}2\lambda_m.
+\]
+Each $p_m$ is positive and $\sum_mp_m=1$, which is exactly a weighted average. For components $j,k$,
+\[
+\frac{D_je^{-2\lambda_j\tau}}{D_ke^{-2\lambda_k\tau}}
+=\frac{D_j}{D_k}e^{2(\lambda_k-\lambda_j)\tau}.
+\]
+If $\lambda_j<\lambda_k$, this ratio increases with age. Equal rates leave their relative shares unchanged. With several rates, an intermediate component need not have a monotonically increasing absolute share; the statement about slower components is justified by these pairwise ratios.
+
+\subsection{A.6: Scalar period equation and latency cutoff (equations 34--35)}
+\textbf{Claim.} For one component the optimum solves $1-(1+x)e^{-x}=\chi$, where $x=2\lambda T^*$ and $\chi=c/c_{\rm crit}\in(0,1)$.
+
+\textbf{Supporting calculation.} Put $\gamma=2\lambda$ and $c_{\rm crit}=A/\gamma$. The equation $H(T^*)=c$ reads
+\[
+\frac A\gamma[1-(1+\gamma T^*)e^{-\gamma T^*}]=c.
+\]
+Divide by $A/\gamma>0$ to obtain the claim. The derivative of its left side is
+\[
+\frac{d}{dx}[1-(1+x)e^{-x}]=-[e^{-x}-(1+x)e^{-x}]=xe^{-x}>0
+\]
+for $x>0$. It starts at zero and tends to one, so there is exactly one positive solution. If $\chi\uparrow1$ while the roots stayed bounded, a finite limit would give the left side equal to one, impossible because $(1+x)e^{-x}>0$ at finite $x$. Hence $T^*\to\infty$.
+
+For unit component weight the no-refresh condition is
+\begin{align*}
+c\ge\Delta e^{-2\lambda\delta}/(2\lambda)
+&\iff e^{-2\lambda\delta}\le 2\lambda c/\Delta\\
+&\iff \delta\ge\frac1{2\lambda}\log\frac{\Delta}{2\lambda c}.
+\end{align*}
+Combining with the model domain $\delta\ge0$ gives the cutoff as the maximum of this expression and zero. If the logarithm is negative, no refreshing is already optimal at zero latency. For a nonunit weight, replace $\Delta$ by $w\Delta$.
+
+\subsection{A.7: A minimum allowed refresh interval}
+\textbf{Claim.} Below threshold, a constraint $T\ge T_{\min}>0$ gives the optimal period $\max\{T_{\min},T^*\}$, with the same price threshold.
+
+\textbf{Supporting calculation.} R.4 proved strict decrease on $(0,T^*)$ and strict increase on $(T^*,\infty)$. If $T_{\min}\le T^*$, the unconstrained minimizer remains feasible. If $T_{\min}>T^*$, the cost is increasing throughout the feasible interval, so its left endpoint minimizes it. Below threshold $B(T)\to c_{\rm crit}>c$, so some sufficiently large feasible period has $B(T)>c$ and improves on no refreshing. At or above threshold none does. If the minimum interval is imposed on every interval of a general schedule, the R.6 bound applies with the infimum restricted to $T\ge T_{\min}$ and gives the same matching periodic attainment.
+
+\subsection{A.8: Why temporally white measurement noise changes the problem}
+\textbf{Claim.} A current reading need not summarize local history when the measurement noise is independent between samples rather than sharing the signal's rate.
+
+\textbf{Supporting calculation.} Take a stationary Gaussian signal with variance $a$ and one-step correlation $q>0$, and independent white measurement noise of variance $b>0$. Then $\Cov(X_t,Y_{t-1})=aq$ and $\Cov(Y_t,Y_{t-1})=aq$, because the two noise samples are independent. The instantaneous residual satisfies
+\[
+\Cov\left(X_t-\frac{a}{a+b}Y_t,Y_{t-1}\right)
+=aq-\frac{a}{a+b}aq=\frac{abq}{a+b}>0.
+\]
+If the current-sample estimate were the conditional mean given the whole local history, its residual would be orthogonal to every past reading by the conditional-expectation rule. This nonzero covariance contradicts that condition. Older data therefore matter. A recursive Gaussian filter can use them, but the single-endpoint sufficiency proof in this paper does not transfer to that model.
+
+
+\clearpage
+\section{Review conclusions and dependency checks}
+\subsection{Forward review}
+The expanded proof was checked in source order. Each inference now has its algebra or rule application next to it, including the required parameter signs and information measurability. The zero-age hybrid case is proved separately; the positive-age branch's conclusions are exported only through its completed parent case. The refresh root is introduced only after existence and uniqueness are shown. Its below-threshold branch is closed before the general-schedule proof.
+
+\textbf{Forward verdict: PASS for the expanded proofs in this report.} No unresolved validity obligation was identified in these derivations under the stated background. This verdict refers to the written expansions, not to the mere presence of the original source claims. The source's compressed exposition is not being treated as a calculation.
+
+\subsection{Conclusion-first dependency check}
+For each completed theorem, the following are conjunctive requirements: every listed obligation is needed. The supporting claim labels provide its detailed derivation. There are no alternative routes used to bypass an unsupported step.
+\begin{longtable}{>{\raggedright\arraybackslash}p{.09\linewidth}>{\raggedright\arraybackslash}p{.49\linewidth}>{\raggedright\arraybackslash}p{.32\linewidth}}
+\toprule Result & Obligations needed for the conclusion & Supporting expanded claims \\
+\midrule\endhead
+L & Exact variation; conditional equivalence; positive remainder; necessity and sufficiency; uniqueness & L.1--L.4 \\
+P & Full-history posteriors; feasible actions satisfying L; costs and positive gap & P.1--P.3; P.4--P.8; P.9--P.10 \\
+D & Conditional prediction; common-action optimum; variance; inequality and equality case & D.1--D.6; completed P \\
+H & Zero age; full-history covariance and projection; normal equations; information inclusion and attainment; loss and posterior variance & H.1; completed positive-age H.2; H.3; completed L and P \\
+U & Solvable coefficient equations; positive denominators; pooled posterior; full-history hybrid projection; feasibility and cost & U.1--U.13; completed L \\
+C & Independence; feasible joint averaging; lower bound and simultaneous attainment; weighted subtraction & C.1--C.4; completed H \\
+R & Gain integral; unique periodic root; both price regimes; uniform finite-horizon lower bound; expectation and limit; matching schedule & R.1--R.3; completed R.4; R.5; completed R.6; R.7; completed C \\
+\bottomrule
+\end{longtable}
+Each row closes using the stated assumptions, explicit background rules, and completed earlier results. The full-history claims use all-time covariance identities, not just endpoint Gaussian regression. The schedule claim uses a uniform bound, not an exchange of expectation and a limiting upper average.
+
+\textbf{Conclusion-first verdict: FOLLOWS for the expanded proof routes.} The conclusions follow through the displayed dependencies. This is a mathematical-review judgment, not a certificate from a proof assistant.
+
+\subsection{What has and has not been assumed}
+\begin{itemize}
+\item The normal-equation proof allows all feasible $L^2$ policies. The linear formulas are verified candidates, not a restriction on competitors.
+\item The scalar-sharing comparison retains fresh local information in both compared architectures. The delayed-only crossover compares different, nonnested information sets.
+\item The common temporal rate is essential within a component. Unequal noise variances preserve the covariance argument; arbitrary unequal temporal rates do not.
+\item Positive gains use $n\ge2$ and positive signal and noise variances. Zero disagreement weight and zero age are included explicitly.
+\item The refresh result requires observation-independent schedules, fixed latency, and no queueing. Uniqueness concerns the optimal finite periodic interval, not every schedule attaining the long-run minimum.
+\end{itemize}
+
+
+\clearpage
+\appendix
+\section{Source identity and coverage}
+The manuscript was not changed. The source snapshot matches the hashes recorded below. The current report is available at
+\url{https://github.com/ANRGUSC/TINA/blob/main/proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.pdf}.
+
+\textbf{Manuscript TeX SHA-256:}\\
+\nolinkurl{ca4063836ef506a56fbee54ab850a67499d70fc5a1de8f5c4f8077a1794f8db5}
+
+\textbf{Manuscript PDF SHA-256:}\\
+\nolinkurl{211b1eae40836b0136d35ea59f6678e5b88df1efa8d01bd100a2ee1f229bf0ef}
+
+The original 73 claim labels and 67 source spans are retained. Each source span is accounted for in the table below. The expansions are authored explanations of these claims, not additional text attributed to the manuscript. The method follows the hierarchical proof and forward/reverse review principles of
+\url{https://github.com/WWresearch/lamport-proof}.
+
+\begin{longtable}{p{.19\linewidth}p{.22\linewidth}p{.48\linewidth}}
+\toprule Source span & Manuscript TeX lines & Expanded claim locations \\
+\midrule\endhead
+
+\texttt{SRC-001} & 111--111 & \stepref{L.1} \\
+
+\texttt{SRC-002} & 111--111 & \stepref{L.2} \\
+
+\texttt{SRC-003} & 111--111 & \stepref{L.3} \\
+
+\texttt{SRC-004} & 111--112 & \stepref{L.4} \\
+
+\texttt{SRC-005} & 134--134 & \stepref{P.1} \\
+
+\texttt{SRC-006} & 134--138 & \stepref{P.2} \\
+
+\texttt{SRC-007} & 138--140 & \stepref{P.3} \\
+
+\texttt{SRC-008} & 140--142 & \stepref{P.4} \\
+
+\texttt{SRC-009} & 142--144 & \stepref{P.5} \\
+
+\texttt{SRC-010} & 144--144 & \stepref{P.6} \\
+
+\texttt{SRC-011} & 144--144 & \stepref{P.7} \\
+
+\texttt{SRC-012} & 144--144 & \stepref{P.8} \\
+
+\texttt{SRC-013} & 144--145 & \stepref{P.9}, \stepref{P.10} \\
+
+\texttt{SRC-014} & 168--169 & \stepref{D.1} \\
+
+\texttt{SRC-015} & 169--169 & \stepref{D.2} \\
+
+\texttt{SRC-016} & 169--169 & \stepref{D.3} \\
+
+\texttt{SRC-017} & 169--169 & \stepref{D.4} \\
+
+\texttt{SRC-018} & 169--170 & \stepref{D.5}, \stepref{D.6} \\
+
+\texttt{SRC-019} & 192--192 & \stepref{H.1} \\
+
+\texttt{SRC-020} & 192--192 & \stepref{H.2} \\
+
+\texttt{SRC-021} & 192--196 & \stepref{H.2.1} \\
+
+\texttt{SRC-022} & 196--196 & \stepref{H.2.2} \\
+
+\texttt{SRC-023} & 196--202 & \stepref{H.2.3} \\
+
+\texttt{SRC-024} & 202--206 & \stepref{H.2.4} \\
+
+\texttt{SRC-025} & 206--206 & \stepref{H.2.5} \\
+
+\texttt{SRC-026} & 206--206 & \stepref{H.2.6} \\
+
+\texttt{SRC-027} & 206--206 & \stepref{H.2.7} \\
+
+\texttt{SRC-028} & 206--211 & \stepref{H.2.8} \\
+
+\texttt{SRC-029} & 211--211 & \stepref{H.2.9} \\
+
+\texttt{SRC-030} & 211--213 & \stepref{H.2.10} \\
+
+\texttt{SRC-031} & 213--213 & \stepref{H.2.11} \\
+
+\texttt{SRC-032} & 213--213 & \stepref{H.2.12} \\
+
+\texttt{SRC-033} & 213--214 & \stepref{H.2.13}, \stepref{H.2.14}, \stepref{H.3} \\
+
+\texttt{SRC-034} & 245--245 & \stepref{U.1} \\
+
+\texttt{SRC-035} & 245--245 & \stepref{U.2} \\
+
+\texttt{SRC-036} & 245--245 & \stepref{U.3} \\
+
+\texttt{SRC-037} & 245--245 & \stepref{U.4} \\
+
+\texttt{SRC-038} & 245--245 & \stepref{U.5} \\
+
+\texttt{SRC-039} & 245--247 & \stepref{U.6} \\
+
+\texttt{SRC-040} & 247--247 & \stepref{U.7} \\
+
+\texttt{SRC-041} & 247--247 & \stepref{U.8} \\
+
+\texttt{SRC-042} & 247--247 & \stepref{U.9} \\
+
+\texttt{SRC-043} & 247--247 & \stepref{U.10} \\
+
+\texttt{SRC-044} & 247--247 & \stepref{U.11} \\
+
+\texttt{SRC-045} & 247--247 & \stepref{U.12} \\
+
+\texttt{SRC-046} & 247--248 & \stepref{U.13} \\
+
+\texttt{SRC-047} & 260--260 & \stepref{C.1} \\
+
+\texttt{SRC-048} & 260--260 & \stepref{C.2} \\
+
+\texttt{SRC-049} & 260--260 & \stepref{C.3} \\
+
+\texttt{SRC-050} & 260--261 & \stepref{C.4} \\
+
+\texttt{SRC-051} & 300--300 & \stepref{R.1} \\
+
+\texttt{SRC-052} & 300--304 & \stepref{R.2} \\
+
+\texttt{SRC-053} & 304--304 & \stepref{R.3} \\
+
+\texttt{SRC-054} & 304--304 & \stepref{R.4}, \stepref{R.4.1} \\
+
+\texttt{SRC-055} & 304--304 & \stepref{R.4.2} \\
+
+\texttt{SRC-056} & 304--304 & \stepref{R.4.3} \\
+
+\texttt{SRC-057} & 304--304 & \stepref{R.4.4} \\
+
+\texttt{SRC-058} & 304--306 & \stepref{R.5} \\
+
+\texttt{SRC-059} & 306--306 & \stepref{R.6} \\
+
+\texttt{SRC-060} & 306--306 & \stepref{R.6.1} \\
+
+\texttt{SRC-061} & 306--306 & \stepref{R.6.2} \\
+
+\texttt{SRC-062} & 306--306 & \stepref{R.6.3} \\
+
+\texttt{SRC-063} & 306--310 & \stepref{R.6.4} \\
+
+\texttt{SRC-064} & 310--310 & \stepref{R.6.5} \\
+
+\texttt{SRC-065} & 310--310 & \stepref{R.6.6} \\
+
+\texttt{SRC-066} & 310--310 & \stepref{R.6.7} \\
+
+\texttt{SRC-067} & 310--311 & \stepref{R.6.8}, \stepref{R.7} \\
+
+\bottomrule\end{longtable}
+\subsection{All numbered manuscript equations}
+\begin{longtable}{p{.16\linewidth}p{.46\linewidth}p{.27\linewidth}}
+\toprule Equations & Content & Derivation here \\
+\midrule\endhead
+1--4 & Model, observation, loss, information & Background and assumptions \\
+5 & Team optimality & L.1--L.4 \\
+6--11 & Fresh policies, posteriors, costs, residual & P.1--P.10 \\
+12 & Local gap & A.1 \\
+13--14 & Delayed policy and crossover & D.1--D.6 \\
+15--21 & Hybrid policy, costs, projection & H.1--H.3 \\
+22 & Fractional age budget & A.3 \\
+23--25 & Unequal sensor quality & U.1--U.13 \\
+26 & Additive value & C.1--C.4 \\
+27 & Effective rate & A.5 \\
+28--33 & Refresh integral, threshold, period, cost & R.1--R.7 \\
+34--35 & Scalar period and latency & A.6 \\
+\bottomrule\end{longtable}
+
+\section{Supplementary numerical verification}
+The prior report's independent check script was rerun against the unchanged manuscript snapshot. It solves 48 continuous-time Gaussian-team systems from their raw observation covariances, 18 discrete-time systems, and 200 refresh-schedule cases. These checks all passed. They corroborate the calculations; they are not substitutes for the preceding proofs.
+
+\subsection{What the finite-dimensional solver checks}
+For a finite observation vector $z_i$ at agent $i$, write a linear candidate as $u_i=\theta_i^\top z_i$. Let $H=(1+\kappa)I-(\kappa/n)\one\one^\top$. The identity $\sum_i(u_i-\bar u)^2=\sum_i u_i^2-n\bar u^2$ gives
+\[
+J=a-\frac2n\sum_i\theta_i^\top\Cov(z_i,X)
++\frac1n\sum_{i,j}\theta_i^\top H_{ij}\Cov(z_i,z_j)\theta_j.
+\]
+Stack the coefficients and define block matrix $Q_{ij}=H_{ij}\Cov(z_i,z_j)$ and vector $r_i=\Cov(z_i,X)$. Then
+\[
+J=a-2r^\top\theta/n+\theta^\top Q\theta/n,
+\quad \nabla_\theta J=2(Q\theta-r)/n.
+\]
+The code solves $Q\theta=r$ from the raw covariances, then compares the resulting cost and coefficients with the theorem's formulas. It does not install the claimed policy as the solver's answer. The augmented observations include multiple old shared times and subsequent local times, so the check can detect nonzero coefficients on observations claimed to be redundant.
+
+\begin{longtable}{p{.68\linewidth}p{.22\linewidth}}
+\toprule Check & Observed result \\
+\midrule\endhead
+Continuous-time systems & 48 \\
+Largest system dimension & 126 \\
+Maximum loss discrepancy & $6.67\times10^{-16}$ \\
+Maximum coefficient discrepancy & $5.39\times10^{-15}$ \\
+Maximum normal-equation residual & $1.78\times10^{-15}$ \\
+Maximum path-projection covariance residual & $2.23\times10^{-16}$ \\
+Discrete-time systems & 18 \\
+Maximum discrete-time loss discrepancy & $5.56\times10^{-16}$ \\
+Refresh-schedule cases & 200 \\
+Minimum finite-horizon bound slack & $0.189410$ \\
+Maximum period-equation residual & $1.12\times10^{-14}$ \\
+\bottomrule\end{longtable}
+Displayed error bounds are rounded upward. The deterministic random seed is 260906351. The check implementation is the existing \texttt{check\_audit.py} from the report materials; this rerun checks the same parameter sets rather than claiming a new exhaustive test.
+
+\subsection{The scalar numerical illustration, with substitution}
+For $n=8$, $a=b=\lambda=1$, and $\kappa=1$,
+\[
+v=1+1/8=9/8,\qquad d=1+1(1+7/8)=23/8.
+\]
+Consequently
+\[
+J_L=1-8/23=15/23\simeq0.652174,
+\quad J_P=1-8/9=1/9\simeq0.111111,
+\]
+\[
+\Delta=15/23-1/9=(135-23)/207=112/207\simeq0.541063.
+\]
+The crossover is $\tau_{\rm cross}=\tfrac12\log(23/9)\simeq0.469135$. At age one,
+\[
+J_D(1)=1-(8/9)e^{-2}\simeq0.879702,
+\quad \frac{J_D(1)-J_L}{J_D(1)}\simeq0.258642.
+\]
+This is the approximately 25.9 percent reduction in team loss. At age $0.5$,
+\[
+J_H(0.5)=15/23-(112/207)e^{-1}\simeq0.453128.
+\]
+For latency $\delta=0.1$ and unit weight,
+\[
+A=(112/207)e^{-0.2},\qquad c_{\rm crit}=A/2\simeq0.221492.
+\]
+At $c=c_{\rm crit}/2$, the scalar equation has $x\simeq1.678347$, so $T^*=x/2\simeq0.839173$. Substituting in $C(T^*)=15/23-Ae^{-2T^*}$ gives approximately $0.569476$.
+
+\subsection{The two-component illustration, with substitution}
+Keep the first component and add $(a_2,b_2,\lambda_2)=(0.4,0.8,0.12)$, with $n=8$, $\kappa_2=1$, and both weights one. Then
+\[
+v_2=0.4+0.8/8=0.5,\quad d_2=0.4+0.8(1+7/8)=1.9,
+\]
+\[
+J_{L,2}=0.4-0.16/1.9\simeq0.315789,
+\quad J_{P,2}=0.4-0.16/0.5=0.08,
+\]
+\[
+\Delta_2=0.315789\ldots-0.08=0.235789\ldots,\quad \gamma_2=0.24.
+\]
+At $\delta=0.1$, use $A_1=\Delta_1e^{-0.2}$ and $A_2=\Delta_2e^{-0.024}$. The joint threshold and the two relevant shares are
+\[
+c_{\rm crit}=A_1/2+A_2/0.24\simeq1.180650,
+\]
+\[
+\frac{A_2}{A_1+A_2}\simeq0.342,
+\qquad \frac{A_2/0.24}{A_1/2+A_2/0.24}\simeq0.812.
+\]
+The slower component has a larger share of the lifetime integral than of the instantaneous value because division by its smaller decay rate increases its accumulated contribution. At half the joint threshold, solving the two-term equation for $H(T)=c$ gives $T^*\simeq5.5513$. Substitution in
+\[
+C(T^*)=J_{L,1}+J_{L,2}-A_1e^{-2T^*}-A_2e^{-0.24T^*}
+\]
+gives approximately $0.9072$.
+
+\end{document}

@@ -14,8 +14,8 @@ Submit [lcss-paper.pdf](lcss-paper.pdf), the six-page manuscript with corrected
 table and figure top margins. [lcss-source.zip](lcss-source.zip) contains its
 matching source package and compiled PDF.
 
-The supplementary [Lamport review PDF](../../proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.pdf)
-and [LaTeX source](../../proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.tex)
+The supplementary [Lamport review PDF](../../proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.pdf)
+and [LaTeX source](../../proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.tex)
 are stored with the complete [review package](../../proof-reports/lcss-letter/README.md).
 The report's `source/` directory preserves the exact reviewed version; the
 submission adds only three vertical-spacing adjustments to keep floats inside

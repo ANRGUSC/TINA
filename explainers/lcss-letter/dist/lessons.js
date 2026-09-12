@@ -2634,8 +2634,8 @@ window.GUIDE = {
     "submission_pdf_path": "submissions/lcss/lcss-paper.pdf",
     "manuscript_sha256": "732fdedb69495793363cfdb8290fd324b338ca5f14e2ca047e217df7766da395",
     "submission_pdf_sha256": "25ea28c85bde2f2ddcf691d31769e253f4a581300833f96baaf8aed56e38f5dc",
-    "report_path": "proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.pdf",
-    "report_sha256": "0db52b7c607f445e740511ebfe9375eb438c91558cddb4a4c697ab90731bb2a9",
+    "report_path": "proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.pdf",
+    "report_sha256": "4e65b5d10d1b918b38bfdf04505a72f2bcd58990ac7248c4a519c37d43c3dc02",
     "proof_snapshot_tex_sha256": "ca4063836ef506a56fbee54ab850a67499d70fc5a1de8f5c4f8077a1794f8db5",
     "relationship_to_proof_snapshot": "The manuscript adds three 7-point vertical-spacing adjustments. Text, formulas, claims, and proofs are unchanged.",
     "publication_status": "L-CSS submission manuscript; not yet accepted for publication"

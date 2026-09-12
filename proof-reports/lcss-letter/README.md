@@ -1,102 +1,50 @@
-# Lamport review of the TINA delayed-pooling letter
+# Expanded Lamport review of the six-page L-CSS submission
 
-**Publication status:** This is an L-CSS submission manuscript. It has not been accepted for publication.
+**Scope:** This report reviews *Too Late to Coordinate: When Local Information Beats Global Sharing*, by Scott Moeller and Bhaskar Krishnamachari, the **six-page L-CSS submission**. It does not review the broader TINA arXiv manuscript.
 
-
-## Interactive reading guide
-
-[Read the guide](https://anrgusc.github.io/TINA/lcss-letter/) for step-by-step
-notation, claims, proofs, and worked calculations, with adjustable text size.
-[Guide source and manuscript revision](../../explainers/lcss-letter/README.md).
-
-
-This package reviews the current six-page letter, *Too Late to Coordinate:
-When Local Information Beats Global Sharing*, by Scott Moeller
-and Bhaskar Krishnamachari. It does not audit the broader arXiv manuscript.
-
-The report concludes that all seven formal results follow under the stated
-assumptions. The forward verdict is PASS and the reverse verdict is FOLLOWS.
-No critical, major, or minor proof issue remains unresolved. This is a model-assisted
-mathematical audit, not a proof-assistant or kernel-checked formalization.
+**Publication status:** Submitted for review; not yet accepted for publication.
 
 ## Read the report
 
-- `TINA_Paper1_Lamport_Report.pdf`: complete report.
-- `TINA_Paper1_Lamport_Report.tex`: standalone LaTeX source, with no external images.
-- Part I: fixed theorem contracts, source inventory, hierarchical rendering,
-  mapping ledger, and review boundary.
-- Part II: forward verdict, detailed mathematical calculations, numerical checks,
-  every-step ledger, and unresolved-obligation and repair assessments.
-- Part III: conclusion-first AND dependency graph, every-node table, and verdict.
+- [Expanded report PDF](TINA_LCSS_Submission_Lamport_Report.pdf)
+- [Standalone LaTeX source](TINA_LCSS_Submission_Lamport_Report.tex)
+- [Six-page submission PDF](../../submissions/lcss/lcss-paper.pdf)
+- [Interactive reading guide](https://anrgusc.github.io/TINA/lcss-letter/)
 
-The reviewed manuscript is included unchanged in `source/`. Its exact file hashes are recorded in `review_manifest.json`.
+All 73 original proof claims now have supporting calculations and explanations immediately beneath them. The report covers all seven formal results, all 35 numbered equations, and the additional analytic claims. The team optimality lemma's worked derivation is on pages 6–8. Source mappings and supplementary numerical checks follow the proofs.
 
-Prepared for [ANRGUSC/TINA](https://github.com/ANRGUSC/TINA). The package can be placed in `proof-reports/lcss-letter/` while preserving its directory structure. The report source is standalone and needs no external images.
+The expanded arguments support the stated results under the model's assumptions. This is a model-assisted mathematical review, not a proof-assistant certificate.
 
-## Build the standalone report
+## Reviewed source
 
-With a standard TeX Live installation:
+The exact reviewed manuscript is preserved in `source/`, with hashes in `review_manifest.json`. The submission PDF linked above differs from that snapshot only by three vertical-spacing adjustments; text, formulas, claims, and proofs are unchanged. The report is specific to this letter.
+
+## Build and check
+
+With TeX Live installed:
 
 ```bash
-pdflatex -interaction=nonstopmode -halt-on-error TINA_Paper1_Lamport_Report.tex
-pdflatex -interaction=nonstopmode -halt-on-error TINA_Paper1_Lamport_Report.tex
+python3 build_report.py
+python3 qa_report.py
 ```
 
-## Reproduce the independent numerical checks
+The canonical standalone `.tex` is the report source. The builder compiles it twice and updates the adjacent PDF. QA requires PyMuPDF. To compile directly, run `pdflatex TINA_LCSS_Submission_Lamport_Report.tex` twice.
 
-The script uses Python 3, NumPy, and SciPy. Versions used for this report were
-NumPy 2.3.5 and SciPy 1.17.0. The seed is fixed in the script.
+## Reproduce the numerical checks
 
 ```bash
 python3 check_audit.py
 ```
 
-It solves 48 continuous-time Gaussian-team systems, including unequal sensor
-variances and extra old/intermediate observations, plus 18 Gaussian AR(1)
-systems with all intermediate local readings. It checks the full-history
-covariance identity directly and 200 finite-horizon independent refresh
-schedules. Full results are in `audit_checks.json`. These computations corroborate
-finite-dimensional consequences; they do not substitute for the analytic proofs.
+The script requires NumPy and SciPy. It checks 48 continuous-time Gaussian-team systems, 18 discrete-time systems, and 200 independent refresh schedules. The expanded report reran these checks successfully. Full results are in `audit_checks.json`. They corroborate finite-dimensional consequences; the written proofs establish the full-history and all-schedules claims.
 
-## Inspect the audit records
+`python3 package_report.py` creates a ZIP containing the current report and supporting records.
 
-- `frozen_conversion.json`: exact source spans, fixed contracts, all 73 rendered
-  steps, legal dependencies, and source mappings.
-- `forward_ledger.json`: checked justifications and statuses for every step.
-- `reverse_graph.json`: all 96 conclusion-reachable nodes and their primary
-  AND routes, with shared background and earlier results.
-- `audit_data.py`, `build_report.py`, and `report_template.tex`: report-generation
-  sources. Run the builder in this directory after creating `output/` if desired.
-  It protects an existing conversion record from silent changes. Its graph checks validate dependency order, scope, cycle freedom, and bottom-up closure of the recorded judgments. The forward
-  justifications and reverse-edge judgments are mathematical review records;
-  the builder checks their structure and generates their presentation.
-- `review_manifest.json`: audit date, manuscript title, plugin revision, and exact input hashes.
-- `qa_summary.json`: document-level checks for page bounds and TeX warnings.
-- `qa_report.py` and `package_report.py`: document checks and packaging scripts.
+## Supporting records and method
 
-## Method provenance
+- `frozen_conversion.json`, `forward_ledger.json`, and `reverse_graph.json` preserve the original source mapping and audit records. Their claim IDs remain useful locators; their references to the earlier K-L/K-H calculation layout are historical. The current expanded derivations and review conclusions are in the report linked above.
+- `review_manifest.json` records manuscript identity and current report hashes.
+- `qa_summary.json` records checks on the current PDF.
+- `plugin/` preserves the WWresearch Lamport Proof instructions and license used for the original review.
 
-The three WWresearch Lamport Proof skills were read and applied in order:
-`convert-lamport`, `forward-lamport`, and `reverse-lamport`.
-
-Repository: https://github.com/WWresearch/lamport-proof
-
-Pinned commit: `c5466f44d6ef0fff983ad67a46bc54e39858826f`.
-
-The exact three skill instructions and their MIT license are included in
-`plugin/`.
-
-Theorem 1 is reviewed through its direct full-history Gaussian projection and
-normal-equation proof. The report also checks the unequal-variance projection,
-all formal endpoint and scheduling results, and eight derived or model-boundary
-claims. The latter are identified separately from the seven formal graph roots.
-
-Source TeX SHA-256:
-`ca4063836ef506a56fbee54ab850a67499d70fc5a1de8f5c4f8077a1794f8db5`
-
-Source PDF SHA-256:
-`211b1eae40836b0136d35ea59f6678e5b88df1efa8d01bd100a2ee1f229bf0ef`
-
-Frozen conversion SHA-256:
-`a599596db88f9006726337403f992a6d8c033239f7c44a940aa86637d8daf165`
-
+Method: [WWresearch/lamport-proof](https://github.com/WWresearch/lamport-proof), pinned revision `c5466f44d6ef0fff983ad67a46bc54e39858826f`.

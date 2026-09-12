@@ -7,5 +7,12 @@
     "letter.pdf": "211b1eae40836b0136d35ea59f6678e5b88df1efa8d01bd100a2ee1f229bf0ef",
     "letter.tex": "ca4063836ef506a56fbee54ab850a67499d70fc5a1de8f5c4f8077a1794f8db5",
     "letter_source.zip": "9033da79b77c9b67d1ec2df17f88f4aacbf54fbca19d7b41702069ea2b48e877"
-  }
+  },
+  "scope": "Six-page L-CSS submission; not the broader TINA arXiv manuscript",
+  "publication_status": "Submitted; not yet accepted",
+  "report_files": {
+    "TINA_LCSS_Submission_Lamport_Report.tex": "20ef03a8015d194c36ccdffcb25510ca4c0835067591a362df6d5609a7c17842",
+    "TINA_LCSS_Submission_Lamport_Report.pdf": "4e65b5d10d1b918b38bfdf04505a72f2bcd58990ac7248c4a519c37d43c3dc02"
+  },
+  "expanded_claims": 73
 }

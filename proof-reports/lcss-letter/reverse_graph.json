@@ -1,0 +1,3388 @@
+{
+  "conversion_sha256": "a599596db88f9006726337403f992a6d8c033239f7c44a940aa86637d8daf165",
+  "verdict": "FOLLOWS",
+  "routes": "Only source-supplied primary AND routes; no alternative proof routes.",
+  "nodes": [
+    {
+      "id": "A-G",
+      "statement": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "classification": "hypothesis",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "P.1",
+        "P.2",
+        "P.4",
+        "P.9",
+        "D.1",
+        "D.5",
+        "H.2.2",
+        "H.2.4",
+        "H.2.5",
+        "H.3"
+      ]
+    },
+    {
+      "id": "A-L2",
+      "statement": "Admissible actions and perturbations are measurable with respect to their assigned information and have finite second moment. $X\\in L^2$ under (1).",
+      "classification": "hypothesis",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "L.1",
+        "L.3",
+        "C.2"
+      ]
+    },
+    {
+      "id": "A-U",
+      "statement": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "classification": "hypothesis",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "U.1",
+        "U.2",
+        "U.3",
+        "U.6",
+        "U.7",
+        "U.8",
+        "U.9"
+      ]
+    },
+    {
+      "id": "A-C",
+      "statement": "A finite number of mutually independent component processes with weights $w_m>0$, componentwise common rates $\\lambda_m>0$, and ages $\\tau_m\\ge0$.",
+      "classification": "hypothesis",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "C.1",
+        "C.3",
+        "C.4"
+      ]
+    },
+    {
+      "id": "A-R",
+      "statement": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "classification": "hypothesis",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "R.1",
+        "R.3",
+        "R.4.2",
+        "R.5",
+        "R.6.1",
+        "R.6.3",
+        "R.6.5",
+        "R.6.6"
+      ]
+    },
+    {
+      "id": "D-loss",
+      "statement": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "classification": "definition",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "L.1",
+        "L.3",
+        "P.6",
+        "P.7",
+        "D.2",
+        "U.5",
+        "U.12",
+        "C.2"
+      ]
+    },
+    {
+      "id": "D-Y",
+      "statement": "$Y_i=X+E_i$ and $\\bar Y=n^{-1}\\sum_iY_i$.",
+      "classification": "definition",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "P.1",
+        "P.2",
+        "P.4"
+      ]
+    },
+    {
+      "id": "D-vd",
+      "statement": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "classification": "definition",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "P.5",
+        "P.9",
+        "D.3",
+        "H.2.1",
+        "H.2.4",
+        "H.2.9"
+      ]
+    },
+    {
+      "id": "D-info",
+      "statement": "The local, pooled, delayed-only, and hybrid information fields are exactly those in Section II-B of the letter.",
+      "classification": "definition",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "H.2.1",
+        "H.2.10"
+      ]
+    },
+    {
+      "id": "D-refresh",
+      "statement": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "classification": "definition",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "R.1",
+        "R.2",
+        "R.4.2",
+        "R.4.3",
+        "R.5",
+        "R.6.1",
+        "R.6.2",
+        "R.6.3",
+        "R.6.7"
+      ]
+    },
+    {
+      "id": "B-G",
+      "statement": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "classification": "named theorem",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "P.1",
+        "P.2",
+        "P.4",
+        "H.2.2",
+        "H.2.7",
+        "U.1",
+        "U.6",
+        "U.7",
+        "U.9"
+      ]
+    },
+    {
+      "id": "B-CE",
+      "statement": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "classification": "named theorem",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "L.2",
+        "P.3",
+        "P.7",
+        "D.1",
+        "D.2",
+        "H.2.7",
+        "H.2.8",
+        "H.2.12",
+        "U.10",
+        "R.6.6"
+      ]
+    },
+    {
+      "id": "B-OU",
+      "statement": "For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\\lambda(t-s)})\\Sigma$. Its cross-covariances are computed directly from (1).",
+      "classification": "named theorem",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "D.1",
+        "H.2.2",
+        "U.8",
+        "U.9"
+      ]
+    },
+    {
+      "id": "B-J",
+      "statement": "Conditional Jensen: $\\phi(\\E[U\\mid\\mathcal A])\\le\\E[\\phi(U)\\mid\\mathcal A]$ for an integrable vector and convex function when the expectations exist. The audit checks information feasibility separately.",
+      "classification": "named theorem",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "C.2"
+      ]
+    },
+    {
+      "id": "B-calc",
+      "statement": "Finite-dimensional real algebra and order, differentiation, integration of exponentials, and the intermediate value theorem for continuous scalar functions, with signs and domains checked at each use.",
+      "classification": "algebraic/logical step",
+      "route": [],
+      "status": "discharged",
+      "support": "Frozen background; applicability checked locally.",
+      "needed_by": [
+        "R.2",
+        "R.3",
+        "R.4.1"
+      ]
+    },
+    {
+      "id": "E-eta",
+      "statement": "The globally quantified residual statement accompanying source equation (11): $\\eta(t)=X(t)-(a/v)\\bar Y(t)$ is independent of the entire sensor process and has variance $P_n$. Theorem 1 explicitly cites this source result. Its covariance calculation is checked separately in K-P.",
+      "classification": "proved earlier",
+      "route": [],
+      "status": "discharged",
+      "support": "Source (11), checked in K-P with all global model assumptions retained.",
+      "needed_by": [
+        "H.2.3"
+      ]
+    },
+    {
+      "id": "L.1",
+      "statement": "For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\\sum_i\\E[w_i((1+\\kappa)u_i-\\kappa\\bar u-X)]$ and a quadratic remainder.",
+      "classification": "major claim",
+      "route": [
+        "A-L2",
+        "D-loss"
+      ],
+      "status": "discharged",
+      "support": "K-L: expansion is an identity for square-integrable policies.",
+      "goal": "G-L",
+      "needed_by": [
+        "L.2",
+        "L.4"
+      ]
+    },
+    {
+      "id": "L.2",
+      "statement": "The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold.",
+      "classification": "major claim",
+      "route": [
+        "L.1",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-L: conditional expectation converts testing against every local perturbation into a zero conditional residual.",
+      "goal": "G-L",
+      "needed_by": [
+        "L.4"
+      ]
+    },
+    {
+      "id": "L.3",
+      "statement": "The remainder is $n^{-1}\\sum_i\\E[w_i^2]+\\kappa n^{-1}\\sum_i\\E[(w_i-\\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$.",
+      "classification": "major claim",
+      "route": [
+        "A-L2",
+        "D-loss"
+      ],
+      "status": "discharged",
+      "support": "K-L: the first sum is strictly positive and the second nonnegative.",
+      "goal": "G-L",
+      "needed_by": [
+        "L.4"
+      ]
+    },
+    {
+      "id": "L.4",
+      "statement": "Q.E.D. Necessity, sufficiency, and uniqueness follow.",
+      "classification": "major claim",
+      "route": [
+        "L.1",
+        "L.2",
+        "L.3"
+      ],
+      "status": "discharged",
+      "support": "A nonzero linear term admits a small improving signed perturbation; a zero linear term leaves a positive remainder.",
+      "goal": "G-L",
+      "needed_by": [
+        "L"
+      ]
+    },
+    {
+      "id": "P.1",
+      "statement": "$X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\\le t$, so it is independent of the local history.",
+      "classification": "major claim",
+      "route": [
+        "A-G",
+        "D-Y",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "K-P: the common exponential factor cancels for every earlier time.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.3"
+      ]
+    },
+    {
+      "id": "P.2",
+      "statement": "Define $\\eta(t)=X(t)-(a/v)\\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process.",
+      "classification": "major claim",
+      "route": [
+        "A-G",
+        "D-Y",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "K-P: Cov(bar Y(t),Y_j(r)) = v exp(-lambda |t-r|); this works for past and future r.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.3"
+      ]
+    },
+    {
+      "id": "P.3",
+      "statement": "The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\\bar Y(t)$.",
+      "classification": "major claim",
+      "route": [
+        "P.1",
+        "P.2",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-P: subtract the explained variance from a.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.5",
+        "P.7",
+        "P.10"
+      ]
+    },
+    {
+      "id": "P.4",
+      "statement": "For the candidate $u_i=kY_i(t)$, $\\E[\\bar u\\mid\\mathcal F_i(t)]=kvY_i(t)/(a+b)$.",
+      "classification": "major claim",
+      "route": [
+        "A-G",
+        "D-Y",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "K-P: the same regression residual is orthogonal to the full local history.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.5"
+      ]
+    },
+    {
+      "id": "P.5",
+      "statement": "Equation (5) gives $k[(1+\\kappa)(a+b)-\\kappa v]=a$. The bracket equals $d$, so $k=a/d$.",
+      "classification": "major claim",
+      "route": [
+        "L",
+        "P.3",
+        "P.4",
+        "D-vd"
+      ],
+      "status": "discharged",
+      "support": "K-P: d is positive under a,b>0 and kappa>=0.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.6",
+        "P.8"
+      ]
+    },
+    {
+      "id": "P.6",
+      "statement": "The local loss is $a-2ak+dk^2=a-a^2/d$.",
+      "classification": "major claim",
+      "route": [
+        "P.5",
+        "D-loss"
+      ],
+      "status": "discharged",
+      "support": "K-P: E(Y_i^2)=a+b and average expected disagreement of the readings is b(1-1/n).",
+      "goal": "G-P",
+      "needed_by": [
+        "P.9",
+        "P.10"
+      ]
+    },
+    {
+      "id": "P.7",
+      "statement": "With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.",
+      "classification": "major claim",
+      "route": [
+        "P.3",
+        "B-CE",
+        "D-loss"
+      ],
+      "status": "discharged",
+      "support": "Each squared tracking error is separately minimized and the nonnegative disagreement term is zero.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.8",
+        "P.9",
+        "P.10"
+      ]
+    },
+    {
+      "id": "P.8",
+      "statement": "The displayed feasible policies are optimal by Lemma 1.",
+      "classification": "major claim",
+      "route": [
+        "L",
+        "P.5",
+        "P.7"
+      ],
+      "status": "discharged",
+      "support": "The normal equations are satisfied; linearity was a candidate construction, not a restriction on competitors.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.10"
+      ]
+    },
+    {
+      "id": "P.9",
+      "statement": "$d-v=b(1+\\kappa)(1-1/n)>0$ and subtraction yields the formula for $\\Delta$.",
+      "classification": "major claim",
+      "route": [
+        "A-G",
+        "D-vd",
+        "P.6",
+        "P.7"
+      ],
+      "status": "discharged",
+      "support": "n>=2, b>0, and kappa>=0 make the strict sign valid.",
+      "goal": "G-P",
+      "needed_by": [
+        "P.10"
+      ]
+    },
+    {
+      "id": "P.10",
+      "statement": "Q.E.D. All endpoint claims follow.",
+      "classification": "major claim",
+      "route": [
+        "P.3",
+        "P.6",
+        "P.7",
+        "P.8",
+        "P.9"
+      ],
+      "status": "discharged",
+      "support": "Every component of the proposition is included.",
+      "goal": "G-P",
+      "needed_by": [
+        "P"
+      ]
+    },
+    {
+      "id": "D.1",
+      "statement": "The Markov property and Proposition 1 give $\\E[X(t)\\mid\\mathcal F(s)]=e^{-\\lambda\\tau}(a/v)\\bar Y(s)$.",
+      "classification": "major claim",
+      "route": [
+        "A-G",
+        "P",
+        "B-OU",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-D: the post-s signal innovation is independent of the old sensor history.",
+      "goal": "G-D",
+      "needed_by": [
+        "D.2",
+        "D.3",
+        "D.6"
+      ]
+    },
+    {
+      "id": "D.2",
+      "statement": "Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss.",
+      "classification": "major claim",
+      "route": [
+        "D.1",
+        "D-loss",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "The lower bound is attained simultaneously for all agents.",
+      "goal": "G-D",
+      "needed_by": [
+        "D.3",
+        "D.6"
+      ]
+    },
+    {
+      "id": "D.3",
+      "statement": "The error variance is the displayed $J_D(\\tau)$.",
+      "classification": "major claim",
+      "route": [
+        "D.1",
+        "D.2",
+        "D-vd"
+      ],
+      "status": "discharged",
+      "support": "K-D: the explained variance is exp(-2 lambda tau) a^2/v.",
+      "goal": "G-D",
+      "needed_by": [
+        "D.4",
+        "D.6"
+      ]
+    },
+    {
+      "id": "D.4",
+      "statement": "Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\\lambda\\tau}<v/d$.",
+      "classification": "major claim",
+      "route": [
+        "D.3",
+        "P"
+      ],
+      "status": "discharged",
+      "support": "Both denominators and a^2 are positive.",
+      "goal": "G-D",
+      "needed_by": [
+        "D.5"
+      ]
+    },
+    {
+      "id": "D.5",
+      "statement": "Taking logarithms gives the exact threshold (14), including its equality case.",
+      "classification": "major claim",
+      "route": [
+        "D.4",
+        "A-G"
+      ],
+      "status": "discharged",
+      "support": "K-D: dividing by -2 lambda reverses the inequality.",
+      "goal": "G-D",
+      "needed_by": [
+        "D.6"
+      ]
+    },
+    {
+      "id": "D.6",
+      "statement": "Q.E.D.",
+      "classification": "major claim",
+      "route": [
+        "D.1",
+        "D.2",
+        "D.3",
+        "D.5"
+      ],
+      "status": "discharged",
+      "support": "Policy, value, strict comparison, and equality case all close.",
+      "goal": "G-D",
+      "needed_by": [
+        "D"
+      ]
+    },
+    {
+      "id": "H.1",
+      "statement": "CASE $\\tau=0$. The formula is the pooled policy.",
+      "classification": "major claim",
+      "route": [
+        "P"
+      ],
+      "status": "discharged",
+      "support": "The local correction is zero; the posterior and cost formulas reduce to the pooled endpoints.",
+      "goal": "G-H",
+      "needed_by": [
+        "H.3"
+      ]
+    },
+    {
+      "id": "H.2",
+      "statement": "CASE $\\tau>0$. Prove the remaining claims under this assumption.",
+      "classification": "major claim",
+      "route": [
+        "H.2.14"
+      ],
+      "status": "discharged",
+      "support": "All descendants of H.2 have tau>0 in scope. This assumption is discharged at the root Q.E.D.",
+      "goal": "G-H",
+      "needed_by": [
+        "H.3"
+      ]
+    },
+    {
+      "id": "H.2.1",
+      "statement": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "classification": "major claim",
+      "route": [
+        "D-info",
+        "D-vd"
+      ],
+      "status": "discharged",
+      "support": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.2",
+        "H.2.3",
+        "H.2.4",
+        "H.2.7",
+        "H.2.9",
+        "H.2.10"
+      ]
+    },
+    {
+      "id": "H.2.2",
+      "statement": "$Z$ is independent of $\\mathcal F(s)$ and has covariance $(1-\\rho^2)(a\\mathbf1\\mathbf1^\\top+bI)$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.1",
+        "A-G",
+        "B-OU",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "K-H1: all old-history cross-covariances cancel.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.6",
+        "H.2.11",
+        "H.2.12"
+      ]
+    },
+    {
+      "id": "H.2.3",
+      "statement": "$X(t)=\\rho h\\bar Y(s)+h\\bar Z+\\eta(t)$, where $\\eta(t)$ is independent of all sensor data and has variance $P_n$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.1",
+        "E-eta",
+        "P"
+      ],
+      "status": "discharged",
+      "support": "This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.8",
+        "H.2.9",
+        "H.2.11",
+        "H.2.12"
+      ]
+    },
+    {
+      "id": "H.2.4",
+      "statement": "For $s<r\\le t$, define $Z_i(r)=Y_i(r)-e^{-\\lambda(r-s)}Y_i(s)$. Then $\\Cov(\\bar Z,Z_i(r))=[v/(a+b)]\\Cov(Z_i,Z_i(r))$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.1",
+        "A-G",
+        "D-vd"
+      ],
+      "status": "discharged",
+      "support": "K-H1 expands the two covariances from (1); the pooled factor v includes the own-sensor contribution.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.5",
+        "H.2.6"
+      ]
+    },
+    {
+      "id": "H.2.5",
+      "statement": "Both covariances have the temporal factor $e^{-\\lambda(t-r)}(1-e^{-2\\lambda(r-s)})$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.4",
+        "A-G"
+      ],
+      "status": "discharged",
+      "support": "K-H1 computes the factor for every intermediate time, including r=t.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.6"
+      ]
+    },
+    {
+      "id": "H.2.6",
+      "statement": "$\\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\\mathcal F(s)$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.2",
+        "H.2.4",
+        "H.2.5"
+      ],
+      "status": "discharged",
+      "support": "K-H2 checks every generator of the enlarged information field. The whole innovation path is independent of the old history.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.7"
+      ]
+    },
+    {
+      "id": "H.2.7",
+      "statement": "Gaussianity gives $\\E[\\bar Z\\mid\\mathcal G_i]=vZ_i/(a+b)$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.1",
+        "H.2.6",
+        "B-G",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-H2: the regression residual is independent of the generated sigma-field and the proposed predictor is measurable in it.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.8"
+      ]
+    },
+    {
+      "id": "H.2.8",
+      "statement": "Independence of $\\eta(t)$ gives $\\E[h\\bar Z+\\eta(t)\\mid\\mathcal G_i]=aZ_i/(a+b)$ and $\\E[k\\bar Z\\mid\\mathcal G_i]=kvZ_i/(a+b)$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.3",
+        "H.2.7",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-H2: h v=a, eta is centered and independent of all observations, and k is deterministic.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.9",
+        "H.2.12"
+      ]
+    },
+    {
+      "id": "H.2.9",
+      "statement": "Subtract the common prediction. Since $(1+\\kappa)(a+b)-\\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality.",
+      "classification": "major claim",
+      "route": [
+        "H.2.1",
+        "H.2.3",
+        "H.2.8",
+        "D-vd",
+        "L"
+      ],
+      "status": "discharged",
+      "support": "K-H3 substitutes the full-history conditional means directly in the normal equation. All admissible nonlinear history-dependent competitors are covered.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.10",
+        "H.2.11"
+      ]
+    },
+    {
+      "id": "H.2.10",
+      "statement": "The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing.",
+      "classification": "major claim",
+      "route": [
+        "H.2.1",
+        "H.2.9",
+        "D-info"
+      ],
+      "status": "discharged",
+      "support": "The policy only uses the current and retained own readings and the old pooled scalar. Feasibility gives equality of the two optimal values.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.14"
+      ]
+    },
+    {
+      "id": "H.2.11",
+      "statement": "The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\\rho^2$. Thus $J_H=P_n+(1-\\rho^2)(J_L-P_n)$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.2",
+        "H.2.3",
+        "H.2.9",
+        "P"
+      ],
+      "status": "discharged",
+      "support": "K-H4 scales the sensor-dependent quadratic cost and retains the independent residual variance.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.13",
+        "H.2.14"
+      ]
+    },
+    {
+      "id": "H.2.12",
+      "statement": "The enlarged-information posterior mean is $\\rho h\\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\\rho^2)(P_1-P_n)$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.2",
+        "H.2.3",
+        "H.2.8",
+        "P",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-H4 computes the posterior variance and checks that the same conditional mean is measurable in the smaller hybrid field.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.14"
+      ]
+    },
+    {
+      "id": "H.2.13",
+      "statement": "Subtracting the cost from $J_L$ yields $\\Delta e^{-2\\lambda\\tau}$.",
+      "classification": "major claim",
+      "route": [
+        "H.2.11",
+        "P"
+      ],
+      "status": "discharged",
+      "support": "The interpolation gives rho^2 Delta, with rho^2=exp(-2 lambda tau).",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2.14"
+      ]
+    },
+    {
+      "id": "H.2.14",
+      "statement": "Q.E.D. The positive-age branch is established.",
+      "classification": "major claim",
+      "route": [
+        "H.2.10",
+        "H.2.11",
+        "H.2.12",
+        "H.2.13"
+      ],
+      "status": "discharged",
+      "support": "Exports the theorem under tau>0.",
+      "goal": "H.2",
+      "needed_by": [
+        "H.2"
+      ]
+    },
+    {
+      "id": "H.3",
+      "statement": "Q.E.D. The two cases cover every $\\tau\\ge0$.",
+      "classification": "major claim",
+      "route": [
+        "H.1",
+        "H.2",
+        "A-G"
+      ],
+      "status": "discharged",
+      "support": "Uses the completed case statements, with no reference into their private descendants.",
+      "goal": "G-H",
+      "needed_by": [
+        "H"
+      ]
+    },
+    {
+      "id": "U.1",
+      "statement": "Substitution into (5) gives $C_i k_i-\\kappa a\\bar k=a$, where $\\bar k=n^{-1}\\sum_i k_i$.",
+      "classification": "major claim",
+      "route": [
+        "L",
+        "A-U",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "K-U: the cross-agent covariance is a and the own variance a+b_i; local histories have the same scalar temporal factor.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.2",
+        "U.4",
+        "U.5",
+        "U.11"
+      ]
+    },
+    {
+      "id": "U.2",
+      "statement": "Averaging $k_i=(a+\\kappa a\\bar k)/C_i$ yields the displayed coefficients.",
+      "classification": "major claim",
+      "route": [
+        "U.1",
+        "A-U"
+      ],
+      "status": "discharged",
+      "support": "K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.4",
+        "U.5",
+        "U.11",
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.3",
+      "statement": "The denominator is positive because $C_i>(1+\\kappa)a$.",
+      "classification": "major claim",
+      "route": [
+        "A-U"
+      ],
+      "status": "discharged",
+      "support": "kappa a theta<kappa/(1+kappa)<1, with kappa=0 handled directly.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.4",
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.4",
+      "statement": "Lemma 1 certifies optimality of the local policy.",
+      "classification": "major claim",
+      "route": [
+        "U.1",
+        "U.2",
+        "U.3",
+        "L"
+      ],
+      "status": "discharged",
+      "support": "The feasible candidate satisfies the conditional equations under the full local histories, so nonlinear competitors are covered.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.5",
+        "U.11",
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.5",
+      "statement": "The quadratic term equals $a\\bar k$, so $J_L=a-a\\bar k$.",
+      "classification": "major claim",
+      "route": [
+        "U.1",
+        "U.2",
+        "U.4",
+        "D-loss"
+      ],
+      "status": "discharged",
+      "support": "K-U: multiply each normal equation by k_i and average.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.12",
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.6",
+      "statement": "Gaussian conditioning gives $P$ and $\\mu_P$.",
+      "classification": "major claim",
+      "route": [
+        "A-U",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "K-U verifies the weighted residual is orthogonal to every sensor.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.7",
+        "U.10",
+        "U.12",
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.7",
+      "statement": "$X(t)-\\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor.",
+      "classification": "major claim",
+      "route": [
+        "U.6",
+        "A-U",
+        "B-G"
+      ],
+      "status": "discharged",
+      "support": "The zero same-time cross-covariances remain zero after multiplication by the common temporal factor.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.10",
+        "U.12"
+      ]
+    },
+    {
+      "id": "U.8",
+      "statement": "Innovations have covariance $(1-\\rho^2)\\Sigma$, where $\\Sigma=a\\mathbf1\\mathbf1^\\top+\\operatorname{diag}(b_i)$.",
+      "classification": "major claim",
+      "route": [
+        "A-U",
+        "B-OU"
+      ],
+      "status": "discharged",
+      "support": "The OU innovation calculation applies entry by entry.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.9",
+        "U.10",
+        "U.12"
+      ]
+    },
+    {
+      "id": "U.9",
+      "statement": "For $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$, the covariance argument in (21) gives $\\E[Z_j\\mid\\mathcal G_i]=\\Sigma_{ji}Z_i/\\Sigma_{ii}$.",
+      "classification": "major claim",
+      "route": [
+        "U.8",
+        "A-U",
+        "B-G",
+        "B-OU"
+      ],
+      "status": "discharged",
+      "support": "K-U repeats the source covariance argument with Sigma; it treats j=i separately through Sigma_ii=a+b_i. All conditional predictors are measurable and denominators positive.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.10",
+        "U.11"
+      ]
+    },
+    {
+      "id": "U.10",
+      "statement": "After subtracting $\\rho\\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$.",
+      "classification": "major claim",
+      "route": [
+        "U.6",
+        "U.7",
+        "U.8",
+        "U.9",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-U uses P(a sum_j 1/b_j+1)=a to compute the residual target projection.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.11"
+      ]
+    },
+    {
+      "id": "U.11",
+      "statement": "The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal.",
+      "classification": "major claim",
+      "route": [
+        "U.1",
+        "U.2",
+        "U.4",
+        "U.9",
+        "U.10",
+        "L"
+      ],
+      "status": "discharged",
+      "support": "K-U substitutes the full-history conditional mean of the weighted action average and verifies the normal equations directly.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.12",
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.12",
+      "statement": "Scaling the remaining quadratic cost by $1-\\rho^2$ gives $J_H=\\rho^2J_P+(1-\\rho^2)J_L$.",
+      "classification": "major claim",
+      "route": [
+        "U.5",
+        "U.6",
+        "U.7",
+        "U.8",
+        "U.11",
+        "D-loss"
+      ],
+      "status": "discharged",
+      "support": "K-U keeps the residual variance P fixed, scales only the sensor-dependent quadratic term, and checks feasibility in the weighted-summary hybrid.",
+      "goal": "G-U",
+      "needed_by": [
+        "U.13"
+      ]
+    },
+    {
+      "id": "U.13",
+      "statement": "Q.E.D.",
+      "classification": "major claim",
+      "route": [
+        "U.2",
+        "U.3",
+        "U.4",
+        "U.5",
+        "U.6",
+        "U.11",
+        "U.12"
+      ],
+      "status": "discharged",
+      "support": "All stated coefficients, posteriors, actions, and cost formulas are accounted for.",
+      "goal": "G-U",
+      "needed_by": [
+        "U"
+      ]
+    },
+    {
+      "id": "C.1",
+      "statement": "Other components are independent of component $m$ and its observations.",
+      "classification": "major claim",
+      "route": [
+        "A-C"
+      ],
+      "status": "discharged",
+      "support": "This is independence of complete component processes, not just same-time uncorrelatedness.",
+      "goal": "G-C",
+      "needed_by": [
+        "C.2"
+      ]
+    },
+    {
+      "id": "C.2",
+      "statement": "Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss.",
+      "classification": "major claim",
+      "route": [
+        "C.1",
+        "B-J",
+        "D-loss",
+        "A-L2"
+      ],
+      "status": "discharged",
+      "support": "K-C: integrate the joint extraneous component data; each averaged action still depends only on that agent's component-m information.",
+      "goal": "G-C",
+      "needed_by": [
+        "C.3"
+      ]
+    },
+    {
+      "id": "C.3",
+      "statement": "Optimization separates across components. Apply Theorem 1 to each.",
+      "classification": "major claim",
+      "route": [
+        "C.2",
+        "H",
+        "A-C"
+      ],
+      "status": "discharged",
+      "support": "An additive lower bound is attained by the collection of componentwise optimal policies.",
+      "goal": "G-C",
+      "needed_by": [
+        "C.4"
+      ]
+    },
+    {
+      "id": "C.4",
+      "statement": "Q.E.D. Sum with the positive weights $w_m$.",
+      "classification": "major claim",
+      "route": [
+        "C.3",
+        "A-C"
+      ],
+      "status": "discharged",
+      "support": "The sum is finite; no interchange of an infinite series and a limit is involved.",
+      "goal": "G-C",
+      "needed_by": [
+        "C"
+      ]
+    },
+    {
+      "id": "R.1",
+      "statement": "Define $V_\\delta(T)=B^{\\prime}(T)=\\sum_m A_m e^{-\\gamma_mT}$.",
+      "classification": "major claim",
+      "route": [
+        "A-R",
+        "D-refresh"
+      ],
+      "status": "discharged",
+      "support": "All sums are finite and all amplitudes and rates positive.",
+      "goal": "G-R",
+      "needed_by": [
+        "R.2",
+        "R.3"
+      ]
+    },
+    {
+      "id": "R.2",
+      "statement": "Differentiate (29): $C^{\\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\\delta(T)$.",
+      "classification": "major claim",
+      "route": [
+        "R.1",
+        "D-refresh",
+        "B-calc"
+      ],
+      "status": "discharged",
+      "support": "K-R: the quotient rule gives the numerator with this sign.",
+      "goal": "G-R",
+      "needed_by": [
+        "R.3",
+        "R.4.1"
+      ]
+    },
+    {
+      "id": "R.3",
+      "statement": "$H^{\\prime}(T)=-TV_\\delta^{\\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\\rm crit}$.",
+      "classification": "major claim",
+      "route": [
+        "R.1",
+        "R.2",
+        "A-R",
+        "B-calc"
+      ],
+      "status": "discharged",
+      "support": "K-R: T exp(-gamma T) tends to zero for gamma>0.",
+      "goal": "G-R",
+      "needed_by": [
+        "R.4.1"
+      ]
+    },
+    {
+      "id": "R.4",
+      "statement": "ASSUME $0<c<c_{\\rm crit}$. PROVE a unique minimizing positive period and its displayed value.",
+      "classification": "major claim",
+      "route": [
+        "R.4.4"
+      ],
+      "status": "discharged",
+      "support": "This local subproof exports the whole conditional statement.",
+      "goal": "G-R",
+      "needed_by": [
+        "R.6.7",
+        "R.7"
+      ]
+    },
+    {
+      "id": "R.4.1",
+      "statement": "There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.",
+      "classification": "major claim",
+      "route": [
+        "R.2",
+        "R.3",
+        "B-calc"
+      ],
+      "status": "discharged",
+      "support": "Continuity, strict monotonicity, and the endpoint limits establish existence before the root is used.",
+      "goal": "R.4",
+      "needed_by": [
+        "R.4.2",
+        "R.4.3",
+        "R.4.4"
+      ]
+    },
+    {
+      "id": "R.4.2",
+      "statement": "$C(T)\\to\\infty$ as $T\\downarrow0$ and $C(T)\\to J_L^{\\rm tot}$ as $T\\to\\infty$, proving the unique global periodic minimum.",
+      "classification": "major claim",
+      "route": [
+        "R.4.1",
+        "D-refresh",
+        "A-R"
+      ],
+      "status": "discharged",
+      "support": "c>0 gives divergence at zero; B is bounded at infinity.",
+      "goal": "R.4",
+      "needed_by": [
+        "R.4.4"
+      ]
+    },
+    {
+      "id": "R.4.3",
+      "statement": "At the root, $c-B(T^*)=-T^*V_\\delta(T^*)$, giving the optimal-cost formula.",
+      "classification": "major claim",
+      "route": [
+        "R.4.1",
+        "D-refresh"
+      ],
+      "status": "discharged",
+      "support": "Tstar>0 licenses division.",
+      "goal": "R.4",
+      "needed_by": [
+        "R.4.4"
+      ]
+    },
+    {
+      "id": "R.4.4",
+      "statement": "Q.E.D. The below-threshold periodic claims hold.",
+      "classification": "major claim",
+      "route": [
+        "R.4.1",
+        "R.4.2",
+        "R.4.3"
+      ],
+      "status": "discharged",
+      "support": "The root and its defining assumptions remain local to R.4; the conditional conclusion is exported.",
+      "goal": "R.4",
+      "needed_by": [
+        "R.4"
+      ]
+    },
+    {
+      "id": "R.5",
+      "statement": "If $c\\ge c_{\\rm crit}$, then $c-B(T)\\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing.",
+      "classification": "major claim",
+      "route": [
+        "A-R",
+        "D-refresh"
+      ],
+      "status": "discharged",
+      "support": "In fact B(T)<ccrit for every finite T, including the price equality case.",
+      "goal": "G-R",
+      "needed_by": [
+        "R.6.7",
+        "R.7"
+      ]
+    },
+    {
+      "id": "R.6",
+      "statement": "Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound.",
+      "classification": "major claim",
+      "route": [
+        "R.6.8"
+      ],
+      "status": "discharged",
+      "support": "This parent is the all-schedules lower bound and its attainment.",
+      "goal": "G-R",
+      "needed_by": [
+        "R.7"
+      ]
+    },
+    {
+      "id": "R.6.1",
+      "statement": "Define $g=\\min\\{0,\\inf_{T>0}(c-B(T))/T\\}$ and condition on a realization of the reception schedule.",
+      "classification": "major claim",
+      "route": [
+        "A-R",
+        "D-refresh"
+      ],
+      "status": "discharged",
+      "support": "g is finite and nonpositive. Independence leaves the conditional sensor-process law unchanged.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.2",
+        "R.6.4"
+      ]
+    },
+    {
+      "id": "R.6.2",
+      "statement": "Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price.",
+      "classification": "major claim",
+      "route": [
+        "R.6.1",
+        "C",
+        "D-refresh"
+      ],
+      "status": "discharged",
+      "support": "K-R: integrate the exact conditional age gain, yielding c-B(T_j).",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.4"
+      ]
+    },
+    {
+      "id": "R.6.3",
+      "statement": "The last incomplete interval contributes at least $-c_{\\rm crit}$, and the initial interval before the first reception has zero gain.",
+      "classification": "major claim",
+      "route": [
+        "D-refresh",
+        "A-R"
+      ],
+      "status": "discharged",
+      "support": "B(L)<=ccrit uniformly in the final interval length L; the source starts without a shared update.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.4"
+      ]
+    },
+    {
+      "id": "R.6.4",
+      "statement": "Because $g\\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\\rm tot}+g)-c_{\\rm crit}$.",
+      "classification": "major claim",
+      "route": [
+        "R.6.1",
+        "R.6.2",
+        "R.6.3"
+      ],
+      "status": "discharged",
+      "support": "K-R shows the complete intervals occupy at most R, so multiplication by g reverses the length comparison.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.5"
+      ]
+    },
+    {
+      "id": "R.6.5",
+      "statement": "Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages.",
+      "classification": "major claim",
+      "route": [
+        "R.6.4",
+        "A-R"
+      ],
+      "status": "discharged",
+      "support": "The count difference contributes a nonnegative cost.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.6"
+      ]
+    },
+    {
+      "id": "R.6.6",
+      "statement": "The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound.",
+      "classification": "major claim",
+      "route": [
+        "R.6.5",
+        "A-R",
+        "B-CE"
+      ],
+      "status": "discharged",
+      "support": "K-R verifies the source explicitly takes expectation before limsup. The schedule-independent remainder vanishes after division by R.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.7",
+        "R.6.8"
+      ]
+    },
+    {
+      "id": "R.6.7",
+      "statement": "Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound.",
+      "classification": "major claim",
+      "route": [
+        "R.4",
+        "R.5",
+        "R.6.6",
+        "D-refresh"
+      ],
+      "status": "discharged",
+      "support": "Transient latency is finite; periodic time averaging gives (29). Both candidates are admissible.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6.8"
+      ]
+    },
+    {
+      "id": "R.6.8",
+      "statement": "Q.E.D. The all-schedules optimum is attained by the stated candidates.",
+      "classification": "major claim",
+      "route": [
+        "R.6.6",
+        "R.6.7"
+      ],
+      "status": "discharged",
+      "support": "Exports the lower bound and matching construction.",
+      "goal": "R.6",
+      "needed_by": [
+        "R.6"
+      ]
+    },
+    {
+      "id": "R.7",
+      "statement": "Q.E.D. Both price regimes and every stated policy class are covered.",
+      "classification": "major claim",
+      "route": [
+        "R.4",
+        "R.5",
+        "R.6"
+      ],
+      "status": "discharged",
+      "support": "No event-triggered schedule is included in the information-independent schedule class.",
+      "goal": "G-R",
+      "needed_by": [
+        "R"
+      ]
+    },
+    {
+      "id": "L",
+      "statement": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "classification": "root",
+      "route": [
+        "L.4"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": [
+        "P.5",
+        "P.8",
+        "H.2.9",
+        "U.1",
+        "U.4",
+        "U.11"
+      ]
+    },
+    {
+      "id": "P",
+      "statement": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "classification": "root",
+      "route": [
+        "P.10"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": [
+        "D.1",
+        "D.4",
+        "H.1",
+        "H.2.3",
+        "H.2.11",
+        "H.2.12",
+        "H.2.13"
+      ]
+    },
+    {
+      "id": "D",
+      "statement": "Let $\\tau\\ge0$ and $s=t-\\tau$. Every agent has $\\mathcal F(s)$ and no post-$s$ measurements. The optimal common action is $u_i^D=e^{-\\lambda\\tau}(a/v)\\bar Y(s)$ and\n\\[\nJ_D(\\tau)=a-\\frac{a^2}{v}e^{-2\\lambda\\tau}.\n\\]\nThen $J_L<J_D(\\tau)$ exactly when $\\tau>(2\\lambda)^{-1}\\log(d/v)$, with equality at that age.",
+      "classification": "root",
+      "route": [
+        "D.6"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": []
+    },
+    {
+      "id": "H",
+      "statement": "Under (1)--(4), put $\\rho=e^{-\\lambda\\tau}$ and $s=t-\\tau$. The unique optimal hybrid action is\n\\[\nu_i^H=\\rho\\frac av\\bar Y(s)+\\frac ad[Y_i(t)-\\rho Y_i(s)].\n\\]\nIt also attains the optimum with the larger information $\\mathcal F(s)\\vee\\mathcal F_i(t)$. Its posterior variance and team loss satisfy\n\\[\nP_H=\\rho^2P_n+(1-\\rho^2)P_1,\\qquad\nJ_H=\\rho^2J_P+(1-\\rho^2)J_L,\n\\]\nand $J_L-J_H=\\Delta e^{-2\\lambda\\tau}$.",
+      "classification": "root",
+      "route": [
+        "H.3"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": [
+        "C.3"
+      ]
+    },
+    {
+      "id": "U",
+      "statement": "Replace $b$ by $b_i>0$, retaining independence, stationarity, Gaussianity, and a common temporal rate. Define\n\\[\nC_i=(1+\\kappa)a+b_i[1+\\kappa(1-1/n)],\\qquad \\theta=n^{-1}\\sum_i C_i^{-1}.\n\\]\nThen $k_i=a/[C_i(1-\\kappa a\\theta)]$, $J_L=a-a^2\\theta/(1-\\kappa a\\theta)$,\n\\[\nP=(a^{-1}+\\sum_i b_i^{-1})^{-1},\\quad\n\\mu_P(t)=P\\sum_iY_i(t)/b_i,\\quad J_P=P.\n\\]\nThe hybrid action is $u_i^H=\\rho\\mu_P(s)+k_i[Y_i(t)-\\rho Y_i(s)]$ and $J_H=\\rho^2J_P+(1-\\rho^2)J_L$.",
+      "classification": "root",
+      "route": [
+        "U.13"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": []
+    },
+    {
+      "id": "C",
+      "statement": "There are finitely many independent components $m=1,\\ldots,M$ and positive weights $w_m$. Within component $m$, the signal and all disturbances share $\\lambda_m>0$. Each component has a pooled summary of age $\\tau_m\\ge0$. Then\n\\[\nJ_L^{\\rm tot}-J_H^{\\rm tot}=\\sum_mw_m\\Delta_m e^{-2\\lambda_m\\tau_m},\\qquad\nJ_L^{\\rm tot}=\\sum_mw_mJ_{L,m},\n\\]\nand each component uses the corresponding hybrid policy (15).",
+      "classification": "root",
+      "route": [
+        "C.4"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": [
+        "R.6.2"
+      ]
+    },
+    {
+      "id": "R",
+      "statement": "Assume fixed finite latency $\\delta\\ge0$, an exact joint pooled-vector refresh with price $c>0$, and locally finite schedules independent of all signal and disturbance processes. Let $\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}>0$,\n\\[\nB(T)=\\sum_m\\frac{A_m}{\\gamma_m}(1-e^{-\\gamma_mT}),\\qquad\nc_{\\rm crit}=\\sum_mA_m/\\gamma_m.\n\\]\nFor $c\\ge c_{\\rm crit}$, no refreshing minimizes the limiting upper average cost at $J_L^{\\rm tot}$. For $0<c<c_{\\rm crit}$, a periodic schedule is optimal among all admissible schedules. Its unique period solves $B(T^*)-T^*B'(T^*)=c$, and its cost is $J_L^{\\rm tot}-\\sum_m A_m e^{-\\gamma_mT^*}$.",
+      "classification": "root",
+      "route": [
+        "R.7"
+      ],
+      "status": "discharged",
+      "support": "Exact frozen theorem contract.",
+      "needed_by": []
+    }
+  ],
+  "edges": [
+    {
+      "parent": "L.1",
+      "obligation": "A-L2",
+      "exact_obligation": "Admissible actions and perturbations are measurable with respect to their assigned information and have finite second moment. $X\\in L^2$ under (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "L.1",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "L.2",
+      "obligation": "L.1",
+      "exact_obligation": "For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\\sum_i\\E[w_i((1+\\kappa)u_i-\\kappa\\bar u-X)]$ and a quadratic remainder.",
+      "scope": "G-L",
+      "route_kind": "primary AND",
+      "support_checked": "K-L: expansion is an identity for square-integrable policies."
+    },
+    {
+      "parent": "L.2",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "L.3",
+      "obligation": "A-L2",
+      "exact_obligation": "Admissible actions and perturbations are measurable with respect to their assigned information and have finite second moment. $X\\in L^2$ under (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "L.3",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "L.4",
+      "obligation": "L.1",
+      "exact_obligation": "For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\\sum_i\\E[w_i((1+\\kappa)u_i-\\kappa\\bar u-X)]$ and a quadratic remainder.",
+      "scope": "G-L",
+      "route_kind": "primary AND",
+      "support_checked": "K-L: expansion is an identity for square-integrable policies."
+    },
+    {
+      "parent": "L.4",
+      "obligation": "L.2",
+      "exact_obligation": "The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold.",
+      "scope": "G-L",
+      "route_kind": "primary AND",
+      "support_checked": "K-L: conditional expectation converts testing against every local perturbation into a zero conditional residual."
+    },
+    {
+      "parent": "L.4",
+      "obligation": "L.3",
+      "exact_obligation": "The remainder is $n^{-1}\\sum_i\\E[w_i^2]+\\kappa n^{-1}\\sum_i\\E[(w_i-\\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$.",
+      "scope": "G-L",
+      "route_kind": "primary AND",
+      "support_checked": "K-L: the first sum is strictly positive and the second nonnegative."
+    },
+    {
+      "parent": "P.1",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.1",
+      "obligation": "D-Y",
+      "exact_obligation": "$Y_i=X+E_i$ and $\\bar Y=n^{-1}\\sum_iY_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.1",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.2",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.2",
+      "obligation": "D-Y",
+      "exact_obligation": "$Y_i=X+E_i$ and $\\bar Y=n^{-1}\\sum_iY_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.2",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.3",
+      "obligation": "P.1",
+      "exact_obligation": "$X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\\le t$, so it is independent of the local history.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: the common exponential factor cancels for every earlier time."
+    },
+    {
+      "parent": "P.3",
+      "obligation": "P.2",
+      "exact_obligation": "Define $\\eta(t)=X(t)-(a/v)\\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: Cov(bar Y(t),Y_j(r)) = v exp(-lambda |t-r|); this works for past and future r."
+    },
+    {
+      "parent": "P.3",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.4",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.4",
+      "obligation": "D-Y",
+      "exact_obligation": "$Y_i=X+E_i$ and $\\bar Y=n^{-1}\\sum_iY_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.4",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.5",
+      "obligation": "L",
+      "exact_obligation": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "P.5",
+      "obligation": "P.3",
+      "exact_obligation": "The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\\bar Y(t)$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: subtract the explained variance from a."
+    },
+    {
+      "parent": "P.5",
+      "obligation": "P.4",
+      "exact_obligation": "For the candidate $u_i=kY_i(t)$, $\\E[\\bar u\\mid\\mathcal F_i(t)]=kvY_i(t)/(a+b)$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: the same regression residual is orthogonal to the full local history."
+    },
+    {
+      "parent": "P.5",
+      "obligation": "D-vd",
+      "exact_obligation": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.6",
+      "obligation": "P.5",
+      "exact_obligation": "Equation (5) gives $k[(1+\\kappa)(a+b)-\\kappa v]=a$. The bracket equals $d$, so $k=a/d$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: d is positive under a,b>0 and kappa>=0."
+    },
+    {
+      "parent": "P.6",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.7",
+      "obligation": "P.3",
+      "exact_obligation": "The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\\bar Y(t)$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: subtract the explained variance from a."
+    },
+    {
+      "parent": "P.7",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.7",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.8",
+      "obligation": "L",
+      "exact_obligation": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "P.8",
+      "obligation": "P.5",
+      "exact_obligation": "Equation (5) gives $k[(1+\\kappa)(a+b)-\\kappa v]=a$. The bracket equals $d$, so $k=a/d$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: d is positive under a,b>0 and kappa>=0."
+    },
+    {
+      "parent": "P.8",
+      "obligation": "P.7",
+      "exact_obligation": "With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "Each squared tracking error is separately minimized and the nonnegative disagreement term is zero."
+    },
+    {
+      "parent": "P.9",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.9",
+      "obligation": "D-vd",
+      "exact_obligation": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "P.9",
+      "obligation": "P.6",
+      "exact_obligation": "The local loss is $a-2ak+dk^2=a-a^2/d$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: E(Y_i^2)=a+b and average expected disagreement of the readings is b(1-1/n)."
+    },
+    {
+      "parent": "P.9",
+      "obligation": "P.7",
+      "exact_obligation": "With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "Each squared tracking error is separately minimized and the nonnegative disagreement term is zero."
+    },
+    {
+      "parent": "P.10",
+      "obligation": "P.3",
+      "exact_obligation": "The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\\bar Y(t)$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: subtract the explained variance from a."
+    },
+    {
+      "parent": "P.10",
+      "obligation": "P.6",
+      "exact_obligation": "The local loss is $a-2ak+dk^2=a-a^2/d$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "K-P: E(Y_i^2)=a+b and average expected disagreement of the readings is b(1-1/n)."
+    },
+    {
+      "parent": "P.10",
+      "obligation": "P.7",
+      "exact_obligation": "With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "Each squared tracking error is separately minimized and the nonnegative disagreement term is zero."
+    },
+    {
+      "parent": "P.10",
+      "obligation": "P.8",
+      "exact_obligation": "The displayed feasible policies are optimal by Lemma 1.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "The normal equations are satisfied; linearity was a candidate construction, not a restriction on competitors."
+    },
+    {
+      "parent": "P.10",
+      "obligation": "P.9",
+      "exact_obligation": "$d-v=b(1+\\kappa)(1-1/n)>0$ and subtraction yields the formula for $\\Delta$.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "n>=2, b>0, and kappa>=0 make the strict sign valid."
+    },
+    {
+      "parent": "D.1",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.1",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "D.1",
+      "obligation": "B-OU",
+      "exact_obligation": "For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\\lambda(t-s)})\\Sigma$. Its cross-covariances are computed directly from (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.1",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.2",
+      "obligation": "D.1",
+      "exact_obligation": "The Markov property and Proposition 1 give $\\E[X(t)\\mid\\mathcal F(s)]=e^{-\\lambda\\tau}(a/v)\\bar Y(s)$.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "K-D: the post-s signal innovation is independent of the old sensor history."
+    },
+    {
+      "parent": "D.2",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.2",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.3",
+      "obligation": "D.1",
+      "exact_obligation": "The Markov property and Proposition 1 give $\\E[X(t)\\mid\\mathcal F(s)]=e^{-\\lambda\\tau}(a/v)\\bar Y(s)$.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "K-D: the post-s signal innovation is independent of the old sensor history."
+    },
+    {
+      "parent": "D.3",
+      "obligation": "D.2",
+      "exact_obligation": "Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "The lower bound is attained simultaneously for all agents."
+    },
+    {
+      "parent": "D.3",
+      "obligation": "D-vd",
+      "exact_obligation": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.4",
+      "obligation": "D.3",
+      "exact_obligation": "The error variance is the displayed $J_D(\\tau)$.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "K-D: the explained variance is exp(-2 lambda tau) a^2/v."
+    },
+    {
+      "parent": "D.4",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "D.5",
+      "obligation": "D.4",
+      "exact_obligation": "Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\\lambda\\tau}<v/d$.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "Both denominators and a^2 are positive."
+    },
+    {
+      "parent": "D.5",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "D.6",
+      "obligation": "D.1",
+      "exact_obligation": "The Markov property and Proposition 1 give $\\E[X(t)\\mid\\mathcal F(s)]=e^{-\\lambda\\tau}(a/v)\\bar Y(s)$.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "K-D: the post-s signal innovation is independent of the old sensor history."
+    },
+    {
+      "parent": "D.6",
+      "obligation": "D.2",
+      "exact_obligation": "Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "The lower bound is attained simultaneously for all agents."
+    },
+    {
+      "parent": "D.6",
+      "obligation": "D.3",
+      "exact_obligation": "The error variance is the displayed $J_D(\\tau)$.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "K-D: the explained variance is exp(-2 lambda tau) a^2/v."
+    },
+    {
+      "parent": "D.6",
+      "obligation": "D.5",
+      "exact_obligation": "Taking logarithms gives the exact threshold (14), including its equality case.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "K-D: dividing by -2 lambda reverses the inequality."
+    },
+    {
+      "parent": "H.1",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "H.2",
+      "obligation": "H.2.14",
+      "exact_obligation": "Q.E.D. The positive-age branch is established.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "Exports the theorem under tau>0."
+    },
+    {
+      "parent": "H.2.1",
+      "obligation": "D-info",
+      "exact_obligation": "The local, pooled, delayed-only, and hybrid information fields are exactly those in Section II-B of the letter.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.1",
+      "obligation": "D-vd",
+      "exact_obligation": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.2",
+      "obligation": "H.2.1",
+      "exact_obligation": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum."
+    },
+    {
+      "parent": "H.2.2",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.2",
+      "obligation": "B-OU",
+      "exact_obligation": "For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\\lambda(t-s)})\\Sigma$. Its cross-covariances are computed directly from (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.2",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.3",
+      "obligation": "H.2.1",
+      "exact_obligation": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum."
+    },
+    {
+      "parent": "H.2.3",
+      "obligation": "E-eta",
+      "exact_obligation": "The globally quantified residual statement accompanying source equation (11): $\\eta(t)=X(t)-(a/v)\\bar Y(t)$ is independent of the entire sensor process and has variance $P_n$. Theorem 1 explicitly cites this source result. Its covariance calculation is checked separately in K-P.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Source (11), checked in K-P with all global model assumptions retained."
+    },
+    {
+      "parent": "H.2.3",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "H.2.4",
+      "obligation": "H.2.1",
+      "exact_obligation": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum."
+    },
+    {
+      "parent": "H.2.4",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.4",
+      "obligation": "D-vd",
+      "exact_obligation": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.5",
+      "obligation": "H.2.4",
+      "exact_obligation": "For $s<r\\le t$, define $Z_i(r)=Y_i(r)-e^{-\\lambda(r-s)}Y_i(s)$. Then $\\Cov(\\bar Z,Z_i(r))=[v/(a+b)]\\Cov(Z_i,Z_i(r))$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H1 expands the two covariances from (1); the pooled factor v includes the own-sensor contribution."
+    },
+    {
+      "parent": "H.2.5",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.6",
+      "obligation": "H.2.2",
+      "exact_obligation": "$Z$ is independent of $\\mathcal F(s)$ and has covariance $(1-\\rho^2)(a\\mathbf1\\mathbf1^\\top+bI)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H1: all old-history cross-covariances cancel."
+    },
+    {
+      "parent": "H.2.6",
+      "obligation": "H.2.4",
+      "exact_obligation": "For $s<r\\le t$, define $Z_i(r)=Y_i(r)-e^{-\\lambda(r-s)}Y_i(s)$. Then $\\Cov(\\bar Z,Z_i(r))=[v/(a+b)]\\Cov(Z_i,Z_i(r))$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H1 expands the two covariances from (1); the pooled factor v includes the own-sensor contribution."
+    },
+    {
+      "parent": "H.2.6",
+      "obligation": "H.2.5",
+      "exact_obligation": "Both covariances have the temporal factor $e^{-\\lambda(t-r)}(1-e^{-2\\lambda(r-s)})$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H1 computes the factor for every intermediate time, including r=t."
+    },
+    {
+      "parent": "H.2.7",
+      "obligation": "H.2.1",
+      "exact_obligation": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum."
+    },
+    {
+      "parent": "H.2.7",
+      "obligation": "H.2.6",
+      "exact_obligation": "$\\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\\mathcal F(s)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H2 checks every generator of the enlarged information field. The whole innovation path is independent of the old history."
+    },
+    {
+      "parent": "H.2.7",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.7",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.8",
+      "obligation": "H.2.3",
+      "exact_obligation": "$X(t)=\\rho h\\bar Y(s)+h\\bar Z+\\eta(t)$, where $\\eta(t)$ is independent of all sensor data and has variance $P_n$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z."
+    },
+    {
+      "parent": "H.2.8",
+      "obligation": "H.2.7",
+      "exact_obligation": "Gaussianity gives $\\E[\\bar Z\\mid\\mathcal G_i]=vZ_i/(a+b)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H2: the regression residual is independent of the generated sigma-field and the proposed predictor is measurable in it."
+    },
+    {
+      "parent": "H.2.8",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.9",
+      "obligation": "H.2.1",
+      "exact_obligation": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum."
+    },
+    {
+      "parent": "H.2.9",
+      "obligation": "H.2.3",
+      "exact_obligation": "$X(t)=\\rho h\\bar Y(s)+h\\bar Z+\\eta(t)$, where $\\eta(t)$ is independent of all sensor data and has variance $P_n$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z."
+    },
+    {
+      "parent": "H.2.9",
+      "obligation": "H.2.8",
+      "exact_obligation": "Independence of $\\eta(t)$ gives $\\E[h\\bar Z+\\eta(t)\\mid\\mathcal G_i]=aZ_i/(a+b)$ and $\\E[k\\bar Z\\mid\\mathcal G_i]=kvZ_i/(a+b)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H2: h v=a, eta is centered and independent of all observations, and k is deterministic."
+    },
+    {
+      "parent": "H.2.9",
+      "obligation": "D-vd",
+      "exact_obligation": "$v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.9",
+      "obligation": "L",
+      "exact_obligation": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "H.2.10",
+      "obligation": "H.2.1",
+      "exact_obligation": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum."
+    },
+    {
+      "parent": "H.2.10",
+      "obligation": "H.2.9",
+      "exact_obligation": "Subtract the common prediction. Since $(1+\\kappa)(a+b)-\\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H3 substitutes the full-history conditional means directly in the normal equation. All admissible nonlinear history-dependent competitors are covered."
+    },
+    {
+      "parent": "H.2.10",
+      "obligation": "D-info",
+      "exact_obligation": "The local, pooled, delayed-only, and hybrid information fields are exactly those in Section II-B of the letter.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.11",
+      "obligation": "H.2.2",
+      "exact_obligation": "$Z$ is independent of $\\mathcal F(s)$ and has covariance $(1-\\rho^2)(a\\mathbf1\\mathbf1^\\top+bI)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H1: all old-history cross-covariances cancel."
+    },
+    {
+      "parent": "H.2.11",
+      "obligation": "H.2.3",
+      "exact_obligation": "$X(t)=\\rho h\\bar Y(s)+h\\bar Z+\\eta(t)$, where $\\eta(t)$ is independent of all sensor data and has variance $P_n$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z."
+    },
+    {
+      "parent": "H.2.11",
+      "obligation": "H.2.9",
+      "exact_obligation": "Subtract the common prediction. Since $(1+\\kappa)(a+b)-\\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H3 substitutes the full-history conditional means directly in the normal equation. All admissible nonlinear history-dependent competitors are covered."
+    },
+    {
+      "parent": "H.2.11",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "H.2.12",
+      "obligation": "H.2.2",
+      "exact_obligation": "$Z$ is independent of $\\mathcal F(s)$ and has covariance $(1-\\rho^2)(a\\mathbf1\\mathbf1^\\top+bI)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H1: all old-history cross-covariances cancel."
+    },
+    {
+      "parent": "H.2.12",
+      "obligation": "H.2.3",
+      "exact_obligation": "$X(t)=\\rho h\\bar Y(s)+h\\bar Z+\\eta(t)$, where $\\eta(t)$ is independent of all sensor data and has variance $P_n$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z."
+    },
+    {
+      "parent": "H.2.12",
+      "obligation": "H.2.8",
+      "exact_obligation": "Independence of $\\eta(t)$ gives $\\E[h\\bar Z+\\eta(t)\\mid\\mathcal G_i]=aZ_i/(a+b)$ and $\\E[k\\bar Z\\mid\\mathcal G_i]=kvZ_i/(a+b)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H2: h v=a, eta is centered and independent of all observations, and k is deterministic."
+    },
+    {
+      "parent": "H.2.12",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "H.2.12",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "H.2.13",
+      "obligation": "H.2.11",
+      "exact_obligation": "The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\\rho^2$. Thus $J_H=P_n+(1-\\rho^2)(J_L-P_n)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H4 scales the sensor-dependent quadratic cost and retains the independent residual variance."
+    },
+    {
+      "parent": "H.2.13",
+      "obligation": "P",
+      "exact_obligation": "Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\\kappa(1-1/n)]$. For complete local and pooled histories,\n\\[\nP_1=\\frac{ab}{a+b},\\quad P_n=\\frac{ab}{b+na},\\quad\nu_i^L=\\frac adY_i(t),\\quad u_i^P=\\frac av\\bar Y(t).\n\\]\nThe optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "H.2.14",
+      "obligation": "H.2.10",
+      "exact_obligation": "The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "The policy only uses the current and retained own readings and the old pooled scalar. Feasibility gives equality of the two optimal values."
+    },
+    {
+      "parent": "H.2.14",
+      "obligation": "H.2.11",
+      "exact_obligation": "The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\\rho^2$. Thus $J_H=P_n+(1-\\rho^2)(J_L-P_n)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H4 scales the sensor-dependent quadratic cost and retains the independent residual variance."
+    },
+    {
+      "parent": "H.2.14",
+      "obligation": "H.2.12",
+      "exact_obligation": "The enlarged-information posterior mean is $\\rho h\\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\\rho^2)(P_1-P_n)$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "K-H4 computes the posterior variance and checks that the same conditional mean is measurable in the smaller hybrid field."
+    },
+    {
+      "parent": "H.2.14",
+      "obligation": "H.2.13",
+      "exact_obligation": "Subtracting the cost from $J_L$ yields $\\Delta e^{-2\\lambda\\tau}$.",
+      "scope": "H.2",
+      "route_kind": "primary AND",
+      "support_checked": "The interpolation gives rho^2 Delta, with rho^2=exp(-2 lambda tau)."
+    },
+    {
+      "parent": "H.3",
+      "obligation": "H.1",
+      "exact_obligation": "CASE $\\tau=0$. The formula is the pooled policy.",
+      "scope": "G-H",
+      "route_kind": "primary AND",
+      "support_checked": "The local correction is zero; the posterior and cost formulas reduce to the pooled endpoints."
+    },
+    {
+      "parent": "H.3",
+      "obligation": "H.2",
+      "exact_obligation": "CASE $\\tau>0$. Prove the remaining claims under this assumption.",
+      "scope": "G-H",
+      "route_kind": "primary AND",
+      "support_checked": "All descendants of H.2 have tau>0 in scope. This assumption is discharged at the root Q.E.D."
+    },
+    {
+      "parent": "H.3",
+      "obligation": "A-G",
+      "exact_obligation": "$n\\ge2$, $a,b,\\lambda>0$, $\\kappa\\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.1",
+      "obligation": "L",
+      "exact_obligation": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "U.1",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.1",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.2",
+      "obligation": "U.1",
+      "exact_obligation": "Substitution into (5) gives $C_i k_i-\\kappa a\\bar k=a$, where $\\bar k=n^{-1}\\sum_i k_i$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U: the cross-agent covariance is a and the own variance a+b_i; local histories have the same scalar temporal factor."
+    },
+    {
+      "parent": "U.2",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.3",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.4",
+      "obligation": "U.1",
+      "exact_obligation": "Substitution into (5) gives $C_i k_i-\\kappa a\\bar k=a$, where $\\bar k=n^{-1}\\sum_i k_i$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U: the cross-agent covariance is a and the own variance a+b_i; local histories have the same scalar temporal factor."
+    },
+    {
+      "parent": "U.4",
+      "obligation": "U.2",
+      "exact_obligation": "Averaging $k_i=(a+\\kappa a\\bar k)/C_i$ yields the displayed coefficients.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U."
+    },
+    {
+      "parent": "U.4",
+      "obligation": "U.3",
+      "exact_obligation": "The denominator is positive because $C_i>(1+\\kappa)a$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "kappa a theta<kappa/(1+kappa)<1, with kappa=0 handled directly."
+    },
+    {
+      "parent": "U.4",
+      "obligation": "L",
+      "exact_obligation": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "U.5",
+      "obligation": "U.1",
+      "exact_obligation": "Substitution into (5) gives $C_i k_i-\\kappa a\\bar k=a$, where $\\bar k=n^{-1}\\sum_i k_i$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U: the cross-agent covariance is a and the own variance a+b_i; local histories have the same scalar temporal factor."
+    },
+    {
+      "parent": "U.5",
+      "obligation": "U.2",
+      "exact_obligation": "Averaging $k_i=(a+\\kappa a\\bar k)/C_i$ yields the displayed coefficients.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U."
+    },
+    {
+      "parent": "U.5",
+      "obligation": "U.4",
+      "exact_obligation": "Lemma 1 certifies optimality of the local policy.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The feasible candidate satisfies the conditional equations under the full local histories, so nonlinear competitors are covered."
+    },
+    {
+      "parent": "U.5",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.6",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.6",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.7",
+      "obligation": "U.6",
+      "exact_obligation": "Gaussian conditioning gives $P$ and $\\mu_P$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U verifies the weighted residual is orthogonal to every sensor."
+    },
+    {
+      "parent": "U.7",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.7",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.8",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.8",
+      "obligation": "B-OU",
+      "exact_obligation": "For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\\lambda(t-s)})\\Sigma$. Its cross-covariances are computed directly from (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.9",
+      "obligation": "U.8",
+      "exact_obligation": "Innovations have covariance $(1-\\rho^2)\\Sigma$, where $\\Sigma=a\\mathbf1\\mathbf1^\\top+\\operatorname{diag}(b_i)$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The OU innovation calculation applies entry by entry."
+    },
+    {
+      "parent": "U.9",
+      "obligation": "A-U",
+      "exact_obligation": "The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\\theta$ are those in (23).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.9",
+      "obligation": "B-G",
+      "exact_obligation": "Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.9",
+      "obligation": "B-OU",
+      "exact_obligation": "For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\\lambda(t-s)})\\Sigma$. Its cross-covariances are computed directly from (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.10",
+      "obligation": "U.6",
+      "exact_obligation": "Gaussian conditioning gives $P$ and $\\mu_P$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U verifies the weighted residual is orthogonal to every sensor."
+    },
+    {
+      "parent": "U.10",
+      "obligation": "U.7",
+      "exact_obligation": "$X(t)-\\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The zero same-time cross-covariances remain zero after multiplication by the common temporal factor."
+    },
+    {
+      "parent": "U.10",
+      "obligation": "U.8",
+      "exact_obligation": "Innovations have covariance $(1-\\rho^2)\\Sigma$, where $\\Sigma=a\\mathbf1\\mathbf1^\\top+\\operatorname{diag}(b_i)$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The OU innovation calculation applies entry by entry."
+    },
+    {
+      "parent": "U.10",
+      "obligation": "U.9",
+      "exact_obligation": "For $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$, the covariance argument in (21) gives $\\E[Z_j\\mid\\mathcal G_i]=\\Sigma_{ji}Z_i/\\Sigma_{ii}$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U repeats the source covariance argument with Sigma; it treats j=i separately through Sigma_ii=a+b_i. All conditional predictors are measurable and denominators positive."
+    },
+    {
+      "parent": "U.10",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.11",
+      "obligation": "U.1",
+      "exact_obligation": "Substitution into (5) gives $C_i k_i-\\kappa a\\bar k=a$, where $\\bar k=n^{-1}\\sum_i k_i$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U: the cross-agent covariance is a and the own variance a+b_i; local histories have the same scalar temporal factor."
+    },
+    {
+      "parent": "U.11",
+      "obligation": "U.2",
+      "exact_obligation": "Averaging $k_i=(a+\\kappa a\\bar k)/C_i$ yields the displayed coefficients.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U."
+    },
+    {
+      "parent": "U.11",
+      "obligation": "U.4",
+      "exact_obligation": "Lemma 1 certifies optimality of the local policy.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The feasible candidate satisfies the conditional equations under the full local histories, so nonlinear competitors are covered."
+    },
+    {
+      "parent": "U.11",
+      "obligation": "U.9",
+      "exact_obligation": "For $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$, the covariance argument in (21) gives $\\E[Z_j\\mid\\mathcal G_i]=\\Sigma_{ji}Z_i/\\Sigma_{ii}$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U repeats the source covariance argument with Sigma; it treats j=i separately through Sigma_ii=a+b_i. All conditional predictors are measurable and denominators positive."
+    },
+    {
+      "parent": "U.11",
+      "obligation": "U.10",
+      "exact_obligation": "After subtracting $\\rho\\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U uses P(a sum_j 1/b_j+1)=a to compute the residual target projection."
+    },
+    {
+      "parent": "U.11",
+      "obligation": "L",
+      "exact_obligation": "For the information fields $\\mathcal G_i$, optimize over $u_i\\in L^2(\\mathcal G_i)$, with $X\\in L^2$, $n\\ge2$, and $\\kappa\\ge0$. A feasible $u$ is optimal exactly when\n\\[\n(1+\\kappa)u_i-\\kappa\\E[\\bar u\\mid\\mathcal G_i]=\\E[X\\mid\\mathcal G_i]\\quad(i=1,\\ldots,n).\n\\]\nTwo optimal feasible policies agree almost surely.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "U.12",
+      "obligation": "U.5",
+      "exact_obligation": "The quadratic term equals $a\\bar k$, so $J_L=a-a\\bar k$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U: multiply each normal equation by k_i and average."
+    },
+    {
+      "parent": "U.12",
+      "obligation": "U.6",
+      "exact_obligation": "Gaussian conditioning gives $P$ and $\\mu_P$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U verifies the weighted residual is orthogonal to every sensor."
+    },
+    {
+      "parent": "U.12",
+      "obligation": "U.7",
+      "exact_obligation": "$X(t)-\\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The zero same-time cross-covariances remain zero after multiplication by the common temporal factor."
+    },
+    {
+      "parent": "U.12",
+      "obligation": "U.8",
+      "exact_obligation": "Innovations have covariance $(1-\\rho^2)\\Sigma$, where $\\Sigma=a\\mathbf1\\mathbf1^\\top+\\operatorname{diag}(b_i)$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The OU innovation calculation applies entry by entry."
+    },
+    {
+      "parent": "U.12",
+      "obligation": "U.11",
+      "exact_obligation": "The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U substitutes the full-history conditional mean of the weighted action average and verifies the normal equations directly."
+    },
+    {
+      "parent": "U.12",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.2",
+      "exact_obligation": "Averaging $k_i=(a+\\kappa a\\bar k)/C_i$ yields the displayed coefficients.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.3",
+      "exact_obligation": "The denominator is positive because $C_i>(1+\\kappa)a$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "kappa a theta<kappa/(1+kappa)<1, with kappa=0 handled directly."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.4",
+      "exact_obligation": "Lemma 1 certifies optimality of the local policy.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "The feasible candidate satisfies the conditional equations under the full local histories, so nonlinear competitors are covered."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.5",
+      "exact_obligation": "The quadratic term equals $a\\bar k$, so $J_L=a-a\\bar k$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U: multiply each normal equation by k_i and average."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.6",
+      "exact_obligation": "Gaussian conditioning gives $P$ and $\\mu_P$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U verifies the weighted residual is orthogonal to every sensor."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.11",
+      "exact_obligation": "The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U substitutes the full-history conditional mean of the weighted action average and verifies the normal equations directly."
+    },
+    {
+      "parent": "U.13",
+      "obligation": "U.12",
+      "exact_obligation": "Scaling the remaining quadratic cost by $1-\\rho^2$ gives $J_H=\\rho^2J_P+(1-\\rho^2)J_L$.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "K-U keeps the residual variance P fixed, scales only the sensor-dependent quadratic term, and checks feasibility in the weighted-summary hybrid."
+    },
+    {
+      "parent": "C.1",
+      "obligation": "A-C",
+      "exact_obligation": "A finite number of mutually independent component processes with weights $w_m>0$, componentwise common rates $\\lambda_m>0$, and ages $\\tau_m\\ge0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "C.2",
+      "obligation": "C.1",
+      "exact_obligation": "Other components are independent of component $m$ and its observations.",
+      "scope": "G-C",
+      "route_kind": "primary AND",
+      "support_checked": "This is independence of complete component processes, not just same-time uncorrelatedness."
+    },
+    {
+      "parent": "C.2",
+      "obligation": "B-J",
+      "exact_obligation": "Conditional Jensen: $\\phi(\\E[U\\mid\\mathcal A])\\le\\E[\\phi(U)\\mid\\mathcal A]$ for an integrable vector and convex function when the expectations exist. The audit checks information feasibility separately.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "C.2",
+      "obligation": "D-loss",
+      "exact_obligation": "$\\ell(u,X)=n^{-1}\\sum_i(u_i-X)^2+\\kappa n^{-1}\\sum_i(u_i-\\bar u)^2$ and $\\bar u=n^{-1}\\sum_i u_i$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "C.2",
+      "obligation": "A-L2",
+      "exact_obligation": "Admissible actions and perturbations are measurable with respect to their assigned information and have finite second moment. $X\\in L^2$ under (1).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "C.3",
+      "obligation": "C.2",
+      "exact_obligation": "Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss.",
+      "scope": "G-C",
+      "route_kind": "primary AND",
+      "support_checked": "K-C: integrate the joint extraneous component data; each averaged action still depends only on that agent's component-m information."
+    },
+    {
+      "parent": "C.3",
+      "obligation": "H",
+      "exact_obligation": "Under (1)--(4), put $\\rho=e^{-\\lambda\\tau}$ and $s=t-\\tau$. The unique optimal hybrid action is\n\\[\nu_i^H=\\rho\\frac av\\bar Y(s)+\\frac ad[Y_i(t)-\\rho Y_i(s)].\n\\]\nIt also attains the optimum with the larger information $\\mathcal F(s)\\vee\\mathcal F_i(t)$. Its posterior variance and team loss satisfy\n\\[\nP_H=\\rho^2P_n+(1-\\rho^2)P_1,\\qquad\nJ_H=\\rho^2J_P+(1-\\rho^2)J_L,\n\\]\nand $J_L-J_H=\\Delta e^{-2\\lambda\\tau}$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "C.3",
+      "obligation": "A-C",
+      "exact_obligation": "A finite number of mutually independent component processes with weights $w_m>0$, componentwise common rates $\\lambda_m>0$, and ages $\\tau_m\\ge0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "C.4",
+      "obligation": "C.3",
+      "exact_obligation": "Optimization separates across components. Apply Theorem 1 to each.",
+      "scope": "G-C",
+      "route_kind": "primary AND",
+      "support_checked": "An additive lower bound is attained by the collection of componentwise optimal policies."
+    },
+    {
+      "parent": "C.4",
+      "obligation": "A-C",
+      "exact_obligation": "A finite number of mutually independent component processes with weights $w_m>0$, componentwise common rates $\\lambda_m>0$, and ages $\\tau_m\\ge0$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.1",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.1",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.2",
+      "obligation": "R.1",
+      "exact_obligation": "Define $V_\\delta(T)=B^{\\prime}(T)=\\sum_m A_m e^{-\\gamma_mT}$.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "All sums are finite and all amplitudes and rates positive."
+    },
+    {
+      "parent": "R.2",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.2",
+      "obligation": "B-calc",
+      "exact_obligation": "Finite-dimensional real algebra and order, differentiation, integration of exponentials, and the intermediate value theorem for continuous scalar functions, with signs and domains checked at each use.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.3",
+      "obligation": "R.1",
+      "exact_obligation": "Define $V_\\delta(T)=B^{\\prime}(T)=\\sum_m A_m e^{-\\gamma_mT}$.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "All sums are finite and all amplitudes and rates positive."
+    },
+    {
+      "parent": "R.3",
+      "obligation": "R.2",
+      "exact_obligation": "Differentiate (29): $C^{\\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\\delta(T)$.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "K-R: the quotient rule gives the numerator with this sign."
+    },
+    {
+      "parent": "R.3",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.3",
+      "obligation": "B-calc",
+      "exact_obligation": "Finite-dimensional real algebra and order, differentiation, integration of exponentials, and the intermediate value theorem for continuous scalar functions, with signs and domains checked at each use.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.4",
+      "obligation": "R.4.4",
+      "exact_obligation": "Q.E.D. The below-threshold periodic claims hold.",
+      "scope": "R.4",
+      "route_kind": "primary AND",
+      "support_checked": "The root and its defining assumptions remain local to R.4; the conditional conclusion is exported."
+    },
+    {
+      "parent": "R.4.1",
+      "obligation": "R.2",
+      "exact_obligation": "Differentiate (29): $C^{\\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\\delta(T)$.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "K-R: the quotient rule gives the numerator with this sign."
+    },
+    {
+      "parent": "R.4.1",
+      "obligation": "R.3",
+      "exact_obligation": "$H^{\\prime}(T)=-TV_\\delta^{\\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\\rm crit}$.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "K-R: T exp(-gamma T) tends to zero for gamma>0."
+    },
+    {
+      "parent": "R.4.1",
+      "obligation": "B-calc",
+      "exact_obligation": "Finite-dimensional real algebra and order, differentiation, integration of exponentials, and the intermediate value theorem for continuous scalar functions, with signs and domains checked at each use.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.4.2",
+      "obligation": "R.4.1",
+      "exact_obligation": "There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.",
+      "scope": "R.4",
+      "route_kind": "primary AND",
+      "support_checked": "Continuity, strict monotonicity, and the endpoint limits establish existence before the root is used."
+    },
+    {
+      "parent": "R.4.2",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.4.2",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.4.3",
+      "obligation": "R.4.1",
+      "exact_obligation": "There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.",
+      "scope": "R.4",
+      "route_kind": "primary AND",
+      "support_checked": "Continuity, strict monotonicity, and the endpoint limits establish existence before the root is used."
+    },
+    {
+      "parent": "R.4.3",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.4.4",
+      "obligation": "R.4.1",
+      "exact_obligation": "There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.",
+      "scope": "R.4",
+      "route_kind": "primary AND",
+      "support_checked": "Continuity, strict monotonicity, and the endpoint limits establish existence before the root is used."
+    },
+    {
+      "parent": "R.4.4",
+      "obligation": "R.4.2",
+      "exact_obligation": "$C(T)\\to\\infty$ as $T\\downarrow0$ and $C(T)\\to J_L^{\\rm tot}$ as $T\\to\\infty$, proving the unique global periodic minimum.",
+      "scope": "R.4",
+      "route_kind": "primary AND",
+      "support_checked": "c>0 gives divergence at zero; B is bounded at infinity."
+    },
+    {
+      "parent": "R.4.4",
+      "obligation": "R.4.3",
+      "exact_obligation": "At the root, $c-B(T^*)=-T^*V_\\delta(T^*)$, giving the optimal-cost formula.",
+      "scope": "R.4",
+      "route_kind": "primary AND",
+      "support_checked": "Tstar>0 licenses division."
+    },
+    {
+      "parent": "R.5",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.5",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6",
+      "obligation": "R.6.8",
+      "exact_obligation": "Q.E.D. The all-schedules optimum is attained by the stated candidates.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "Exports the lower bound and matching construction."
+    },
+    {
+      "parent": "R.6.1",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.1",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.2",
+      "obligation": "R.6.1",
+      "exact_obligation": "Define $g=\\min\\{0,\\inf_{T>0}(c-B(T))/T\\}$ and condition on a realization of the reception schedule.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "g is finite and nonpositive. Independence leaves the conditional sensor-process law unchanged."
+    },
+    {
+      "parent": "R.6.2",
+      "obligation": "C",
+      "exact_obligation": "There are finitely many independent components $m=1,\\ldots,M$ and positive weights $w_m$. Within component $m$, the signal and all disturbances share $\\lambda_m>0$. Each component has a pooled summary of age $\\tau_m\\ge0$. Then\n\\[\nJ_L^{\\rm tot}-J_H^{\\rm tot}=\\sum_mw_m\\Delta_m e^{-2\\lambda_m\\tau_m},\\qquad\nJ_L^{\\rm tot}=\\sum_mw_mJ_{L,m},\n\\]\nand each component uses the corresponding hybrid policy (15).",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Exact frozen theorem contract."
+    },
+    {
+      "parent": "R.6.2",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.3",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.3",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.4",
+      "obligation": "R.6.1",
+      "exact_obligation": "Define $g=\\min\\{0,\\inf_{T>0}(c-B(T))/T\\}$ and condition on a realization of the reception schedule.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "g is finite and nonpositive. Independence leaves the conditional sensor-process law unchanged."
+    },
+    {
+      "parent": "R.6.4",
+      "obligation": "R.6.2",
+      "exact_obligation": "Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "K-R: integrate the exact conditional age gain, yielding c-B(T_j)."
+    },
+    {
+      "parent": "R.6.4",
+      "obligation": "R.6.3",
+      "exact_obligation": "The last incomplete interval contributes at least $-c_{\\rm crit}$, and the initial interval before the first reception has zero gain.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "B(L)<=ccrit uniformly in the final interval length L; the source starts without a shared update."
+    },
+    {
+      "parent": "R.6.5",
+      "obligation": "R.6.4",
+      "exact_obligation": "Because $g\\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\\rm tot}+g)-c_{\\rm crit}$.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "K-R shows the complete intervals occupy at most R, so multiplication by g reverses the length comparison."
+    },
+    {
+      "parent": "R.6.5",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.6",
+      "obligation": "R.6.5",
+      "exact_obligation": "Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "The count difference contributes a nonnegative cost."
+    },
+    {
+      "parent": "R.6.6",
+      "obligation": "A-R",
+      "exact_obligation": "Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.6",
+      "obligation": "B-CE",
+      "exact_obligation": "Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.7",
+      "obligation": "R.4",
+      "exact_obligation": "ASSUME $0<c<c_{\\rm crit}$. PROVE a unique minimizing positive period and its displayed value.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "This local subproof exports the whole conditional statement."
+    },
+    {
+      "parent": "R.6.7",
+      "obligation": "R.5",
+      "exact_obligation": "If $c\\ge c_{\\rm crit}$, then $c-B(T)\\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "In fact B(T)<ccrit for every finite T, including the price equality case."
+    },
+    {
+      "parent": "R.6.7",
+      "obligation": "R.6.6",
+      "exact_obligation": "The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "K-R verifies the source explicitly takes expectation before limsup. The schedule-independent remainder vanishes after division by R."
+    },
+    {
+      "parent": "R.6.7",
+      "obligation": "D-refresh",
+      "exact_obligation": "$\\gamma_m=2\\lambda_m$, $A_m=w_m\\Delta_m e^{-\\gamma_m\\delta}$, $B(T)=\\sum_m A_m(1-e^{-\\gamma_mT})/\\gamma_m$, and $C(T)=J_L^{\\rm tot}+[c-B(T)]/T$.",
+      "scope": "Global contract or background",
+      "route_kind": "primary AND",
+      "support_checked": "Frozen background; applicability checked locally."
+    },
+    {
+      "parent": "R.6.8",
+      "obligation": "R.6.6",
+      "exact_obligation": "The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "K-R verifies the source explicitly takes expectation before limsup. The schedule-independent remainder vanishes after division by R."
+    },
+    {
+      "parent": "R.6.8",
+      "obligation": "R.6.7",
+      "exact_obligation": "Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound.",
+      "scope": "R.6",
+      "route_kind": "primary AND",
+      "support_checked": "Transient latency is finite; periodic time averaging gives (29). Both candidates are admissible."
+    },
+    {
+      "parent": "R.7",
+      "obligation": "R.4",
+      "exact_obligation": "ASSUME $0<c<c_{\\rm crit}$. PROVE a unique minimizing positive period and its displayed value.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "This local subproof exports the whole conditional statement."
+    },
+    {
+      "parent": "R.7",
+      "obligation": "R.5",
+      "exact_obligation": "If $c\\ge c_{\\rm crit}$, then $c-B(T)\\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "In fact B(T)<ccrit for every finite T, including the price equality case."
+    },
+    {
+      "parent": "R.7",
+      "obligation": "R.6",
+      "exact_obligation": "Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "This parent is the all-schedules lower bound and its attainment."
+    },
+    {
+      "parent": "L",
+      "obligation": "L.4",
+      "exact_obligation": "Q.E.D. Necessity, sufficiency, and uniqueness follow.",
+      "scope": "G-L",
+      "route_kind": "primary AND",
+      "support_checked": "A nonzero linear term admits a small improving signed perturbation; a zero linear term leaves a positive remainder."
+    },
+    {
+      "parent": "P",
+      "obligation": "P.10",
+      "exact_obligation": "Q.E.D. All endpoint claims follow.",
+      "scope": "G-P",
+      "route_kind": "primary AND",
+      "support_checked": "Every component of the proposition is included."
+    },
+    {
+      "parent": "D",
+      "obligation": "D.6",
+      "exact_obligation": "Q.E.D.",
+      "scope": "G-D",
+      "route_kind": "primary AND",
+      "support_checked": "Policy, value, strict comparison, and equality case all close."
+    },
+    {
+      "parent": "H",
+      "obligation": "H.3",
+      "exact_obligation": "Q.E.D. The two cases cover every $\\tau\\ge0$.",
+      "scope": "G-H",
+      "route_kind": "primary AND",
+      "support_checked": "Uses the completed case statements, with no reference into their private descendants."
+    },
+    {
+      "parent": "U",
+      "obligation": "U.13",
+      "exact_obligation": "Q.E.D.",
+      "scope": "G-U",
+      "route_kind": "primary AND",
+      "support_checked": "All stated coefficients, posteriors, actions, and cost formulas are accounted for."
+    },
+    {
+      "parent": "C",
+      "obligation": "C.4",
+      "exact_obligation": "Q.E.D. Sum with the positive weights $w_m$.",
+      "scope": "G-C",
+      "route_kind": "primary AND",
+      "support_checked": "The sum is finite; no interchange of an infinite series and a limit is involved."
+    },
+    {
+      "parent": "R",
+      "obligation": "R.7",
+      "exact_obligation": "Q.E.D. Both price regimes and every stated policy class are covered.",
+      "scope": "G-R",
+      "route_kind": "primary AND",
+      "support_checked": "No event-triggered schedule is included in the information-independent schedule class."
+    }
+  ],
+  "root_verdicts": {
+    "L": "FOLLOWS",
+    "P": "FOLLOWS",
+    "D": "FOLLOWS",
+    "H": "FOLLOWS",
+    "U": "FOLLOWS",
+    "C": "FOLLOWS",
+    "R": "FOLLOWS"
+  }
+}

@@ -2,3 +2,6 @@
 *.npz binary
 *.pdf binary
 *.png binary
+
+# Preserve the exact bytes of the archived, hash-identified review package.
+proof-reports/lcss-letter/** -text

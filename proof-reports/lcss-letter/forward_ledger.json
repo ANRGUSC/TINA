@@ -1,0 +1,1614 @@
+{
+  "conversion_sha256": "a599596db88f9006726337403f992a6d8c033239f7c44a940aa86637d8daf165",
+  "overall": "PASS",
+  "steps": [
+    {
+      "id": "L.1",
+      "statement": "For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\\sum_i\\E[w_i((1+\\kappa)u_i-\\kappa\\bar u-X)]$ and a quadratic remainder.",
+      "source": "For feasible $w$",
+      "deps": [
+        "A-L2",
+        "D-loss"
+      ],
+      "check": "K-L: expansion is an identity for square-integrable policies.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-001",
+      "source_lines": [
+        111,
+        111
+      ],
+      "proof": "L",
+      "parent": "L",
+      "goal": "G-L"
+    },
+    {
+      "id": "L.2",
+      "statement": "The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold.",
+      "source": "and vanishes for all",
+      "deps": [
+        "L.1",
+        "B-CE"
+      ],
+      "check": "K-L: conditional expectation converts testing against every local perturbation into a zero conditional residual.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-002",
+      "source_lines": [
+        111,
+        111
+      ],
+      "proof": "L",
+      "parent": "L",
+      "goal": "G-L"
+    },
+    {
+      "id": "L.3",
+      "statement": "The remainder is $n^{-1}\\sum_i\\E[w_i^2]+\\kappa n^{-1}\\sum_i\\E[(w_i-\\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$.",
+      "source": "The remainder is",
+      "deps": [
+        "A-L2",
+        "D-loss"
+      ],
+      "check": "K-L: the first sum is strictly positive and the second nonnegative.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-003",
+      "source_lines": [
+        111,
+        111
+      ],
+      "proof": "L",
+      "parent": "L",
+      "goal": "G-L"
+    },
+    {
+      "id": "L.4",
+      "statement": "Q.E.D. Necessity, sufficiency, and uniqueness follow.",
+      "source": "proving necessity",
+      "deps": [
+        "L.1",
+        "L.2",
+        "L.3"
+      ],
+      "check": "A nonzero linear term admits a small improving signed perturbation; a zero linear term leaves a positive remainder.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-004",
+      "source_lines": [
+        111,
+        112
+      ],
+      "proof": "L",
+      "parent": "L",
+      "goal": "G-L"
+    },
+    {
+      "id": "P.1",
+      "statement": "$X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\\le t$, so it is independent of the local history.",
+      "source": "For any",
+      "deps": [
+        "A-G",
+        "D-Y",
+        "B-G"
+      ],
+      "check": "K-P: the common exponential factor cancels for every earlier time.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-005",
+      "source_lines": [
+        134,
+        134
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.2",
+      "statement": "Define $\\eta(t)=X(t)-(a/v)\\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process.",
+      "source": "Similarly,",
+      "deps": [
+        "A-G",
+        "D-Y",
+        "B-G"
+      ],
+      "check": "K-P: Cov(bar Y(t),Y_j(r)) = v exp(-lambda |t-r|); this works for past and future r.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-006",
+      "source_lines": [
+        134,
+        138
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.3",
+      "statement": "The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\\bar Y(t)$.",
+      "source": "Computing the residual variances",
+      "deps": [
+        "P.1",
+        "P.2",
+        "B-CE"
+      ],
+      "check": "K-P: subtract the explained variance from a.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-007",
+      "source_lines": [
+        138,
+        140
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.4",
+      "statement": "For the candidate $u_i=kY_i(t)$, $\\E[\\bar u\\mid\\mathcal F_i(t)]=kvY_i(t)/(a+b)$.",
+      "source": "For $u_i=kY_i(t)$",
+      "deps": [
+        "A-G",
+        "D-Y",
+        "B-G"
+      ],
+      "check": "K-P: the same regression residual is orthogonal to the full local history.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-008",
+      "source_lines": [
+        140,
+        142
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.5",
+      "statement": "Equation (5) gives $k[(1+\\kappa)(a+b)-\\kappa v]=a$. The bracket equals $d$, so $k=a/d$.",
+      "source": "Equation~\\eqref{eq:normal}",
+      "deps": [
+        "L",
+        "P.3",
+        "P.4",
+        "D-vd"
+      ],
+      "check": "K-P: d is positive under a,b>0 and kappa>=0.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-009",
+      "source_lines": [
+        142,
+        144
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.6",
+      "statement": "The local loss is $a-2ak+dk^2=a-a^2/d$.",
+      "source": "Its expected loss is",
+      "deps": [
+        "P.5",
+        "D-loss"
+      ],
+      "check": "K-P: E(Y_i^2)=a+b and average expected disagreement of the readings is b(1-1/n).",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-010",
+      "source_lines": [
+        144,
+        144
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.7",
+      "statement": "With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.",
+      "source": "With pooled information",
+      "deps": [
+        "P.3",
+        "B-CE",
+        "D-loss"
+      ],
+      "check": "Each squared tracking error is separately minimized and the nonnegative disagreement term is zero.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-011",
+      "source_lines": [
+        144,
+        144
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.8",
+      "statement": "The displayed feasible policies are optimal by Lemma 1.",
+      "source": "Lemma~\\ref{lem:normal}",
+      "deps": [
+        "L",
+        "P.5",
+        "P.7"
+      ],
+      "check": "The normal equations are satisfied; linearity was a candidate construction, not a restriction on competitors.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-012",
+      "source_lines": [
+        144,
+        144
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.9",
+      "statement": "$d-v=b(1+\\kappa)(1-1/n)>0$ and subtraction yields the formula for $\\Delta$.",
+      "source": "Finally,",
+      "deps": [
+        "A-G",
+        "D-vd",
+        "P.6",
+        "P.7"
+      ],
+      "check": "n>=2, b>0, and kappa>=0 make the strict sign valid.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-013",
+      "source_lines": [
+        144,
+        145
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "P.10",
+      "statement": "Q.E.D. All endpoint claims follow.",
+      "source": "Finally,",
+      "deps": [
+        "P.3",
+        "P.6",
+        "P.7",
+        "P.8",
+        "P.9"
+      ],
+      "check": "Every component of the proposition is included.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "IMPLICIT",
+      "source_id": "SRC-013",
+      "source_lines": [
+        144,
+        145
+      ],
+      "proof": "P",
+      "parent": "P",
+      "goal": "G-P"
+    },
+    {
+      "id": "D.1",
+      "statement": "The Markov property and Proposition 1 give $\\E[X(t)\\mid\\mathcal F(s)]=e^{-\\lambda\\tau}(a/v)\\bar Y(s)$.",
+      "source": "The Markov property",
+      "deps": [
+        "A-G",
+        "P",
+        "B-OU",
+        "B-CE"
+      ],
+      "check": "K-D: the post-s signal innovation is independent of the old sensor history.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-014",
+      "source_lines": [
+        168,
+        169
+      ],
+      "proof": "D",
+      "parent": "D",
+      "goal": "G-D"
+    },
+    {
+      "id": "D.2",
+      "statement": "Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss.",
+      "source": "Taking this common conditional mean",
+      "deps": [
+        "D.1",
+        "D-loss",
+        "B-CE"
+      ],
+      "check": "The lower bound is attained simultaneously for all agents.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-015",
+      "source_lines": [
+        169,
+        169
+      ],
+      "proof": "D",
+      "parent": "D",
+      "goal": "G-D"
+    },
+    {
+      "id": "D.3",
+      "statement": "The error variance is the displayed $J_D(\\tau)$.",
+      "source": "Its error variance",
+      "deps": [
+        "D.1",
+        "D.2",
+        "D-vd"
+      ],
+      "check": "K-D: the explained variance is exp(-2 lambda tau) a^2/v.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-016",
+      "source_lines": [
+        169,
+        169
+      ],
+      "proof": "D",
+      "parent": "D",
+      "goal": "G-D"
+    },
+    {
+      "id": "D.4",
+      "statement": "Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\\lambda\\tau}<v/d$.",
+      "source": "Comparing with",
+      "deps": [
+        "D.3",
+        "P"
+      ],
+      "check": "Both denominators and a^2 are positive.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-017",
+      "source_lines": [
+        169,
+        169
+      ],
+      "proof": "D",
+      "parent": "D",
+      "goal": "G-D"
+    },
+    {
+      "id": "D.5",
+      "statement": "Taking logarithms gives the exact threshold (14), including its equality case.",
+      "source": "which is",
+      "deps": [
+        "D.4",
+        "A-G"
+      ],
+      "check": "K-D: dividing by -2 lambda reverses the inequality.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-018",
+      "source_lines": [
+        169,
+        170
+      ],
+      "proof": "D",
+      "parent": "D",
+      "goal": "G-D"
+    },
+    {
+      "id": "D.6",
+      "statement": "Q.E.D.",
+      "source": "which is",
+      "deps": [
+        "D.1",
+        "D.2",
+        "D.3",
+        "D.5"
+      ],
+      "check": "Policy, value, strict comparison, and equality case all close.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "IMPLICIT",
+      "source_id": "SRC-018",
+      "source_lines": [
+        169,
+        170
+      ],
+      "proof": "D",
+      "parent": "D",
+      "goal": "G-D"
+    },
+    {
+      "id": "H.1",
+      "statement": "CASE $\\tau=0$. The formula is the pooled policy.",
+      "source": "For $\\tau=0$",
+      "deps": [
+        "P"
+      ],
+      "check": "The local correction is zero; the posterior and cost formulas reduce to the pooled endpoints.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-019",
+      "source_lines": [
+        192,
+        192
+      ],
+      "proof": "H",
+      "parent": "H",
+      "goal": "G-H"
+    },
+    {
+      "id": "H.2",
+      "statement": "CASE $\\tau>0$. Prove the remaining claims under this assumption.",
+      "source": "Suppose $\\tau>0$",
+      "deps": [
+        "A-G"
+      ],
+      "check": "All descendants of H.2 have tau>0 in scope. This assumption is discharged at the root Q.E.D.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-020",
+      "source_lines": [
+        192,
+        192
+      ],
+      "proof": "H",
+      "parent": "H",
+      "goal": "G-H"
+    },
+    {
+      "id": "H.2.1",
+      "statement": "Enlarge each information field to $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\\rho Y_i(s)$, $h=a/v$, $k=a/d$.",
+      "source": "and enlarge each agent's information",
+      "deps": [
+        "D-info",
+        "D-vd"
+      ],
+      "check": "This is an enlargement, so its minimum is a lower bound on the hybrid minimum.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-021",
+      "source_lines": [
+        192,
+        196
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.2",
+      "statement": "$Z$ is independent of $\\mathcal F(s)$ and has covariance $(1-\\rho^2)(a\\mathbf1\\mathbf1^\\top+bI)$.",
+      "source": "The Gaussian Markov property",
+      "deps": [
+        "H.2.1",
+        "A-G",
+        "B-OU",
+        "B-G"
+      ],
+      "check": "K-H1: all old-history cross-covariances cancel.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-022",
+      "source_lines": [
+        196,
+        196
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.3",
+      "statement": "$X(t)=\\rho h\\bar Y(s)+h\\bar Z+\\eta(t)$, where $\\eta(t)$ is independent of all sensor data and has variance $P_n$.",
+      "source": "Equation~\\eqref{eq:eta}",
+      "deps": [
+        "H.2.1",
+        "E-eta",
+        "P"
+      ],
+      "check": "This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-023",
+      "source_lines": [
+        196,
+        202
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.4",
+      "statement": "For $s<r\\le t$, define $Z_i(r)=Y_i(r)-e^{-\\lambda(r-s)}Y_i(s)$. Then $\\Cov(\\bar Z,Z_i(r))=[v/(a+b)]\\Cov(Z_i,Z_i(r))$.",
+      "source": "For $s<r\\le t$",
+      "deps": [
+        "H.2.1",
+        "A-G",
+        "D-vd"
+      ],
+      "check": "K-H1 expands the two covariances from (1); the pooled factor v includes the own-sensor contribution.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-024",
+      "source_lines": [
+        202,
+        206
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.5",
+      "statement": "Both covariances have the temporal factor $e^{-\\lambda(t-r)}(1-e^{-2\\lambda(r-s)})$.",
+      "source": "Both covariances share",
+      "deps": [
+        "H.2.4",
+        "A-G"
+      ],
+      "check": "K-H1 computes the factor for every intermediate time, including r=t.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-025",
+      "source_lines": [
+        206,
+        206
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.6",
+      "statement": "$\\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\\mathcal F(s)$.",
+      "source": "Thus $\\bar Z-",
+      "deps": [
+        "H.2.2",
+        "H.2.4",
+        "H.2.5"
+      ],
+      "check": "K-H2 checks every generator of the enlarged information field. The whole innovation path is independent of the old history.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-026",
+      "source_lines": [
+        206,
+        206
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.7",
+      "statement": "Gaussianity gives $\\E[\\bar Z\\mid\\mathcal G_i]=vZ_i/(a+b)$.",
+      "source": "Gaussianity gives",
+      "deps": [
+        "H.2.1",
+        "H.2.6",
+        "B-G",
+        "B-CE"
+      ],
+      "check": "K-H2: the regression residual is independent of the generated sigma-field and the proposed predictor is measurable in it.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-027",
+      "source_lines": [
+        206,
+        206
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.8",
+      "statement": "Independence of $\\eta(t)$ gives $\\E[h\\bar Z+\\eta(t)\\mid\\mathcal G_i]=aZ_i/(a+b)$ and $\\E[k\\bar Z\\mid\\mathcal G_i]=kvZ_i/(a+b)$.",
+      "source": "Since $\\eta(t)$",
+      "deps": [
+        "H.2.3",
+        "H.2.7",
+        "B-CE"
+      ],
+      "check": "K-H2: h v=a, eta is centered and independent of all observations, and k is deterministic.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-028",
+      "source_lines": [
+        206,
+        211
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.9",
+      "statement": "Subtract the common prediction. Since $(1+\\kappa)(a+b)-\\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality.",
+      "source": "Subtract the common prediction",
+      "deps": [
+        "H.2.1",
+        "H.2.3",
+        "H.2.8",
+        "D-vd",
+        "L"
+      ],
+      "check": "K-H3 substitutes the full-history conditional means directly in the normal equation. All admissible nonlinear history-dependent competitors are covered.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-029",
+      "source_lines": [
+        211,
+        211
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.10",
+      "statement": "The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing.",
+      "source": "The policy \\eqref{eq:hybridpolicy}",
+      "deps": [
+        "H.2.1",
+        "H.2.9",
+        "D-info"
+      ],
+      "check": "The policy only uses the current and retained own readings and the old pooled scalar. Feasibility gives equality of the two optimal values.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-030",
+      "source_lines": [
+        211,
+        213
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.11",
+      "statement": "The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\\rho^2$. Thus $J_H=P_n+(1-\\rho^2)(J_L-P_n)$.",
+      "source": "At one time,",
+      "deps": [
+        "H.2.2",
+        "H.2.3",
+        "H.2.9",
+        "P"
+      ],
+      "check": "K-H4 scales the sensor-dependent quadratic cost and retains the independent residual variance.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-031",
+      "source_lines": [
+        213,
+        213
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.12",
+      "statement": "The enlarged-information posterior mean is $\\rho h\\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\\rho^2)(P_1-P_n)$.",
+      "source": "The posterior mean under the enlarged information",
+      "deps": [
+        "H.2.2",
+        "H.2.3",
+        "H.2.8",
+        "P",
+        "B-CE"
+      ],
+      "check": "K-H4 computes the posterior variance and checks that the same conditional mean is measurable in the smaller hybrid field.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-032",
+      "source_lines": [
+        213,
+        213
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.13",
+      "statement": "Subtracting the cost from $J_L$ yields $\\Delta e^{-2\\lambda\\tau}$.",
+      "source": "Equation~\\eqref{eq:exponential}",
+      "deps": [
+        "H.2.11",
+        "P"
+      ],
+      "check": "The interpolation gives rho^2 Delta, with rho^2=exp(-2 lambda tau).",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-033",
+      "source_lines": [
+        213,
+        214
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.2.14",
+      "statement": "Q.E.D. The positive-age branch is established.",
+      "source": "Equation~\\eqref{eq:exponential}",
+      "deps": [
+        "H.2.10",
+        "H.2.11",
+        "H.2.12",
+        "H.2.13"
+      ],
+      "check": "Exports the theorem under tau>0.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "IMPLICIT",
+      "source_id": "SRC-033",
+      "source_lines": [
+        213,
+        214
+      ],
+      "proof": "H",
+      "parent": "H.2",
+      "goal": "H.2"
+    },
+    {
+      "id": "H.3",
+      "statement": "Q.E.D. The two cases cover every $\\tau\\ge0$.",
+      "source": "Equation~\\eqref{eq:exponential}",
+      "deps": [
+        "H.1",
+        "H.2",
+        "A-G"
+      ],
+      "check": "Uses the completed case statements, with no reference into their private descendants.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "IMPLICIT",
+      "source_id": "SRC-033",
+      "source_lines": [
+        213,
+        214
+      ],
+      "proof": "H",
+      "parent": "H",
+      "goal": "G-H"
+    },
+    {
+      "id": "U.1",
+      "statement": "Substitution into (5) gives $C_i k_i-\\kappa a\\bar k=a$, where $\\bar k=n^{-1}\\sum_i k_i$.",
+      "source": "Substitution of",
+      "deps": [
+        "L",
+        "A-U",
+        "B-G"
+      ],
+      "check": "K-U: the cross-agent covariance is a and the own variance a+b_i; local histories have the same scalar temporal factor.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-034",
+      "source_lines": [
+        245,
+        245
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.2",
+      "statement": "Averaging $k_i=(a+\\kappa a\\bar k)/C_i$ yields the displayed coefficients.",
+      "source": "Averaging $k_i=",
+      "deps": [
+        "U.1",
+        "A-U"
+      ],
+      "check": "K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-035",
+      "source_lines": [
+        245,
+        245
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.3",
+      "statement": "The denominator is positive because $C_i>(1+\\kappa)a$.",
+      "source": "The denominator is positive",
+      "deps": [
+        "A-U"
+      ],
+      "check": "kappa a theta<kappa/(1+kappa)<1, with kappa=0 handled directly.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-036",
+      "source_lines": [
+        245,
+        245
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.4",
+      "statement": "Lemma 1 certifies optimality of the local policy.",
+      "source": "Lemma~\\ref{lem:normal} then",
+      "deps": [
+        "U.1",
+        "U.2",
+        "U.3",
+        "L"
+      ],
+      "check": "The feasible candidate satisfies the conditional equations under the full local histories, so nonlinear competitors are covered.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-037",
+      "source_lines": [
+        245,
+        245
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.5",
+      "statement": "The quadratic term equals $a\\bar k$, so $J_L=a-a\\bar k$.",
+      "source": "The quadratic term equals",
+      "deps": [
+        "U.1",
+        "U.2",
+        "U.4",
+        "D-loss"
+      ],
+      "check": "K-U: multiply each normal equation by k_i and average.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-038",
+      "source_lines": [
+        245,
+        245
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.6",
+      "statement": "Gaussian conditioning gives $P$ and $\\mu_P$.",
+      "source": "Gaussian conditioning gives",
+      "deps": [
+        "A-U",
+        "B-G"
+      ],
+      "check": "K-U verifies the weighted residual is orthogonal to every sensor.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-039",
+      "source_lines": [
+        245,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.7",
+      "statement": "$X(t)-\\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor.",
+      "source": "The residual $X(t)-",
+      "deps": [
+        "U.6",
+        "A-U",
+        "B-G"
+      ],
+      "check": "The zero same-time cross-covariances remain zero after multiplication by the common temporal factor.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-040",
+      "source_lines": [
+        247,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.8",
+      "statement": "Innovations have covariance $(1-\\rho^2)\\Sigma$, where $\\Sigma=a\\mathbf1\\mathbf1^\\top+\\operatorname{diag}(b_i)$.",
+      "source": "Innovations over",
+      "deps": [
+        "A-U",
+        "B-OU"
+      ],
+      "check": "The OU innovation calculation applies entry by entry.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-041",
+      "source_lines": [
+        247,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.9",
+      "statement": "For $\\mathcal G_i=\\mathcal F(s)\\vee\\mathcal F_i(t)$, the covariance argument in (21) gives $\\E[Z_j\\mid\\mathcal G_i]=\\Sigma_{ji}Z_i/\\Sigma_{ii}$.",
+      "source": "For $\\mathcal G_i=",
+      "deps": [
+        "U.8",
+        "A-U",
+        "B-G",
+        "B-OU"
+      ],
+      "check": "K-U repeats the source covariance argument with Sigma; it treats j=i separately through Sigma_ii=a+b_i. All conditional predictors are measurable and denominators positive.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-042",
+      "source_lines": [
+        247,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.10",
+      "statement": "After subtracting $\\rho\\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$.",
+      "source": "After subtracting",
+      "deps": [
+        "U.6",
+        "U.7",
+        "U.8",
+        "U.9",
+        "B-CE"
+      ],
+      "check": "K-U uses P(a sum_j 1/b_j+1)=a to compute the residual target projection.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-043",
+      "source_lines": [
+        247,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.11",
+      "statement": "The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal.",
+      "source": "The residual normal equations",
+      "deps": [
+        "U.1",
+        "U.2",
+        "U.4",
+        "U.9",
+        "U.10",
+        "L"
+      ],
+      "check": "K-U substitutes the full-history conditional mean of the weighted action average and verifies the normal equations directly.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-044",
+      "source_lines": [
+        247,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.12",
+      "statement": "Scaling the remaining quadratic cost by $1-\\rho^2$ gives $J_H=\\rho^2J_P+(1-\\rho^2)J_L$.",
+      "source": "Scaling the remaining",
+      "deps": [
+        "U.5",
+        "U.6",
+        "U.7",
+        "U.8",
+        "U.11",
+        "D-loss"
+      ],
+      "check": "K-U keeps the residual variance P fixed, scales only the sensor-dependent quadratic term, and checks feasibility in the weighted-summary hybrid.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-045",
+      "source_lines": [
+        247,
+        247
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "U.13",
+      "statement": "Q.E.D.",
+      "source": "gives the stated cost law",
+      "deps": [
+        "U.2",
+        "U.3",
+        "U.4",
+        "U.5",
+        "U.6",
+        "U.11",
+        "U.12"
+      ],
+      "check": "All stated coefficients, posteriors, actions, and cost formulas are accounted for.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-046",
+      "source_lines": [
+        247,
+        248
+      ],
+      "proof": "U",
+      "parent": "U",
+      "goal": "G-U"
+    },
+    {
+      "id": "C.1",
+      "statement": "Other components are independent of component $m$ and its observations.",
+      "source": "For component $m$",
+      "deps": [
+        "A-C"
+      ],
+      "check": "This is independence of complete component processes, not just same-time uncorrelatedness.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-047",
+      "source_lines": [
+        260,
+        260
+      ],
+      "proof": "C",
+      "parent": "C",
+      "goal": "G-C"
+    },
+    {
+      "id": "C.2",
+      "statement": "Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss.",
+      "source": "Averaging a policy",
+      "deps": [
+        "C.1",
+        "B-J",
+        "D-loss",
+        "A-L2"
+      ],
+      "check": "K-C: integrate the joint extraneous component data; each averaged action still depends only on that agent's component-m information.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-048",
+      "source_lines": [
+        260,
+        260
+      ],
+      "proof": "C",
+      "parent": "C",
+      "goal": "G-C"
+    },
+    {
+      "id": "C.3",
+      "statement": "Optimization separates across components. Apply Theorem 1 to each.",
+      "source": "Optimization therefore",
+      "deps": [
+        "C.2",
+        "H",
+        "A-C"
+      ],
+      "check": "An additive lower bound is attained by the collection of componentwise optimal policies.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-049",
+      "source_lines": [
+        260,
+        260
+      ],
+      "proof": "C",
+      "parent": "C",
+      "goal": "G-C"
+    },
+    {
+      "id": "C.4",
+      "statement": "Q.E.D. Sum with the positive weights $w_m$.",
+      "source": "and sum with weights",
+      "deps": [
+        "C.3",
+        "A-C"
+      ],
+      "check": "The sum is finite; no interchange of an infinite series and a limit is involved.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-050",
+      "source_lines": [
+        260,
+        261
+      ],
+      "proof": "C",
+      "parent": "C",
+      "goal": "G-C"
+    },
+    {
+      "id": "R.1",
+      "statement": "Define $V_\\delta(T)=B^{\\prime}(T)=\\sum_m A_m e^{-\\gamma_mT}$.",
+      "source": "Put $V_\\delta(T)",
+      "deps": [
+        "A-R",
+        "D-refresh"
+      ],
+      "check": "All sums are finite and all amplitudes and rates positive.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-051",
+      "source_lines": [
+        300,
+        300
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    },
+    {
+      "id": "R.2",
+      "statement": "Differentiate (29): $C^{\\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\\delta(T)$.",
+      "source": "Differentiating",
+      "deps": [
+        "R.1",
+        "D-refresh",
+        "B-calc"
+      ],
+      "check": "K-R: the quotient rule gives the numerator with this sign.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-052",
+      "source_lines": [
+        300,
+        304
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    },
+    {
+      "id": "R.3",
+      "statement": "$H^{\\prime}(T)=-TV_\\delta^{\\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\\rm crit}$.",
+      "source": "Since $H",
+      "deps": [
+        "R.1",
+        "R.2",
+        "A-R",
+        "B-calc"
+      ],
+      "check": "K-R: T exp(-gamma T) tends to zero for gamma>0.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-053",
+      "source_lines": [
+        304,
+        304
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    },
+    {
+      "id": "R.4",
+      "statement": "ASSUME $0<c<c_{\\rm crit}$. PROVE a unique minimizing positive period and its displayed value.",
+      "source": "For $0<c<c_",
+      "deps": [
+        "A-R"
+      ],
+      "check": "This local subproof exports the whole conditional statement.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-054",
+      "source_lines": [
+        304,
+        304
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    },
+    {
+      "id": "R.4.1",
+      "statement": "There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.",
+      "source": "For $0<c<c_",
+      "deps": [
+        "R.2",
+        "R.3",
+        "B-calc"
+      ],
+      "check": "Continuity, strict monotonicity, and the endpoint limits establish existence before the root is used.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-054",
+      "source_lines": [
+        304,
+        304
+      ],
+      "proof": "R",
+      "parent": "R.4",
+      "goal": "R.4"
+    },
+    {
+      "id": "R.4.2",
+      "statement": "$C(T)\\to\\infty$ as $T\\downarrow0$ and $C(T)\\to J_L^{\\rm tot}$ as $T\\to\\infty$, proving the unique global periodic minimum.",
+      "source": "Also, $C(T)",
+      "deps": [
+        "R.4.1",
+        "D-refresh",
+        "A-R"
+      ],
+      "check": "c>0 gives divergence at zero; B is bounded at infinity.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-055",
+      "source_lines": [
+        304,
+        304
+      ],
+      "proof": "R",
+      "parent": "R.4",
+      "goal": "R.4"
+    },
+    {
+      "id": "R.4.3",
+      "statement": "At the root, $c-B(T^*)=-T^*V_\\delta(T^*)$, giving the optimal-cost formula.",
+      "source": "At the root,",
+      "deps": [
+        "R.4.1",
+        "D-refresh"
+      ],
+      "check": "Tstar>0 licenses division.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-056",
+      "source_lines": [
+        304,
+        304
+      ],
+      "proof": "R",
+      "parent": "R.4",
+      "goal": "R.4"
+    },
+    {
+      "id": "R.4.4",
+      "statement": "Q.E.D. The below-threshold periodic claims hold.",
+      "source": "proving \\eqref{eq:optimalcost}",
+      "deps": [
+        "R.4.1",
+        "R.4.2",
+        "R.4.3"
+      ],
+      "check": "The root and its defining assumptions remain local to R.4; the conditional conclusion is exported.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-057",
+      "source_lines": [
+        304,
+        304
+      ],
+      "proof": "R",
+      "parent": "R.4",
+      "goal": "R.4"
+    },
+    {
+      "id": "R.5",
+      "statement": "If $c\\ge c_{\\rm crit}$, then $c-B(T)\\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing.",
+      "source": "If $c\\ge c_",
+      "deps": [
+        "A-R",
+        "D-refresh"
+      ],
+      "check": "In fact B(T)<ccrit for every finite T, including the price equality case.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-058",
+      "source_lines": [
+        304,
+        306
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    },
+    {
+      "id": "R.6",
+      "statement": "Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound.",
+      "source": "To compare general schedules",
+      "deps": [
+        "A-R"
+      ],
+      "check": "This parent is the all-schedules lower bound and its attainment.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-059",
+      "source_lines": [
+        306,
+        306
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    },
+    {
+      "id": "R.6.1",
+      "statement": "Define $g=\\min\\{0,\\inf_{T>0}(c-B(T))/T\\}$ and condition on a realization of the reception schedule.",
+      "source": "set $g=",
+      "deps": [
+        "A-R",
+        "D-refresh"
+      ],
+      "check": "g is finite and nonpositive. Independence leaves the conditional sensor-process law unchanged.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-060",
+      "source_lines": [
+        306,
+        306
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.2",
+      "statement": "Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price.",
+      "source": "Each complete reception interval",
+      "deps": [
+        "R.6.1",
+        "C",
+        "D-refresh"
+      ],
+      "check": "K-R: integrate the exact conditional age gain, yielding c-B(T_j).",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-061",
+      "source_lines": [
+        306,
+        306
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.3",
+      "statement": "The last incomplete interval contributes at least $-c_{\\rm crit}$, and the initial interval before the first reception has zero gain.",
+      "source": "The last incomplete interval",
+      "deps": [
+        "D-refresh",
+        "A-R"
+      ],
+      "check": "B(L)<=ccrit uniformly in the final interval length L; the source starts without a shared update.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-062",
+      "source_lines": [
+        306,
+        306
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.4",
+      "statement": "Because $g\\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\\rm tot}+g)-c_{\\rm crit}$.",
+      "source": "Because $g\\le0$",
+      "deps": [
+        "R.6.1",
+        "R.6.2",
+        "R.6.3"
+      ],
+      "check": "K-R shows the complete intervals occupy at most R, so multiplication by g reverses the length comparison.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-063",
+      "source_lines": [
+        306,
+        310
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.5",
+      "statement": "Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages.",
+      "source": "Charging transmissions at generation",
+      "deps": [
+        "R.6.4",
+        "A-R"
+      ],
+      "check": "The count difference contributes a nonnegative cost.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-064",
+      "source_lines": [
+        310,
+        310
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.6",
+      "statement": "The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound.",
+      "source": "The bound is uniform",
+      "deps": [
+        "R.6.5",
+        "A-R",
+        "B-CE"
+      ],
+      "check": "K-R verifies the source explicitly takes expectation before limsup. The schedule-independent remainder vanishes after division by R.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-065",
+      "source_lines": [
+        310,
+        310
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.7",
+      "statement": "Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound.",
+      "source": "Periodic operation at",
+      "deps": [
+        "R.4",
+        "R.5",
+        "R.6.6",
+        "D-refresh"
+      ],
+      "check": "Transient latency is finite; periodic time averaging gives (29). Both candidates are admissible.",
+      "status": "OK",
+      "kind": "NORMALIZED",
+      "support": "EXPLICIT",
+      "source_id": "SRC-066",
+      "source_lines": [
+        310,
+        310
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.6.8",
+      "statement": "Q.E.D. The all-schedules optimum is attained by the stated candidates.",
+      "source": "attains it.",
+      "deps": [
+        "R.6.6",
+        "R.6.7"
+      ],
+      "check": "Exports the lower bound and matching construction.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "EXPLICIT",
+      "source_id": "SRC-067",
+      "source_lines": [
+        310,
+        311
+      ],
+      "proof": "R",
+      "parent": "R.6",
+      "goal": "R.6"
+    },
+    {
+      "id": "R.7",
+      "statement": "Q.E.D. Both price regimes and every stated policy class are covered.",
+      "source": "attains it.",
+      "deps": [
+        "R.4",
+        "R.5",
+        "R.6"
+      ],
+      "check": "No event-triggered schedule is included in the information-independent schedule class.",
+      "status": "OK",
+      "kind": "STRUCTURAL",
+      "support": "IMPLICIT",
+      "source_id": "SRC-067",
+      "source_lines": [
+        310,
+        311
+      ],
+      "proof": "R",
+      "parent": "R",
+      "goal": "G-R"
+    }
+  ],
+  "minor_steps": [],
+  "unresolved_validity_obligations": []
+}

@@ -1,6 +1,16 @@
 # Too Late to Coordinate: When Local Information Beats Global Sharing
 
-## Files
+## Supplementary proof review
+
+The [Lamport review](../../proof-reports/lcss-letter/README.md) includes the
+[44-page report PDF](../../proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.pdf),
+[standalone LaTeX source](../../proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.tex),
+audit records, and the exact reviewed manuscript with recorded hashes.
+The current submission differs from that snapshot only by three 7-point
+vertical-spacing adjustments for table and figure margins. Mathematical content
+is unchanged. The review is model-assisted, not a proof-assistant certificate.
+
+## Manuscript files
 
 - `main.tex`: complete manuscript, including all proofs and bibliography.
 - `main.pdf`: six-page compiled manuscript.

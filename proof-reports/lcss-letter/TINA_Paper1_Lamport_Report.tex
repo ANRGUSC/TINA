@@ -1,0 +1,1570 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem,xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{pdflscape}
+\definecolor{ink}{HTML}{173C54}
+\definecolor{lightline}{HTML}{D9E3E8}
+\hypersetup{pdftitle={Lamport Proof Review: Too Late to Coordinate},pdfauthor={Model-assisted mathematical review prepared for Bhaskar Krishnamachari}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\one}{\mathbf1}
+\newcommand{\G}{\mathcal G}
+\newcommand{\F}{\mathcal F}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\iid}{\perp\!\!\!\perp}
+\newenvironment{proofstep}[2]{%
+  \begin{list}{}{\leftmargin=\dimexpr 0.17in*#2\relax%
+  \setlength{\rightmargin}{0pt}\setlength{\topsep}{5pt}\setlength{\parsep}{2pt}}%
+  \item[]\textbf{\textcolor{ink}{#1.}}\ }{\end{list}}
+\newcommand{\calculation}[2]{\subsection{#1: #2}}
+\setlist[itemize]{topsep=4pt,itemsep=2pt,leftmargin=1.35em}
+\setlist[enumerate]{topsep=4pt,itemsep=3pt,leftmargin=1.7em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\setcounter{tocdepth}{1}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{ink}{TINA pooling letter: proof review}}
+\fancyhead[R]{\small September 12, 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{14pt}
+\emergencystretch=2em
+\begin{document}
+\begin{center}
+{\Large\bfseries\textcolor{ink}{Lamport Proof Review}}\\[8pt]
+{\large Too Late to Coordinate:\\
+When Local Information Beats Global Sharing}\\[10pt]
+{\normalsize Review of the six-page letter by Scott Moeller and Bhaskar Krishnamachari}\\[5pt]
+September 12, 2026
+\end{center}
+
+\section*{Main conclusion}
+The seven formal results are supported by the submitted arguments under the stated model. The forward review is \textbf{PASS}. The conclusion-first review is \textbf{FOLLOWS}. No critical, major, or minor proof issue, circular argument, or unresolved validity obligation was identified.
+
+Theorem 1 checks the team optimality equations directly under each agent's full local observation history and the common delayed history. Its central covariance identity gives the required conditional means for every intermediate observation time. The report checks that identity, its unequal-variance counterpart, all endpoint and refresh calculations, and the discrete-time and multirate consequences.
+
+The distinction between the two communication comparisons is important. Fresh local information can outperform a \emph{delayed pool used alone}. A hybrid that retains fresh local observations has strictly positive pooling value at every finite age. The no-refresh threshold for the hybrid concerns its \emph{communication-inclusive average cost}.
+
+The accompanying package is prepared for \url{https://github.com/ANRGUSC/TINA}. The source identifiers below specify the exact manuscript covered by this report.
+
+This report follows the \texttt{convert-lamport}, \texttt{forward-lamport}, and \texttt{reverse-lamport} skills from the \href{https://github.com/WWresearch/lamport-proof}{WWresearch Lamport Proof project}. It is a model-assisted mathematical audit. No Lean, Coq, Isabelle, or other proof kernel was used.
+
+{\small \begin{longtable}{>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.34\linewidth}>{\raggedright\arraybackslash}p{.26\linewidth}>{\raggedright\arraybackslash}p{.20\linewidth}}
+\toprule
+ID & Result & Forward audit & Reverse audit \\
+\midrule\endfirsthead
+\toprule
+ID & Result & Forward audit & Reverse audit \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{L} & Lemma 1: Team optimality & PASS & FOLLOWS \\[3pt]
+\texttt{P} & Proposition 1: Fresh endpoints & PASS & FOLLOWS \\[3pt]
+\texttt{D} & Corollary 1: The delay crossover & PASS & FOLLOWS \\[3pt]
+\texttt{H} & Theorem 1: Hybrid policy and exponential value & PASS & FOLLOWS \\[3pt]
+\texttt{U} & Proposition 2: Unequal sensor quality & PASS & FOLLOWS \\[3pt]
+\texttt{C} & Corollary 2: Additive coordination value & PASS & FOLLOWS \\*[3pt]
+\texttt{R} & Theorem 2: Optimal refresh period & PASS & FOLLOWS \\[3pt]
+\end{longtable}}
+
+\clearpage
+{\small\setlength{\parskip}{0pt}\tableofcontents}
+\clearpage
+
+\part{Source-preserving Lamport conversion}
+\section{Rendering status}
+\textbf{SOURCE-MAPPED.} All seven formal proofs have an auditable rendering. The source inventory partitions their proof text into 67 consecutive segments. The hierarchy contains 73 labeled steps, including case boundaries and closing steps. Each source segment is placed, and each rendered step has a source entry.
+
+\emph{This status concerns source mapping only; it is not a validity verdict.}
+
+The conversion retains the paper's route. The hybrid proof uses information enlargement, Gaussian projection on the full history, and the necessary and sufficient team optimality equations. The refresh proof uses an interval-by-interval lower bound. The detailed calculations in Part II check the operations supplied by the source while keeping their provenance separate from the source rendering.
+
+\section{Frozen source contract}
+Here, ``frozen'' means that the document and assumptions being reviewed are fixed. It prevents a proof from being judged against a silently revised theorem. The target is the current six-page letter in \texttt{source/letter.pdf} and its matching \texttt{source/letter.tex}. The broader arXiv paper is not used to supply missing proof steps. The manuscript itself has not been edited by this review.
+
+\subsection{Model and conventions}
+There are $n\ge2$ agents. Agent $i$ observes $Y_i(t)=X(t)+E_i(t)$. The signal $X$ and the sensor disturbances $E_i$ are independent mean-zero stationary Gaussian processes. In the scalar equal-quality model,
+\[
+\Cov(X(t),X(r))=a e^{-\lambda|t-r|},\qquad
+\Cov(E_i(t),E_i(r))=b e^{-\lambda|t-r|},
+\]
+with $a,b,\lambda>0$. The rate is common to the signal and every disturbance. The expected team loss is
+\begin{equation}
+J(u)=\E\left[\frac1n\sum_i(u_i-X)^2+
+\frac\kappa n\sum_i(u_i-\bar u)^2\right],\qquad
+\bar u=\frac1n\sum_i u_i,\quad\kappa\ge0.
+\tag{A1}
+\end{equation}
+Actions do not affect the signal or observations. Each action must be square-integrable and measurable with respect to its assigned information. All optimality claims therefore include nonlinear and history-dependent policies.
+
+The local history is $\F_i(t)=\sigma\{Y_i(r):r\le t\}$ and the complete history is $\F(t)=\bigvee_i\F_i(t)$. Pooling time $s=t-\tau$ is in the past, so $\tau\ge0$. The hybrid information is
+\[
+\HH_i(t;s)=\F_i(t)\vee\sigma\{\bar Y(r):r\le s\}.
+\]
+These are sigma-fields generated by the indicated observations. Independence of a Gaussian residual from a whole history is checked against every finite subfamily of that history. The generated sigma-field statement follows by the usual extension from cylinder events. It does not assume that a finite numerical grid equals the full history.
+
+The following conventions make the source's notation explicit without adding model restrictions. Agent and component counts are finite positive integers. Ages and latencies are finite nonnegative real numbers. A ``nonzero'' policy perturbation is nonzero as an $L^2$ equivalence class. The long-run cost is the limiting upper average of \emph{expected} accumulated loss and communication cost. The refresh proof starts without a pooled update, as stated by its zero-gain initial interval. A fixed initial summary would change only a bounded transient, not the long-run optimum.
+
+\subsection{Accepted mathematical background and source assumptions}
+The audit uses the elementary rules and named Gaussian, conditional-expectation, and convexity facts that the source invokes. Their precise forms are listed below so that each application has an explicit domain and conclusion. The source identifies Lemma 1 as a specialization of Radner's stationarity condition and supplies its own variational proof, which is checked here. The related-work citations do not supply missing steps in any audited proof.
+
+{\small \begin{longtable}{>{\raggedright\arraybackslash}p{.11\linewidth}>{\raggedright\arraybackslash}p{.79\linewidth}}
+\toprule
+ID & Exact background rule or assumption \\
+\midrule\endfirsthead
+\toprule
+ID & Exact background rule or assumption \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{A-G} & $n\ge2$, $a,b,\lambda>0$, $\kappa\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1). \\[3pt]
+\texttt{A-L2} & Admissible actions and perturbations are measurable with respect to their assigned information and have finite second moment. $X\in L^2$ under (1). \\[3pt]
+\texttt{A-U} & The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\theta$ are those in (23). \\[3pt]
+\texttt{A-C} & A finite number of mutually independent component processes with weights $w_m>0$, componentwise common rates $\lambda_m>0$, and ages $\tau_m\ge0$. \\[3pt]
+\texttt{A-R} & Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state. \\[3pt]
+\texttt{D-loss} & $\ell(u,X)=n^{-1}\sum_i(u_i-X)^2+\kappa n^{-1}\sum_i(u_i-\bar u)^2$ and $\bar u=n^{-1}\sum_i u_i$. \\[3pt]
+\texttt{D-Y} & $Y_i=X+E_i$ and $\bar Y=n^{-1}\sum_iY_i$. \\[3pt]
+\texttt{D-vd} & $v=a+b/n$ and $d=a+b[1+\kappa(1-1/n)]$. \\[3pt]
+\texttt{D-info} & The local, pooled, delayed-only, and hybrid information fields are exactly those in Section II-B of the letter. \\[3pt]
+\texttt{D-refresh} & $\gamma_m=2\lambda_m$, $A_m=w_m\Delta_m e^{-\gamma_m\delta}$, $B(T)=\sum_m A_m(1-e^{-\gamma_mT})/\gamma_m$, and $C(T)=J_L^{\rm tot}+[c-B(T)]/T$. \\[3pt]
+\texttt{B-G} & Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement. \\[3pt]
+\texttt{B-CE} & Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction. \\[3pt]
+\texttt{B-OU} & For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\lambda(t-s)})\Sigma$. Its cross-covariances are computed directly from (1). \\[3pt]
+\texttt{B-J} & Conditional Jensen: $\phi(\E[U\mid\mathcal A])\le\E[\phi(U)\mid\mathcal A]$ for an integrable vector and convex function when the expectations exist. The audit checks information feasibility separately. \\[3pt]
+\texttt{B-calc} & Finite-dimensional real algebra and order, differentiation, integration of exponentials, and the intermediate value theorem for continuous scalar functions, with signs and domains checked at each use. \\*[3pt]
+\texttt{E-eta} & The globally quantified residual statement accompanying source equation (11): $\eta(t)=X(t)-(a/v)\bar Y(t)$ is independent of the entire sensor process and has variance $P_n$. Theorem 1 explicitly cites this source result. Its covariance calculation is checked separately in K-P. \\[3pt]
+\end{longtable}}
+
+\subsection{Scope of earlier results}
+The seven proofs are reviewed as separate theorem units. A later proof cites the public result \texttt{L}, \texttt{P}, or \texttt{H}, rather than a private descendant of a closed Lamport subproof. The globally quantified residual property accompanying source equation (11) is a special explicit source dependency, recorded as \texttt{E-eta}. Theorem 1 cites that equation, and the audit checks its covariance argument independently under the global model. No local case assumption or witness is exported with it.
+
+\subsection{Lemma 1: Team optimality}\label{contract-L}
+For the information fields $\mathcal G_i$, optimize over $u_i\in L^2(\mathcal G_i)$, with $X\in L^2$, $n\ge2$, and $\kappa\ge0$. A feasible $u$ is optimal exactly when
+\[
+(1+\kappa)u_i-\kappa\E[\bar u\mid\mathcal G_i]=\E[X\mid\mathcal G_i]\quad(i=1,\ldots,n).
+\]
+Two optimal feasible policies agree almost surely.
+\noindent Source: letter (3), (5), lines 102--112.
+
+\subsection{Proposition 1: Fresh endpoints}\label{contract-P}
+Under (1)--(3), let $v=a+b/n$ and $d=a+b[1+\kappa(1-1/n)]$. For complete local and pooled histories,
+\[
+P_1=\frac{ab}{a+b},\quad P_n=\frac{ab}{b+na},\quad
+u_i^L=\frac adY_i(t),\quad u_i^P=\frac av\bar Y(t).
+\]
+The optimal losses are $J_L=a-a^2/d$ and $J_P=P_n=a-a^2/v$, and $\Delta=J_L-J_P=a^2(d-v)/(vd)>0$.
+\noindent Source: letter (6)--(11), lines 117--145.
+
+\subsection{Corollary 1: The delay crossover}\label{contract-D}
+Let $\tau\ge0$ and $s=t-\tau$. Every agent has $\mathcal F(s)$ and no post-$s$ measurements. The optimal common action is $u_i^D=e^{-\lambda\tau}(a/v)\bar Y(s)$ and
+\[
+J_D(\tau)=a-\frac{a^2}{v}e^{-2\lambda\tau}.
+\]
+Then $J_L<J_D(\tau)$ exactly when $\tau>(2\lambda)^{-1}\log(d/v)$, with equality at that age.
+\noindent Source: letter (13), (14), lines 155--170.
+
+\subsection{Theorem 1: Hybrid policy and exponential value}\label{contract-H}
+Under (1)--(4), put $\rho=e^{-\lambda\tau}$ and $s=t-\tau$. The unique optimal hybrid action is
+\[
+u_i^H=\rho\frac av\bar Y(s)+\frac ad[Y_i(t)-\rho Y_i(s)].
+\]
+It also attains the optimum with the larger information $\mathcal F(s)\vee\mathcal F_i(t)$. Its posterior variance and team loss satisfy
+\[
+P_H=\rho^2P_n+(1-\rho^2)P_1,\qquad
+J_H=\rho^2J_P+(1-\rho^2)J_L,
+\]
+and $J_L-J_H=\Delta e^{-2\lambda\tau}$.
+\noindent Source: letter (15)--(21), lines 175--214.
+
+\subsection{Proposition 2: Unequal sensor quality}\label{contract-U}
+Replace $b$ by $b_i>0$, retaining independence, stationarity, Gaussianity, and a common temporal rate. Define
+\[
+C_i=(1+\kappa)a+b_i[1+\kappa(1-1/n)],\qquad \theta=n^{-1}\sum_i C_i^{-1}.
+\]
+Then $k_i=a/[C_i(1-\kappa a\theta)]$, $J_L=a-a^2\theta/(1-\kappa a\theta)$,
+\[
+P=(a^{-1}+\sum_i b_i^{-1})^{-1},\quad
+\mu_P(t)=P\sum_iY_i(t)/b_i,\quad J_P=P.
+\]
+The hybrid action is $u_i^H=\rho\mu_P(s)+k_i[Y_i(t)-\rho Y_i(s)]$ and $J_H=\rho^2J_P+(1-\rho^2)J_L$.
+\noindent Source: letter (23)--(25), lines 230--248.
+
+\subsection{Corollary 2: Additive coordination value}\label{contract-C}
+There are finitely many independent components $m=1,\ldots,M$ and positive weights $w_m$. Within component $m$, the signal and all disturbances share $\lambda_m>0$. Each component has a pooled summary of age $\tau_m\ge0$. Then
+\[
+J_L^{\rm tot}-J_H^{\rm tot}=\sum_mw_m\Delta_m e^{-2\lambda_m\tau_m},\qquad
+J_L^{\rm tot}=\sum_mw_mJ_{L,m},
+\]
+and each component uses the corresponding hybrid policy (15).
+\noindent Source: letter (26), lines 252--261.
+
+\subsection{Theorem 2: Optimal refresh period}\label{contract-R}
+Assume fixed finite latency $\delta\ge0$, an exact joint pooled-vector refresh with price $c>0$, and locally finite schedules independent of all signal and disturbance processes. Let $\gamma_m=2\lambda_m$, $A_m=w_m\Delta_m e^{-\gamma_m\delta}>0$,
+\[
+B(T)=\sum_m\frac{A_m}{\gamma_m}(1-e^{-\gamma_mT}),\qquad
+c_{\rm crit}=\sum_mA_m/\gamma_m.
+\]
+For $c\ge c_{\rm crit}$, no refreshing minimizes the limiting upper average cost at $J_L^{\rm tot}$. For $0<c<c_{\rm crit}$, a periodic schedule is optimal among all admissible schedules. Its unique period solves $B(T^*)-T^*B'(T^*)=c$, and its cost is $J_L^{\rm tot}-\sum_m A_m e^{-\gamma_mT^*}$.
+\noindent Source: letter (28)--(33), lines 284--311.
+
+
+\section{Source inventory}
+The source IDs below cover every proof-bearing span of the seven formal proofs in source order. The line numbers refer to the unchanged \texttt{source/letter.tex}. The original text of every span is also stored in \texttt{frozen\_conversion.json}. Several rendered steps may share one source span when a sentence supplies both a mathematical statement and its case or closing structure.
+
+{\footnotesize \begin{longtable}{>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.48\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}}
+\toprule
+Source ID & Lines & Source claim or transition & Placement \\
+\midrule\endfirsthead
+\toprule
+Source ID & Lines & Source claim or transition & Placement \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{SRC-001} & 111--111 & For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\sum_i\E[w_i((1+\kappa)u_i-\kappa\bar u-X)]$ and a quadratic remainder. & \texttt{L.1} \\[3pt]
+\texttt{SRC-002} & 111--111 & The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold. & \texttt{L.2} \\[3pt]
+\texttt{SRC-003} & 111--111 & The remainder is $n^{-1}\sum_i\E[w_i^2]+\kappa n^{-1}\sum_i\E[(w_i-\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$. & \texttt{L.3} \\[3pt]
+\texttt{SRC-004} & 111--112 & Q.E.D. Necessity, sufficiency, and uniqueness follow. & \texttt{L.4} \\[3pt]
+\texttt{SRC-005} & 134--134 & $X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\le t$, so it is independent of the local history. & \texttt{P.1} \\[3pt]
+\texttt{SRC-006} & 134--138 & Define $\eta(t)=X(t)-(a/v)\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process. & \texttt{P.2} \\[3pt]
+\texttt{SRC-007} & 138--140 & The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\bar Y(t)$. & \texttt{P.3} \\[3pt]
+\texttt{SRC-008} & 140--142 & For the candidate $u_i=kY_i(t)$, $\E[\bar u\mid\mathcal F_i(t)]=kvY_i(t)/(a+b)$. & \texttt{P.4} \\[3pt]
+\texttt{SRC-009} & 142--144 & Equation (5) gives $k[(1+\kappa)(a+b)-\kappa v]=a$. The bracket equals $d$, so $k=a/d$. & \texttt{P.5} \\[3pt]
+\texttt{SRC-010} & 144--144 & The local loss is $a-2ak+dk^2=a-a^2/d$. & \texttt{P.6} \\[3pt]
+\texttt{SRC-011} & 144--144 & With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$. & \texttt{P.7} \\[3pt]
+\texttt{SRC-012} & 144--144 & The displayed feasible policies are optimal by Lemma 1. & \texttt{P.8} \\[3pt]
+\texttt{SRC-013} & 144--145 & $d-v=b(1+\kappa)(1-1/n)>0$ and subtraction yields the formula for $\Delta$. & \texttt{P.9}, \texttt{P.10} \\[3pt]
+\texttt{SRC-014} & 168--169 & The Markov property and Proposition 1 give $\E[X(t)\mid\mathcal F(s)]=e^{-\lambda\tau}(a/v)\bar Y(s)$. & \texttt{D.1} \\[3pt]
+\texttt{SRC-015} & 169--169 & Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss. & \texttt{D.2} \\[3pt]
+\texttt{SRC-016} & 169--169 & The error variance is the displayed $J_D(\tau)$. & \texttt{D.3} \\[3pt]
+\texttt{SRC-017} & 169--169 & Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\lambda\tau}<v/d$. & \texttt{D.4} \\[3pt]
+\texttt{SRC-018} & 169--170 & Taking logarithms gives the exact threshold (14), including its equality case. & \texttt{D.5}, \texttt{D.6} \\[3pt]
+\texttt{SRC-019} & 192--192 & CASE $\tau=0$. The formula is the pooled policy. & \texttt{H.1} \\[3pt]
+\texttt{SRC-020} & 192--192 & CASE $\tau>0$. Prove the remaining claims under this assumption. & \texttt{H.2} \\[3pt]
+\texttt{SRC-021} & 192--196 & Enlarge each information field to $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\rho Y_i(s)$, $h=a/v$, $k=a/d$. & \texttt{H.2.1} \\[3pt]
+\texttt{SRC-022} & 196--196 & $Z$ is independent of $\mathcal F(s)$ and has covariance $(1-\rho^2)(a\mathbf1\mathbf1^\top+bI)$. & \texttt{H.2.2} \\[3pt]
+\texttt{SRC-023} & 196--202 & $X(t)=\rho h\bar Y(s)+h\bar Z+\eta(t)$, where $\eta(t)$ is independent of all sensor data and has variance $P_n$. & \texttt{H.2.3} \\[3pt]
+\texttt{SRC-024} & 202--206 & For $s<r\le t$, define $Z_i(r)=Y_i(r)-e^{-\lambda(r-s)}Y_i(s)$. Then $\Cov(\bar Z,Z_i(r))=[v/(a+b)]\Cov(Z_i,Z_i(r))$. & \texttt{H.2.4} \\[3pt]
+\texttt{SRC-025} & 206--206 & Both covariances have the temporal factor $e^{-\lambda(t-r)}(1-e^{-2\lambda(r-s)})$. & \texttt{H.2.5} \\[3pt]
+\texttt{SRC-026} & 206--206 & $\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\mathcal F(s)$. & \texttt{H.2.6} \\[3pt]
+\texttt{SRC-027} & 206--206 & Gaussianity gives $\E[\bar Z\mid\mathcal G_i]=vZ_i/(a+b)$. & \texttt{H.2.7} \\[3pt]
+\texttt{SRC-028} & 206--211 & Independence of $\eta(t)$ gives $\E[h\bar Z+\eta(t)\mid\mathcal G_i]=aZ_i/(a+b)$ and $\E[k\bar Z\mid\mathcal G_i]=kvZ_i/(a+b)$. & \texttt{H.2.8} \\[3pt]
+\texttt{SRC-029} & 211--211 & Subtract the common prediction. Since $(1+\kappa)(a+b)-\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality. & \texttt{H.2.9} \\[3pt]
+\texttt{SRC-030} & 211--213 & The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing. & \texttt{H.2.10} \\[3pt]
+\texttt{SRC-031} & 213--213 & The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\rho^2$. Thus $J_H=P_n+(1-\rho^2)(J_L-P_n)$. & \texttt{H.2.11} \\[3pt]
+\texttt{SRC-032} & 213--213 & The enlarged-information posterior mean is $\rho h\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\rho^2)(P_1-P_n)$. & \texttt{H.2.12} \\[3pt]
+\texttt{SRC-033} & 213--214 & Subtracting the cost from $J_L$ yields $\Delta e^{-2\lambda\tau}$. & \texttt{H.2.13}, \texttt{H.2.14}, \texttt{H.3} \\[3pt]
+\texttt{SRC-034} & 245--245 & Substitution into (5) gives $C_i k_i-\kappa a\bar k=a$, where $\bar k=n^{-1}\sum_i k_i$. & \texttt{U.1} \\[3pt]
+\texttt{SRC-035} & 245--245 & Averaging $k_i=(a+\kappa a\bar k)/C_i$ yields the displayed coefficients. & \texttt{U.2} \\[3pt]
+\texttt{SRC-036} & 245--245 & The denominator is positive because $C_i>(1+\kappa)a$. & \texttt{U.3} \\[3pt]
+\texttt{SRC-037} & 245--245 & Lemma 1 certifies optimality of the local policy. & \texttt{U.4} \\[3pt]
+\texttt{SRC-038} & 245--245 & The quadratic term equals $a\bar k$, so $J_L=a-a\bar k$. & \texttt{U.5} \\[3pt]
+\texttt{SRC-039} & 245--247 & Gaussian conditioning gives $P$ and $\mu_P$. & \texttt{U.6} \\[3pt]
+\texttt{SRC-040} & 247--247 & $X(t)-\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor. & \texttt{U.7} \\[3pt]
+\texttt{SRC-041} & 247--247 & Innovations have covariance $(1-\rho^2)\Sigma$, where $\Sigma=a\mathbf1\mathbf1^\top+\operatorname{diag}(b_i)$. & \texttt{U.8} \\[3pt]
+\texttt{SRC-042} & 247--247 & For $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$, the covariance argument in (21) gives $\E[Z_j\mid\mathcal G_i]=\Sigma_{ji}Z_i/\Sigma_{ii}$. & \texttt{U.9} \\[3pt]
+\texttt{SRC-043} & 247--247 & After subtracting $\rho\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$. & \texttt{U.10} \\[3pt]
+\texttt{SRC-044} & 247--247 & The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal. & \texttt{U.11} \\[3pt]
+\texttt{SRC-045} & 247--247 & Scaling the remaining quadratic cost by $1-\rho^2$ gives $J_H=\rho^2J_P+(1-\rho^2)J_L$. & \texttt{U.12} \\[3pt]
+\texttt{SRC-046} & 247--248 & Q.E.D. & \texttt{U.13} \\[3pt]
+\texttt{SRC-047} & 260--260 & Other components are independent of component $m$ and its observations. & \texttt{C.1} \\[3pt]
+\texttt{SRC-048} & 260--260 & Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss. & \texttt{C.2} \\[3pt]
+\texttt{SRC-049} & 260--260 & Optimization separates across components. Apply Theorem 1 to each. & \texttt{C.3} \\[3pt]
+\texttt{SRC-050} & 260--261 & Q.E.D. Sum with the positive weights $w_m$. & \texttt{C.4} \\[3pt]
+\texttt{SRC-051} & 300--300 & Define $V_\delta(T)=B^{\prime}(T)=\sum_m A_m e^{-\gamma_mT}$. & \texttt{R.1} \\[3pt]
+\texttt{SRC-052} & 300--304 & Differentiate (29): $C^{\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\delta(T)$. & \texttt{R.2} \\[3pt]
+\texttt{SRC-053} & 304--304 & $H^{\prime}(T)=-TV_\delta^{\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\rm crit}$. & \texttt{R.3} \\[3pt]
+\texttt{SRC-054} & 304--304 & ASSUME $0<c<c_{\rm crit}$. PROVE a unique minimizing positive period and its displayed value. & \texttt{R.4}, \texttt{R.4.1} \\[3pt]
+\texttt{SRC-055} & 304--304 & $C(T)\to\infty$ as $T\downarrow0$ and $C(T)\to J_L^{\rm tot}$ as $T\to\infty$, proving the unique global periodic minimum. & \texttt{R.4.2} \\[3pt]
+\texttt{SRC-056} & 304--304 & At the root, $c-B(T^*)=-T^*V_\delta(T^*)$, giving the optimal-cost formula. & \texttt{R.4.3} \\[3pt]
+\texttt{SRC-057} & 304--304 & Q.E.D. The below-threshold periodic claims hold. & \texttt{R.4.4} \\[3pt]
+\texttt{SRC-058} & 304--306 & If $c\ge c_{\rm crit}$, then $c-B(T)\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing. & \texttt{R.5} \\[3pt]
+\texttt{SRC-059} & 306--306 & Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound. & \texttt{R.6} \\[3pt]
+\texttt{SRC-060} & 306--306 & Define $g=\min\{0,\inf_{T>0}(c-B(T))/T\}$ and condition on a realization of the reception schedule. & \texttt{R.6.1} \\[3pt]
+\texttt{SRC-061} & 306--306 & Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price. & \texttt{R.6.2} \\[3pt]
+\texttt{SRC-062} & 306--306 & The last incomplete interval contributes at least $-c_{\rm crit}$, and the initial interval before the first reception has zero gain. & \texttt{R.6.3} \\[3pt]
+\texttt{SRC-063} & 306--310 & Because $g\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\rm tot}+g)-c_{\rm crit}$. & \texttt{R.6.4} \\[3pt]
+\texttt{SRC-064} & 310--310 & Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages. & \texttt{R.6.5} \\[3pt]
+\texttt{SRC-065} & 310--310 & The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound. & \texttt{R.6.6} \\[3pt]
+\texttt{SRC-066} & 310--310 & Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound. & \texttt{R.6.7} \\*[3pt]
+\texttt{SRC-067} & 310--311 & Q.E.D. The all-schedules optimum is attained by the stated candidates. & \texttt{R.6.8}, \texttt{R.7} \\[3pt]
+\end{longtable}}
+
+\section{Lamport-style rendering}
+Each capital-letter prefix identifies a theorem unit. Decimal labels indicate nesting. For example, \texttt{H.2.7} lies inside the positive-age case \texttt{H.2}. Only a completed parent statement is available after its subproof closes. Each source-support label records what the source supplies; it is not a validity assessment.
+
+\subsection{Lemma 1: Team optimality}
+\begin{proofstep}{L.1}{0}
+For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\sum_i\E[w_i((1+\kappa)u_i-\kappa\bar u-X)]$ and a quadratic remainder.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-001}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{L.2}{0}
+The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-002}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{L.3}{0}
+The remainder is $n^{-1}\sum_i\E[w_i^2]+\kappa n^{-1}\sum_i\E[(w_i-\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-003}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{L.4}{0}
+Q.E.D. Necessity, sufficiency, and uniqueness follow.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-004}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\subsection{Proposition 1: Fresh endpoints}
+\begin{proofstep}{P.1}{0}
+$X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\le t$, so it is independent of the local history.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-005}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.2}{0}
+Define $\eta(t)=X(t)-(a/v)\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-006}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.3}{0}
+The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\bar Y(t)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-007}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.4}{0}
+For the candidate $u_i=kY_i(t)$, $\E[\bar u\mid\mathcal F_i(t)]=kvY_i(t)/(a+b)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-008}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.5}{0}
+Equation (5) gives $k[(1+\kappa)(a+b)-\kappa v]=a$. The bracket equals $d$, so $k=a/d$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-009}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.6}{0}
+The local loss is $a-2ak+dk^2=a-a^2/d$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-010}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.7}{0}
+With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-011}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.8}{0}
+The displayed feasible policies are optimal by Lemma 1.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-012}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.9}{0}
+$d-v=b(1+\kappa)(1-1/n)>0$ and subtraction yields the formula for $\Delta$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-013}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{P.10}{0}
+Q.E.D. All endpoint claims follow.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-013}. Support recorded in source: IMPLICIT.}
+\end{proofstep}
+\subsection{Corollary 1: The delay crossover}
+\begin{proofstep}{D.1}{0}
+The Markov property and Proposition 1 give $\E[X(t)\mid\mathcal F(s)]=e^{-\lambda\tau}(a/v)\bar Y(s)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-014}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{D.2}{0}
+Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-015}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{D.3}{0}
+The error variance is the displayed $J_D(\tau)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-016}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{D.4}{0}
+Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\lambda\tau}<v/d$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-017}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{D.5}{0}
+Taking logarithms gives the exact threshold (14), including its equality case.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-018}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{D.6}{0}
+Q.E.D.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-018}. Support recorded in source: IMPLICIT.}
+\end{proofstep}
+\subsection{Theorem 1: Hybrid policy and exponential value}
+\begin{proofstep}{H.1}{0}
+CASE $\tau=0$. The formula is the pooled policy.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-019}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2}{0}
+CASE $\tau>0$. Prove the remaining claims under this assumption.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-020}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.1}{1}
+Enlarge each information field to $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\rho Y_i(s)$, $h=a/v$, $k=a/d$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-021}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.2}{1}
+$Z$ is independent of $\mathcal F(s)$ and has covariance $(1-\rho^2)(a\mathbf1\mathbf1^\top+bI)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-022}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.3}{1}
+$X(t)=\rho h\bar Y(s)+h\bar Z+\eta(t)$, where $\eta(t)$ is independent of all sensor data and has variance $P_n$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-023}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.4}{1}
+For $s<r\le t$, define $Z_i(r)=Y_i(r)-e^{-\lambda(r-s)}Y_i(s)$. Then $\Cov(\bar Z,Z_i(r))=[v/(a+b)]\Cov(Z_i,Z_i(r))$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-024}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.5}{1}
+Both covariances have the temporal factor $e^{-\lambda(t-r)}(1-e^{-2\lambda(r-s)})$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-025}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.6}{1}
+$\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\mathcal F(s)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-026}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.7}{1}
+Gaussianity gives $\E[\bar Z\mid\mathcal G_i]=vZ_i/(a+b)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-027}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.8}{1}
+Independence of $\eta(t)$ gives $\E[h\bar Z+\eta(t)\mid\mathcal G_i]=aZ_i/(a+b)$ and $\E[k\bar Z\mid\mathcal G_i]=kvZ_i/(a+b)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-028}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.9}{1}
+Subtract the common prediction. Since $(1+\kappa)(a+b)-\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-029}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.10}{1}
+The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-030}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.11}{1}
+The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\rho^2$. Thus $J_H=P_n+(1-\rho^2)(J_L-P_n)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-031}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.12}{1}
+The enlarged-information posterior mean is $\rho h\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\rho^2)(P_1-P_n)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-032}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.13}{1}
+Subtracting the cost from $J_L$ yields $\Delta e^{-2\lambda\tau}$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-033}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.2.14}{1}
+Q.E.D. The positive-age branch is established.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-033}. Support recorded in source: IMPLICIT.}
+\end{proofstep}
+\begin{proofstep}{H.3}{0}
+Q.E.D. The two cases cover every $\tau\ge0$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-033}. Support recorded in source: IMPLICIT.}
+\end{proofstep}
+\subsection{Proposition 2: Unequal sensor quality}
+\begin{proofstep}{U.1}{0}
+Substitution into (5) gives $C_i k_i-\kappa a\bar k=a$, where $\bar k=n^{-1}\sum_i k_i$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-034}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.2}{0}
+Averaging $k_i=(a+\kappa a\bar k)/C_i$ yields the displayed coefficients.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-035}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.3}{0}
+The denominator is positive because $C_i>(1+\kappa)a$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-036}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.4}{0}
+Lemma 1 certifies optimality of the local policy.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-037}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.5}{0}
+The quadratic term equals $a\bar k$, so $J_L=a-a\bar k$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-038}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.6}{0}
+Gaussian conditioning gives $P$ and $\mu_P$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-039}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.7}{0}
+$X(t)-\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-040}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.8}{0}
+Innovations have covariance $(1-\rho^2)\Sigma$, where $\Sigma=a\mathbf1\mathbf1^\top+\operatorname{diag}(b_i)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-041}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.9}{0}
+For $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$, the covariance argument in (21) gives $\E[Z_j\mid\mathcal G_i]=\Sigma_{ji}Z_i/\Sigma_{ii}$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-042}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.10}{0}
+After subtracting $\rho\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-043}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.11}{0}
+The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-044}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.12}{0}
+Scaling the remaining quadratic cost by $1-\rho^2$ gives $J_H=\rho^2J_P+(1-\rho^2)J_L$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-045}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{U.13}{0}
+Q.E.D.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-046}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\subsection{Corollary 2: Additive coordination value}
+\begin{proofstep}{C.1}{0}
+Other components are independent of component $m$ and its observations.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-047}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{C.2}{0}
+Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-048}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{C.3}{0}
+Optimization separates across components. Apply Theorem 1 to each.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-049}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{C.4}{0}
+Q.E.D. Sum with the positive weights $w_m$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-050}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\subsection{Theorem 2: Optimal refresh period}
+\begin{proofstep}{R.1}{0}
+Define $V_\delta(T)=B^{\prime}(T)=\sum_m A_m e^{-\gamma_mT}$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-051}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.2}{0}
+Differentiate (29): $C^{\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\delta(T)$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-052}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.3}{0}
+$H^{\prime}(T)=-TV_\delta^{\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\rm crit}$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-053}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.4}{0}
+ASSUME $0<c<c_{\rm crit}$. PROVE a unique minimizing positive period and its displayed value.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-054}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.4.1}{1}
+There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-054}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.4.2}{1}
+$C(T)\to\infty$ as $T\downarrow0$ and $C(T)\to J_L^{\rm tot}$ as $T\to\infty$, proving the unique global periodic minimum.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-055}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.4.3}{1}
+At the root, $c-B(T^*)=-T^*V_\delta(T^*)$, giving the optimal-cost formula.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-056}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.4.4}{1}
+Q.E.D. The below-threshold periodic claims hold.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-057}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.5}{0}
+If $c\ge c_{\rm crit}$, then $c-B(T)\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-058}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6}{0}
+Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-059}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.1}{1}
+Define $g=\min\{0,\inf_{T>0}(c-B(T))/T\}$ and condition on a realization of the reception schedule.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-060}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.2}{1}
+Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-061}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.3}{1}
+The last incomplete interval contributes at least $-c_{\rm crit}$, and the initial interval before the first reception has zero gain.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-062}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.4}{1}
+Because $g\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\rm tot}+g)-c_{\rm crit}$.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-063}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.5}{1}
+Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-064}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.6}{1}
+The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-065}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.7}{1}
+Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-066}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.6.8}{1}
+Q.E.D. The all-schedules optimum is attained by the stated candidates.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-067}. Support recorded in source: EXPLICIT.}
+\end{proofstep}
+\begin{proofstep}{R.7}{0}
+Q.E.D. Both price regimes and every stated policy class are covered.
+\par\nopagebreak\smallskip{\small Source: \texttt{SRC-067}. Support recorded in source: IMPLICIT.}
+\end{proofstep}
+
+\section{Source-to-step mapping ledger}
+\texttt{NORMALIZED} means that notation or syntax was standardized without changing the mathematical claim. \texttt{STRUCTURAL} records organization already present in the source, such as its zero/positive-age cases or final conclusion. \texttt{EXPLICIT} and \texttt{IMPLICIT} describe source support. No source assertion has been replaced by a newly invented supporting lemma.
+
+{\footnotesize \begin{longtable}{>{\raggedright\arraybackslash}p{.11\linewidth}>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.15\linewidth}>{\raggedright\arraybackslash}p{.13\linewidth}>{\raggedright\arraybackslash}p{.06\linewidth}>{\raggedright\arraybackslash}p{.29\linewidth}}
+\toprule
+Step/item & Source & Kind & Support & Issue & Notes \\
+\midrule\endfirsthead
+\toprule
+Step/item & Source & Kind & Support & Issue & Notes \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{L} & \texttt{THM-L} & NORMALIZED & EXPLICIT & None & Letter lines 102--110. \\[3pt]
+\texttt{P} & \texttt{THM-P} & NORMALIZED & EXPLICIT & None & Letter lines 117--133. \\[3pt]
+\texttt{D} & \texttt{THM-D} & NORMALIZED & EXPLICIT & None & Letter lines 155--167. \\[3pt]
+\texttt{H} & \texttt{THM-H} & NORMALIZED & EXPLICIT & None & Letter lines 175--191. \\[3pt]
+\texttt{U} & \texttt{THM-U} & NORMALIZED & EXPLICIT & None & Letter lines 230--244. \\[3pt]
+\texttt{C} & \texttt{THM-C} & NORMALIZED & EXPLICIT & None & Letter lines 252--259. \\[3pt]
+\texttt{R} & \texttt{THM-R} & NORMALIZED & EXPLICIT & None & Letter lines 284--299. \\[3pt]
+\texttt{L.1} & \texttt{SRC-001} & NORMALIZED & EXPLICIT & None & Parent \texttt{L}. \\[3pt]
+\texttt{L.2} & \texttt{SRC-002} & NORMALIZED & EXPLICIT & None & Parent \texttt{L}. \\[3pt]
+\texttt{L.3} & \texttt{SRC-003} & NORMALIZED & EXPLICIT & None & Parent \texttt{L}. \\[3pt]
+\texttt{L.4} & \texttt{SRC-004} & STRUCTURAL & EXPLICIT & None & Parent \texttt{L}. \\[3pt]
+\texttt{P.1} & \texttt{SRC-005} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.2} & \texttt{SRC-006} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.3} & \texttt{SRC-007} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.4} & \texttt{SRC-008} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.5} & \texttt{SRC-009} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.6} & \texttt{SRC-010} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.7} & \texttt{SRC-011} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.8} & \texttt{SRC-012} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.9} & \texttt{SRC-013} & NORMALIZED & EXPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{P.10} & \texttt{SRC-013} & STRUCTURAL & IMPLICIT & None & Parent \texttt{P}. \\[3pt]
+\texttt{D.1} & \texttt{SRC-014} & NORMALIZED & EXPLICIT & None & Parent \texttt{D}. \\[3pt]
+\texttt{D.2} & \texttt{SRC-015} & NORMALIZED & EXPLICIT & None & Parent \texttt{D}. \\[3pt]
+\texttt{D.3} & \texttt{SRC-016} & NORMALIZED & EXPLICIT & None & Parent \texttt{D}. \\[3pt]
+\texttt{D.4} & \texttt{SRC-017} & NORMALIZED & EXPLICIT & None & Parent \texttt{D}. \\[3pt]
+\texttt{D.5} & \texttt{SRC-018} & NORMALIZED & EXPLICIT & None & Parent \texttt{D}. \\[3pt]
+\texttt{D.6} & \texttt{SRC-018} & STRUCTURAL & IMPLICIT & None & Parent \texttt{D}. \\[3pt]
+\texttt{H.1} & \texttt{SRC-019} & STRUCTURAL & EXPLICIT & None & Parent \texttt{H}. \\[3pt]
+\texttt{H.2} & \texttt{SRC-020} & STRUCTURAL & EXPLICIT & None & Parent \texttt{H}. \\[3pt]
+\texttt{H.2.1} & \texttt{SRC-021} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.2} & \texttt{SRC-022} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.3} & \texttt{SRC-023} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.4} & \texttt{SRC-024} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.5} & \texttt{SRC-025} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.6} & \texttt{SRC-026} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.7} & \texttt{SRC-027} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.8} & \texttt{SRC-028} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.9} & \texttt{SRC-029} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.10} & \texttt{SRC-030} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.11} & \texttt{SRC-031} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.12} & \texttt{SRC-032} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.13} & \texttt{SRC-033} & NORMALIZED & EXPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.2.14} & \texttt{SRC-033} & STRUCTURAL & IMPLICIT & None & Parent \texttt{H.2}. \\[3pt]
+\texttt{H.3} & \texttt{SRC-033} & STRUCTURAL & IMPLICIT & None & Parent \texttt{H}. \\[3pt]
+\texttt{U.1} & \texttt{SRC-034} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.2} & \texttt{SRC-035} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.3} & \texttt{SRC-036} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.4} & \texttt{SRC-037} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.5} & \texttt{SRC-038} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.6} & \texttt{SRC-039} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.7} & \texttt{SRC-040} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.8} & \texttt{SRC-041} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.9} & \texttt{SRC-042} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.10} & \texttt{SRC-043} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.11} & \texttt{SRC-044} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.12} & \texttt{SRC-045} & NORMALIZED & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{U.13} & \texttt{SRC-046} & STRUCTURAL & EXPLICIT & None & Parent \texttt{U}. \\[3pt]
+\texttt{C.1} & \texttt{SRC-047} & NORMALIZED & EXPLICIT & None & Parent \texttt{C}. \\[3pt]
+\texttt{C.2} & \texttt{SRC-048} & NORMALIZED & EXPLICIT & None & Parent \texttt{C}. \\[3pt]
+\texttt{C.3} & \texttt{SRC-049} & NORMALIZED & EXPLICIT & None & Parent \texttt{C}. \\[3pt]
+\texttt{C.4} & \texttt{SRC-050} & STRUCTURAL & EXPLICIT & None & Parent \texttt{C}. \\[3pt]
+\texttt{R.1} & \texttt{SRC-051} & NORMALIZED & EXPLICIT & None & Parent \texttt{R}. \\[3pt]
+\texttt{R.2} & \texttt{SRC-052} & NORMALIZED & EXPLICIT & None & Parent \texttt{R}. \\[3pt]
+\texttt{R.3} & \texttt{SRC-053} & NORMALIZED & EXPLICIT & None & Parent \texttt{R}. \\[3pt]
+\texttt{R.4} & \texttt{SRC-054} & STRUCTURAL & EXPLICIT & None & Parent \texttt{R}. \\[3pt]
+\texttt{R.4.1} & \texttt{SRC-054} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.4}. \\[3pt]
+\texttt{R.4.2} & \texttt{SRC-055} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.4}. \\[3pt]
+\texttt{R.4.3} & \texttt{SRC-056} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.4}. \\[3pt]
+\texttt{R.4.4} & \texttt{SRC-057} & STRUCTURAL & EXPLICIT & None & Parent \texttt{R.4}. \\[3pt]
+\texttt{R.5} & \texttt{SRC-058} & NORMALIZED & EXPLICIT & None & Parent \texttt{R}. \\[3pt]
+\texttt{R.6} & \texttt{SRC-059} & NORMALIZED & EXPLICIT & None & Parent \texttt{R}. \\[3pt]
+\texttt{R.6.1} & \texttt{SRC-060} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.2} & \texttt{SRC-061} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.3} & \texttt{SRC-062} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.4} & \texttt{SRC-063} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.5} & \texttt{SRC-064} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.6} & \texttt{SRC-065} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.7} & \texttt{SRC-066} & NORMALIZED & EXPLICIT & None & Parent \texttt{R.6}. \\[3pt]
+\texttt{R.6.8} & \texttt{SRC-067} & STRUCTURAL & EXPLICIT & None & Parent \texttt{R.6}. \\*[3pt]
+\texttt{R.7} & \texttt{SRC-067} & STRUCTURAL & IMPLICIT & None & Parent \texttt{R}. \\[3pt]
+\end{longtable}}
+
+\section{Gap and ambiguity register}
+There are no open, admitted, unavailable-external, or materially ambiguous support items in the converted formal proofs under the declared mathematical background. Consequently, there are no \texttt{GAP}, \texttt{ADM}, \texttt{EXT}, or \texttt{AMB} entries or obligation rows to discharge.
+
+This finding is limited to the specified proof boundary. For example, the model does not authorize an extension to different signal and sensor-error rates within one component, or to communication times chosen from the observations. Such extensions are outside the theorem statements rather than hidden premises accepted by this audit.
+
+\clearpage
+\section{Frozen audit handoff}
+The theorem contracts, accepted background, rendered steps, source inventory, and mapping ledger are fixed before the two audit ledgers are evaluated. Mapping metadata identifies provenance only. It is not proof evidence.
+
+The review package includes the exact source, the three plugin instruction files, the conversion record, both audit ledgers, and the independently runnable numerical checks. These identifiers make the reviewed versions unambiguous:
+
+\begin{itemize}
+\item Plugin repository commit:\\ \nolinkurl{c5466f44d6ef0fff983ad67a46bc54e39858826f}.
+\item Letter TeX SHA-256:\\ \nolinkurl{ca4063836ef506a56fbee54ab850a67499d70fc5a1de8f5c4f8077a1794f8db5}.
+\item Letter PDF SHA-256:\\ \nolinkurl{211b1eae40836b0136d35ea59f6678e5b88df1efa8d01bd100a2ee1f229bf0ef}.
+\item Conversion record SHA-256:\\ \nolinkurl{a599596db88f9006726337403f992a6d8c033239f7c44a940aa86637d8daf165}.
+\end{itemize}
+The plugin instructions are available at the pinned \href{https://github.com/WWresearch/lamport-proof/tree/c5466f44d6ef0fff983ad67a46bc54e39858826f/skills}{repository revision}. The project describes these outputs as model-assisted review artifacts, not machine-checked proofs.
+
+\clearpage
+\part{Forward audit}
+\section{Verdict}
+\textbf{PASS.} The source-supplied proof routes establish the stated results. Every labeled step is supported within its active scope. No critical, major, or minor issue remains unresolved.
+
+\section{Theorem contract}
+The audit uses exactly the seven contracts in Part I. In particular, competitors are all feasible $L^2$ policies, the hybrid includes the retained local sample, the unequal-variance extension retains the common temporal rate, and the refresh theorem is restricted to schedules independent of the sensor processes.
+
+No proof is treated as establishing the stronger claim that the optimal refresh schedule is unique. The theorem identifies a unique \emph{optimal periodic interval}. Other schedules can have the same long-run cost, for example after changing finitely many refresh times.
+
+\section{Proof-structure summary}
+All generated step labels are unambiguous. The hierarchy has at most two nested levels within a theorem unit. No dependency points to a later step. The positive-age assumption in the hybrid proof is local to its case, and the below-threshold assumption in the periodic optimization subproof is discharged before the general-schedule comparison.
+
+{\small \begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.16\linewidth}>{\raggedright\arraybackslash}p{.13\linewidth}>{\raggedright\arraybackslash}p{.50\linewidth}}
+\toprule
+Proof & Steps & Max. level & Main pattern \\
+\midrule\endfirsthead
+\toprule
+Proof & Steps & Max. level & Main pattern \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{L} & 4 & 1 & Quadratic variation and strict convexity. \\[3pt]
+\texttt{P} & 10 & 1 & Gaussian projection, feasible policy, and matching optimality equations. \\[3pt]
+\texttt{D} & 6 & 1 & Common conditional mean and exact scalar comparison. \\[3pt]
+\texttt{H} & 17 & 2 & Zero/positive age cases, full-history Gaussian projection, direct normal equations, and matching feasible policy. \\[3pt]
+\texttt{U} & 13 & 1 & Unequal-coefficient normal equations and covariance-factor extension. \\[3pt]
+\texttt{C} & 4 & 1 & Independence, joint averaging, and an attained additive bound. \\*[3pt]
+\texttt{R} & 19 & 2 & Scalar minimization, finite-horizon interval lower bound, and attainment. \\[3pt]
+\end{longtable}}
+
+The hierarchy contains no unjustified \texttt{PICK} witness. In the refresh proof, continuity, endpoint limits, and strict monotonicity establish the existence and uniqueness of $T^*$ before that root is used. The zero-age hybrid case is covered explicitly, including its vanishing innovation and pooled posterior.
+
+\section{Findings and checked derivations}
+\subsection{Findings}
+No proof defect was identified. The central full-history projection is checked in K-H1--K-H3. Proposition 2 states the generalized covariance projection and invokes Lemma 1. Its coefficient denominators and full-history projections are checked in K-U. Theorem 2 explicitly conditions the expected cost on the schedule and then averages before taking the long-run limit, as checked in K-R.
+
+The remainder of this section supplies the checked algebra, covariance identities, and side conditions behind the ledger. Each calculation follows the operation invoked by the source. None substitutes a different proof route.
+
+\calculation{K-L}{Normal equations and nonlinear competitors}
+Let $r_i=(1+\kappa)u_i-\kappa\bar u-X$. All $r_i$ belong to $L^2$ because $X$ and the actions do. Expanding (A1) gives
+\begin{align}
+J(u+w)-J(u)
+&=\frac2n\sum_i\E[w_i r_i]+Q(w),\notag\\
+Q(w)&=\frac1n\sum_i\E[w_i^2]
++\frac\kappa n\sum_i\E[(w_i-\bar w)^2].\tag{A2}
+\end{align}
+For each feasible $w_i$, conditional expectation gives
+\[
+\E[w_i r_i]=\E\bigl[w_i\E[r_i\mid\G_i]\bigr].
+\]
+If the linear term vanishes for all feasible perturbations, choose one nonzero component at a time and set $w_i=\E[r_i\mid\G_i]$. The $L^2$ contraction property ensures this is admissible. It follows that $\E[r_i\mid\G_i]=0$ almost surely. Since $u_i$ is $\G_i$-measurable, these are precisely the source normal equations. Conversely, those equations make every linear term zero.
+
+If the linear functional is nonzero in some feasible direction $w$, the variation $\epsilon w$ has cost change $\epsilon L+\epsilon^2Q(w)$ with $L\ne0$. A sufficiently small $\epsilon$ of the opposite sign improves the objective. This proves necessity. If all linear terms vanish, (A2) is nonnegative, proving sufficiency. Its first sum is strictly positive for a nonzero $L^2$ perturbation, proving uniqueness whenever an optimum exists. The later propositions explicitly construct the needed optima. The proof never restricts competitors to linear policies.
+
+\calculation{K-P}{Endpoint projections, costs, and the global residual}
+Write $q_{tr}=e^{-\lambda|t-r|}$. Independence and the common rate give
+\begin{align*}
+\Cov(X(t),Y_i(r))&=a q_{tr},\\
+\Cov(Y_i(t),Y_i(r))&=(a+b)q_{tr},\\
+\Cov(\bar Y(t),Y_j(r))&=v q_{tr}.
+\end{align*}
+Thus
+\[
+\Cov\left(X(t)-\frac{a}{a+b}Y_i(t),Y_i(r)\right)=0,
+\quad
+\Cov\left(X(t)-\frac av\bar Y(t),Y_j(r)\right)=0.
+\]
+The second equality holds for every $j$ and every $r$, including future $r$. Joint Gaussianity therefore gives independence from the entire indicated observation family. Both predictors are measurable in their assigned history. Their residual variances are
+\[
+a-\frac{a^2}{a+b}=P_1,\qquad a-\frac{a^2}{v}=P_n.
+\]
+The same all-history covariance calculation gives
+$\E[\bar Y(t)\mid\F_i(t)]=vY_i(t)/(a+b)$. Applying Lemma 1 to $kY_i(t)$ yields
+\[
+k\bigl[(1+\kappa)(a+b)-\kappa v\bigr]=a,
+\qquad (1+\kappa)(a+b)-\kappa v=d>0.
+\]
+For this candidate,
+\[
+\E[(kY_i-X)^2]=a-2ak+k^2(a+b),\qquad
+\frac1n\sum_i\E[(Y_i-\bar Y)^2]=b(1-1/n).
+\]
+The team objective is therefore $a-2ak+dk^2$, minimized at $k=a/d$. For pooled information, the common conditional mean minimizes every tracking term and simultaneously makes disagreement zero. Subtraction gives
+\[
+\Delta=\frac{a^2(d-v)}{vd},\qquad d-v=b(1+\kappa)(1-1/n)>0.
+\]
+The residual result \texttt{E-eta} used later is now checked under the global model, with no case-specific assumption.
+
+\calculation{K-D}{The delay threshold and its exact comparison class}
+The OU signal decomposition is $X(t)=\rho X(s)+\xi$, where $\rho=e^{-\lambda\tau}$ and $\xi$ is independent of the signal and disturbance histories through $s$. Therefore
+\[
+\E[X(t)\mid\F(s)]=\rho\E[X(s)\mid\F(s)]=\rho(a/v)\bar Y(s).
+\]
+Its explained variance is $\rho^2a^2/v$, giving the stated $J_D$. Since $a,v,d>0$,
+\[
+J_L<J_D\iff \frac1d>\frac{\rho^2}{v}
+\iff e^{-2\lambda\tau}<\frac vd
+\iff \tau>\frac{1}{2\lambda}\log\frac dv.
+\]
+Every equivalence preserves its domain. The last step reverses the inequality when dividing by $-2\lambda$. Since $d>v$, the crossover age is strictly positive, and equality holds at that value.
+
+These information sets are not nested: delayed-pool-only operation has other sensors' old data, while local operation has its own current data. The comparison does not say that adding an old pool to a fresh local history makes decisions worse. That enlarged hybrid can ignore the pool and in fact achieves a strictly lower loss at finite age.
+
+\calculation{K-H1}{The full-history covariance identity}
+Set $\Sigma=a\one\one^\top+bI$ and $q=1-\rho^2$. For an old observation at $r\le s$,
+\[
+\Cov(Z_i,Y_j(r))
+=\Sigma_{ij}\left[e^{-\lambda(t-r)}-
+e^{-\lambda(t-s)}e^{-\lambda(s-r)}\right]=0.
+\]
+Also $\Cov(Z)=q\Sigma$. Consequently, the endpoint vector is independent of $\F(s)$. The target identity is
+\[
+X(t)=\rho h\bar Y(s)+h\bar Z+\eta(t),\qquad h=a/v,
+\]
+where $\eta(t)$ is independent of the sensor data and has variance $P_n$.
+
+For $s<r\le t$, define the private innovation path $Z_i(r)=Y_i(r)-e^{-\lambda(r-s)}Y_i(s)$. Direct expansion from the four raw cross-covariances gives
+\[
+\Cov(Z_j,Z_i(r))=\Sigma_{ji}f(r),\qquad
+f(r)=e^{-\lambda(t-r)}(1-e^{-2\lambda(r-s)}).
+\]
+The own-sensor coefficient is $\Sigma_{ii}=a+b$, and every other sensor has $\Sigma_{ji}=a$. Averaging over $j$ gives
+\[
+\Cov(\bar Z,Z_i(r))=v f(r),\qquad
+\Cov(Z_i,Z_i(r))=(a+b)f(r).
+\]
+This proves source (21) for every intermediate time and for $r=t$. In particular, the factor for the pooled average is $v/(a+b)$. The factor $a/(a+b)$ applies only to a different sensor $j\ne i$. The source uses the pooled factor correctly. The identity does not divide by $f(r)$, and the model gives $a+b>0$.
+
+\calculation{K-H2}{Projection on the entire information field}
+Let $W_i=\bar Z-vZ_i/(a+b)$. The innovation identity in K-H1 shows that $W_i$ is orthogonal to every $Z_i(r)$ for $s<r\le t$. Both $\bar Z$ and $Z_i$ are orthogonal to every observation in $\F(s)$, so the same holds for $W_i$.
+
+Since $Y_i(s)$ belongs to $\F(s)$, the equality
+\[
+Y_i(r)=Z_i(r)+e^{-\lambda(r-s)}Y_i(s)
+\]
+implies
+\[
+\G_i=\F(s)\vee\F_i(t)
+=\F(s)\vee\sigma\{Z_i(r):s<r\le t\}.
+\]
+The residual $W_i$ and every finite family of these observation generators are jointly Gaussian. Their zero cross-covariances give independence from each finite family. Extending from cylinder events gives independence from $\G_i$. Also $\E[W_i]=0$ and $Z_i$ is $\G_i$-measurable. Therefore
+\[
+\E[\bar Z\mid\G_i]=\frac{v}{a+b}Z_i.
+\tag{A3}
+\]
+With $T=h\bar Z+\eta(t)$ and $h=a/v$, the independent centered residual $\eta(t)$ contributes zero to this conditional mean. Hence
+\[
+\E[T\mid\G_i]=\frac{a}{a+b}Z_i,\qquad
+\E[k\bar Z\mid\G_i]=\frac{kv}{a+b}Z_i.
+\]
+These are conditional means for the full observation path. The argument has checked every generator of that history.
+
+\calculation{K-H3}{Direct optimality under full local histories}
+Set $m=\rho h\bar Y(s)$ and propose $u_i=m+kZ_i$, where $k=a/d$. The common term $m$ is measurable in every $\G_i$, and the average action is $m+k\bar Z$. Thus
+\begin{align*}
+(1+\kappa)u_i-\kappa\E[\bar u\mid\G_i]
+&=m+k\left[(1+\kappa)-\frac{\kappa v}{a+b}\right]Z_i\\
+&=m+\frac{a}{a+b}Z_i
+=\E[X(t)\mid\G_i],
+\end{align*}
+where $(1+\kappa)(a+b)-\kappa v=d>0$. The candidate is a finite linear combination of square-integrable available observations. Lemma 1 therefore establishes its unique optimality among all admissible policies under the enlarged information, including nonlinear functions of the full histories.
+
+Let $J_E$ denote that enlarged-information optimum. Since $\HH_i\subseteq\G_i$, information enlargement gives $J_E\le J_H$. The candidate uses only $Y_i(t)$, $Y_i(s)$, and $\bar Y(s)$, all available under $\HH_i$. Hence $J_H\le J_E$, and equality is attained. No intermediate path observation needs to be discarded from the optimization class to obtain this conclusion.
+
+The same projection also checks the posterior claim. The conditional mean $m+aZ_i/(a+b)$ is hybrid-measurable. By the tower property it is the conditional mean under both the enlarged and hybrid fields. The full-path information consequently has the same posterior error as the stated hybrid implementation.
+
+For the variance calculation in K-H4, the residual target has covariances
+\[
+\Cov(T,Z_i)=a q,\quad
+\Var(Z_i)=(a+b)q,\quad
+\Cov(\bar Z,Z_i)=vq.
+\]
+
+\calculation{K-H4}{Team loss and posterior variance}
+At a fresh endpoint, $X=h\bar Y+\eta$, with $\eta$ independent of $Y$. Expanding the loss of the local policy separates it as
+\[
+J_L=P_n+
+\E\left[\frac1n\sum_i(kY_i-h\bar Y)^2+
+\frac\kappa n\sum_i(kY_i-k\bar Y)^2\right].
+\]
+Replacing $Y$ by $Z$ multiplies the second, quadratic term by $q$. The residual variance $P_n$ does not change. This gives
+\[
+J_H=P_n+q(J_L-P_n)=\rho^2J_P+(1-\rho^2)J_L.
+\]
+For the posterior, K-H2--K-H3 have already identified the full-history conditional mean. Its error is computed from the endpoint covariances. Since
+\[
+\Var(T)=q(a-P_n)+P_n,\qquad
+\frac{\Cov(T,Z_i)^2}{\Var(Z_i)}=q\frac{a^2}{a+b},
+\]
+the error variance is
+\[
+P_n+q\left(a-P_n-\frac{a^2}{a+b}\right)
+=P_n+q(P_1-P_n).
+\]
+The posterior mean is hybrid-feasible, so the same variance holds for the smaller hybrid field. At $\tau=0$, the source's separate case gives the pooled endpoint directly. At infinite age the expressions converge to the local endpoint; infinite age is used only as a limit, not in a division by $q$.
+
+\calculation{K-U}{Unequal sensor variances}
+With $b_i>0$, $\Cov(Y_i,Y_j)=a+b_i\mathbf1_{i=j}$. For $u_i=k_iY_i$,
+\[
+\E[\bar u\mid\F_i(t)]
+=\frac{a\bar k+b_i k_i/n}{a+b_i}Y_i(t).
+\]
+This is a full-history regression because all cross-time covariances still have the same scalar factor. Substitution in Lemma 1 gives
+\[
+\left[(1+\kappa)a+b_i(1+\kappa-\kappa/n)\right]k_i
+-\kappa a\bar k=a.
+\]
+The bracket is $C_i$. Averaging $k_i=(a+\kappa a\bar k)/C_i$ gives
+\[
+\bar k=a\theta+\kappa a\theta\bar k,
+\qquad \bar k=\frac{a\theta}{1-\kappa a\theta}.
+\]
+The denominator is positive. If $\kappa>0$, $C_i>(1+\kappa)a$ implies $\kappa a\theta<\kappa/(1+\kappa)<1$. At $\kappa=0$, the denominator is one. Lemma 1 certifies optimality of these feasible coefficients. Multiplying the normal equations by $k_i$ and averaging shows that the quadratic objective term equals $a\bar k$, hence $J_L=a-a\bar k$.
+
+Write $S=\sum_i b_i^{-1}$ and $P=(a^{-1}+S)^{-1}$. For $\mu_P=P\sum_iY_i/b_i$,
+\[
+\Cov(\mu_P,Y_j)=P(aS+1)=a,
+\qquad
+\Cov(X-\mu_P,Y_j)=0.
+\]
+The same factorization holds at every time offset. Thus $X(t)-\mu_P(t)$ is independent of the entire sensor process and its variance is $P$.
+
+For the hybrid proof, let $\Sigma=a\one\one^\top+\operatorname{diag}(b_i)$. The same direct innovation expansion gives $\Cov(Z_j,Z_i(r))=\Sigma_{ji}f(r)$. Thus $Z_j-\Sigma_{ji}Z_i/\Sigma_{ii}$ is orthogonal to the entire local innovation path and to every old observation. As in K-H2, Gaussianity gives
+\[
+\E[Z_j\mid\G_i]=\frac{\Sigma_{ji}}{\Sigma_{ii}}Z_i,
+\qquad \Sigma_{ii}=a+b_i>0.
+\]
+The residual target is $T=\sum_j(P/b_j)Z_j+\eta(t)$, with $\eta(t)=X(t)-\mu_P(t)$ independent of the sensor data. Consequently,
+\[
+\E[T\mid\G_i]=\frac{P(aS+1)}{a+b_i}Z_i=\frac{a}{a+b_i}Z_i,
+\quad
+\E\left[\frac1n\sum_j k_jZ_j\,\middle|\,\G_i\right]
+=\frac{a\bar k+b_i k_i/n}{a+b_i}Z_i.
+\]
+Substitution gives exactly $C_i k_i-\kappa a\bar k=a$. Lemma 1 therefore certifies the residual action $k_iZ_i$ under the full history. The policy uses the common scalar $\mu_P(s)$ and the agent's own two readings, so the smaller weighted-summary hybrid attains this optimum. The independent residual contributes variance $P$, while the remaining quadratic cost scales by $q=1-\rho^2$. This yields $J_H=P+q(J_L-P)$. The zero-age case gives $Z_i=0$ and the pooled policy directly.
+
+\calculation{K-C}{Independent components and additive value}
+For a fixed component $m$, let $O_m$ be all component-$m$ observations and let $B$ contain the observations from all other components. The complete component processes are independent, so $B$ is independent of $(O_m,X_m)$. A feasible component action has the form $u_{im}=f_{im}(O_{im},B_i)$, where each argument is restricted to the data available to agent $i$. Averaging the action vector over the joint law of $B$ gives $\widetilde u_{im}=\int f_{im}(O_{im},b_i)\,d\mathsf P_{B_i}(b_i)$. This remains measurable in $O_{im}$ and square-integrable by conditional expectation. The target is fixed during averaging, and the team loss is convex in its action vector. Conditional Jensen therefore cannot increase the component loss. The extra observations can be correlated across agents; the averaging uses their joint law.
+
+Every feasible joint policy therefore has weighted loss at least the sum of the independent component minima. Choosing all componentwise optimal hybrid actions attains that lower bound simultaneously. This establishes equality of the optimum with the sum, rather than just an inequality. All sums are finite. Different $\lambda_m$ across components are allowed, but each component still requires its own signal and sensor disturbances to share one rate. Each component uses its own current reading, retained reading, and shared scalar.
+
+\calculation{K-R}{Refresh thresholds and optimization over all independent schedules}
+After reception, a component's gain at elapsed time $r$ is $A_m e^{-\gamma_m r}$. Integrating over a reception interval of length $T$ gives $B(T)$. One price per interval therefore produces the periodic average (29).
+
+The derivative calculation is
+\[
+C'(T)=\frac{-TB'(T)-c+B(T)}{T^2}
+=\frac{H(T)-c}{T^2}.
+\]
+Since $H'(T)=T\sum_m\gamma_m A_m e^{-\gamma_mT}>0$,
+$H(0)=0$, and $H(\infty)=c_{\rm crit}$, every price strictly between these limits has a unique positive root. The derivative changes from negative to positive there. As $T\downarrow0$, $B(T)=T\sum_m A_m+O(T^2)$ and $c/T$ diverges. As $T\to\infty$, $B(T)$ remains bounded. These facts establish the global periodic minimum and its displayed value. For $c\ge c_{\rm crit}$, $B(T)<c_{\rm crit}\le c$ for every finite $T$, including $c=c_{\rm crit}$.
+
+To check the stronger all-schedules claim, condition on a deterministic realization of an independent schedule. Let $r_1<\cdots<r_N\le R$ be its receptions in the observation horizon, and let
+\[
+g=\min\{0,\inf_{T>0}(c-B(T))/T\}.
+\]
+For every complete interval $T_j=r_{j+1}-r_j$,
+\[
+c-B(T_j)\ge gT_j.
+\]
+The scalar $g$ is finite because $B(T)\le T\sum_m A_m$, so $(c-B(T))/T\ge-\sum_m A_m$.
+The final, possibly incomplete interval has total gain at most $c_{\rm crit}$. The initial interval has no pooled gain. Dropping any unassigned nonnegative communication charges is conservative. Since $\sum_jT_j\le R$ and $g\le0$, the conditional expected cost satisfies
+\begin{equation}
+\E[\text{accumulated cost through }R\mid\text{schedule}]
+\ge R(J_L^{\rm tot}+g)-c_{\rm crit}.
+\tag{A4}
+\end{equation}
+The no-reception and single-reception cases obey the same inequality. Coincident refreshes, if permitted by a schedule representation, only add positive cost; an interval of length zero contributes $c-B(0)=c\ge0$.
+
+If prices are charged at generation, the number charged is at least the number received in the horizon. The same lower bound therefore holds. For a random schedule independent of the sensor processes, conditioning leaves their law unchanged, so the pointwise age formula is still valid. Taking expectation in (A4), dividing by $R$, and then taking a limiting upper average gives the lower bound $J_L^{\rm tot}+g$. This sequence of operations does not exchange expectation with a limiting upper average. If expected communication counts are infinite, the corresponding total objective is infinite and cannot improve the bound.
+
+A periodic schedule at $T^*$ below the threshold, or no refreshing above it, attains the bound. The finite initial latency changes average cost by a term tending to zero. Therefore the optimization is genuinely over all independent locally finite schedules, not just over periods.
+
+\subsection{Derived claims outside the formal theorem environments}
+The following statements in the letter are checked against the same results and parameter domains. They do not introduce additional proof routes for the formal theorems.
+
+\begin{enumerate}
+\item \textbf{Local disagreement gap, source (12).}
+Subtracting $P_1=a-a^2/(a+b)$ from $J_L=a-a^2/d$ gives
+\[
+J_L-P_1=\frac{\kappa a^2b(1-1/n)}{(a+b)d}.
+\]
+It vanishes at $\kappa=0$ and is positive at $\kappa>0$.
+
+\item \textbf{Delay-tolerance comparisons after source (14).}
+For fixed $a,b,n,\lambda$, $\partial d/\partial\kappa=b(1-1/n)>0$ and $v$ is fixed, so $\tau_{\rm cross}$ increases with $\kappa$. For fixed $a,b,n,\kappa$, it is proportional to $1/\lambda$ and decreases as the rate increases.
+
+\item \textbf{Age budget and half-life, source (22).}
+For $\alpha\in(0,1)$, requiring a gain at least $\alpha\Delta$ is equivalent to $e^{-2\lambda\tau}\ge\alpha$. Its exact solution is $\tau\le\log(1/\alpha)/(2\lambda)$. The value half-life follows by taking $\alpha=1/2$. The signal's normalized correlation is $e^{-\lambda\tau}$, with correlation half-life $\log 2/\lambda$, exactly twice the value half-life. The coherence time $1/\lambda$ is the lag at correlation $e^{-1}$.
+
+\item \textbf{Discrete-time pooling after source (22).}
+For independent stationary Gaussian AR(1) processes sharing coefficient $q\in(0,1)$, the covariance at integer lag $k$ is the corresponding variance times $q^{|k|}$. With $s<t$ integers and $Z_i(r)=Y_i(r)-q^{r-s}Y_i(s)$,
+\[
+\Cov(Z_j(t),Z_i(r))=\Sigma_{ji}q^{t-r}(1-q^{2(r-s)}),\qquad s<r\le t.
+\]
+Thus the old-history orthogonality, full-path projection, and normal-equation checks in K-P and K-H carry through with $\rho=q^{t-s}$. At age $k=t-s$, the cost is $q^{2k}J_P+(1-q^{2k})J_L$, so the gain is $\Delta q^{2k}$. Age $k=0$ gives the pooled endpoint directly. The same covariance factorization checks the unequal-variance formulas. The source's Gaussian, stationarity, independence, and common-coefficient assumptions all remain necessary to this stated proof route.
+
+The letter only transfers the endpoint and pooling laws. For example, over a discrete reception interval of $N$ slots, the accumulated value is the sum $\sum_m A_m(1-q_m^{2N})/(1-q_m^2)$ under ages counted from the reception slot. The continuous-time integral and the continuous positive root in Theorem 2 are not asserted verbatim for integer refresh periods.
+
+\item \textbf{Multirate effective decay, source (27).}
+With $V(\tau)=\sum_mw_m\Delta_m e^{-2\lambda_m\tau}>0$, differentiation gives the displayed weighted mean of $2\lambda_m$. If $\lambda_j<\lambda_k$, the ratio of their remaining contributions equals its age-zero ratio times $e^{2(\lambda_k-\lambda_j)\tau}$, so the slower component's relative share grows. Equal rates give constant relative shares.
+
+\item \textbf{Scalar period equation and latency cutoff, source (34)--(35).}
+For one component, set $x=2\lambda T^*$ and $\chi=c/c_{\rm crit}$. The root condition reduces to $1-(1+x)e^{-x}=\chi$, whose derivative is $xe^{-x}>0$ for $x>0$. As $\chi\uparrow1$, its unique root diverges. For unit component weight,
+\[
+c\ge\frac{\Delta e^{-2\lambda\delta}}{2\lambda}
+\iff
+\delta\ge\max\left\{0,\frac{1}{2\lambda}\log\frac{\Delta}{2\lambda c}\right\}
+\quad(\delta\ge0).
+\]
+The maximum with zero handles prices already above the zero-latency threshold. With a nonunit weight, that weight must multiply $\Delta$; the letter explicitly states unit weight for (35).
+
+\item \textbf{Minimum-interval constraint after source (35).}
+Below the price threshold, the objective decreases until $T^*$ and increases afterward. Restricting to $T\ge T_{\min}>0$ gives the minimizing period $\max\{T_{\min},T^*\}$. The no-refresh threshold is unchanged, since sufficiently large admissible periods still produce a gain whenever $c<c_{\rm crit}$.
+
+\item \textbf{The measurement-noise qualification in Section II-A.}
+To check the stated limitation, take a stationary Gaussian signal with variance $a$ and one-step correlation $q>0$, and independent measurement noise of variance $b>0$ at each sample. The instantaneous residual satisfies
+\[
+\Cov\left(X_t-\frac{a}{a+b}Y_{i,t},Y_{i,t-1}\right)
+=aq-\frac{a}{a+b}aq=\frac{abq}{a+b}>0.
+\]
+The current reading alone therefore fails to summarize the local history in this example. The usual recursive Gaussian conditional update incorporates older readings, as stated by the source's Kalman-filter qualification. This check concerns the explanatory model limitation, not an extension of a pooling theorem to white noise.
+\end{enumerate}
+
+\subsection{Boundary and interpretation checks}
+\begin{itemize}
+\item The delayed-only optimal actions coincide, so their disagreement cost is zero. For $\tau>\tau_{\rm cross}$ their tracking loss exceeds the entire optimized local team loss, including the local disagreement penalty. This verifies the introduction's agreement comparison.
+\item In the hybrid, the scalar sufficiency claim compares against all raw sensor histories through the pooling time, with each agent's subsequent local history retained in both information sets. It concerns exact real-valued summaries under the stated Gaussian model.
+\item $\kappa=0$ is allowed throughout. The local policy becomes the local posterior mean; pooling still improves estimation for $n\ge2$.
+\item $\tau=0$ gives fresh pooling. The source handles this case explicitly, and the full-path projection identity uses the positive denominator $a+b$.
+\item At positive finite age, $J_H<J_L$. As age tends to infinity, the hybrid gain tends to zero.
+\item $c=c_{\rm crit}$ belongs to the no-refresh regime. Every finite periodic interval has a strictly larger average cost than no refreshing.
+\item The strict positive-gain claims use $n\ge2$, $a,b>0$. They are not asserted for a one-agent or noiseless degenerate model.
+\item The schedule theorem does not cover event-triggered communication. Conditioning on an observation-dependent schedule can change the sensor law and make silence informative.
+\item The common within-component rate is used in every full-history residual and projection calculation. Unequal sensor variances preserve it; unequal signal and disturbance rates generally do not.
+\end{itemize}
+
+\subsection{Coverage of the displayed equations}
+Every numbered equation in the letter is accounted for below. Model equations and definitions fix the audit boundary. The remaining entries point to their derivation checks in this report.
+\begin{longtable}{p{.15\linewidth}p{.48\linewidth}p{.27\linewidth}}
+\toprule
+Letter equations & Content & Audit location \\
+\midrule\endfirsthead
+\toprule
+Letter equations & Content & Audit location \\
+\midrule\endhead
+\bottomrule\endfoot
+(1)--(4) & Process model, observations, loss, and information fields & Model and conventions \\
+(5) & Necessary and sufficient team equations & K-L \\
+(6)--(11) & Endpoint definitions, posteriors, policies, costs, and residual & K-P \\
+(12) & Local disagreement gap & Derived claim 1 \\
+(13)--(14) & Delayed-only policy, cost, and crossover & K-D \\
+(15)--(21) & Hybrid policy, value, variance, and full-history projection & K-H1--K-H4 \\
+(22) & Exact age budget & Derived claim 3 \\
+(23)--(25) & Unequal-quality coefficients, posterior, and hybrid policy & K-U \\
+(26) & Additive component value & K-C \\
+(27) & Effective decay rate & Derived claim 5 \\
+(28)--(33) & Integrated benefit, price threshold, optimal period and cost & K-R \\
+(34)--(35) & Scalar period and latency cutoff & Derived claim 6 \\
+\end{longtable}
+
+\subsection{Independent numerical checks}
+The review adds finite-dimensional checks that do not insert the claimed policy into the optimization solver. For a raw observation vector $z_i$ at each agent and
+$H=(1+\kappa)I-(\kappa/n)\one\one^\top$, the solver forms
+\[
+Q_{ij}=H_{ij}\Cov(z_i,z_j),\qquad r_i=\Cov(z_i,X),\qquad
+Q\theta=r.
+\]
+The expected loss is then evaluated as
+$a-2r^\top\theta/n+\theta^\top Q\theta/n$.
+The test cases use unequal sensor variances and include complete delayed observations at three old times, together with the agent's readings at three subsequent times. They check that the extra intermediate and older observations receive zero coefficients beyond the theorem's sufficient data.
+
+There are 24 parameter sets, each tested with local information and with the augmented history, for 48 systems in total. Four sets have $\kappa=0$. The covariance matrices are positive definite in these tests. Separate calculations expand the full-path projection cross-covariances from the original process covariances and check the pooled residual. An additional 18 independently solved Gaussian AR(1) systems use $q\in\{0.15,0.6,0.95\}$, ages $k\in\{1,2,4\}$, and $\kappa\in\{0,1.7\}$. These include unequal sensor variances and all intermediate local integer-time readings.
+
+The 200 schedule checks cover one to four components, prices below, equal to, and above the threshold, random finite reception patterns, and messages still in transit at the horizon. They check the finite-horizon bound, the optimal-period equation, and the minimum-interval constraint.
+
+{\small \begin{longtable}{>{\raggedright\arraybackslash}p{.66\linewidth}>{\raggedright\arraybackslash}p{.25\linewidth}}
+\toprule
+Check & Result \\
+\midrule\endfirsthead
+\toprule
+Check & Result \\
+\midrule\endhead
+\bottomrule\endfoot
+Independent Gaussian-team linear systems & 48 \\[3pt]
+Largest system dimension & 126 \\[3pt]
+Largest expected-loss discrepancy & $6.66\times10^{-16}$ \\[3pt]
+Largest policy-coefficient discrepancy & $5.38\times10^{-15}$ \\[3pt]
+Largest conditional normal-equation residual & $1.78\times10^{-15}$ \\[3pt]
+Largest full-path projection covariance residual & $2.22\times10^{-16}$ \\[3pt]
+Independent discrete-time Gaussian-team systems & 18 \\[3pt]
+Largest discrete-time expected-loss discrepancy & $5.55\times10^{-16}$ \\[3pt]
+Independent refresh-schedule checks & 200 \\[3pt]
+Smallest finite-horizon lower-bound slack & $0.189410$ \\*[3pt]
+Largest optimal-period equation residual & $1.11\times10^{-14}$ \\[3pt]
+\end{longtable}}
+
+The seed is \texttt{260906351}. The package includes \texttt{check\_audit.py} and its full parameter-level output \texttt{audit\_checks.json}. The script requires Python 3, NumPy, and SciPy. The installed package versions are recorded in \texttt{audit\_checks.json}. Run \texttt{python3 check\_audit.py} to reproduce these checks.
+These checks corroborate the algebra and finite-dimensional consequences. They do not prove an all-history or all-schedules theorem. Those claims are assessed by the mathematical steps above.
+
+The letter's representative values also agree with direct substitution:
+\[
+J_L=\frac{15}{23}\simeq0.6522,\quad J_P=\frac19,
+\quad\Delta=\frac{112}{207},\quad
+\lambda\tau_{\rm cross}\simeq0.4691.
+\]
+At $\lambda\tau=1$, $J_D\simeq0.8797$, so the local reduction relative to delayed-only loss is about $25.9\%$. At $\tau=0.5$ and $\lambda=1$, $J_H\simeq0.4531$. For $\delta=0.1$, the scalar critical price is about $0.2215$, and at half that price the optimal period is about $0.8392$ with average cost $0.5695$.
+
+For the second component $(a_2,b_2,\lambda_2)=(0.4,0.8,0.12)$, with $n=8$, $\kappa_2=1$, and both weights one, direct evaluation gives a joint threshold $1.1807$. The second component contributes $34.2\%$ of the value at reception and $81.2\%$ of its lifetime integral. At half the joint threshold, the optimal period is $5.5513$ and the total cost is $0.9072$. The source package also includes its 83-system parameter records and figure-generation code, so these illustration checks can be reproduced separately from this audit's augmented-history checks.
+
+\section{Forward step ledger}
+There is one row for every labeled step, including parent claims and internal closing steps. A goal \texttt{G-H} means the full contract for Theorem 1. A goal \texttt{H.2} means that contract under its positive-age case assumption. The enclosing assumptions and definitions remain active within that goal and are discharged when its parent closes. The calculation IDs refer to the preceding section.
+
+{\footnotesize \subsection{Lemma 1: Team optimality}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{L.1} & \texttt{G-L} & \texttt{A-L2}, \texttt{D-loss} & K-L: expansion is an identity for square-integrable policies. & OK \\[3pt]
+\texttt{L.2} & \texttt{G-L} & \texttt{L.1}, \texttt{B-CE} & K-L: conditional expectation converts testing against every local perturbation into a zero conditional residual. & OK \\[3pt]
+\texttt{L.3} & \texttt{G-L} & \texttt{A-L2}, \texttt{D-loss} & K-L: the first sum is strictly positive and the second nonnegative. & OK \\*[3pt]
+\texttt{L.4} & \texttt{G-L} & \texttt{L.1}, \texttt{L.2}, \texttt{L.3} & A nonzero linear term admits a small improving signed perturbation; a zero linear term leaves a positive remainder. & OK \\[3pt]
+\end{longtable}
+\subsection{Proposition 1: Fresh endpoints}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{P.1} & \texttt{G-P} & \texttt{A-G}, \texttt{D-Y}, \texttt{B-G} & K-P: the common exponential factor cancels for every earlier time. & OK \\[3pt]
+\texttt{P.2} & \texttt{G-P} & \texttt{A-G}, \texttt{D-Y}, \texttt{B-G} & K-P: Cov(bar Y(t),Y\_j(r)) = v exp(-lambda |t-r|); this works for past and future r. & OK \\[3pt]
+\texttt{P.3} & \texttt{G-P} & \texttt{P.1}, \texttt{P.2}, \texttt{B-CE} & K-P: subtract the explained variance from a. & OK \\[3pt]
+\texttt{P.4} & \texttt{G-P} & \texttt{A-G}, \texttt{D-Y}, \texttt{B-G} & K-P: the same regression residual is orthogonal to the full local history. & OK \\[3pt]
+\texttt{P.5} & \texttt{G-P} & \texttt{L}, \texttt{P.3}, \texttt{P.4}, \texttt{D-vd} & K-P: d is positive under a,b>0 and kappa>=0. & OK \\[3pt]
+\texttt{P.6} & \texttt{G-P} & \texttt{P.5}, \texttt{D-loss} & K-P: E(Y\_i\textasciicircum{}2)=a+b and average expected disagreement of the readings is b(1-1/n). & OK \\[3pt]
+\texttt{P.7} & \texttt{G-P} & \texttt{P.3}, \texttt{B-CE}, \texttt{D-loss} & Each squared tracking error is separately minimized and the nonnegative disagreement term is zero. & OK \\[3pt]
+\texttt{P.8} & \texttt{G-P} & \texttt{L}, \texttt{P.5}, \texttt{P.7} & The normal equations are satisfied; linearity was a candidate construction, not a restriction on competitors. & OK \\[3pt]
+\texttt{P.9} & \texttt{G-P} & \texttt{A-G}, \texttt{D-vd}, \texttt{P.6}, \texttt{P.7} & n>=2, b>0, and kappa>=0 make the strict sign valid. & OK \\*[3pt]
+\texttt{P.10} & \texttt{G-P} & \texttt{P.3}, \texttt{P.6}, \texttt{P.7}, \texttt{P.8}, \texttt{P.9} & Every component of the proposition is included. & OK \\[3pt]
+\end{longtable}
+\subsection{Corollary 1: The delay crossover}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{D.1} & \texttt{G-D} & \texttt{A-G}, \texttt{P}, \texttt{B-OU}, \texttt{B-CE} & K-D: the post-s signal innovation is independent of the old sensor history. & OK \\[3pt]
+\texttt{D.2} & \texttt{G-D} & \texttt{D.1}, \texttt{D-loss}, \texttt{B-CE} & The lower bound is attained simultaneously for all agents. & OK \\[3pt]
+\texttt{D.3} & \texttt{G-D} & \texttt{D.1}, \texttt{D.2}, \texttt{D-vd} & K-D: the explained variance is exp(-2 lambda tau) a\textasciicircum{}2/v. & OK \\[3pt]
+\texttt{D.4} & \texttt{G-D} & \texttt{D.3}, \texttt{P} & Both denominators and a\textasciicircum{}2 are positive. & OK \\[3pt]
+\texttt{D.5} & \texttt{G-D} & \texttt{D.4}, \texttt{A-G} & K-D: dividing by -2 lambda reverses the inequality. & OK \\*[3pt]
+\texttt{D.6} & \texttt{G-D} & \texttt{D.1}, \texttt{D.2}, \texttt{D.3}, \texttt{D.5} & Policy, value, strict comparison, and equality case all close. & OK \\[3pt]
+\end{longtable}
+\subsection{Theorem 1: Hybrid policy and exponential value}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{H.1} & \texttt{G-H} & \texttt{P} & The local correction is zero; the posterior and cost formulas reduce to the pooled endpoints. & OK \\[3pt]
+\texttt{H.2} & \texttt{G-H} & \texttt{A-G} & All descendants of H.2 have tau>0 in scope. This assumption is discharged at the root Q.E.D. & OK \\[3pt]
+\texttt{H.2.1} & \texttt{H.2} & \texttt{D-info}, \texttt{D-vd} & This is an enlargement, so its minimum is a lower bound on the hybrid minimum. & OK \\[3pt]
+\texttt{H.2.2} & \texttt{H.2} & \texttt{H.2.1}, \texttt{A-G}, \texttt{B-OU}, \texttt{B-G} & K-H1: all old-history cross-covariances cancel. & OK \\[3pt]
+\texttt{H.2.3} & \texttt{H.2} & \texttt{H.2.1}, \texttt{E-eta}, \texttt{P} & This is the source residual decomposition with bar Y(t)=rho bar Y(s)+bar Z. & OK \\[3pt]
+\texttt{H.2.4} & \texttt{H.2} & \texttt{H.2.1}, \texttt{A-G}, \texttt{D-vd} & K-H1 expands the two covariances from (1); the pooled factor v includes the own-sensor contribution. & OK \\[3pt]
+\texttt{H.2.5} & \texttt{H.2} & \texttt{H.2.4}, \texttt{A-G} & K-H1 computes the factor for every intermediate time, including r=t. & OK \\[3pt]
+\texttt{H.2.6} & \texttt{H.2} & \texttt{H.2.2}, \texttt{H.2.4}, \texttt{H.2.5} & K-H2 checks every generator of the enlarged information field. The whole innovation path is independent of the old history. & OK \\[3pt]
+\texttt{H.2.7} & \texttt{H.2} & \texttt{H.2.1}, \texttt{H.2.6}, \texttt{B-G}, \texttt{B-CE} & K-H2: the regression residual is independent of the generated sigma-field and the proposed predictor is measurable in it. & OK \\[3pt]
+\texttt{H.2.8} & \texttt{H.2} & \texttt{H.2.3}, \texttt{H.2.7}, \texttt{B-CE} & K-H2: h v=a, eta is centered and independent of all observations, and k is deterministic. & OK \\[3pt]
+\texttt{H.2.9} & \texttt{H.2} & \texttt{H.2.1}, \texttt{H.2.3}, \texttt{H.2.8}, \texttt{D-vd}, \texttt{L} & K-H3 substitutes the full-history conditional means directly in the normal equation. All admissible nonlinear history-dependent competitors are covered. & OK \\[3pt]
+\texttt{H.2.10} & \texttt{H.2} & \texttt{H.2.1}, \texttt{H.2.9}, \texttt{D-info} & The policy only uses the current and retained own readings and the old pooled scalar. Feasibility gives equality of the two optimal values. & OK \\[3pt]
+\texttt{H.2.11} & \texttt{H.2} & \texttt{H.2.2}, \texttt{H.2.3}, \texttt{H.2.9}, \texttt{P} & K-H4 scales the sensor-dependent quadratic cost and retains the independent residual variance. & OK \\[3pt]
+\texttt{H.2.12} & \texttt{H.2} & \texttt{H.2.2}, \texttt{H.2.3}, \texttt{H.2.8}, \texttt{P}, \texttt{B-CE} & K-H4 computes the posterior variance and checks that the same conditional mean is measurable in the smaller hybrid field. & OK \\[3pt]
+\texttt{H.2.13} & \texttt{H.2} & \texttt{H.2.11}, \texttt{P} & The interpolation gives rho\textasciicircum{}2 Delta, with rho\textasciicircum{}2=exp(-2 lambda tau). & OK \\[3pt]
+\texttt{H.2.14} & \texttt{H.2} & \texttt{H.2.10}, \texttt{H.2.11}, \texttt{H.2.12}, \texttt{H.2.13} & Exports the theorem under tau>0. & OK \\*[3pt]
+\texttt{H.3} & \texttt{G-H} & \texttt{H.1}, \texttt{H.2}, \texttt{A-G} & Uses the completed case statements, with no reference into their private descendants. & OK \\[3pt]
+\end{longtable}
+\subsection{Proposition 2: Unequal sensor quality}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{U.1} & \texttt{G-U} & \texttt{L}, \texttt{A-U}, \texttt{B-G} & K-U: the cross-agent covariance is a and the own variance a+b\_i; local histories have the same scalar temporal factor. & OK \\[3pt]
+\texttt{U.2} & \texttt{G-U} & \texttt{U.1}, \texttt{A-U} & K-U solves bar k=a theta/(1-kappa a theta); denominator positivity follows directly from A-U. & OK \\[3pt]
+\texttt{U.3} & \texttt{G-U} & \texttt{A-U} & kappa a theta<kappa/(1+kappa)<1, with kappa=0 handled directly. & OK \\[3pt]
+\texttt{U.4} & \texttt{G-U} & \texttt{U.1}, \texttt{U.2}, \texttt{U.3}, \texttt{L} & The feasible candidate satisfies the conditional equations under the full local histories, so nonlinear competitors are covered. & OK \\[3pt]
+\texttt{U.5} & \texttt{G-U} & \texttt{U.1}, \texttt{U.2}, \texttt{U.4}, \texttt{D-loss} & K-U: multiply each normal equation by k\_i and average. & OK \\[3pt]
+\texttt{U.6} & \texttt{G-U} & \texttt{A-U}, \texttt{B-G} & K-U verifies the weighted residual is orthogonal to every sensor. & OK \\[3pt]
+\texttt{U.7} & \texttt{G-U} & \texttt{U.6}, \texttt{A-U}, \texttt{B-G} & The zero same-time cross-covariances remain zero after multiplication by the common temporal factor. & OK \\[3pt]
+\texttt{U.8} & \texttt{G-U} & \texttt{A-U}, \texttt{B-OU} & The OU innovation calculation applies entry by entry. & OK \\[3pt]
+\texttt{U.9} & \texttt{G-U} & \texttt{U.8}, \texttt{A-U}, \texttt{B-G}, \texttt{B-OU} & K-U repeats the source covariance argument with Sigma; it treats j=i separately through Sigma\_ii=a+b\_i. All conditional predictors are measurable and denominators positive. & OK \\[3pt]
+\texttt{U.10} & \texttt{G-U} & \texttt{U.6}, \texttt{U.7}, \texttt{U.8}, \texttt{U.9}, \texttt{B-CE} & K-U uses P(a sum\_j 1/b\_j+1)=a to compute the residual target projection. & OK \\[3pt]
+\texttt{U.11} & \texttt{G-U} & \texttt{U.1}, \texttt{U.2}, \texttt{U.4}, \texttt{U.9}, \texttt{U.10}, \texttt{L} & K-U substitutes the full-history conditional mean of the weighted action average and verifies the normal equations directly. & OK \\[3pt]
+\texttt{U.12} & \texttt{G-U} & \texttt{U.5}, \texttt{U.6}, \texttt{U.7}, \texttt{U.8}, \texttt{U.11}, \texttt{D-loss} & K-U keeps the residual variance P fixed, scales only the sensor-dependent quadratic term, and checks feasibility in the weighted-summary hybrid. & OK \\*[3pt]
+\texttt{U.13} & \texttt{G-U} & \texttt{U.2}, \texttt{U.3}, \texttt{U.4}, \texttt{U.5}, \texttt{U.6}, \texttt{U.11}, \texttt{U.12} & All stated coefficients, posteriors, actions, and cost formulas are accounted for. & OK \\[3pt]
+\end{longtable}
+\subsection{Corollary 2: Additive coordination value}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{C.1} & \texttt{G-C} & \texttt{A-C} & This is independence of complete component processes, not just same-time uncorrelatedness. & OK \\[3pt]
+\texttt{C.2} & \texttt{G-C} & \texttt{C.1}, \texttt{B-J}, \texttt{D-loss}, \texttt{A-L2} & K-C: integrate the joint extraneous component data; each averaged action still depends only on that agent's component-m information. & OK \\[3pt]
+\texttt{C.3} & \texttt{G-C} & \texttt{C.2}, \texttt{H}, \texttt{A-C} & An additive lower bound is attained by the collection of componentwise optimal policies. & OK \\*[3pt]
+\texttt{C.4} & \texttt{G-C} & \texttt{C.3}, \texttt{A-C} & The sum is finite; no interchange of an infinite series and a limit is involved. & OK \\[3pt]
+\end{longtable}
+\subsection{Theorem 2: Optimal refresh period}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.46\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endfirsthead
+\toprule
+Step & Goal & Legal dependencies & Justification checked & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{R.1} & \texttt{G-R} & \texttt{A-R}, \texttt{D-refresh} & All sums are finite and all amplitudes and rates positive. & OK \\[3pt]
+\texttt{R.2} & \texttt{G-R} & \texttt{R.1}, \texttt{D-refresh}, \texttt{B-calc} & K-R: the quotient rule gives the numerator with this sign. & OK \\[3pt]
+\texttt{R.3} & \texttt{G-R} & \texttt{R.1}, \texttt{R.2}, \texttt{A-R}, \texttt{B-calc} & K-R: T exp(-gamma T) tends to zero for gamma>0. & OK \\[3pt]
+\texttt{R.4} & \texttt{G-R} & \texttt{A-R} & This local subproof exports the whole conditional statement. & OK \\[3pt]
+\texttt{R.4.1} & \texttt{R.4} & \texttt{R.2}, \texttt{R.3}, \texttt{B-calc} & Continuity, strict monotonicity, and the endpoint limits establish existence before the root is used. & OK \\[3pt]
+\texttt{R.4.2} & \texttt{R.4} & \texttt{R.4.1}, \texttt{D-refresh}, \texttt{A-R} & c>0 gives divergence at zero; B is bounded at infinity. & OK \\[3pt]
+\texttt{R.4.3} & \texttt{R.4} & \texttt{R.4.1}, \texttt{D-refresh} & Tstar>0 licenses division. & OK \\[3pt]
+\texttt{R.4.4} & \texttt{R.4} & \texttt{R.4.1}, \texttt{R.4.2}, \texttt{R.4.3} & The root and its defining assumptions remain local to R.4; the conditional conclusion is exported. & OK \\[3pt]
+\texttt{R.5} & \texttt{G-R} & \texttt{A-R}, \texttt{D-refresh} & In fact B(T)<ccrit for every finite T, including the price equality case. & OK \\[3pt]
+\texttt{R.6} & \texttt{G-R} & \texttt{A-R} & This parent is the all-schedules lower bound and its attainment. & OK \\[3pt]
+\texttt{R.6.1} & \texttt{R.6} & \texttt{A-R}, \texttt{D-refresh} & g is finite and nonpositive. Independence leaves the conditional sensor-process law unchanged. & OK \\[3pt]
+\texttt{R.6.2} & \texttt{R.6} & \texttt{R.6.1}, \texttt{C}, \texttt{D-refresh} & K-R: integrate the exact conditional age gain, yielding c-B(T\_j). & OK \\[3pt]
+\texttt{R.6.3} & \texttt{R.6} & \texttt{D-refresh}, \texttt{A-R} & B(L)<=ccrit uniformly in the final interval length L; the source starts without a shared update. & OK \\[3pt]
+\texttt{R.6.4} & \texttt{R.6} & \texttt{R.6.1}, \texttt{R.6.2}, \texttt{R.6.3} & K-R shows the complete intervals occupy at most R, so multiplication by g reverses the length comparison. & OK \\[3pt]
+\texttt{R.6.5} & \texttt{R.6} & \texttt{R.6.4}, \texttt{A-R} & The count difference contributes a nonnegative cost. & OK \\[3pt]
+\texttt{R.6.6} & \texttt{R.6} & \texttt{R.6.5}, \texttt{A-R}, \texttt{B-CE} & K-R verifies the source explicitly takes expectation before limsup. The schedule-independent remainder vanishes after division by R. & OK \\[3pt]
+\texttt{R.6.7} & \texttt{R.6} & \texttt{R.4}, \texttt{R.5}, \texttt{R.6.6}, \texttt{D-refresh} & Transient latency is finite; periodic time averaging gives (29). Both candidates are admissible. & OK \\[3pt]
+\texttt{R.6.8} & \texttt{R.6} & \texttt{R.6.6}, \texttt{R.6.7} & Exports the lower bound and matching construction. & OK \\*[3pt]
+\texttt{R.7} & \texttt{G-R} & \texttt{R.4}, \texttt{R.5}, \texttt{R.6} & No event-triggered schedule is included in the information-independent schedule class. & OK \\[3pt]
+\end{longtable}}
+
+\section{Unresolved obligations}
+None under the stated source and mathematical background. The full-history projections, denominator signs, information constraints, and schedule-expectation order are all supported by the submitted proof routes and checked calculations.
+
+The numerical experiments are not used to discharge a symbolic inference, a continuum-history assertion, or an optimization claim over arbitrary schedules. No external arXiv proof or unavailable cited lemma is needed for closure.
+
+\section{Minimal repair plan}
+No mathematical repair or proof clarification is required by this audit. The source manuscript is unchanged. Its stated common-rate Gaussian model and independent-schedule restriction define the scope of the conclusions.
+
+\clearpage
+\part{Conclusion-first reverse audit}
+\section{Audit boundary}
+The roots are exactly the seven formal theorem contracts in Part I. The reverse audit uses the same frozen rendering and accepted background, together with the forward step ledger. Each dependency is rechecked for its exact proposition and scope. An earlier theorem is used through its public conclusion, and the explicitly cited residual property is tracked as \texttt{E-eta}.
+
+Only routes actually supplied by the paper are represented. There is one primary justification route for each claim. A route is an AND group: every listed obligation is required. The hybrid proof's zero- and positive-age cases are jointly required with their coverage of $\tau\ge0$; they are not alternative proofs that could rescue a failing case. The conditional branches in the periodic optimization retain their own price assumptions. No speculative or diagnostic alternative proof is used to close a root.
+
+The tables use compact identifiers for exact statements printed in the hierarchy and repeated in the dependency table. Scope conditions belong to their enclosing goals. Thus the claim \texttt{H.2} is the full theorem under $\tau>0$, and its closure exports that conditional claim, not an unconditional conclusion derived by division at $\tau=0$.
+
+\section{Obligation graph}
+Each row gives one claim's primary route and the exact child obligations that must all hold. For a parent with a subproof, the route goes through its internal Q.E.D. The descendants of that Q.E.D. expose the necessary supporting claims without a sideways reference into another closed subproof.
+
+{\footnotesize \subsection{Lemma 1: Team optimality}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{L} & \texttt{R-L} & \texttt{L.4} \\[3pt]
+\texttt{L.1} & \texttt{R-L.1} & \texttt{A-L2}, \texttt{D-loss} \\[3pt]
+\texttt{L.2} & \texttt{R-L.2} & \texttt{L.1}, \texttt{B-CE} \\[3pt]
+\texttt{L.3} & \texttt{R-L.3} & \texttt{A-L2}, \texttt{D-loss} \\*[3pt]
+\texttt{L.4} & \texttt{R-L.4} & \texttt{L.1}, \texttt{L.2}, \texttt{L.3} \\[3pt]
+\end{longtable}
+\subsection{Proposition 1: Fresh endpoints}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{P} & \texttt{R-P} & \texttt{P.10} \\[3pt]
+\texttt{P.1} & \texttt{R-P.1} & \texttt{A-G}, \texttt{D-Y}, \texttt{B-G} \\[3pt]
+\texttt{P.2} & \texttt{R-P.2} & \texttt{A-G}, \texttt{D-Y}, \texttt{B-G} \\[3pt]
+\texttt{P.3} & \texttt{R-P.3} & \texttt{P.1}, \texttt{P.2}, \texttt{B-CE} \\[3pt]
+\texttt{P.4} & \texttt{R-P.4} & \texttt{A-G}, \texttt{D-Y}, \texttt{B-G} \\[3pt]
+\texttt{P.5} & \texttt{R-P.5} & \texttt{L}, \texttt{P.3}, \texttt{P.4}, \texttt{D-vd} \\[3pt]
+\texttt{P.6} & \texttt{R-P.6} & \texttt{P.5}, \texttt{D-loss} \\[3pt]
+\texttt{P.7} & \texttt{R-P.7} & \texttt{P.3}, \texttt{B-CE}, \texttt{D-loss} \\[3pt]
+\texttt{P.8} & \texttt{R-P.8} & \texttt{L}, \texttt{P.5}, \texttt{P.7} \\[3pt]
+\texttt{P.9} & \texttt{R-P.9} & \texttt{A-G}, \texttt{D-vd}, \texttt{P.6}, \texttt{P.7} \\*[3pt]
+\texttt{P.10} & \texttt{R-P.10} & \texttt{P.3}, \texttt{P.6}, \texttt{P.7}, \texttt{P.8}, \texttt{P.9} \\[3pt]
+\end{longtable}
+\subsection{Corollary 1: The delay crossover}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{D} & \texttt{R-D} & \texttt{D.6} \\[3pt]
+\texttt{D.1} & \texttt{R-D.1} & \texttt{A-G}, \texttt{P}, \texttt{B-OU}, \texttt{B-CE} \\[3pt]
+\texttt{D.2} & \texttt{R-D.2} & \texttt{D.1}, \texttt{D-loss}, \texttt{B-CE} \\[3pt]
+\texttt{D.3} & \texttt{R-D.3} & \texttt{D.1}, \texttt{D.2}, \texttt{D-vd} \\[3pt]
+\texttt{D.4} & \texttt{R-D.4} & \texttt{D.3}, \texttt{P} \\[3pt]
+\texttt{D.5} & \texttt{R-D.5} & \texttt{D.4}, \texttt{A-G} \\*[3pt]
+\texttt{D.6} & \texttt{R-D.6} & \texttt{D.1}, \texttt{D.2}, \texttt{D.3}, \texttt{D.5} \\[3pt]
+\end{longtable}
+\subsection{Theorem 1: Hybrid policy and exponential value}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{H} & \texttt{R-H} & \texttt{H.3} \\[3pt]
+\texttt{H.1} & \texttt{R-H.1} & \texttt{P} \\[3pt]
+\texttt{H.2} & \texttt{R-H.2} & \texttt{H.2.14} \\[3pt]
+\texttt{H.2.1} & \texttt{R-H.2.1} & \texttt{D-info}, \texttt{D-vd} \\[3pt]
+\texttt{H.2.2} & \texttt{R-H.2.2} & \texttt{H.2.1}, \texttt{A-G}, \texttt{B-OU}, \texttt{B-G} \\[3pt]
+\texttt{H.2.3} & \texttt{R-H.2.3} & \texttt{H.2.1}, \texttt{E-eta}, \texttt{P} \\[3pt]
+\texttt{H.2.4} & \texttt{R-H.2.4} & \texttt{H.2.1}, \texttt{A-G}, \texttt{D-vd} \\[3pt]
+\texttt{H.2.5} & \texttt{R-H.2.5} & \texttt{H.2.4}, \texttt{A-G} \\[3pt]
+\texttt{H.2.6} & \texttt{R-H.2.6} & \texttt{H.2.2}, \texttt{H.2.4}, \texttt{H.2.5} \\[3pt]
+\texttt{H.2.7} & \texttt{R-H.2.7} & \texttt{H.2.1}, \texttt{H.2.6}, \texttt{B-G}, \texttt{B-CE} \\[3pt]
+\texttt{H.2.8} & \texttt{R-H.2.8} & \texttt{H.2.3}, \texttt{H.2.7}, \texttt{B-CE} \\[3pt]
+\texttt{H.2.9} & \texttt{R-H.2.9} & \texttt{H.2.1}, \texttt{H.2.3}, \texttt{H.2.8}, \texttt{D-vd}, \texttt{L} \\[3pt]
+\texttt{H.2.10} & \texttt{R-H.2.10} & \texttt{H.2.1}, \texttt{H.2.9}, \texttt{D-info} \\[3pt]
+\texttt{H.2.11} & \texttt{R-H.2.11} & \texttt{H.2.2}, \texttt{H.2.3}, \texttt{H.2.9}, \texttt{P} \\[3pt]
+\texttt{H.2.12} & \texttt{R-H.2.12} & \texttt{H.2.2}, \texttt{H.2.3}, \texttt{H.2.8}, \texttt{P}, \texttt{B-CE} \\[3pt]
+\texttt{H.2.13} & \texttt{R-H.2.13} & \texttt{H.2.11}, \texttt{P} \\[3pt]
+\texttt{H.2.14} & \texttt{R-H.2.14} & \texttt{H.2.10}, \texttt{H.2.11}, \texttt{H.2.12}, \texttt{H.2.13} \\*[3pt]
+\texttt{H.3} & \texttt{R-H.3} & \texttt{H.1}, \texttt{H.2}, \texttt{A-G} \\[3pt]
+\end{longtable}
+\subsection{Proposition 2: Unequal sensor quality}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{U} & \texttt{R-U} & \texttt{U.13} \\[3pt]
+\texttt{U.1} & \texttt{R-U.1} & \texttt{L}, \texttt{A-U}, \texttt{B-G} \\[3pt]
+\texttt{U.2} & \texttt{R-U.2} & \texttt{U.1}, \texttt{A-U} \\[3pt]
+\texttt{U.3} & \texttt{R-U.3} & \texttt{A-U} \\[3pt]
+\texttt{U.4} & \texttt{R-U.4} & \texttt{U.1}, \texttt{U.2}, \texttt{U.3}, \texttt{L} \\[3pt]
+\texttt{U.5} & \texttt{R-U.5} & \texttt{U.1}, \texttt{U.2}, \texttt{U.4}, \texttt{D-loss} \\[3pt]
+\texttt{U.6} & \texttt{R-U.6} & \texttt{A-U}, \texttt{B-G} \\[3pt]
+\texttt{U.7} & \texttt{R-U.7} & \texttt{U.6}, \texttt{A-U}, \texttt{B-G} \\[3pt]
+\texttt{U.8} & \texttt{R-U.8} & \texttt{A-U}, \texttt{B-OU} \\[3pt]
+\texttt{U.9} & \texttt{R-U.9} & \texttt{U.8}, \texttt{A-U}, \texttt{B-G}, \texttt{B-OU} \\[3pt]
+\texttt{U.10} & \texttt{R-U.10} & \texttt{U.6}, \texttt{U.7}, \texttt{U.8}, \texttt{U.9}, \texttt{B-CE} \\[3pt]
+\texttt{U.11} & \texttt{R-U.11} & \texttt{U.1}, \texttt{U.2}, \texttt{U.4}, \texttt{U.9}, \texttt{U.10}, \texttt{L} \\[3pt]
+\texttt{U.12} & \texttt{R-U.12} & \texttt{U.5}, \texttt{U.6}, \texttt{U.7}, \texttt{U.8}, \texttt{U.11}, \texttt{D-loss} \\*[3pt]
+\texttt{U.13} & \texttt{R-U.13} & \texttt{U.2}, \texttt{U.3}, \texttt{U.4}, \texttt{U.5}, \texttt{U.6}, \texttt{U.11}, \texttt{U.12} \\[3pt]
+\end{longtable}
+\subsection{Corollary 2: Additive coordination value}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{C} & \texttt{R-C} & \texttt{C.4} \\[3pt]
+\texttt{C.1} & \texttt{R-C.1} & \texttt{A-C} \\[3pt]
+\texttt{C.2} & \texttt{R-C.2} & \texttt{C.1}, \texttt{B-J}, \texttt{D-loss}, \texttt{A-L2} \\[3pt]
+\texttt{C.3} & \texttt{R-C.3} & \texttt{C.2}, \texttt{H}, \texttt{A-C} \\*[3pt]
+\texttt{C.4} & \texttt{R-C.4} & \texttt{C.3}, \texttt{A-C} \\[3pt]
+\end{longtable}
+\subsection{Theorem 2: Optimal refresh period}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.14\linewidth}>{\raggedright\arraybackslash}p{.21\linewidth}>{\raggedright\arraybackslash}p{.54\linewidth}}
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endfirsthead
+\toprule
+Claim & Primary route & AND obligations \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{R} & \texttt{R-R} & \texttt{R.7} \\[3pt]
+\texttt{R.1} & \texttt{R-R.1} & \texttt{A-R}, \texttt{D-refresh} \\[3pt]
+\texttt{R.2} & \texttt{R-R.2} & \texttt{R.1}, \texttt{D-refresh}, \texttt{B-calc} \\[3pt]
+\texttt{R.3} & \texttt{R-R.3} & \texttt{R.1}, \texttt{R.2}, \texttt{A-R}, \texttt{B-calc} \\[3pt]
+\texttt{R.4} & \texttt{R-R.4} & \texttt{R.4.4} \\[3pt]
+\texttt{R.4.1} & \texttt{R-R.4.1} & \texttt{R.2}, \texttt{R.3}, \texttt{B-calc} \\[3pt]
+\texttt{R.4.2} & \texttt{R-R.4.2} & \texttt{R.4.1}, \texttt{D-refresh}, \texttt{A-R} \\[3pt]
+\texttt{R.4.3} & \texttt{R-R.4.3} & \texttt{R.4.1}, \texttt{D-refresh} \\[3pt]
+\texttt{R.4.4} & \texttt{R-R.4.4} & \texttt{R.4.1}, \texttt{R.4.2}, \texttt{R.4.3} \\[3pt]
+\texttt{R.5} & \texttt{R-R.5} & \texttt{A-R}, \texttt{D-refresh} \\[3pt]
+\texttt{R.6} & \texttt{R-R.6} & \texttt{R.6.8} \\[3pt]
+\texttt{R.6.1} & \texttt{R-R.6.1} & \texttt{A-R}, \texttt{D-refresh} \\[3pt]
+\texttt{R.6.2} & \texttt{R-R.6.2} & \texttt{R.6.1}, \texttt{C}, \texttt{D-refresh} \\[3pt]
+\texttt{R.6.3} & \texttt{R-R.6.3} & \texttt{D-refresh}, \texttt{A-R} \\[3pt]
+\texttt{R.6.4} & \texttt{R-R.6.4} & \texttt{R.6.1}, \texttt{R.6.2}, \texttt{R.6.3} \\[3pt]
+\texttt{R.6.5} & \texttt{R-R.6.5} & \texttt{R.6.4}, \texttt{A-R} \\[3pt]
+\texttt{R.6.6} & \texttt{R-R.6.6} & \texttt{R.6.5}, \texttt{A-R}, \texttt{B-CE} \\[3pt]
+\texttt{R.6.7} & \texttt{R-R.6.7} & \texttt{R.4}, \texttt{R.5}, \texttt{R.6.6}, \texttt{D-refresh} \\[3pt]
+\texttt{R.6.8} & \texttt{R-R.6.8} & \texttt{R.6.6}, \texttt{R.6.7} \\*[3pt]
+\texttt{R.7} & \texttt{R-R.7} & \texttt{R.4}, \texttt{R.5}, \texttt{R.6} \\[3pt]
+\end{longtable}}
+
+\section{Critical findings}
+There is no failing or open conclusion-reachable leaf in this graph. The delicate obligations are discharged as follows:
+\begin{itemize}
+\item The full-history endpoint reductions require orthogonality to every relevant time and every relevant sensor, not just current-time regression. K-P and K-H1 check those quantifiers.
+\item The full-path conditional mean requires independence of the regression residual from the generated observation sigma-field, together with measurability of the predictor. K-H2 checks both at H.2.6--H.2.8.
+\item Optimality requires the full-history normal equations and a feasible policy that attains the lower bound. H.2.9 and H.2.10 provide these two steps, and Lemma 1 covers all admissible policies.
+\item The unequal-quality extension states its generalized covariance projection. K-U checks U.9--U.12 with the new covariance matrix and the same positive temporal factor.
+\item The refresh theorem requires a lower bound for every allowed schedule and a schedule that attains it. R.6 supplies both, with a uniform finite-horizon remainder and the correct expectation order.
+\end{itemize}
+Every forward step used by a reverse edge has the same exact proposition and active parameter scope. All conclusion-reachable leaves are discharged under the declared source boundary. The covariance example for white measurement noise only illustrates the model boundary and is not a counterexample to a stated theorem.
+
+\begin{landscape}
+\section{Dependency table}
+The graph has 96 unique conclusion-reachable nodes. Repeated background obligations and earlier theorem roots are shared. Every node has an exact statement, parent uses, route, classification, and status. ``Discharged'' means supported in this structured mathematical audit, not certified by a proof-assistant kernel.
+
+{\footnotesize \begin{longtable}{>{\raggedright\arraybackslash}p{.07\linewidth}>{\raggedright\arraybackslash}p{.355\linewidth}>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.09\linewidth}>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.10\linewidth}>{\raggedright\arraybackslash}p{.08\linewidth}}
+\toprule
+ID & Exact claim/obligation & Needed by & Route / edge & Classification & Support & Status \\
+\midrule\endfirsthead
+\toprule
+ID & Exact claim/obligation & Needed by & Route / edge & Classification & Support & Status \\
+\midrule\endhead
+\bottomrule\endfoot
+\texttt{A-G} & $n\ge2$, $a,b,\lambda>0$, $\kappa\ge0$; mutually independent, stationary, mean-zero Gaussian signal and disturbances with the common exponential covariance (1). & \texttt{P.1}, \texttt{P.2}, \texttt{P.4}, \texttt{P.9}, \texttt{D.1}, \texttt{D.5}, \texttt{H.2.2}, \texttt{H.2.4}, \texttt{H.2.5}, \texttt{H.3} & Leaf & hypothesis & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{A-L2} & Admissible actions and perturbations are measurable with respect to their assigned information and have finite second moment. $X\in L^2$ under (1). & \texttt{L.1}, \texttt{L.3}, \texttt{C.2} & Leaf & hypothesis & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{A-U} & The A-G assumptions hold with disturbance variances $b_i>0$ and unchanged common rate. The definitions $C_i,\theta$ are those in (23). & \texttt{U.1}, \texttt{U.2}, \texttt{U.3}, \texttt{U.6}, \texttt{U.7}, \texttt{U.8}, \texttt{U.9} & Leaf & hypothesis & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{A-C} & A finite number of mutually independent component processes with weights $w_m>0$, componentwise common rates $\lambda_m>0$, and ages $\tau_m\ge0$. & \texttt{C.1}, \texttt{C.3}, \texttt{C.4} & Leaf & hypothesis & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{A-R} & Fixed finite latency, exact joint vectors of componentwise pooled means sampled at the same time, price $c>0$, no queueing, and schedules independent of the sensor processes. Local finiteness means finitely many transmissions in each bounded interval. The proof uses an initially unshared state. & \texttt{R.1}, \texttt{R.3}, \texttt{R.4.2}, \texttt{R.5}, \texttt{R.6.1}, \texttt{R.6.3}, \texttt{R.6.5}, \texttt{R.6.6} & Leaf & hypothesis & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{D-loss} & $\ell(u,X)=n^{-1}\sum_i(u_i-X)^2+\kappa n^{-1}\sum_i(u_i-\bar u)^2$ and $\bar u=n^{-1}\sum_i u_i$. & \texttt{L.1}, \texttt{L.3}, \texttt{P.6}, \texttt{P.7}, \texttt{D.2}, \texttt{U.5}, \texttt{U.12}, \texttt{C.2} & Leaf & definition & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{D-Y} & $Y_i=X+E_i$ and $\bar Y=n^{-1}\sum_iY_i$. & \texttt{P.1}, \texttt{P.2}, \texttt{P.4} & Leaf & definition & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{D-vd} & $v=a+b/n$ and $d=a+b[1+\kappa(1-1/n)]$. & \texttt{P.5}, \texttt{P.9}, \texttt{D.3}, \texttt{H.2.1}, \texttt{H.2.4}, \texttt{H.2.9} & Leaf & definition & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{D-info} & The local, pooled, delayed-only, and hybrid information fields are exactly those in Section II-B of the letter. & \texttt{H.2.1}, \texttt{H.2.10} & Leaf & definition & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{D-refresh} & $\gamma_m=2\lambda_m$, $A_m=w_m\Delta_m e^{-\gamma_m\delta}$, $B(T)=\sum_m A_m(1-e^{-\gamma_mT})/\gamma_m$, and $C(T)=J_L^{\rm tot}+[c-B(T)]/T$. & \texttt{R.1}, \texttt{R.2}, \texttt{R.4.2}, \texttt{R.4.3}, \texttt{R.5}, \texttt{R.6.1}, \texttt{R.6.2}, \texttt{R.6.3}, \texttt{R.6.7} & Leaf & definition & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{B-G} & Gaussian regression and orthogonality: a jointly Gaussian residual with zero cross-covariance with every observation is independent of the observation sigma-field. For a nonsingular Gaussian observation vector, the conditional mean is its linear regression; the residual covariance is the corresponding Schur complement. & \texttt{P.1}, \texttt{P.2}, \texttt{P.4}, \texttt{H.2.2}, \texttt{H.2.7}, \texttt{U.1}, \texttt{U.6}, \texttt{U.7}, \texttt{U.9} & Leaf & named theorem & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{B-CE} & Conditional expectation is the $L^2$ orthogonal projection. It minimizes mean-square error, is characterized by testing against measurable $L^2$ variables, satisfies the tower property, and is an $L^2$ contraction. & \texttt{L.2}, \texttt{P.3}, \texttt{P.7}, \texttt{D.1}, \texttt{D.2}, \texttt{H.2.7}, \texttt{H.2.8}, \texttt{H.2.12}, \texttt{U.10}, \texttt{R.6.6} & Leaf & named theorem & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{B-OU} & For the stated stationary common-rate Gaussian process, the innovation over $[s,t]$ is independent of the past and has covariance $(1-e^{-2\lambda(t-s)})\Sigma$. Its cross-covariances are computed directly from (1). & \texttt{D.1}, \texttt{H.2.2}, \texttt{U.8}, \texttt{U.9} & Leaf & named theorem & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{B-J} & Conditional Jensen: $\phi(\E[U\mid\mathcal A])\le\E[\phi(U)\mid\mathcal A]$ for an integrable vector and convex function when the expectations exist. The audit checks information feasibility separately. & \texttt{C.2} & Leaf & named theorem & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{B-calc} & Finite-dimensional real algebra and order, differentiation, integration of exponentials, and the intermediate value theorem for continuous scalar functions, with signs and domains checked at each use. & \texttt{R.2}, \texttt{R.3}, \texttt{R.4.1} & Leaf & algebraic/logical step & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{E-eta} & The globally quantified residual statement accompanying source equation (11): $\eta(t)=X(t)-(a/v)\bar Y(t)$ is independent of the entire sensor process and has variance $P_n$. Theorem 1 explicitly cites this source result. Its covariance calculation is checked separately in K-P. & \texttt{H.2.3} & Leaf & proved earlier & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{L.1} & For a feasible perturbation $w$, the objective difference has linear term $2n^{-1}\sum_i\E[w_i((1+\kappa)u_i-\kappa\bar u-X)]$ and a quadratic remainder. & \texttt{L.2}, \texttt{L.4} & \texttt{R-L.1} & major claim & Forward \texttt{L.1}. & \emph{Discharged}. \\[2pt]
+\texttt{L.2} & The linear term vanishes for every feasible $w$ if and only if the conditional normal equations (5) hold. & \texttt{L.4} & \texttt{R-L.2} & major claim & Forward \texttt{L.2}. & \emph{Discharged}. \\[2pt]
+\texttt{L.3} & The remainder is $n^{-1}\sum_i\E[w_i^2]+\kappa n^{-1}\sum_i\E[(w_i-\bar w)^2]$, positive whenever $w$ is nonzero in $L^2$. & \texttt{L.4} & \texttt{R-L.3} & major claim & Forward \texttt{L.3}. & \emph{Discharged}. \\[2pt]
+\texttt{L.4} & Q.E.D. Necessity, sufficiency, and uniqueness follow. & \texttt{L} & \texttt{R-L.4} & major claim & Forward \texttt{L.4}. & \emph{Discharged}. \\[2pt]
+\texttt{P.1} & $X(t)-aY_i(t)/(a+b)$ has zero covariance with every $Y_i(r)$ for $r\le t$, so it is independent of the local history. & \texttt{P.3} & \texttt{R-P.1} & major claim & Forward \texttt{P.1}. & \emph{Discharged}. \\[2pt]
+\texttt{P.2} & Define $\eta(t)=X(t)-(a/v)\bar Y(t)$. It is uncorrelated with every $Y_j(r)$ and independent of the entire sensor process. & \texttt{P.3} & \texttt{R-P.2} & major claim & Forward \texttt{P.2}. & \emph{Discharged}. \\[2pt]
+\texttt{P.3} & The residual variances are $P_1=ab/(a+b)$ and $P_n=ab/(b+na)$. The corresponding conditional means are $aY_i(t)/(a+b)$ and $(a/v)\bar Y(t)$. & \texttt{P.5}, \texttt{P.7}, \texttt{P.10} & \texttt{R-P.3} & major claim & Forward \texttt{P.3}. & \emph{Discharged}. \\[2pt]
+\texttt{P.4} & For the candidate $u_i=kY_i(t)$, $\E[\bar u\mid\mathcal F_i(t)]=kvY_i(t)/(a+b)$. & \texttt{P.5} & \texttt{R-P.4} & major claim & Forward \texttt{P.4}. & \emph{Discharged}. \\[2pt]
+\texttt{P.5} & Equation (5) gives $k[(1+\kappa)(a+b)-\kappa v]=a$. The bracket equals $d$, so $k=a/d$. & \texttt{P.6}, \texttt{P.8} & \texttt{R-P.5} & major claim & Forward \texttt{P.5}. & \emph{Discharged}. \\[2pt]
+\texttt{P.6} & The local loss is $a-2ak+dk^2=a-a^2/d$. & \texttt{P.9}, \texttt{P.10} & \texttt{R-P.6} & major claim & Forward \texttt{P.6}. & \emph{Discharged}. \\[2pt]
+\texttt{P.7} & With pooled information all agents use the common conditional mean, with zero disagreement and loss $P_n$. & \texttt{P.8}, \texttt{P.9}, \texttt{P.10} & \texttt{R-P.7} & major claim & Forward \texttt{P.7}. & \emph{Discharged}. \\[2pt]
+\texttt{P.8} & The displayed feasible policies are optimal by Lemma 1. & \texttt{P.10} & \texttt{R-P.8} & major claim & Forward \texttt{P.8}. & \emph{Discharged}. \\[2pt]
+\texttt{P.9} & $d-v=b(1+\kappa)(1-1/n)>0$ and subtraction yields the formula for $\Delta$. & \texttt{P.10} & \texttt{R-P.9} & major claim & Forward \texttt{P.9}. & \emph{Discharged}. \\[2pt]
+\texttt{P.10} & Q.E.D. All endpoint claims follow. & \texttt{P} & \texttt{R-P.10} & major claim & Forward \texttt{P.10}. & \emph{Discharged}. \\[2pt]
+\texttt{D.1} & The Markov property and Proposition 1 give $\E[X(t)\mid\mathcal F(s)]=e^{-\lambda\tau}(a/v)\bar Y(s)$. & \texttt{D.2}, \texttt{D.3}, \texttt{D.6} & \texttt{R-D.1} & major claim & Forward \texttt{D.1}. & \emph{Discharged}. \\[2pt]
+\texttt{D.2} & Taking this common mean minimizes tracking loss and yields zero disagreement, hence minimizes the team loss. & \texttt{D.3}, \texttt{D.6} & \texttt{R-D.2} & major claim & Forward \texttt{D.2}. & \emph{Discharged}. \\[2pt]
+\texttt{D.3} & The error variance is the displayed $J_D(\tau)$. & \texttt{D.4}, \texttt{D.6} & \texttt{R-D.3} & major claim & Forward \texttt{D.3}. & \emph{Discharged}. \\[2pt]
+\texttt{D.4} & Comparison with $J_L$ yields $J_L<J_D$ if and only if $e^{-2\lambda\tau}<v/d$. & \texttt{D.5} & \texttt{R-D.4} & major claim & Forward \texttt{D.4}. & \emph{Discharged}. \\[2pt]
+\texttt{D.5} & Taking logarithms gives the exact threshold (14), including its equality case. & \texttt{D.6} & \texttt{R-D.5} & major claim & Forward \texttt{D.5}. & \emph{Discharged}. \\[2pt]
+\texttt{D.6} & Q.E.D. & \texttt{D} & \texttt{R-D.6} & major claim & Forward \texttt{D.6}. & \emph{Discharged}. \\[2pt]
+\texttt{H.1} & CASE $\tau=0$. The formula is the pooled policy. & \texttt{H.3} & \texttt{R-H.1} & major claim & Forward \texttt{H.1}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2} & CASE $\tau>0$. Prove the remaining claims under this assumption. & \texttt{H.3} & \texttt{R-H.2} & major claim & Forward \texttt{H.2}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.1} & Enlarge each information field to $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$ and define $Z_i=Y_i(t)-\rho Y_i(s)$, $h=a/v$, $k=a/d$. & \texttt{H.2.2}, \texttt{H.2.3}, \texttt{H.2.4}, \texttt{H.2.7}, \texttt{H.2.9}, \texttt{H.2.10} & \texttt{R-H.2.1} & major claim & Forward \texttt{H.2.1}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.2} & $Z$ is independent of $\mathcal F(s)$ and has covariance $(1-\rho^2)(a\mathbf1\mathbf1^\top+bI)$. & \texttt{H.2.6}, \texttt{H.2.11}, \texttt{H.2.12} & \texttt{R-H.2.2} & major claim & Forward \texttt{H.2.2}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.3} & $X(t)=\rho h\bar Y(s)+h\bar Z+\eta(t)$, where $\eta(t)$ is independent of all sensor data and has variance $P_n$. & \texttt{H.2.8}, \texttt{H.2.9}, \texttt{H.2.11}, \texttt{H.2.12} & \texttt{R-H.2.3} & major claim & Forward \texttt{H.2.3}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.4} & For $s<r\le t$, define $Z_i(r)=Y_i(r)-e^{-\lambda(r-s)}Y_i(s)$. Then $\Cov(\bar Z,Z_i(r))=[v/(a+b)]\Cov(Z_i,Z_i(r))$. & \texttt{H.2.5}, \texttt{H.2.6} & \texttt{R-H.2.4} & major claim & Forward \texttt{H.2.4}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.5} & Both covariances have the temporal factor $e^{-\lambda(t-r)}(1-e^{-2\lambda(r-s)})$. & \texttt{H.2.6} & \texttt{R-H.2.5} & major claim & Forward \texttt{H.2.5}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.6} & $\bar Z-vZ_i/(a+b)$ is orthogonal to the entire local innovation path and to $\mathcal F(s)$. & \texttt{H.2.7} & \texttt{R-H.2.6} & major claim & Forward \texttt{H.2.6}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.7} & Gaussianity gives $\E[\bar Z\mid\mathcal G_i]=vZ_i/(a+b)$. & \texttt{H.2.8} & \texttt{R-H.2.7} & major claim & Forward \texttt{H.2.7}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.8} & Independence of $\eta(t)$ gives $\E[h\bar Z+\eta(t)\mid\mathcal G_i]=aZ_i/(a+b)$ and $\E[k\bar Z\mid\mathcal G_i]=kvZ_i/(a+b)$. & \texttt{H.2.9}, \texttt{H.2.12} & \texttt{R-H.2.8} & major claim & Forward \texttt{H.2.8}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.9} & Subtract the common prediction. Since $(1+\kappa)(a+b)-\kappa v=d$, the correction $kZ_i$ satisfies (5) under the full path information. Lemma 1 certifies optimality. & \texttt{H.2.10}, \texttt{H.2.11} & \texttt{R-H.2.9} & major claim & Forward \texttt{H.2.9}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.10} & The policy (15) is feasible under the hybrid field (4), so it attains the same value as complete delayed sharing. & \texttt{H.2.14} & \texttt{R-H.2.10} & major claim & Forward \texttt{H.2.10}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.11} & The irreducible variance is $P_n$ and the remaining quadratic cost scales by $1-\rho^2$. Thus $J_H=P_n+(1-\rho^2)(J_L-P_n)$. & \texttt{H.2.13}, \texttt{H.2.14} & \texttt{R-H.2.11} & major claim & Forward \texttt{H.2.11}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.12} & The enlarged-information posterior mean is $\rho h\bar Y(s)+aZ_i/(a+b)$. It is hybrid-feasible and has error variance $P_n+(1-\rho^2)(P_1-P_n)$. & \texttt{H.2.14} & \texttt{R-H.2.12} & major claim & Forward \texttt{H.2.12}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.13} & Subtracting the cost from $J_L$ yields $\Delta e^{-2\lambda\tau}$. & \texttt{H.2.14} & \texttt{R-H.2.13} & major claim & Forward \texttt{H.2.13}. & \emph{Discharged}. \\[2pt]
+\texttt{H.2.14} & Q.E.D. The positive-age branch is established. & \texttt{H.2} & \texttt{R-H.2.14} & major claim & Forward \texttt{H.2.14}. & \emph{Discharged}. \\[2pt]
+\texttt{H.3} & Q.E.D. The two cases cover every $\tau\ge0$. & \texttt{H} & \texttt{R-H.3} & major claim & Forward \texttt{H.3}. & \emph{Discharged}. \\[2pt]
+\texttt{U.1} & Substitution into (5) gives $C_i k_i-\kappa a\bar k=a$, where $\bar k=n^{-1}\sum_i k_i$. & \texttt{U.2}, \texttt{U.4}, \texttt{U.5}, \texttt{U.11} & \texttt{R-U.1} & major claim & Forward \texttt{U.1}. & \emph{Discharged}. \\[2pt]
+\texttt{U.2} & Averaging $k_i=(a+\kappa a\bar k)/C_i$ yields the displayed coefficients. & \texttt{U.4}, \texttt{U.5}, \texttt{U.11}, \texttt{U.13} & \texttt{R-U.2} & major claim & Forward \texttt{U.2}. & \emph{Discharged}. \\[2pt]
+\texttt{U.3} & The denominator is positive because $C_i>(1+\kappa)a$. & \texttt{U.4}, \texttt{U.13} & \texttt{R-U.3} & major claim & Forward \texttt{U.3}. & \emph{Discharged}. \\[2pt]
+\texttt{U.4} & Lemma 1 certifies optimality of the local policy. & \texttt{U.5}, \texttt{U.11}, \texttt{U.13} & \texttt{R-U.4} & major claim & Forward \texttt{U.4}. & \emph{Discharged}. \\[2pt]
+\texttt{U.5} & The quadratic term equals $a\bar k$, so $J_L=a-a\bar k$. & \texttt{U.12}, \texttt{U.13} & \texttt{R-U.5} & major claim & Forward \texttt{U.5}. & \emph{Discharged}. \\[2pt]
+\texttt{U.6} & Gaussian conditioning gives $P$ and $\mu_P$. & \texttt{U.7}, \texttt{U.10}, \texttt{U.12}, \texttt{U.13} & \texttt{R-U.6} & major claim & Forward \texttt{U.6}. & \emph{Discharged}. \\[2pt]
+\texttt{U.7} & $X(t)-\mu_P(t)$ is independent of the entire sensor process because all temporal covariances share one factor. & \texttt{U.10}, \texttt{U.12} & \texttt{R-U.7} & major claim & Forward \texttt{U.7}. & \emph{Discharged}. \\[2pt]
+\texttt{U.8} & Innovations have covariance $(1-\rho^2)\Sigma$, where $\Sigma=a\mathbf1\mathbf1^\top+\operatorname{diag}(b_i)$. & \texttt{U.9}, \texttt{U.10}, \texttt{U.12} & \texttt{R-U.8} & major claim & Forward \texttt{U.8}. & \emph{Discharged}. \\[2pt]
+\texttt{U.9} & For $\mathcal G_i=\mathcal F(s)\vee\mathcal F_i(t)$, the covariance argument in (21) gives $\E[Z_j\mid\mathcal G_i]=\Sigma_{ji}Z_i/\Sigma_{ii}$. & \texttt{U.10}, \texttt{U.11} & \texttt{R-U.9} & major claim & Forward \texttt{U.9}. & \emph{Discharged}. \\[2pt]
+\texttt{U.10} & After subtracting $\rho\mu_P(s)$, the target has conditional mean $aZ_i/(a+b_i)$. & \texttt{U.11} & \texttt{R-U.10} & major claim & Forward \texttt{U.10}. & \emph{Discharged}. \\[2pt]
+\texttt{U.11} & The residual normal equations are the fresh-local equations, so $k_iZ_i$ is optimal. & \texttt{U.12}, \texttt{U.13} & \texttt{R-U.11} & major claim & Forward \texttt{U.11}. & \emph{Discharged}. \\[2pt]
+\texttt{U.12} & Scaling the remaining quadratic cost by $1-\rho^2$ gives $J_H=\rho^2J_P+(1-\rho^2)J_L$. & \texttt{U.13} & \texttt{R-U.12} & major claim & Forward \texttt{U.12}. & \emph{Discharged}. \\[2pt]
+\texttt{U.13} & Q.E.D. & \texttt{U} & \texttt{R-U.13} & major claim & Forward \texttt{U.13}. & \emph{Discharged}. \\[2pt]
+\texttt{C.1} & Other components are independent of component $m$ and its observations. & \texttt{C.2} & \texttt{R-C.1} & major claim & Forward \texttt{C.1}. & \emph{Discharged}. \\[2pt]
+\texttt{C.2} & Averaging a policy over the other components preserves the information restrictions and cannot increase the component loss. & \texttt{C.3} & \texttt{R-C.2} & major claim & Forward \texttt{C.2}. & \emph{Discharged}. \\[2pt]
+\texttt{C.3} & Optimization separates across components. Apply Theorem 1 to each. & \texttt{C.4} & \texttt{R-C.3} & major claim & Forward \texttt{C.3}. & \emph{Discharged}. \\[2pt]
+\texttt{C.4} & Q.E.D. Sum with the positive weights $w_m$. & \texttt{C} & \texttt{R-C.4} & major claim & Forward \texttt{C.4}. & \emph{Discharged}. \\[2pt]
+\texttt{R.1} & Define $V_\delta(T)=B^{\prime}(T)=\sum_m A_m e^{-\gamma_mT}$. & \texttt{R.2}, \texttt{R.3} & \texttt{R-R.1} & major claim & Forward \texttt{R.1}. & \emph{Discharged}. \\[2pt]
+\texttt{R.2} & Differentiate (29): $C^{\prime}(T)=[H(T)-c]/T^2$, where $H(T)=B(T)-TV_\delta(T)$. & \texttt{R.3}, \texttt{R.4.1} & \texttt{R-R.2} & major claim & Forward \texttt{R.2}. & \emph{Discharged}. \\[2pt]
+\texttt{R.3} & $H^{\prime}(T)=-TV_\delta^{\prime}(T)>0$ for $T>0$, and $H$ increases from zero to $c_{\rm crit}$. & \texttt{R.4.1} & \texttt{R-R.3} & major claim & Forward \texttt{R.3}. & \emph{Discharged}. \\[2pt]
+\texttt{R.4} & ASSUME $0<c<c_{\rm crit}$. PROVE a unique minimizing positive period and its displayed value. & \texttt{R.6.7}, \texttt{R.7} & \texttt{R-R.4} & major claim & Forward \texttt{R.4}. & \emph{Discharged}. \\[2pt]
+\texttt{R.4.1} & There is a unique root $H(T^*)=c$, and $C$ decreases before it and increases after it. & \texttt{R.4.2}, \texttt{R.4.3}, \texttt{R.4.4} & \texttt{R-R.4.1} & major claim & Forward \texttt{R.4.1}. & \emph{Discharged}. \\[2pt]
+\texttt{R.4.2} & $C(T)\to\infty$ as $T\downarrow0$ and $C(T)\to J_L^{\rm tot}$ as $T\to\infty$, proving the unique global periodic minimum. & \texttt{R.4.4} & \texttt{R-R.4.2} & major claim & Forward \texttt{R.4.2}. & \emph{Discharged}. \\[2pt]
+\texttt{R.4.3} & At the root, $c-B(T^*)=-T^*V_\delta(T^*)$, giving the optimal-cost formula. & \texttt{R.4.4} & \texttt{R-R.4.3} & major claim & Forward \texttt{R.4.3}. & \emph{Discharged}. \\[2pt]
+\texttt{R.4.4} & Q.E.D. The below-threshold periodic claims hold. & \texttt{R.4} & \texttt{R-R.4.4} & major claim & Forward \texttt{R.4.4}. & \emph{Discharged}. \\[2pt]
+\texttt{R.5} & If $c\ge c_{\rm crit}$, then $c-B(T)\ge0$ for each finite $T$, so no periodic schedule improves on no refreshing. & \texttt{R.6.7}, \texttt{R.7} & \texttt{R-R.5} & major claim & Forward \texttt{R.5}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6} & Every locally finite independent schedule has average cost at least the minimum of the periodic costs and the no-refresh cost. The stated candidates attain this bound. & \texttt{R.7} & \texttt{R-R.6} & major claim & Forward \texttt{R.6}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.1} & Define $g=\min\{0,\inf_{T>0}(c-B(T))/T\}$ and condition on a realization of the reception schedule. & \texttt{R.6.2}, \texttt{R.6.4} & \texttt{R-R.6.1} & major claim & Forward \texttt{R.6.1}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.2} & Every complete interval of length $T_j$ contributes at least $gT_j$ relative to local operation when assigned one communication price. & \texttt{R.6.4} & \texttt{R-R.6.2} & major claim & Forward \texttt{R.6.2}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.3} & The last incomplete interval contributes at least $-c_{\rm crit}$, and the initial interval before the first reception has zero gain. & \texttt{R.6.4} & \texttt{R-R.6.3} & major claim & Forward \texttt{R.6.3}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.4} & Because $g\le0$, the expected total cost through time $R$, conditional on the schedule, is at least $R(J_L^{\rm tot}+g)-c_{\rm crit}$. & \texttt{R.6.5} & \texttt{R-R.6.4} & major claim & Forward \texttt{R.6.4}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.5} & Charging transmissions at generation preserves the bound since sent messages are at least as numerous as received messages. & \texttt{R.6.6} & \texttt{R-R.6.5} & major claim & Forward \texttt{R.6.5}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.6} & The bound is uniform over schedules. Take expectation over the schedule, divide by $R$, and then take the limiting upper average to obtain the independent-randomized-schedule bound. & \texttt{R.6.7}, \texttt{R.6.8} & \texttt{R-R.6.6} & major claim & Forward \texttt{R.6.6}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.7} & Periodic operation at $T^*$ below the threshold, or no communication otherwise, attains the bound. & \texttt{R.6.8} & \texttt{R-R.6.7} & major claim & Forward \texttt{R.6.7}. & \emph{Discharged}. \\[2pt]
+\texttt{R.6.8} & Q.E.D. The all-schedules optimum is attained by the stated candidates. & \texttt{R.6} & \texttt{R-R.6.8} & major claim & Forward \texttt{R.6.8}. & \emph{Discharged}. \\[2pt]
+\texttt{R.7} & Q.E.D. Both price regimes and every stated policy class are covered. & \texttt{R} & \texttt{R-R.7} & major claim & Forward \texttt{R.7}. & \emph{Discharged}. \\[2pt]
+\texttt{L} & Exact full contract in Section~\ref{contract-L}: Lemma 1: Team optimality. & \texttt{P.5}, \texttt{P.8}, \texttt{H.2.9}, \texttt{U.1}, \texttt{U.4}, \texttt{U.11} & \texttt{R-L} & root & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{P} & Exact full contract in Section~\ref{contract-P}: Proposition 1: Fresh endpoints. & \texttt{D.1}, \texttt{D.4}, \texttt{H.1}, \texttt{H.2.3}, \texttt{H.2.11}, \texttt{H.2.12}, \texttt{H.2.13} & \texttt{R-P} & root & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{D} & Exact full contract in Section~\ref{contract-D}: Corollary 1: The delay crossover. & Root & \texttt{R-D} & root & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{H} & Exact full contract in Section~\ref{contract-H}: Theorem 1: Hybrid policy and exponential value. & \texttt{C.3} & \texttt{R-H} & root & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{U} & Exact full contract in Section~\ref{contract-U}: Proposition 2: Unequal sensor quality. & Root & \texttt{R-U} & root & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\texttt{C} & Exact full contract in Section~\ref{contract-C}: Corollary 2: Additive coordination value. & \texttt{R.6.2} & \texttt{R-C} & root & Boundary / contract. & \emph{Discharged}. \\*[2pt]
+\texttt{R} & Exact full contract in Section~\ref{contract-R}: Theorem 2: Optimal refresh period. & Root & \texttt{R-R} & root & Boundary / contract. & \emph{Discharged}. \\[2pt]
+\end{longtable}}
+\end{landscape}
+
+\section{Verdict}
+\textbf{FOLLOWS.} Every obligation on the source-supplied route to each root \texttt{L}, \texttt{P}, \texttt{D}, \texttt{H}, \texttt{U}, \texttt{C}, and \texttt{R} is discharged. The full-history projection and direct normal-equation checks close at \texttt{H.2.7} and \texttt{H.2.9}, hybrid feasibility closes at \texttt{H.2.10}, the unequal-variance calculation closes at \texttt{U.11} and \texttt{U.12}, and the all-schedules bound and attainment close at \texttt{R.6}.
+
+The result applies to the specified six-page letter and its stated assumptions. It supports the proof routes for all seven formal results, together with the derived claims checked in the forward review. This is a full model-assisted Lamport audit, with separate source mapping, forward checking, and conclusion-first dependency analysis. It is not a machine-checked formalization.
+\end{document}

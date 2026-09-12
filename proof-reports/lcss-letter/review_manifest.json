@@ -1,0 +1,11 @@
+{
+  "manuscript_title": "Too Late to Coordinate: When Local Information Beats Global Sharing",
+  "audit_date": "2026-09-12",
+  "formal_results": 7,
+  "plugin_commit": "c5466f44d6ef0fff983ad67a46bc54e39858826f",
+  "source_sha256": {
+    "letter.pdf": "211b1eae40836b0136d35ea59f6678e5b88df1efa8d01bd100a2ee1f229bf0ef",
+    "letter.tex": "ca4063836ef506a56fbee54ab850a67499d70fc5a1de8f5c4f8077a1794f8db5",
+    "letter_source.zip": "9033da79b77c9b67d1ec2df17f88f4aacbf54fbca19d7b41702069ea2b48e877"
+  }
+}

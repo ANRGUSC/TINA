@@ -82,7 +82,6 @@ Its pool is $\tau$ time units old and its local information is current. Let $J_L
 We call $J_L-J_H(\tau)$ the \emph{coordination value} of the delayed pool. It includes reductions in tracking error and disagreement. Its age-zero value is $\Delta=J_L-J_P$.
 
 \begin{table}[t]
-\vspace*{7pt} % Keep the top caption inside the submission margin.
 \caption{Data sufficient to implement the optimal policies.}
 \label{tab:information}
 \centering
@@ -323,7 +322,6 @@ This follows by solving $c\ge\Delta e^{-2\lambda\delta}/(2\lambda)$ for $\delta$
 \section{Numerical Illustration}
 Consider $n=8$, $a=b=1$, $\kappa=1$, and $\lambda=1$. Then $P_1=0.5$, $J_P=P_n=1/9$, $J_L=15/23$, and $\Delta=112/207\simeq0.5411$. The delay crossover is $\lambda\tau_{\rm cross}\simeq0.4691$. At one coherence time, $\lambda\tau=1$, delayed-pool-only loss is $0.8797$, compared with $0.6522$ locally. Local operation therefore reduces team loss by $25.9\%$, with no communication price included. At age $\tau=0.5$, the hybrid retains $e^{-1}\simeq36.8\%$ of the fresh-pooling value and has loss $0.4531$.
 \begin{figure}[t]
- \vspace*{7pt} % Keep figure paths inside the submission margin.
  \centering
  \includegraphics[width=\columnwidth]{figures/pooling_decay.pdf}
  \caption{The delay crossover and hybrid value. (a) Expected team loss under four information architectures. Beyond the crossover age, fresh-local operation outperforms the delayed pool used alone. The hybrid achieves lower loss than fresh-local operation at every finite age. (b) The hybrid's improvement over fresh-local operation, normalized by the improvement from fresh pooling, equals $e^{-2\lambda\tau}$ across the illustrated parameter settings. Markers show Monte Carlo estimates.}
@@ -333,7 +331,6 @@ Figure~\ref{fig:decay} uses 120,000 independent stationary Gaussian sample pairs
 
 For latency $\delta=0.1$, the critical communication cost is $\Delta e^{-0.2}/2\simeq0.2215$. Figure~\ref{fig:refresh} shows the effect of communication price. At half this cost, \eqref{eq:dimensionless} gives $2\lambda T^*\simeq1.6783$, hence $T^*\simeq0.8392$. The average cost is approximately $0.5695$. 
 \begin{figure}[t]
- \vspace*{7pt} % Keep figure paths inside the submission margin.
  \centering
  \includegraphics[width=\columnwidth]{figures/refresh_cost.pdf}
  \caption{Average team loss plus communication cost for the hybrid architecture with periodic pooled updates and continued access to fresh local observations. The dashed line shows fresh-local operation without updates. Below the critical update price, each cost curve has a unique finite minimizer. At or above that price, no refreshing is optimal.}

@@ -20,6 +20,8 @@ and processed numerical results, and deterministic build/test entry points.
 - `submissions/arxiv/`: the verified arXiv source closure, metadata, and upload
   ZIP for the full manuscript.
 - `submissions/lcss/`: current joint L-CSS/ACC submission PDF and source ZIP.
+- `proof-reports/lcss-letter/`: [Lamport review PDF](proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.pdf),
+  standalone LaTeX source, audit records, and the reviewed manuscript snapshot.
 - `numerics/config/`: fixed experiment parameters and seeds.
 - `numerics/experiments/`: six experiment drivers and the all-experiment runner.
 - `numerics/src/`: covariance, process, regret, theory, graph, and plotting code.

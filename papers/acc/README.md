@@ -1,5 +1,7 @@
 # Joint L-CSS/ACC Paper 1
 
+**Publication status:** This is an L-CSS submission manuscript. It has not been accepted for publication.
+
 The joint submission, **Too Late to Coordinate: When Local Information Beats
 Global Sharing**, uses the shared source in [../lcss/](../lcss/).
 
@@ -8,3 +10,4 @@ copies of the PDF and source ZIP are in [../../submissions/lcss/](../../submissi
 
 The latest files were imported from `TINA_Paper1_Source.zip`. Build and
 numerical reproduction instructions are in [../lcss/README.md](../lcss/README.md).
+

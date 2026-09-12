@@ -10,10 +10,24 @@ uses synchronized neighborhood snapshots: a broader snapshot arrives at a
 greater age. The repository includes the exact manuscript inputs, archived raw
 and processed numerical results, and deterministic build/test entry points.
 
+## Interactive reading guide
+
+**Publication status:** This is an L-CSS submission manuscript. It has not been accepted for publication.
+
+[**Read the interactive guide: notation, results, and fully worked proofs**](https://anrgusc.github.io/TINA/lcss-letter/).
+
+The guide covers the six-page letter **Too Late to Coordinate: When Local
+Information Beats Global Sharing**. It has adjustable 14–40 px text, chapter
+navigation, plain-English explanations, and 260 worked substeps covering all
+73 proof steps. This explainer is specific to the L-CSS letter and does not cover
+the full TINA arXiv manuscript. Its [source and manuscript provenance](explainers/lcss-letter/)
+are included in this repository.
+
 ## Repository map
 
 - `papers/full/`: canonical full manuscript, bibliography, figures, and compiled
   preprint.
+- `explainers/lcss-letter/`: interactive reading guide, editable explanations, and Pages build.
 - `papers/lcss/`: six-page joint L-CSS/ACC Paper 1 manuscript, compiled PDF, IEEE class file,
   figures, and numerical verification materials.
 - `papers/acc/`: pointer to the shared L-CSS/ACC Paper 1 source.
@@ -75,3 +89,4 @@ common-rate Gaussian-affine model. It does not test mixed-age architectures,
 heterogeneous temporal rates, endogenous dynamics, nonlinear decision maps, or
 action constraints. Code and repository content are released under the
 BSD 3-Clause License. See `CITATION.cff` for citation metadata.
+

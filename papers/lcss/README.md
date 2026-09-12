@@ -1,5 +1,15 @@
 # Too Late to Coordinate: When Local Information Beats Global Sharing
 
+**Publication status:** This is an L-CSS submission manuscript. It has not been accepted for publication.
+
+
+## Interactive reading guide
+
+[Read the guide](https://anrgusc.github.io/TINA/lcss-letter/) for step-by-step
+notation, claims, proofs, and worked calculations, with adjustable text size.
+[Guide source and manuscript revision](../../explainers/lcss-letter/README.md).
+
+
 ## Supplementary proof review
 
 The [Lamport review](../../proof-reports/lcss-letter/README.md) includes the
@@ -73,3 +83,4 @@ Author instructions: https://ieeecss.org/publication/ieee-control-systems-letter
 ACC 2027 dates: https://acc2027.a2c2.org/
 
 The ACC site lists September 11, 2026 for joint L-CSS/ACC submission and September 25, 2026 for regular ACC submission. Joint submission is made through L-CSS with the ACC option.
+

@@ -1,0 +1,51 @@
+name: Publish reading guide
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'explainers/lcss-letter/**'
+      - 'papers/lcss/main.tex'
+      - 'papers/lcss/main.pdf'
+      - 'submissions/lcss/lcss-paper.pdf'
+      - 'proof-reports/lcss-letter/TINA_Paper1_Lamport_Report.pdf'
+      - '.github/workflows/publish-reading-guide.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reading-guide-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build and verify the guide
+        run: python3 explainers/lcss-letter/build_pages.py
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy guide
+        id: deployment
+        uses: actions/deploy-pages@v4

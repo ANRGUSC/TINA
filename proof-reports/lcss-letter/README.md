@@ -1,5 +1,15 @@
 # Lamport review of the TINA delayed-pooling letter
 
+**Publication status:** This is an L-CSS submission manuscript. It has not been accepted for publication.
+
+
+## Interactive reading guide
+
+[Read the guide](https://anrgusc.github.io/TINA/lcss-letter/) for step-by-step
+notation, claims, proofs, and worked calculations, with adjustable text size.
+[Guide source and manuscript revision](../../explainers/lcss-letter/README.md).
+
+
 This package reviews the current six-page letter, *Too Late to Coordinate:
 When Local Information Beats Global Sharing*, by Scott Moeller
 and Bhaskar Krishnamachari. It does not audit the broader arXiv manuscript.
@@ -89,3 +99,4 @@ Source PDF SHA-256:
 
 Frozen conversion SHA-256:
 `a599596db88f9006726337403f992a6d8c033239f7c44a940aa86637d8daf165`
+

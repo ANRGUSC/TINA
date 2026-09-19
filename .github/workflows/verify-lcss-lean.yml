@@ -2,7 +2,14 @@ name: Verify L-CSS Lean proofs
 
 on:
   push:
+    branches: [main]
+    paths:
+      - 'papers/lcss/lean/**'
+      - '.github/workflows/verify-lcss-lean.yml'
   pull_request:
+    paths:
+      - 'papers/lcss/lean/**'
+      - '.github/workflows/verify-lcss-lean.yml'
   workflow_dispatch:
 
 permissions:

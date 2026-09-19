@@ -4,6 +4,8 @@ Lean proofs of Theorems 1 and 2 of [the letter](../main.tex), with a constructed
 independent Gaussian/OU model, arithmetic-history adapters, physical attaining
 policies, and inclusive reception endpoints.
 
+**Scope:** H1 (randomized-policy admissibility correspondence) remains open; this merge leaves the letter text in `papers/lcss/main.tex` unchanged.
+
 Theorem 2 establishes optimality for the explicitly formalized policy class.
 The [correspondence audit](audit.md) records an unresolved distinction between
 conditional per-seed square integrability and unconditional fixed-time square
@@ -49,7 +51,8 @@ fresh replay. It is not full verification. `--extract-only` regenerates the
 core DAG from hash-matched previous evidence and performs no new proof checking.
 
 [GitHub Actions](../../../.github/workflows/verify-lcss-lean.yml) runs full
-validation on pushes, pull requests, and manual dispatches. Logs, dependency
+validation on pushes to `main` and pull requests that change `papers/lcss/lean/**`
+or the verification workflow itself, and on manual dispatches. Logs, dependency
 exports, DAGs, and verification reports are generated locally and uploaded as
 CI artifacts; they are ignored by Git. A clean checkout requires no archived
 results. The temporary `migratefrom/` inputs are also ignored and are not needed

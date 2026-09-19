@@ -5,3 +5,6 @@
 
 # Preserve the exact bytes of the archived, hash-identified review package.
 proof-reports/lcss-letter/** -text
+
+# Keep the hash-locked Lean proof package reproducible on Windows checkouts.
+papers/lcss/lean/** text eol=lf

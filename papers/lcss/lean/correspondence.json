@@ -1,0 +1,610 @@
+{
+  "scope": "C5 paper-to-Lean correspondence review",
+  "paper": "proof-project/reference/lcss-main.tex",
+  "paper_commit": "96909b3b63d2ad6921fa499e55cb3a01365e5fdf",
+  "independent_human_review": false,
+  "rows": [
+    {
+      "id": "M01",
+      "paper_lines": [
+        54,
+        72
+      ],
+      "claim": "n≥2, a,b,λ>0, κ≥0",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.Parameters",
+          "file": "proof-project/LCSS/Parameters.lean",
+          "line": 14
+        }
+      ],
+      "explanation": "Exact numerical domain; rate is λ, not 2λ."
+    },
+    {
+      "id": "M02",
+      "paper_lines": [
+        54,
+        62
+      ],
+      "claim": "Independent centered Gaussian primitives with exponential covariance",
+      "disposition": "pass_at_covariance_process_contract",
+      "lean": [
+        {
+          "declaration": "LCSS.PaperModel",
+          "file": "proof-project/LCSS/PaperModel.lean",
+          "line": 17
+        },
+        {
+          "declaration": "LCSS.full_model_witness",
+          "file": "proof-project/LCSS/ModelWitness.lean",
+          "line": 15
+        }
+      ],
+      "explanation": "Whole-process independence, Gaussian finite laws, means and covariance; a full real-time continuous witness exists. A separate stationarity-in-law corollary is not exported."
+    },
+    {
+      "id": "M03",
+      "paper_lines": [
+        252,
+        261
+      ],
+      "claim": "Independent components with possibly different rates",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.PaperComponents",
+          "file": "proof-project/LCSS/Components.lean",
+          "line": 56
+        }
+      ],
+      "explanation": "Component source families are independent. Sensors within a component are correlated through their shared signal, as required."
+    },
+    {
+      "id": "I01",
+      "paper_lines": [
+        75,
+        94
+      ],
+      "claim": "Entire real-time histories, fresh local data and past pooled data",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.historySigma",
+          "file": "proof-project/LCSS/Gaussian.lean",
+          "line": 21
+        },
+        {
+          "declaration": "LCSS.SensorModel.localInfo",
+          "file": "proof-project/LCSS/Endpoints.lean",
+          "line": 13
+        },
+        {
+          "declaration": "LCSS.SensorModel.hybridInfo",
+          "file": "proof-project/LCSS/History.lean",
+          "line": 65
+        },
+        {
+          "declaration": "LCSS.SensorModel.fullInfo",
+          "file": "proof-project/LCSS/History.lean",
+          "line": 63
+        }
+      ],
+      "explanation": "Arbitrary real past indices, not a finite grid or only the latest observation."
+    },
+    {
+      "id": "I02",
+      "paper_lines": [
+        75,
+        94
+      ],
+      "claim": "Pooled data are literal arithmetic means",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.theorem1_arithmetic",
+          "file": "proof-project/LCSS/ArithmeticHistory.lean",
+          "line": 122
+        },
+        {
+          "declaration": "LCSS.RawRealization.message",
+          "file": "proof-project/LCSS/RawProcess.lean",
+          "line": 53
+        },
+        {
+          "declaration": "LCSS.RawRealization.receivedInfo_informationSpace",
+          "file": "proof-project/LCSS/RawProcess.lean",
+          "line": 145
+        }
+      ],
+      "explanation": "Arithmetic history and raw-to-L² adapters are proved; raw means are pointwise finite sums."
+    },
+    {
+      "id": "I03",
+      "paper_lines": [
+        72,
+        94
+      ],
+      "claim": "Information measurability modulo null events",
+      "disposition": "pass_with_explicit_convention",
+      "lean": [
+        {
+          "declaration": "LCSS.informationSpace",
+          "file": "proof-project/LCSS/History.lean",
+          "line": 12
+        },
+        {
+          "declaration": "LCSS.aeHistory",
+          "file": "proof-project/LCSS/RawHistory.lean",
+          "line": 15
+        },
+        {
+          "declaration": "LCSS.informationSpace_aeHistory",
+          "file": "proof-project/LCSS/RawHistory.lean",
+          "line": 120
+        },
+        {
+          "declaration": "LCSS.RawRealization.receivedInfo_informationSpace",
+          "file": "proof-project/LCSS/RawProcess.lean",
+          "line": 145
+        }
+      ],
+      "explanation": "Ambient-null augmentation has the same admissible L² classes. No simultaneous full-measure event for an uncountable family is assumed."
+    },
+    {
+      "id": "T101",
+      "paper_lines": [
+        176,
+        181
+      ],
+      "claim": "Hybrid formula",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.Theorem1Claims",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 65
+        },
+        {
+          "declaration": "LCSS.theorem1_arithmetic",
+          "file": "proof-project/LCSS/ArithmeticHistory.lean",
+          "line": 122
+        }
+      ],
+      "explanation": "policy_formula is the exact affine innovation formula. The literal-message wrapper supplies arithmetic pool semantics."
+    },
+    {
+      "id": "T102",
+      "paper_lines": [
+        72,
+        182
+      ],
+      "claim": "Optimal among all measurable L² actions, including nonlinear ones",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.optimalExpectedLoss",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 17
+        },
+        {
+          "declaration": "LCSS.expectedLoss_eq_optimalExpectedLoss",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 21
+        },
+        {
+          "declaration": "LCSS.Theorem1Claims",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 65
+        }
+      ],
+      "explanation": "The domain is all information-measurable L² policies. Nonempty domain and boundedness for the real infimum are proved."
+    },
+    {
+      "id": "T103",
+      "paper_lines": [
+        182,
+        185
+      ],
+      "claim": "Actual posterior conditional variance",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.Theorem1Claims",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 65
+        },
+        {
+          "declaration": "LCSS.SensorModel.posterior_arithmetic_condVar",
+          "file": "proof-project/LCSS/ArithmeticHistory.lean",
+          "line": 89
+        }
+      ],
+      "explanation": "Conditional variance is Mathlib condVar and the claimed constant equality holds almost surely, as appropriate."
+    },
+    {
+      "id": "T104",
+      "paper_lines": [
+        182,
+        189
+      ],
+      "claim": "Cost interpolation, same full-sharing value, exponential gain",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.Theorem1Claims",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 65
+        },
+        {
+          "declaration": "LCSS.theorem1",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 101
+        }
+      ],
+      "explanation": "All three are conclusions; not fields assumed by the model."
+    },
+    {
+      "id": "T105",
+      "paper_lines": [
+        193,
+        193
+      ],
+      "claim": "Age zero is included",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.theorem1",
+          "file": "proof-project/LCSS/Theorem1.lean",
+          "line": 101
+        }
+      ],
+      "explanation": "Root assumes 0≤τ; no hidden strict-positive-age restriction."
+    },
+    {
+      "id": "T201",
+      "paper_lines": [
+        272,
+        272
+      ],
+      "claim": "Fixed latency; no service queue or minimum separation",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.PhysicalSchedule",
+          "file": "proof-project/LCSS/PhysicalSchedule.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.PhysicalSchedule.receivedBy",
+          "file": "proof-project/LCSS/ReceptionEndpoints.lean",
+          "line": 14
+        }
+      ],
+      "explanation": "Non-strict reception at send+δ. No T≥δ requirement is inserted."
+    },
+    {
+      "id": "T202",
+      "paper_lines": [
+        272,
+        272
+      ],
+      "claim": "Finite, empty and infinite locally finite schedules",
+      "disposition": "pass_for_nonnegative_startup",
+      "lean": [
+        {
+          "declaration": "LCSS.PhysicalSchedule",
+          "file": "proof-project/LCSS/PhysicalSchedule.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.PhysicalSchedule.count_spec",
+          "file": "proof-project/LCSS/PhysicalSchedule.lean",
+          "line": 38
+        }
+      ],
+      "explanation": "Active indices form an initial segment; monotone sends can repeat. Each active transmission is charged. No explosion on bounded positive horizons."
+    },
+    {
+      "id": "T203",
+      "paper_lines": [
+        272,
+        311
+      ],
+      "claim": "Schedule randomness independent of signals and disturbances",
+      "disposition": "pass_with_product_seed_convention",
+      "lean": [
+        {
+          "declaration": "LCSS.InclusiveRawStrategy",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.timeAverage",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 51
+        }
+      ],
+      "explanation": "Schedule depends only on seed ξ; objective uses ν.prod μ. Actions may use the whole independent seed, a harmless enlargement for the lower bound."
+    },
+    {
+      "id": "T204",
+      "paper_lines": [
+        72,
+        272
+      ],
+      "claim": "Finite second moment for randomized policies",
+      "disposition": "conditional_mismatch_high",
+      "lean": [
+        {
+          "declaration": "LCSS.InclusiveRawPolicy",
+          "file": "proof-project/LCSS/InclusivePolicy.lean",
+          "line": 28
+        },
+        {
+          "declaration": "LCSS.InclusiveRawStrategy",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 14
+        }
+      ],
+      "explanation": "Lean requires ∀ξ ∀t MemLp(u ξ t)2 μ. Unconditional fixed-time L² over ν.prod μ does not imply this. See C5-H1."
+    },
+    {
+      "id": "T205",
+      "paper_lines": [
+        72,
+        283
+      ],
+      "claim": "Measurable time-integrated objective",
+      "disposition": "clarification_medium",
+      "lean": [
+        {
+          "declaration": "LCSS.InclusiveRawStrategy",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.timeAverage",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 51
+        }
+      ],
+      "explanation": "Loss measurability is explicit. New C5Review.ofJoint derives the analytic fields from joint action measurability; conditional L² remains an input."
+    },
+    {
+      "id": "T206",
+      "paper_lines": [
+        272,
+        307
+      ],
+      "claim": "Startup and no initially supplied pooled information",
+      "disposition": "clarification_medium",
+      "lean": [
+        {
+          "declaration": "LCSS.PhysicalSchedule",
+          "file": "proof-project/LCSS/PhysicalSchedule.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.RawRealization.receivedInfo",
+          "file": "proof-project/LCSS/RawProcess.lean",
+          "line": 126
+        }
+      ],
+      "explanation": "Sends start at time 0. Local prehistory still exists. The proof text supports empty pooled startup but the model paragraph should say so."
+    },
+    {
+      "id": "T207",
+      "paper_lines": [
+        252,
+        252
+      ],
+      "claim": "Same physical agents across all components",
+      "disposition": "pass_by_specialization",
+      "lean": [
+        {
+          "declaration": "LCSS.AgentCoordinates",
+          "file": "proof-project/LCSS/ScheduledPolicy.lean",
+          "line": 77
+        }
+      ],
+      "explanation": "Use common n and the identity agent correspondence. New C5Review.commonAgents constructs this specialization."
+    },
+    {
+      "id": "T208",
+      "paper_lines": [
+        272,
+        272
+      ],
+      "claim": "Competitors may use a message at its reception instant",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.PhysicalSchedule.receivedBy",
+          "file": "proof-project/LCSS/ReceptionEndpoints.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.InclusiveRawPolicy",
+          "file": "proof-project/LCSS/InclusivePolicy.lean",
+          "line": 28
+        },
+        {
+          "declaration": "LCSS.InclusiveRawPolicy.toStrict_integrated_loss",
+          "file": "proof-project/LCSS/InclusivePolicy.lean",
+          "line": 82
+        }
+      ],
+      "explanation": "All inclusive competitors in the formal class are covered; endpoint erasure preserves every horizon loss."
+    },
+    {
+      "id": "T209",
+      "paper_lines": [
+        65,
+        72
+      ],
+      "claim": "Tracking plus disagreement with correct normalization",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.pointwiseLoss",
+          "file": "proof-project/LCSS/Objective.lean",
+          "line": 14
+        },
+        {
+          "declaration": "LCSS.RawRealization.realizedLoss",
+          "file": "proof-project/LCSS/RawPolicy.lean",
+          "line": 93
+        }
+      ],
+      "explanation": "Actual raw loss is used; positive weights and κ≥0 make ofReal conversion faithful."
+    },
+    {
+      "id": "T210",
+      "paper_lines": [
+        283,
+        311
+      ],
+      "claim": "limsup of expected integrated loss and generation-time charges",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.timeAverage",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 51
+        },
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.timeUpperCost",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 56
+        }
+      ],
+      "explanation": "Expectation is before the limsup; raw time integral is inside expectation. Sends still in flight are charged; infinite costs are allowed."
+    },
+    {
+      "id": "T211",
+      "paper_lines": [
+        274,
+        288
+      ],
+      "claim": "A, γ, B and critical price",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.RefreshMixture.ofParameters",
+          "file": "proof-project/LCSS/RefreshBridge.lean",
+          "line": 37
+        },
+        {
+          "declaration": "LCSS.RefreshMixture.benefit",
+          "file": "proof-project/LCSS/RefreshCalculus.lean",
+          "line": 26
+        },
+        {
+          "declaration": "LCSS.RefreshMixture.threshold",
+          "file": "proof-project/LCSS/RefreshCalculus.lean",
+          "line": 27
+        }
+      ],
+      "explanation": "γ=2λ, A=wΔexp(-γδ), threshold=ΣA/γ, no missing weight or latency factor."
+    },
+    {
+      "id": "T212",
+      "paper_lines": [
+        290,
+        294
+      ],
+      "claim": "Unique positive period-equation root",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.RefreshMixture.exists_unique_period",
+          "file": "proof-project/LCSS/RefreshCalculus.lean",
+          "line": 132
+        },
+        {
+          "declaration": "LCSS.RefreshMixture.marginal_formula",
+          "file": "proof-project/LCSS/RefreshCalculus.lean",
+          "line": 96
+        }
+      ],
+      "explanation": "Positive and finite parameters give strict monotonicity and the critical limit. This does not assert uniqueness of every optimal randomized schedule."
+    },
+    {
+      "id": "T213",
+      "paper_lines": [
+        290,
+        298
+      ],
+      "claim": "No-refresh and periodic costs are physically attained",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.noRefresh_cost",
+          "file": "proof-project/LCSS/InclusiveAttainment.lean",
+          "line": 24
+        },
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.periodic_cost",
+          "file": "proof-project/LCSS/InclusiveAttainment.lean",
+          "line": 30
+        },
+        {
+          "declaration": "LCSS.theorem2_inclusive_physical_attainment",
+          "file": "proof-project/LCSS/InclusiveAttainment.lean",
+          "line": 51
+        }
+      ],
+      "explanation": "Candidates are single raw action paths for all horizons. Equality concerns the physical time-integrated objective."
+    },
+    {
+      "id": "T214",
+      "paper_lines": [
+        307,
+        311
+      ],
+      "claim": "Global bound over general schedules and controls",
+      "disposition": "pass_for_formal_class_only",
+      "lean": [
+        {
+          "declaration": "LCSS.InclusiveRawStrategy.expected_horizon_lower_bound",
+          "file": "proof-project/LCSS/InclusiveObjective.lean",
+          "line": 80
+        },
+        {
+          "declaration": "LCSS.theorem2_inclusive_lower_bounds",
+          "file": "proof-project/LCSS/InclusiveAttainment.lean",
+          "line": 39
+        }
+      ],
+      "explanation": "C2 removes reception endpoints and compares every formal competitor. C5-H1 prevents unconditional identification with a broader paper class."
+    },
+    {
+      "id": "V01",
+      "paper_lines": [
+        54,
+        62
+      ],
+      "claim": "Full model existence, not just finitely many Gaussian marginals",
+      "disposition": "pass",
+      "lean": [
+        {
+          "declaration": "LCSS.full_model_witness",
+          "file": "proof-project/LCSS/ModelWitness.lean",
+          "line": 15
+        },
+        {
+          "declaration": "LCSS.theorem1_ou",
+          "file": "proof-project/LCSS/ModelWitness.lean",
+          "line": 31
+        },
+        {
+          "declaration": "LCSS.theorem2_ou_physical_attainment",
+          "file": "proof-project/LCSS/ModelWitness.lean",
+          "line": 35
+        }
+      ],
+      "explanation": "C3 constructs all real times jointly and independent primitives; instantiated roots require no supplied model or regularity witness."
+    }
+  ]
+}

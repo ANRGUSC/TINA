@@ -1,0 +1,205 @@
+{
+  "repositories": {
+    "BrownianMotion": {
+      "revision": "be340b915d6d59a63d871ba6fed7a04eef77fb1b",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "repository_url": "https://github.com/RemyDegenne/brownian-motion.git"
+    },
+    "KolmogorovExtension4": {
+      "revision": "7d76e184c3d2138a2741baf923b57e9a01b9cf25",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "repository_url": "https://github.com/RemyDegenne/kolmogorov_extension4.git"
+    }
+  },
+  "modules": {
+    "BrownianMotion.Gaussian.BrownianMotion": {
+      "upstream_sha256": "19c7759e0cbc4959a77bc8db9c2fccb0aa84f6740362a874645cf80293922a19",
+      "source": "BrownianMotion/Gaussian/BrownianMotion.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "19c7759e0cbc4959a77bc8db9c2fccb0aa84f6740362a874645cf80293922a19"
+    },
+    "BrownianMotion.Auxiliary.HasLaw": {
+      "upstream_sha256": "8990633ee9f46231cad43abc0b9db39c45a30c53b7d6b27e4020badf160b6a3a",
+      "source": "BrownianMotion/Auxiliary/HasLaw.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "8990633ee9f46231cad43abc0b9db39c45a30c53b7d6b27e4020badf160b6a3a"
+    },
+    "BrownianMotion.Continuity.KolmogorovChentsov": {
+      "upstream_sha256": "0814a0012d92a1c80ac8681247c106ef6604bffd747b26bb54010d4144283c5b",
+      "source": "BrownianMotion/Continuity/KolmogorovChentsov.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "0814a0012d92a1c80ac8681247c106ef6604bffd747b26bb54010d4144283c5b"
+    },
+    "BrownianMotion.Auxiliary.Topology": {
+      "upstream_sha256": "ce23e4180f97416196f30f05f52756ecc46c99737ec9bb674c9ed3f16014e2b6",
+      "source": "BrownianMotion/Auxiliary/Topology.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "ce23e4180f97416196f30f05f52756ecc46c99737ec9bb674c9ed3f16014e2b6"
+    },
+    "BrownianMotion.Continuity.LimitModification": {
+      "upstream_sha256": "971828f61f311578c0a88233e82504ea7838cdc818bb50a00f26678c0c97868e",
+      "source": "BrownianMotion/Continuity/LimitModification.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "971828f61f311578c0a88233e82504ea7838cdc818bb50a00f26678c0c97868e"
+    },
+    "BrownianMotion.Auxiliary.DenseCountable": {
+      "upstream_sha256": "a80476377e6c0e2b573816f728db930ccbd8bc2469709ea3b7f03615474c8b58",
+      "source": "BrownianMotion/Auxiliary/DenseCountable.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "a80476377e6c0e2b573816f728db930ccbd8bc2469709ea3b7f03615474c8b58"
+    },
+    "BrownianMotion.Continuity.KolmogorovChentsovInequality": {
+      "upstream_sha256": "0e3d9f8b665d5c3b215ad0c6ffdf88f9e7058dbb0ac28c8dc8bd1a30b979a56c",
+      "source": "BrownianMotion/Continuity/KolmogorovChentsovInequality.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "0e3d9f8b665d5c3b215ad0c6ffdf88f9e7058dbb0ac28c8dc8bd1a30b979a56c"
+    },
+    "BrownianMotion.Continuity.IsKolmogorovProcess": {
+      "upstream_sha256": "e2ab3360724b02661981dc8d46164ed943d52fbf96b85b5586481077bf90b02f",
+      "source": "BrownianMotion/Continuity/IsKolmogorovProcess.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "e2ab3360724b02661981dc8d46164ed943d52fbf96b85b5586481077bf90b02f"
+    },
+    "BrownianMotion.Auxiliary.FiniteInf": {
+      "upstream_sha256": "5731080f16cb712effaffa72739ff36d4a4835f9385e5bbb8e06d88c6617425d",
+      "source": "BrownianMotion/Auxiliary/FiniteInf.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "5731080f16cb712effaffa72739ff36d4a4835f9385e5bbb8e06d88c6617425d"
+    },
+    "BrownianMotion.Auxiliary.MeanInequalities": {
+      "upstream_sha256": "396701f3112dea060898d6e5c3e979786f0f541618e22f290118251b00b2106e",
+      "source": "BrownianMotion/Auxiliary/MeanInequalities.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "396701f3112dea060898d6e5c3e979786f0f541618e22f290118251b00b2106e"
+    },
+    "BrownianMotion.Continuity.Chaining": {
+      "upstream_sha256": "705bf609ae98ad8227985830f9f50fdfef86a01cdc0c925142bbcca4507a047b",
+      "source": "BrownianMotion/Continuity/Chaining.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "705bf609ae98ad8227985830f9f50fdfef86a01cdc0c925142bbcca4507a047b"
+    },
+    "BrownianMotion.Auxiliary.ENNReal": {
+      "upstream_sha256": "45e32bb046b5e29dc428795644c1e24bdfb22f46d1b7a53d71a0db823caebd10",
+      "source": "BrownianMotion/Auxiliary/ENNReal.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "45e32bb046b5e29dc428795644c1e24bdfb22f46d1b7a53d71a0db823caebd10"
+    },
+    "BrownianMotion.Continuity.HasBoundedInternalCoveringNumber": {
+      "upstream_sha256": "d169aba72155a5b7dfcb89cd13568082f9146da3f8ebdf83c72a2489d969e588",
+      "source": "BrownianMotion/Continuity/HasBoundedInternalCoveringNumber.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "d169aba72155a5b7dfcb89cd13568082f9146da3f8ebdf83c72a2489d969e588"
+    },
+    "BrownianMotion.Continuity.CoveringNumber": {
+      "upstream_sha256": "0a066df0cd9ef5fd55f453578de9866672baea986d65ea86f2fdc4d18e4867ea",
+      "source": "BrownianMotion/Continuity/CoveringNumber.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "0a066df0cd9ef5fd55f453578de9866672baea986d65ea86f2fdc4d18e4867ea"
+    },
+    "BrownianMotion.Auxiliary.MeasureTheory": {
+      "upstream_sha256": "6792d2d55e8d05aa83b0faadd256092129bf834c64c483c76d74af9b7ea46f94",
+      "source": "BrownianMotion/Auxiliary/MeasureTheory.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "6792d2d55e8d05aa83b0faadd256092129bf834c64c483c76d74af9b7ea46f94"
+    },
+    "BrownianMotion.Auxiliary.Algebra": {
+      "upstream_sha256": "ff7a39360ac8213105b113f9c1dbd761b45e8ed3cad2f8d65af7c8c4f30a40da",
+      "source": "BrownianMotion/Auxiliary/Algebra.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "4b28cfe42a72abfa02fbbecaff28daadd855f5885ab2b5b1f075b682438797d3"
+    },
+    "BrownianMotion.Auxiliary.Metric": {
+      "upstream_sha256": "13f5040961175788f8631ba4551a00ef4671a0c172ba85f145c57b025f7b7d9e",
+      "source": "BrownianMotion/Auxiliary/Metric.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "13f5040961175788f8631ba4551a00ef4671a0c172ba85f145c57b025f7b7d9e"
+    },
+    "BrownianMotion.Auxiliary.Nat": {
+      "upstream_sha256": "637f1fa12fb1cd584ce886f06b9a5167b5a7e96415740112e0ed60157916be10",
+      "source": "BrownianMotion/Auxiliary/Nat.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "637f1fa12fb1cd584ce886f06b9a5167b5a7e96415740112e0ed60157916be10"
+    },
+    "BrownianMotion.Gaussian.StochasticProcesses": {
+      "upstream_sha256": "c5fc98b72eb3044fe49add5b47ce10ec8a9aeb1e47aa11aa32a91a2e0c393f81",
+      "source": "BrownianMotion/Gaussian/StochasticProcesses.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "c5fc98b72eb3044fe49add5b47ce10ec8a9aeb1e47aa11aa32a91a2e0c393f81"
+    },
+    "BrownianMotion.Gaussian.CovMatrix": {
+      "upstream_sha256": "89ec93a4bbf3671bc6eb34803c1000777ec00a600732b878d4623cd0457d7ea8",
+      "source": "BrownianMotion/Gaussian/CovMatrix.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "89ec93a4bbf3671bc6eb34803c1000777ec00a600732b878d4623cd0457d7ea8"
+    },
+    "BrownianMotion.Auxiliary.ContinuousBilinForm": {
+      "upstream_sha256": "6a2092c753f4236b1199eb1ac422c195ba053b18958e38ecd9677f49d4e5fd91",
+      "source": "BrownianMotion/Auxiliary/ContinuousBilinForm.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "6a2092c753f4236b1199eb1ac422c195ba053b18958e38ecd9677f49d4e5fd91"
+    },
+    "BrownianMotion.Auxiliary.LinearAlgebra": {
+      "upstream_sha256": "9d01184f8cbf9b79e29a7fa28f0ddd73c2d5dc3cbda690a02a7fd90ea7594a64",
+      "source": "BrownianMotion/Auxiliary/LinearAlgebra.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "9d01184f8cbf9b79e29a7fa28f0ddd73c2d5dc3cbda690a02a7fd90ea7594a64"
+    },
+    "BrownianMotion.Gaussian.GaussianProcess": {
+      "upstream_sha256": "0a51f1274533938eb90b61d2f038ce6edf1fe5000f883cfbae45542eda123dfe",
+      "source": "BrownianMotion/Gaussian/GaussianProcess.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "0a51f1274533938eb90b61d2f038ce6edf1fe5000f883cfbae45542eda123dfe"
+    },
+    "BrownianMotion.Gaussian.Moment": {
+      "upstream_sha256": "1ec420407465231b2bdee35a8923b5786c22336ca4c7efcf07cef05eab9fbb3c",
+      "source": "BrownianMotion/Gaussian/Moment.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "1ec420407465231b2bdee35a8923b5786c22336ca4c7efcf07cef05eab9fbb3c"
+    },
+    "BrownianMotion.Gaussian.ProjectiveLimit": {
+      "upstream_sha256": "0383e10ef62ec0f3aaff30cfd64ec9a90c1ab78fbb64f7f23668d693e8e97840",
+      "source": "BrownianMotion/Gaussian/ProjectiveLimit.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "0383e10ef62ec0f3aaff30cfd64ec9a90c1ab78fbb64f7f23668d693e8e97840"
+    },
+    "BrownianMotion.Auxiliary.NNReal": {
+      "upstream_sha256": "92dbb17acfc90d8544d9021074814bbba164de8c85b4796603a261237bd87336",
+      "source": "BrownianMotion/Auxiliary/NNReal.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "92dbb17acfc90d8544d9021074814bbba164de8c85b4796603a261237bd87336"
+    },
+    "BrownianMotion.Gaussian.Gaussian": {
+      "upstream_sha256": "7970de8c7bceb385a286a4dc9b5ddbf377102fdd9943c68baf852a12b66f7a64",
+      "source": "BrownianMotion/Gaussian/Gaussian.lean",
+      "repository": "BrownianMotion",
+      "ported_sha256": "7970de8c7bceb385a286a4dc9b5ddbf377102fdd9943c68baf852a12b66f7a64"
+    },
+    "KolmogorovExtension4.KolmogorovExtension": {
+      "upstream_sha256": "dc357744898a33480b9605d4f7c4cfe9a23282329f982c902bf0e3a1a9872e14",
+      "source": "KolmogorovExtension4/KolmogorovExtension.lean",
+      "repository": "KolmogorovExtension4",
+      "ported_sha256": "dc357744898a33480b9605d4f7c4cfe9a23282329f982c902bf0e3a1a9872e14"
+    },
+    "KolmogorovExtension4.RegularContent": {
+      "upstream_sha256": "fbd5badca4a85ef33655e8a9051183b3158ad38dbae5e24b49f6699be20c1a6b",
+      "source": "KolmogorovExtension4/RegularContent.lean",
+      "repository": "KolmogorovExtension4",
+      "ported_sha256": "fbd5badca4a85ef33655e8a9051183b3158ad38dbae5e24b49f6699be20c1a6b"
+    },
+    "KolmogorovExtension4.CompactSystem": {
+      "upstream_sha256": "e7356efc8317663f1c2edd7bed857faa424e898ee04c35ed6510c3d06444195b",
+      "source": "KolmogorovExtension4/CompactSystem.lean",
+      "repository": "KolmogorovExtension4",
+      "ported_sha256": "e7356efc8317663f1c2edd7bed857faa424e898ee04c35ed6510c3d06444195b"
+    }
+  },
+  "compatibility_changes": [
+    {
+      "file": "BrownianMotion/Auxiliary/Algebra.lean",
+      "description": "Remove duplicate Set.indicator_apply_apply, already available in the pinned imported libraries. No mathematical hypothesis or proof is replaced.",
+      "patch": "compatibility.patch"
+    }
+  ],
+  "lean_toolchain": "leanprover/lean4:v4.33.1",
+  "mathlib_revision": "0df444a360eaa60ab8c11dca51a86af692955474"
+}

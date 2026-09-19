@@ -1,0 +1,15 @@
+# Temporary migration inputs and local compiler outputs.
+/migratefrom/
+.DS_Store
+.lake/
+*.olean
+*.ilean
+*.olean.private
+*.olean.server
+
+# Verification regenerates these; CI publishes them as artifacts.
+/proof-project/evidence/
+/proof-project/proof-dag.json
+/review/*.log
+/review/verification.json
+/review/C5-dependencies.json

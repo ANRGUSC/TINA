@@ -1,0 +1,63 @@
+name: Verify L-CSS Lean proofs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'papers/lcss/lean/**'
+      - '.github/workflows/verify-lcss-lean.yml'
+  pull_request:
+    paths:
+      - 'papers/lcss/lean/**'
+      - '.github/workflows/verify-lcss-lean.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      LEAN_NUM_THREADS: '2'
+    defaults:
+      run:
+        working-directory: papers/lcss/lean/proof-project
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pinned Lean and fetch Mathlib cache
+        uses: leanprover/lean-action@96e06131c0e9943c780388fd166f55d1e2fa0433
+        with:
+          lake-package-directory: papers/lcss/lean/proof-project
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-github-cache: 'false'
+          use-mathlib-cache: 'true'
+
+      - name: Clean rebuild, regression examples, axiom audit and fresh kernel replay
+        run: python3 scripts/verify.py --clean
+
+      - name: Test verifier rejection guards
+        run: python3 scripts/check_guards.py
+
+      - name: Verify supplementary C5 proofs and replay
+        run: python3 ../review/verify_review.py "$PWD"
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lcss-lean-${{ github.sha }}
+          path: |
+            papers/lcss/lean/proof-project/evidence/
+            papers/lcss/lean/proof-project/proof-dag.json
+            papers/lcss/lean/review/*.log
+            papers/lcss/lean/review/verification.json
+            papers/lcss/lean/review/C5-dependencies.json
+          if-no-files-found: error
+          retention-days: 14

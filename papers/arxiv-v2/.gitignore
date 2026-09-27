@@ -1,0 +1,4 @@
+build/
+qa/
+__pycache__/
+!CHANGELOG.md

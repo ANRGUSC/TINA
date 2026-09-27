@@ -1,0 +1,50 @@
+{
+  "baseline_source_sha256": "9476b7a7a155a79076c818b20bd6362b77990e4e24d6cccdf0e9df743bf44238",
+  "reviewed_source_sha256": "f15a18cc0b12021f01d57da58e5f6c11f43e43a6693b75cabbdb96271f3ed337",
+  "references_and_labels": "pass",
+  "baseline_matches_arxiv_source": true,
+  "title_authors_preamble_unchanged_except_date": true,
+  "title_page_date": "September 2026",
+  "related_work_verbatim_unchanged": true,
+  "bibliography_verbatim_unchanged": true,
+  "figures_unchanged_sha256": {
+    "fig7_1_temporal_scaling.pdf": "d2ec239fd24bcbbbd59a53c1c1d9ed8118d1b06928abc6c08032688e6a8971c8",
+    "fig7_2_local_global_phase.pdf": "25f3eed3809163f5486e6dd903de6f8920a09eeea43eacb654b7f1d606352b65",
+    "fig7_3_radius_regret.pdf": "d5710e00328a0af673f68ffaefd9f9ee4ecb39fa766a379a8bf37e30e11dcea0",
+    "fig7_4_radius_phase.pdf": "7c6ab9173f4ef895c3a5273490e94fad3e6de395b6390adac11c9c7a25239021",
+    "fig7_5_decision_relevance.pdf": "33800c06d013c715b29cf56e52f5fda77b2934cac7841f9adf03b96eac02c4b1",
+    "fig7_6_general_graphs.pdf": "4b78791b53fc788e2c910499fbac8f7d9e3324d628dd39a8c6d4c29e2d82047c"
+  },
+  "non_gaussian_coupled_team_exact_enumeration": [
+    {
+      "decay": 0.0,
+      "regret_error": 7.549516567451064e-15,
+      "optimal_policy_error": 6.661338147750939e-16
+    },
+    {
+      "decay": 0.15,
+      "regret_error": 1.3322676295501878e-15,
+      "optimal_policy_error": 8.881784197001252e-16
+    },
+    {
+      "decay": 0.6,
+      "regret_error": 1.3322676295501878e-15,
+      "optimal_policy_error": 1.6653345369377348e-15
+    },
+    {
+      "decay": 0.95,
+      "regret_error": 4.440892098500626e-16,
+      "optimal_policy_error": 1.2212453270876722e-15
+    },
+    {
+      "decay": 1.0,
+      "regret_error": 0.0,
+      "optimal_policy_error": 2.42861286636753e-17
+    }
+  ],
+  "v1_v2_omission_max_abs_error": 1.1102230246251565e-16,
+  "archived_experiment4_points": 4896,
+  "v2_vs_archived_theory_max_abs_error": 2.220446049250313e-16,
+  "direct_grid_max_abs_error": 0.0008000517908905228,
+  "direct_grid_mean_abs_error": 0.00022478595111202364
+}

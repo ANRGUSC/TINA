@@ -30,7 +30,7 @@ The pointwise infinite-line regret convention is retained in the canonical model
 
 The last three precision changes were checked by the independent reviewer. The original related-work text, bibliography entries, figures, numerical values, and unrelated narrative were not rewritten.
 
-## Result numbering
+## Result numbering after simplification (before the clarity pass)
 
 | v1 | v2 |
 | --- | --- |
@@ -53,4 +53,18 @@ Corollary 1 and Remark 1 are retained. There are now nine numbered lemmas, propo
 
 ## Review and validation
 
-The independent reviewer found no theorem-level error and approved the final targeted fixes. The final source hash and numerical checks are recorded in `verification.json`. The compiled PDF has 39 pages, compared with 44 in the baseline. The existing typesetting and unaffected wording were retained rather than changing layout to meet the notes' approximate page estimates.
+The independent reviewer found no theorem-level error and approved the final targeted fixes. The final source hash and numerical checks are recorded in `verification.json`. The initial simplification PDF had 39 pages, compared with 44 in the baseline; the subsequent clarity revision has 52 pages. The existing typesetting and unaffected wording were retained rather than changing layout to meet the notes' approximate page estimates.
+
+
+## Clarity pass (September 26, 2026)
+
+Applied `clarifyTINA2.md` within the existing mathematical structure. The verbatim instructions are archived in `clarity-notes.md`; independent findings and their resolution are in `CLARITY_REVIEW.md`.
+
+- Sections 2--5: applied all 42 inline recommendations (2-A--B, 3-A--T, 4-A--H, 5-A--L), expanding the projection, innovation, aggregate, composition, omission, and optimal-radius derivations and their interpretations.
+- Added the Section 3 roadmap, snapshot timing diagram, assumptions table, and Section 5 marginal-rate illustration. Added entries to the notation table and replaced brittle numeric cross-references with labels.
+- Added Appendix A, Mathematical Toolkit (seven subsections), and Appendix B, Glossary. All result proofs remain in the main text.
+- Preserved theorem conclusions, original numerical results, bibliography, related-work prose, and the six original figures. The prior simplification's unified snapshot and innovation treatment remains intact.
+- Qualified the explanatory notes where needed: stationarity and fixed one-time distributions; affine Gaussian conditional means; singular Gaussian covariance; equal inverse-length limits; continuous field versions; spatial-only versus temporal assumptions; null modes versus useful observations; finite caps versus finite graphs; necessary versus sufficient optimality conditions.
+- Added reproducible vector-figure generation and appendix-aware build and verification. Equation and figure numbering now reflects the new material; the earlier map above records the simplification stage only.
+
+Validation: independent mathematical review; all 25 repository tests; revision-specific numerical identities and 4,896 archived grid comparisons; a 52-page build without warnings, undefined references, or overfull boxes; visual inspection of the rendered PDF. No experiments were regenerated.

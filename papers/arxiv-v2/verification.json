@@ -1,11 +1,12 @@
 {
   "baseline_source_sha256": "9476b7a7a155a79076c818b20bd6362b77990e4e24d6cccdf0e9df743bf44238",
-  "reviewed_source_sha256": "f15a18cc0b12021f01d57da58e5f6c11f43e43a6693b75cabbdb96271f3ed337",
+  "current_source_sha256": "8379ead8f0973a6e81e43820f61de6b167b9b05efa69ad037c10df8c001865fd",
+  "appendices_sha256": "489caf35de757c0cc4f680d122743443326c65f34a7b639ac2dd204535ee08d8",
   "references_and_labels": "pass",
   "baseline_matches_arxiv_source": true,
-  "title_authors_preamble_unchanged_except_date": true,
+  "title_authors_preamble_unchanged_except_date_and_table_packages": true,
   "title_page_date": "September 2026",
-  "related_work_verbatim_unchanged": true,
+  "related_work_text_unchanged_except_reference_labels": true,
   "bibliography_verbatim_unchanged": true,
   "figures_unchanged_sha256": {
     "fig7_1_temporal_scaling.pdf": "d2ec239fd24bcbbbd59a53c1c1d9ed8118d1b06928abc6c08032688e6a8971c8",

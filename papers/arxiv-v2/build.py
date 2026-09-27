@@ -7,7 +7,7 @@ import subprocess
 PAPER = Path(__file__).resolve().parent
 BUILD = PAPER / 'build'
 BUILD.mkdir(exist_ok=True)
-for name in ('main.tex', 'references.bib'):
+for name in ('main.tex', 'appendices.tex', 'references.bib'):
     shutil.copy2(PAPER / name, BUILD / name)
 shutil.copytree(PAPER / 'figures', BUILD / 'figures', dirs_exist_ok=True)
 latex = ['pdflatex', '-interaction=nonstopmode', '-halt-on-error',

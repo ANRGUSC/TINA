@@ -12,7 +12,8 @@ import numpy as np
 PAPER = Path(__file__).resolve().parent
 ROOT = PAPER.parents[1]
 BASE = ROOT / 'papers/full'
-source = (PAPER / 'main.tex').read_text(encoding='utf-8')
+main_source = (PAPER / 'main.tex').read_text(encoding='utf-8')
+source = main_source + '\n' + (PAPER / 'appendices.tex').read_text(encoding='utf-8')
 baseline = (BASE / 'main.tex').read_text(encoding='utf-8')
 labels = re.findall(r'\\label\{([^}]+)\}', source)
 refs = re.findall(r'\\(?:ref|eqref)\{([^}]+)\}', source)
@@ -35,10 +36,11 @@ def section(text, title):
     end = text.find('\\section{', start + 10)
     return text[start:end if end >= 0 else len(text)]
 
-assert section(source, 'Related Work') == section(baseline, 'Related Work')
+assert re.sub(r'\\label\{subsec:related_(?:static|aoi|spatial)\}\n', '',
+              section(source, 'Related Work')) == section(baseline, 'Related Work')
 assert source[:source.index('\\begin{abstract}')].replace(
     r'\date{September 2026}', r'\date{August 2026}'
-) == baseline[:baseline.index('\\begin{abstract}')]
+).replace(r'\usepackage{longtable,array}'+'\n','') == baseline[:baseline.index('\\begin{abstract}')]
 
 # A stationary non-Gaussian Markov chain on {-1,+1}^3 with common scalar
 # conditional decay. Optimize over ALL measurable agentwise policies by using
@@ -116,12 +118,13 @@ assert max(grid_errors) < 0.0016
 
 report = {
     'baseline_source_sha256': digest(BASE / 'main.tex'),
-    'reviewed_source_sha256': digest(PAPER / 'main.tex'),
+    'current_source_sha256': digest(PAPER / 'main.tex'),
+    'appendices_sha256': digest(PAPER / 'appendices.tex'),
     'references_and_labels': 'pass',
     'baseline_matches_arxiv_source': True,
-    'title_authors_preamble_unchanged_except_date': True,
+    'title_authors_preamble_unchanged_except_date_and_table_packages': True,
     'title_page_date': 'September 2026',
-    'related_work_verbatim_unchanged': True,
+    'related_work_text_unchanged_except_reference_labels': True,
     'bibliography_verbatim_unchanged': True,
     'figures_unchanged_sha256': unchanged,
     'non_gaussian_coupled_team_exact_enumeration': finite_checks,
@@ -133,7 +136,7 @@ report = {
 }
 (PAPER / 'verification.json').write_text(json.dumps(report, indent=2)+'\n')
 (PAPER / 'changes-from-v1.diff').write_text(''.join(difflib.unified_diff(
-    baseline.splitlines(keepends=True), source.splitlines(keepends=True),
+    baseline.splitlines(keepends=True), main_source.splitlines(keepends=True),
     fromfile='papers/full/main.tex (v1)', tofile='papers/arxiv-v2/main.tex (v2 draft)')),
     encoding='utf-8')
 print(json.dumps({key: val for key, val in report.items() if key != 'figures_unchanged_sha256'}, indent=2))

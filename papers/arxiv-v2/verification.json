@@ -1,8 +1,8 @@
 {
   "baseline_source_sha256": "9476b7a7a155a79076c818b20bd6362b77990e4e24d6cccdf0e9df743bf44238",
-  "current_source_sha256": "4ff6920afb45bebf68d332c7f0dc230f27d3125c37eba4cf04b35c0c6c5025c7",
+  "current_source_sha256": "075925f3e981c09de04f463a19fd0616ac77fec693dff26f75755216f796767d",
   "appendices_sha256": "b80e55ed826d68cc4700ba207c5c119d342c072e5eb6eead390e556dbd012692",
-  "supplement_sha256": "a28e9542adc7c7023bab7077f04e6798041358df829401b2a620c501ec17152e",
+  "technical_appendices_sha256": "189148f58efd5c9c66a73ff339e322660b60c7315a4a573681f61a3b91022d3a",
   "references_and_labels": "pass",
   "baseline_matches_arxiv_source": true,
   "title_authors_preamble_unchanged_except_date_table_and_external_reference_packages": true,

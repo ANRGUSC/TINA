@@ -1,9 +1,7 @@
-\renewcommand{\thesection}{S\arabic{section}}
-\renewcommand{\theequation}{S\arabic{equation}}
 \section{Aggregate-coupling calculations}
-\label{supp:aggregate}
+\label{app:technical-aggregate}
 This section supplies the matrix arithmetic for Proposition~\ref{prop:aggregate_local}
-in the main paper. For $Q=qI+\gamma\mathbf1\mathbf1^\top$,
+above. For $Q=qI+\gamma\mathbf1\mathbf1^\top$,
 \[
 Q^{-1}=\frac1q\left(I-\frac{\gamma}{q+\gamma n}\mathbf1\mathbf1^\top\right).
 \]
@@ -64,9 +62,9 @@ The numerator reduces to $\gamma^2(n-1)$, which gives \eqref{eq:aggregate_Rloc}.
 
 \end{proof}
 
-\section{Canonical spatial omission: detailed calculation}
-\label{supp:canonical}
-We expand the proof of Lemma~\ref{prop:canonical_eta_S} in the main paper,
+\section{Canonical spatial omission calculation}
+\label{app:technical-canonical}
+We expand the proof of Lemma~\ref{prop:canonical_eta_S} above,
 including the equal-inverse-length case in the variance integral.
 \begin{proof}
 By spatial stationarity, take $z=0$ and suppress the time argument. Write $\beta_c\triangleq1/\ell_c$ and $\beta_s\triangleq1/\ell_s$ for the inverse lengths, so $w(u)=\tfrac{\beta_c}{2}e^{-\beta_c|u|}$ and $\operatorname{Cov}(\theta(u),\theta(u'))=\sigma^2e^{-\beta_s|u-u'|}$.
@@ -141,10 +139,10 @@ I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]
 \end{proof}
 
 \section{Numerical reproducibility details}
-\label{supp:numerics}
+\label{app:technical-numerics}
 This section records settings, estimators, grids, normalization conventions,
 and diagnostics for the six experiments in Section~\ref{sec:numerical-evaluation}
-of the main paper, which reports the findings and their interpretation.
+which reports the findings and their interpretation.
 Each calculation evaluates architecture regret under the corresponding
 information structure: a common delayed snapshot in Experiment 1, the exact
 fresh-local rule in Experiment 2, scalar composition in Experiments 3--4,

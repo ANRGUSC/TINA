@@ -13,7 +13,7 @@ PAPER = Path(__file__).resolve().parent
 ROOT = PAPER.parents[1]
 BASE = ROOT / 'papers/full'
 main_source = (PAPER / 'main.tex').read_text(encoding='utf-8')
-support_sources = ('appendices.tex', 'supplement-body.tex')
+support_sources = ('appendices.tex', 'technical-appendices.tex')
 source = main_source + '\n' + '\n'.join(
     (PAPER / name).read_text(encoding='utf-8') for name in support_sources)
 baseline = (BASE / 'main.tex').read_text(encoding='utf-8')
@@ -42,7 +42,7 @@ assert re.sub(r'\\label\{subsec:related_(?:static|aoi|spatial)\}\n', '',
               section(source, 'Related Work')) == section(baseline, 'Related Work')
 current_front = source[:source.index('\\begin{abstract}')].replace(
     r'\date{September 2026}', r'\date{August 2026}'
-).replace(r'\usepackage{longtable,array}'+'\n','').replace(r'\usepackage{xr-hyper}'+'\n','')
+).replace(r'\usepackage{longtable,array}'+'\n','').replace(r'\usepackage{xr-hyper}'+'\n','').replace(r'\usepackage{xurl}'+'\n','')
 current_front = re.sub(r'\\externaldocument\[\]\[nocite\]\{[^}]+\}\n', '', current_front)
 assert current_front == baseline[:baseline.index('\\begin{abstract}')]
 assert len(re.findall(r'\\section\{', main_source)) == 8
@@ -50,7 +50,12 @@ assert len(re.findall(r'\\begin\{(?:lemma|theorem|proposition)\}', main_source))
 assert len(re.findall(r'\\includegraphics', main_source)) == 6
 assert r'\input{appendices.tex}' not in main_source
 assert 's(r)' not in main_source
-# Preserve the recovered earlier PDF independently of the active manuscript.
+# Preserve every earlier PDF independently of the active manuscript.
+for name, expected in json.loads((PAPER / 'preserved-pdfs.json').read_text()).items():
+    assert digest(PAPER / name) == expected
+assert r'\input{technical-appendices.tex}' in main_source
+assert len(re.findall(r'\\section\{', (PAPER / 'technical-appendices.tex').read_text())) == 3
+# Original recovered PDF pin:
 assert digest(PAPER / 'tina-v2-a.pdf') == '2d5ba1c09df6b6882f1b756d6d758e5721c90782b594a491fce164b9342c7c7a'
 
 # A stationary non-Gaussian Markov chain on {-1,+1}^3 with common scalar
@@ -131,7 +136,7 @@ report = {
     'baseline_source_sha256': digest(BASE / 'main.tex'),
     'current_source_sha256': digest(PAPER / 'main.tex'),
     'appendices_sha256': digest(PAPER / 'appendices.tex'),
-    'supplement_sha256': digest(PAPER / 'supplement-body.tex'),
+    'technical_appendices_sha256': digest(PAPER / 'technical-appendices.tex'),
     'references_and_labels': 'pass',
     'baseline_matches_arxiv_source': True,
     'title_authors_preamble_unchanged_except_date_table_and_external_reference_packages': True,

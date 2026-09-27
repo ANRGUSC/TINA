@@ -7,9 +7,9 @@
 +\usepackage{longtable,array}
  \usepackage{float}
 +\usepackage{xr-hyper}
++\usepackage{xurl}
  \usepackage[hidelinks]{hyperref}
-+\externaldocument[][nocite]{tina-v2-d-supplement}
-+\externaldocument[][nocite]{tina-v2-d-companion}
++\externaldocument[][nocite]{tina-v2-e-companion}
  \usepackage{cite}
  \setlength{\emergencystretch}{1em}
  \newtheorem{lemma}{Lemma}
@@ -1283,7 +1283,7 @@
 -\eqref{eq:eta_S_local} and simplifying yields
 -\eqref{eq:aggregate_eta}.
 +Evaluating the trace with the rank-one inverse of $Q$ yields the stated
-+regrets and their ratio. Supplementary Section~\ref{supp:aggregate} records
++regrets and their ratio. Appendix~\ref{app:technical-aggregate} records
 +the matrix arithmetic.
  \end{proof}
  
@@ -2594,7 +2594,7 @@
 +\end{equation}
 +Thus $\eta_S(0)=1-\operatorname{Corr}(x^\star(0),\theta(0))^2
 +=\ell_c/(\ell_c+2\ell_s)$.
-+Supplementary Section~\ref{supp:canonical} evaluates the integrals explicitly.
++Appendix~\ref{app:technical-canonical} evaluates the integrals explicitly.
  \end{proof}
  
 -\begin{remark}[Continuum-field interpretation]
@@ -2894,7 +2894,7 @@
 +where $L_G$ is the graph Laplacian; we scale the covariance to average marginal variance
 +one. This emphasizes low graph-frequency modes
 +\cite{shuman2013emerging,lindgren2011explicit}. All experiments use common-rate
-+Gaussian-affine environments. Supplementary Section~\ref{supp:numerics}
++Gaussian-affine environments. Appendix~\ref{app:technical-numerics}
 +gives the reference settings, sampling procedures, confidence intervals,
 +and grid-error diagnostics; the repository contains the reproduction package.
  
@@ -3074,7 +3074,7 @@
 +increasing spatial correlation lowers it by making additional observations
 +more redundant. Separate sweeps confirm all four canonical comparative
 +statics. Detailed discretization errors, including the near-threshold
-+zero/positive disagreements, appear in the supplement.
++zero/positive disagreements, appear in Appendix~\ref{app:technical-numerics}.
 +
 +\begin{figure}[!htbp]
  \centering
@@ -3273,16 +3273,20 @@
  accept full responsibility for its contents.
  
  \paragraph{Code and Data Availability.}
-+Detailed algebraic derivations and numerical reproducibility information are
-+provided in the supplementary material. A separate mathematical companion
-+provides background on the projection and stochastic-process tools used here.
-+Both documents accompany the paper in the repository.
++Appendices~\ref{app:technical-aggregate}--\ref{app:technical-numerics} provide detailed algebraic
++derivations and numerical reproducibility information. A separate mathematical
++companion in the repository provides background on the projection and
++stochastic-process tools used here.
  The manuscript source, numerical code, experiment configurations, processed
  reference results, and figure-generation pipeline are available in the public
  TINA repository at \url{https://github.com/ANRGUSC/TINA}
-@@ -3750,5 +2262,4 @@
+@@ -3750,5 +2262,9 @@
  \bibliographystyle{IEEEtran}
  \bibliography{references}
  
--
++\clearpage
++\appendix
++\numberwithin{equation}{section}
++\input{technical-appendices.tex}
+ 
  \end{document}

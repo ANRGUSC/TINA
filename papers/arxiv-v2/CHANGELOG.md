@@ -95,3 +95,8 @@ At the author's request, the shortened 32-page revision is now `tina-v2-c.pdf`, 
 ## Revision d (September 27, 2026)
 
 Applied `revs-v2-c.md` without expanding the 32-page main paper. Moved a compact assumptions table from the companion into Section 3, clarified action prediction and the nonnested snapshot family, and made the roles of the supporting documents explicit. Kept all main proofs and Supplement S1/S2 unchanged. Compressed S3 to settings, estimators, grids, normalization, seeds, archive locations, and diagnostics (5-page supplement). Updated all cross-document links and build targets to `tina-v2-d*`; preserved every earlier a/b/c PDF byte-for-byte. Independent review and PDF checks are recorded in `REVISION_D_REVIEW.md`.
+
+
+## Revision e (September 27, 2026)
+
+Merged the compact technical supplement into the main arXiv PDF after the references as Appendices A-C. Updated cross-references and equation numbering. The main PDF is 37 pages; the separate companion remains 8 pages. The active technical source is `technical-appendices.tex`; the standalone supplement wrapper is retired. Earlier PDFs remain unchanged. No mathematical content or numerical results changed.

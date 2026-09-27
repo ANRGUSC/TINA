@@ -9,8 +9,8 @@
 \usepackage{float}
 \usepackage{xr-hyper}
 \usepackage[hidelinks]{hyperref}
-\externaldocument[][nocite]{tina-v2-b-supplement}
-\externaldocument[][nocite]{tina-v2-b-companion}
+\externaldocument[][nocite]{tina-v2-d-supplement}
+\externaldocument[][nocite]{tina-v2-d-companion}
 \usepackage{cite}
 \setlength{\emergencystretch}{1em}
 \newtheorem{lemma}{Lemma}
@@ -546,6 +546,11 @@ $\mathcal{S}(\mathcal{A})$ is the standard Hilbert-space projection problem,
 yielding \eqref{eq:optimal_projection} and \eqref{eq:projection_regret}.
 \end{proof}
 
+Architecture regret measures the part of the full-information decision that
+cannot be reproduced using the admissible information. The relevant error is
+therefore prediction error for the full-information action, measured in the
+$Q$-metric.
+
 The projection error is $Q$-orthogonal to every admissible policy. In particular,
 $2R(\mathcal A)=\|x_t^\star\|_Q^2-\|u_{\mathcal A}^\star\|_Q^2$,
 which is often useful for computing regret.
@@ -637,6 +642,37 @@ $m_T(r)$ & marginal freshness-loss rate & $m_S(r)$ & marginal spatial-gain rate 
 We compare current local state with a complete but delayed global snapshot.
 The comparison is first expressed through prediction error, then evaluated
 under a common-rate Gauss--Markov model.
+
+\begin{table}[htbp]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\caption{Assumptions used in the derivations. All rows use square-integrable
+targets and a deterministic positive-definite quadratic cost; normalized shares
+require $R_\infty>0$. Entries describe the sufficient assumptions used by the
+proofs, including their stated non-Gaussian extensions. ``Fixed epoch'' means
+stationarity is unnecessary for that result.}
+\label{tab:result-assumptions}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.23\linewidth}>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.13\linewidth}>{\centering\arraybackslash}p{.095\linewidth}>{\centering\arraybackslash}p{.085\linewidth}>{\raggedright\arraybackslash}p{.275\linewidth}@{}}
+\toprule
+Result & Stationarity & Common-rate innovation & Affine target & Gaussian & Other \\
+\midrule
+Lemma~\ref{lem:radner_projection}
+ & Fixed epoch & No & No & No & Closed linear policy space \\
+Lemma~\ref{lem:innovation_split}; Theorems~\ref{thm:OU_stale_regret}--\ref{thm:local_global_crossover}
+ & Time & Yes & Yes & No & Scalar decay; conditionally mean-zero innovation \\
+Proposition~\ref{prop:aggregate_local}
+ & Fixed epoch & No & Yes & No & Independent, mean-zero, equal-variance states \\
+Theorem~\ref{thm:spatiotemporal_composition}
+ & Time & Yes & Yes & No & Synchronized snapshots \\
+Proposition~\ref{thm:marginal_balance}
+ & Time & Yes & Yes & No & Differentiable $\tau,\eta_S$; $\eta_S<1$ \\
+Lemma~\ref{prop:canonical_eta_S}
+ & Space & No & Yes & Yes & $Q=qI$; exponential spatial covariance and kernel \\
+Theorem~\ref{thm:canonical_optimal_radius}
+ & Space/time & Yes & Yes & Yes & Canonical model and linear delay \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Two Benchmark Architectures}
 \label{subsec:two_architectures}
@@ -1340,7 +1376,8 @@ R(r)\triangleq R(\mathcal A_{r,\tau(r)}).
 \label{eq:R_of_r}
 \end{equation}
 The synchronized-snapshot convention is as in Section~\ref{subsec:architectures}:
-broader scope replaces a fresher snapshot with an older one.
+an interior optimum is possible because increasing $r$ replaces a fresher
+snapshot with an older, broader one. The radius family is generally not nested.
 
 By Theorem~\ref{thm:spatiotemporal_composition},
 \begin{equation}
@@ -2213,6 +2250,10 @@ contributions throughout the paper's development, reviewed the manuscript, and
 accept full responsibility for its contents.
 
 \paragraph{Code and Data Availability.}
+Detailed algebraic derivations and numerical reproducibility information are
+provided in the supplementary material. A separate mathematical companion
+provides background on the projection and stochastic-process tools used here.
+Both documents accompany the paper in the repository.
 The manuscript source, numerical code, experiment configurations, processed
 reference results, and figure-generation pipeline are available in the public
 TINA repository at \url{https://github.com/ANRGUSC/TINA}

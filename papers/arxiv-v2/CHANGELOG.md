@@ -85,3 +85,13 @@ The active paper is now `tina-v2-b.pdf`; `tina-v2-a.pdf` preserves the recovered
 - Built a three-document source package with resolved, linked external references. The PDF filenames follow the author's a/b naming; the earlier a PDF is checked against its original committed bytes.
 
 Review corrections clarify sufficient information in a hybrid architecture, strict monotonicity for uniqueness, the covariance normalization, and the companion's mixing entry. These do not change the stated results. See `SHORTENING_REVIEW.md` and `verification.json` for the final independent review and validation.
+
+
+## Lettered PDF snapshots
+
+At the author's request, the shortened 32-page revision is now `tina-v2-c.pdf`, with `tina-v2-c-supplement.pdf` and `tina-v2-c-companion.pdf`. The 52-page clarity revision was restored byte-for-byte from commit `25185a8` as `tina-v2-b.pdf`; `tina-v2-a.pdf` remains the earlier 39-page simplification. The active build and cross-document links target c. Earlier review hashes describe the source before this filename/reference-only update. Each subsequent substantive revision should receive a new letter.
+
+
+## Revision d (September 27, 2026)
+
+Applied `revs-v2-c.md` without expanding the 32-page main paper. Moved a compact assumptions table from the companion into Section 3, clarified action prediction and the nonnested snapshot family, and made the roles of the supporting documents explicit. Kept all main proofs and Supplement S1/S2 unchanged. Compressed S3 to settings, estimators, grids, normalization, seeds, archive locations, and diagnostics (5-page supplement). Updated all cross-document links and build targets to `tina-v2-d*`; preserved every earlier a/b/c PDF byte-for-byte. Independent review and PDF checks are recorded in `REVISION_D_REVIEW.md`.

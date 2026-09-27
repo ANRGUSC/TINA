@@ -1,8 +1,8 @@
 {
   "baseline_source_sha256": "9476b7a7a155a79076c818b20bd6362b77990e4e24d6cccdf0e9df743bf44238",
-  "current_source_sha256": "3314bfaa5326b6ead1c0e84b9c1074a8a67b065f3cc5ee89ca2f1ea75666e7dd",
-  "appendices_sha256": "6fceb142a9d82f31c94f9821edb99ece70ed8f663af0944ac35e72826643e5e5",
-  "supplement_sha256": "eee59823c7837fa0e785f54f412c3449c2f0e9f427f4d41b0be83bcf14ab365d",
+  "current_source_sha256": "4ff6920afb45bebf68d332c7f0dc230f27d3125c37eba4cf04b35c0c6c5025c7",
+  "appendices_sha256": "b80e55ed826d68cc4700ba207c5c119d342c072e5eb6eead390e556dbd012692",
+  "supplement_sha256": "a28e9542adc7c7023bab7077f04e6798041358df829401b2a620c501ec17152e",
   "references_and_labels": "pass",
   "baseline_matches_arxiv_source": true,
   "title_authors_preamble_unchanged_except_date_table_and_external_reference_packages": true,

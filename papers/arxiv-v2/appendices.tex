@@ -199,9 +199,9 @@ Witsenhausen's counterexample & Classic example where control actions also signa
 \normalsize
 
 \clearpage
-\section{Timing and result assumptions}
-The following diagram and table summarize the main paper's snapshot convention
-and the assumptions of its results.
+\section{Snapshot timing}
+The diagram illustrates the main paper's snapshot convention.
+Table~\ref{tab:result-assumptions} in the main paper summarizes the result assumptions.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/snapshot_timing.pdf}
@@ -210,38 +210,7 @@ used for the decision at time $t$. For $r_2>r_1$ with $\tau(r_2)>\tau(r_1)$,
 the wider snapshot is older. Cost is evaluated against the current state $\theta_t$.}
 \label{fig:snapshot-timing}
 \end{figure}
-\begin{table}[htbp]
-\centering\small
-\setlength{\tabcolsep}{3pt}
-\caption{Assumptions used in the derivations. All rows use square-integrable
-targets and a deterministic positive-definite quadratic cost; normalized shares
-require $R_\infty>0$. Entries describe the sufficient assumptions used by the
-proofs, including their stated non-Gaussian extensions. ``Fixed epoch'' means
-stationarity is unnecessary for that result.}
-\label{tab:result-assumptions}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.23\linewidth}>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.13\linewidth}>{\centering\arraybackslash}p{.095\linewidth}>{\centering\arraybackslash}p{.085\linewidth}>{\raggedright\arraybackslash}p{.275\linewidth}@{}}
-\toprule
-Result & Stationarity & Common-rate innovation & Affine target & Gaussian & Other \\
-\midrule
-Lemma~\ref{lem:radner_projection}; observation~\eqref{eq:general_crossover}
- & Fixed epoch & No & No & No & Admissible linear policy space \\
-Lemma~\ref{lem:innovation_split}; Theorems~\ref{thm:OU_stale_regret}--\ref{thm:local_global_crossover}
- & Time & Yes & Yes & No & Scalar decay; finite-delay crossover as stated \\
-Proposition~\ref{prop:aggregate_local}
- & Fixed epoch & No & Yes & No & Independent, mean-zero, equal-variance states \\
-Threshold~\eqref{eq:aggregate_rho_star}
- & Time & Yes & Yes & No & Aggregate model plus temporal law \\
-Theorem~\ref{thm:spatiotemporal_composition}
- & Time & Yes & Yes & No & Synchronized snapshots \\
-Proposition~\ref{thm:marginal_balance}
- & Time & Yes & Yes & No & Differentiable $\tau,\eta_S$; $\eta_S<1$ \\
-Lemma~\ref{prop:canonical_eta_S}
- & Space & No & Yes & Yes & $Q=qI$; exponential spatial covariance and kernel \\
-Theorem~\ref{thm:canonical_optimal_radius}
- & Space/time & Yes & Yes & Yes & Canonical model and linear delay \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 \clearpage
 \section{Marginal-rate illustration}

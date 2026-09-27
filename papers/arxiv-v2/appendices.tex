@@ -1,8 +1,6 @@
-\clearpage
-\appendix
 \section{Mathematical Toolkit}
 \label{app:toolkit}
-This appendix collects the background facts used in the main-text proofs.
+This companion collects the background facts used in the main-text proofs.
 All random vectors in the projection statements are square-integrable, and
 all weighting matrices $Q$ are deterministic and positive definite.
 
@@ -30,12 +28,22 @@ all weighting matrices $Q$ are deterministic and positive definite.
 
 \textbf{Common information makes the optimizer independent of $Q$.} If every component of the policy may depend on the same $\sigma$-algebra $\mathcal G$, the $Q$-projection of $x$ is simply $\mathbb E[x\mid\mathcal G]$, for any positive-definite $Q$. The error $e=x-\mathbb E[x\mid\mathcal G]$ satisfies $\mathbb E[s^\top Qe]=\mathbb E\big[s^\top Q\,\mathbb E[e\mid\mathcal G]\big]=0$ for every $\mathcal G$-measurable $s$. With \emph{different} information per agent, this fails and the coupled equations \eqref{eq:block_conditional_normal_equations} are needed.
 
+\textbf{Regret and the factor one-half.} Completing the square in the main
+paper's quadratic cost gives $R(\mathcal A)=\tfrac12\|x^\star-u^\star_{\mathcal A}\|_Q^2$.
+Consequently a squared $Q$-norm in a proof equals twice the corresponding
+regret. The best constant action is $\bar x^\star=\mathbb E[x^\star]$, since
+\[
+\|x^\star-c\|_Q^2=\|x^\star-\bar x^\star\|_Q^2+
+(\bar x^\star-c)^\top Q(\bar x^\star-c).
+\]
+Thus $2R_\infty=\|x^\star-\bar x^\star\|_Q^2$.
+
 \textbf{Mean-square convergence.} $Y_n\to Y$ in $L^2$ means $\mathbb E\|Y_n-Y\|^2\to0$.
 
 \subsection{Gaussian facts}
 \label{app:toolkit-3}
 \textbf{Conditioning.} If $(X,Y)$ is jointly Gaussian and $\Sigma_{YY}$ is invertible,
-  
+
 \[
 \mathbb E[X\mid Y]=\mu_X+\Sigma_{XY}\Sigma_{YY}^{-1}(Y-\mu_Y),\qquad \operatorname{Cov}(X\mid Y)=\Sigma_{XX}-\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}.
 \]
@@ -46,20 +54,20 @@ $\Sigma_{YY}$, the same formulas use its Moore--Penrose inverse on the covarianc
 \textbf{Scalar case.} For nonzero marginal variances, $\operatorname{Var}(X\mid Y)=\operatorname{Var}(X)\big(1-\operatorname{Corr}(X,Y)^2\big)$.
 
 \textbf{Uncorrelated implies independent} for jointly Gaussian variables. For the OU process, Brownian increments after the snapshot time are independent
-of the past, which gives innovation independence in Appendix~\ref{app:toolkit-4}.
+of the past, which gives innovation independence in Section~\ref{app:toolkit-4}.
 
 \textbf{Linear functionals stay Gaussian.} Integrals such as $\int w(u)\theta(u)\,du$ defined as mean-square limits of linear combinations of a Gaussian field are Gaussian, so the facts above apply to $x^\star$ in Section~\ref{subsec:canonical_line_model}.
 
 \subsection{The Ornstein--Uhlenbeck process in time}
 \label{app:toolkit-4}
 \textbf{Scalar SDE.} $d\theta_t=-\tfrac1T(\theta_t-\bar\theta)\,dt+\sigma\sqrt{2/T}\,dW_t$, where $W$ is Brownian motion (continuous paths, independent Gaussian increments with variance equal to elapsed time). A useful mental model is the small-step recursion
-  
+
 \[
 \theta_{t+\Delta}\approx\theta_t-\tfrac{\Delta}{T}(\theta_t-\bar\theta)+\sigma\sqrt{2\Delta/T}\,Z,\qquad Z\sim N(0,1)\text{ fresh at each step}.
 \]
 
 \textbf{Solution over a lag $\tau$.}
-  
+
 \[
 \theta_t-\bar\theta=e^{-\tau/T}(\theta_{t-\tau}-\bar\theta)+\underbrace{\sigma\sqrt{2/T}\int_{t-\tau}^{t}e^{-(t-s)/T}dW_s}_{\varepsilon_{t,\tau}} .
 \]
@@ -97,7 +105,7 @@ the original graph.
 \textbf{Cyclic trace.} $\operatorname{tr}(ABC)=\operatorname{tr}(BCA)=\operatorname{tr}(CAB)$ whenever the products are defined.
 
 \textbf{Sherman--Morrison.} For invertible $A$ and vectors $a,c$ with $1+c^\top A^{-1}a\neq0$,
-  
+
 \[
 (A+ac^\top)^{-1}=A^{-1}-\frac{A^{-1}ac^\top A^{-1}}{1+c^\top A^{-1}a}.
 \]
@@ -143,43 +151,43 @@ Term & Meaning in this paper & First use/background \\
 \bottomrule
 \endfoot
 Information architecture & Specification of which variables, at which ages, each agent's decision may depend on; formally a tuple of $\sigma$-algebras $(\mathcal G_1,\dots,\mathcal G_n)$ & Section~\ref{subsec:architectures} \\
-$\sigma$-algebra $\sigma(Y)$ & "What is known from observing $Y$" & Section~\ref{subsec:architectures}, Appendix~\ref{app:toolkit-1} \\
-Measurable ($\mathcal G_i$-measurable) & Computable from agent $i$'s information & \eqref{eq:policy_subspace}, Appendix~\ref{app:toolkit-1} \\
+$\sigma$-algebra $\sigma(Y)$ & "What is known from observing $Y$" & Section~\ref{subsec:architectures}, Section~\ref{app:toolkit-1} \\
+Measurable ($\mathcal G_i$-measurable) & Computable from agent $i$'s information & \eqref{eq:policy_subspace}, Section~\ref{app:toolkit-1} \\
 Admissible policy & A joint rule in which each agent uses only its own information & \eqref{eq:policy_subspace} \\
 Static team & Several decision makers with one shared objective, each acting on its own information, whose actions do not affect anyone's later information & Section~\ref{sec:introduction}, Section~\ref{subsec:related_static} \\
 Person-by-person (stationarity) conditions & Each agent's rule is optimal given the others' rules; here, equations \eqref{eq:conditional_normal_equations}--\eqref{eq:block_conditional_normal_equations} & Corollary~\ref{cor:conditional_normal_equations} \\
 Full-information (clairvoyant) decision & $x^\star_t=Q^{-1}b(\theta_t)$, optimal with complete current state & \eqref{eq:clairvoyant} \\
 Architecture regret & Extra expected cost versus the full-information decision, after optimizing over admissible policies & \eqref{eq:architecture_regret} \\
 $Q$-weighted norm & $\|u\|_Q^2=\mathbb E[u^\top Qu]$; the metric in which regret is a squared distance & \eqref{eq:q_inner_product} \\
-Projection & Closest point in a subspace; here, the best admissible policy & Lemma~\ref{lem:radner_projection}, Appendix~\ref{app:toolkit-2} \\
+Projection & Closest point in a subspace; here, the best admissible policy & Lemma~\ref{lem:radner_projection}, Section~\ref{app:toolkit-2} \\
 Open-loop & Using no state information; the best constant action & \eqref{eq:Rinf_general} \\
 Open-loop regret $R_\infty$ & Regret of the best constant; the normalizer for all shares & \eqref{eq:Rinf_general} \\
 Omission share $\eta_S$ & Fraction of decision variance not captured by current information in a given scope & \eqref{eq:eta_S_local}, \eqref{eq:eta_S_definition} \\
 Temporal unpredictability $\eta_T$ & Fraction of decision variance not predictable from a complete snapshot of age $\tau$ & \eqref{eq:temporal_unpredictability} \\
 Staleness ratio $\rho$ & $\tau/T$, delay measured in coherence times & \eqref{eq:rho_definition} \\
-Stationary & Joint distributions are invariant under time (or spatial) translations & \eqref{eq:state_integrability} \\
+Stationary & Joint distributions are invariant under time (or spatial) translations & \eqref{eq:state_partition} \\
 Ergodic & Time averages along one realization converge to expectations & Section~\ref{subsec:architecture_regret} \\
-Square-integrable & Finite second moment, $\mathbb E\|Y\|^2<\infty$ & \eqref{eq:state_integrability} \\
+Square-integrable & Finite second moment, $\mathbb E\|Y\|^2<\infty$ & \eqref{eq:state_partition} \\
 Gauss--Markov & Gaussian and Markov; here, the OU process & Section~\ref{subsec:OU_model} \\
-Ornstein--Uhlenbeck (OU) process & Stationary Gaussian Markov process that reverts to its mean with exponential correlation & \eqref{eq:OU_process}, Appendix~\ref{app:toolkit-4} \\
+Ornstein--Uhlenbeck (OU) process & Stationary Gaussian Markov process that reverts to its mean with exponential correlation & \eqref{eq:OU_process}, Section~\ref{app:toolkit-4} \\
 Coherence time $T$ & Time lag at which correlation falls to $1/e$ & \eqref{eq:OU_process} \\
 Common-rate model & All components and modes decorrelate with the same time constant $T$ & Section~\ref{sec:introduction}, \eqref{eq:OU_process} \\
 Innovation & Part of the current state not predictable from an earlier snapshot & \eqref{eq:state_innovation_decomposition} \\
-Mixing & Decay of statistical dependence with separation; the temporal limit here uses strong mixing & Section~\ref{subsec:two_architectures} \\
+Mixing & Decay of statistical dependence with separation; strong mixing suffices for the temporal limit & Section~\ref{subsec:two_architectures} \\
 Data-processing inequality & Processing or aging information along a Markov chain cannot improve prediction & Section~\ref{subsec:two_architectures} \\
-Nested (architectures) & One architecture's information contains the other's, at every agent & \eqref{eq:info_inclusion}, \eqref{eq:radius_architecture_nested} \\
+Nested (architectures) & One architecture's information contains the other's, at every agent & \eqref{eq:info_inclusion}, \eqref{eq:eta_S_monotone} \\
 Synchronized snapshot & All observations used in a decision share one time stamp & Section~\ref{subsec:architectures} \\
 Mode & A direction or spatial pattern in state space, often an eigenvector of $\Sigma_S$ & Section~\ref{subsec:decision_relevant_smoothness} \\
-Null space of $K$ & State directions that do not change the desired decision & Section~\ref{subsec:decision_relevant_smoothness}, Appendix~\ref{app:toolkit-6} \\
+Null space of $K$ & State directions that do not change the desired decision & Section~\ref{subsec:decision_relevant_smoothness}, Section~\ref{app:toolkit-6} \\
 Decision-sensitivity operator $K$ & $Q^{-1}B$; maps state to desired action & \eqref{eq:affine_map_and_sensitivity} \\
 Separable covariance & Space--time covariance that factors into a time part times a space part & \eqref{eq:separable_space_time_covariance} \\
 Spatial correlation length $\ell_s$ & Distance over which the state stays correlated & \eqref{eq:spatial_exponential_covariance} \\
 Decision-relevance length $\ell_c$ & Distance over which remote state affects the desired local action & \eqref{eq:canonical_target} \\
 Temporal propagation length $L_T$ & $vT$: how far information travels in one coherence time & \eqref{eq:temporal_propagation_length} \\
-Spatial Markov property & Given the field at a point, the two sides are conditionally independent & Section~\ref{subsec:spatial_structure}, Appendix~\ref{app:toolkit-5} \\
-Gaussian Markov random field & Gaussian vector with graph-based conditional independence & Appendix~\ref{app:toolkit-5} \\
-Graph Laplacian $L_G$ & $D_G-A_G$; measures roughness of signals on a graph & \eqref{eq:graph_spectral_covariance}, Appendix~\ref{app:toolkit-5} \\
-Graph frequency & Eigenvalue of $L_G$; low values correspond to smooth patterns & Section~\ref{subsec:related_spatial}, Appendix~\ref{app:toolkit-5} \\
+Spatial Markov property & Given the field at a point, the two sides are conditionally independent & Section~\ref{subsec:spatial_structure}, Section~\ref{app:toolkit-5} \\
+Gaussian Markov random field & Gaussian vector with graph-based conditional independence & Section~\ref{app:toolkit-5} \\
+Graph Laplacian $L_G$ & $D_G-A_G$; measures roughness of signals on a graph & \eqref{eq:graph_spectral_covariance}, Section~\ref{app:toolkit-5} \\
+Graph frequency & Eigenvalue of $L_G$; low values correspond to smooth patterns & Section~\ref{subsec:related_spatial}, Section~\ref{app:toolkit-5} \\
 Continuous relaxation & Treating the integer radius as a real number & Section~\ref{sec:optimal_coordination_scale} \\
 Unimodal & Decreasing, then increasing; a single minimum & Section~\ref{sec:optimal_coordination_scale} \\
 Marginal balance & Equality of spatial-gain and freshness-loss rates, necessary at a differentiable interior optimum & \eqref{eq:marginal_balance_condition} \\
@@ -189,3 +197,63 @@ Age of Information (AoI) & Time since the freshest received update was generated
 Witsenhausen's counterexample & Classic example where control actions also signal information, and linear policies can be suboptimal & Section~\ref{sec:introduction}, Section~\ref{sec:discussion_conclusions} \\
 \end{longtable}
 \normalsize
+
+\clearpage
+\section{Timing and result assumptions}
+The following diagram and table summarize the main paper's snapshot convention
+and the assumptions of its results.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/snapshot_timing.pdf}
+\caption{A radius-$r$ synchronized snapshot is taken at time $t-\tau(r)$ and
+used for the decision at time $t$. For $r_2>r_1$ with $\tau(r_2)>\tau(r_1)$,
+the wider snapshot is older. Cost is evaluated against the current state $\theta_t$.}
+\label{fig:snapshot-timing}
+\end{figure}
+\begin{table}[htbp]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\caption{Assumptions used in the derivations. All rows use square-integrable
+targets and a deterministic positive-definite quadratic cost; normalized shares
+require $R_\infty>0$. Entries describe the sufficient assumptions used by the
+proofs, including their stated non-Gaussian extensions. ``Fixed epoch'' means
+stationarity is unnecessary for that result.}
+\label{tab:result-assumptions}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.23\linewidth}>{\raggedright\arraybackslash}p{.12\linewidth}>{\raggedright\arraybackslash}p{.13\linewidth}>{\centering\arraybackslash}p{.095\linewidth}>{\centering\arraybackslash}p{.085\linewidth}>{\raggedright\arraybackslash}p{.275\linewidth}@{}}
+\toprule
+Result & Stationarity & Common-rate innovation & Affine target & Gaussian & Other \\
+\midrule
+Lemma~\ref{lem:radner_projection}; observation~\eqref{eq:general_crossover}
+ & Fixed epoch & No & No & No & Admissible linear policy space \\
+Lemma~\ref{lem:innovation_split}; Theorems~\ref{thm:OU_stale_regret}--\ref{thm:local_global_crossover}
+ & Time & Yes & Yes & No & Scalar decay; finite-delay crossover as stated \\
+Proposition~\ref{prop:aggregate_local}
+ & Fixed epoch & No & Yes & No & Independent, mean-zero, equal-variance states \\
+Threshold~\eqref{eq:aggregate_rho_star}
+ & Time & Yes & Yes & No & Aggregate model plus temporal law \\
+Theorem~\ref{thm:spatiotemporal_composition}
+ & Time & Yes & Yes & No & Synchronized snapshots \\
+Proposition~\ref{thm:marginal_balance}
+ & Time & Yes & Yes & No & Differentiable $\tau,\eta_S$; $\eta_S<1$ \\
+Lemma~\ref{prop:canonical_eta_S}
+ & Space & No & Yes & Yes & $Q=qI$; exponential spatial covariance and kernel \\
+Theorem~\ref{thm:canonical_optimal_radius}
+ & Space/time & Yes & Yes & Yes & Canonical model and linear delay \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\section{Marginal-rate illustration}
+Figure~\ref{fig:marginal-balance} illustrates how the marginal rates determine the optimal radius for the
+canonical model in the main paper.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.92\linewidth]{figures/marginal_balance.pdf}
+\caption{Marginal balance in the canonical model with $\ell_c=1$ and
+$\ell_s=0.5$. Increasing $L_T=vT$ lowers $m_T=2/L_T$ and moves the crossing
+with $m_S$ outward. For the middle curve ($L_T=4$), regret falls to the left
+of the crossing and rises to its right. This is an illustration of the
+analytical rates, not an additional numerical experiment.}
+\label{fig:marginal-balance}
+\end{figure}

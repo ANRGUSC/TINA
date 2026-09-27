@@ -68,3 +68,20 @@ Applied `clarifyTINA2.md` within the existing mathematical structure. The verbat
 - Added reproducible vector-figure generation and appendix-aware build and verification. Equation and figure numbering now reflects the new material; the earlier map above records the simplification stage only.
 
 Validation: independent mathematical review; all 25 repository tests; revision-specific numerical identities and 4,896 archived grid comparisons; a 52-page build without warnings, undefined references, or overfull boxes; visual inspection of the rendered PDF. No experiments were regenerated.
+
+
+## Shorter continuous refinement (`revise-v2b.md`)
+
+The active paper is now `tina-v2-b.pdf`; `tina-v2-a.pdf` preserves the recovered 39-page earlier draft. The current paper is 32 pages including references, with main text ending on page 29. Section 3 begins on page 7, and its general local?global crossover theorem appears on page 10. The 52-page pre-shortening draft remains in commit `25185a8`.
+
+- Preserved Sections 1?8, the early large-system threshold, established notation, all nine numbered principal results, and the normal-equation corollary. The abstract, title, authors, related-work prose, bibliography, and original experiment figures are unchanged.
+- Section 2: consolidated graph, state, action, cost, and regret definitions; retained the projection lemma, its proof, and coupled conditional normal equations. Removed repeated model interpretations and moved basic projection explanations to the companion.
+- Section 3: retained the OU SDE and transition, short innovation lemma, stale-global regret, crossover, and aggregate-coupling example. Kept the independence/normal-equation argument for the local policy; moved expanded matrix arithmetic to Supplement S1.
+- Section 4: kept composition in place with the innovation/rescaling/stationarity proof and one explained-share equivalent. Retained decision relevance as its main explanatory home.
+- Section 5: retained marginal balance and its derivative proof, spatial tail self-similarity, omission constant, radius theorem, threshold, comparative statics, cap distinction, and limiting interpretations. Moved the expanded covariance integral to Supplement S2.
+- Section 6: retained all six experiments and the six original figure assets. Combined the radius-curve and regime-map discussion, shortened methodology, and moved detailed settings and grid-error diagnostics to Supplement S3.
+- Section 7: retained verbatim prose. Section 8: consolidated repeated decision-relevance and static-team explanations while retaining limitations and extensions.
+- Separate mathematical companion: preserved the toolkit and glossary, plus the timing diagram, assumptions table, and marginal-rate illustration. Added the factor-of-one-half and constant-policy explanation moved out of the main paper.
+- Built a three-document source package with resolved, linked external references. The PDF filenames follow the author's a/b naming; the earlier a PDF is checked against its original committed bytes.
+
+Review corrections clarify sufficient information in a hybrid architecture, strict monotonicity for uniqueness, the covariance normalization, and the companion's mixing entry. These do not change the stated results. See `SHORTENING_REVIEW.md` and `verification.json` for the final independent review and validation.

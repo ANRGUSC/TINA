@@ -1,4 +1,5 @@
 build/
 qa/
+qa-shortened/
 __pycache__/
 !CHANGELOG.md

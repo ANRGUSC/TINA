@@ -1,0 +1,369 @@
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\section{Aggregate-coupling calculations}
+\label{supp:aggregate}
+This section supplies the matrix arithmetic for Proposition~\ref{prop:aggregate_local}
+in the main paper. For $Q=qI+\gamma\mathbf1\mathbf1^\top$,
+\[
+Q^{-1}=\frac1q\left(I-\frac{\gamma}{q+\gamma n}\mathbf1\mathbf1^\top\right).
+\]
+\begin{proof}
+Recall the coupled normal equations \eqref{eq:block_conditional_normal_equations}:
+\[
+ Q_{ii}u_i+\sum_{j\ne i}Q_{ij}\mathbb E[u_j\mid\mathcal G_i]
+ =\mathbb E[b_i(\theta_t)\mid\mathcal G_i].
+\]
+Here $Q_{ii}=q+\gamma$, $Q_{ij}=\gamma$ for $j\ne i$, and $b_i(\theta)=\theta_i$.
+Let $\mu_j=\mathbb E[u_j]$. For $j\ne i$, the policy $u_j$ is a function of $\theta_{j,t}$,
+which is independent of $\theta_{i,t}$, so
+\[
+\mathbb E[u_j\mid\mathcal G^{\mathrm{loc}}_{i,t}]
+=\mathbb E[u_j]=\mu_j,
+\]
+while $\theta_{i,t}$ is
+$\mathcal G^{\mathrm{loc}}_{i,t}$-measurable. The conditional normal equation
+\eqref{eq:block_conditional_normal_equations} therefore gives
+\[
+(q+\gamma)u_i
++\gamma\sum_{j\ne i}\mu_j
+-\theta_{i,t}=0.
+\]
+Taking expectations yields
+\[
+q\mu_i+\gamma\sum_j\mu_j=0.
+\]
+Summing over $i$ implies $\sum_j\mu_j=0$, hence every $\mu_i=0$ and
+$u_i=\theta_{i,t}/(q+\gamma)$, which proves
+\eqref{eq:optimal_local_shared}. This argument uses independence, zero means,
+square integrability, and strict convexity; Gaussianity is not required for the
+local-policy formula.
+
+\emph{Open-loop regret.} Here $B=I$ and $\Sigma_\infty=\sigma^2I$, so by \eqref{eq:OU_Rinf}, $R_\infty=\tfrac{\sigma^2}2\operatorname{tr}(Q^{-1})$. From the Sherman--Morrison formula above,
+
+\[
+\operatorname{tr}(Q^{-1})=\frac1q\Big(n-\frac{\gamma n}{q+\gamma n}\Big)=\frac{n\,(q+\gamma(n-1))}{q\,(q+\gamma n)},
+\]
+
+which gives \eqref{eq:aggregate_Rinf}.
+
+\emph{Local regret.} By the Pythagorean form of Lemma~\ref{lem:radner_projection} (the orthogonality identity after Lemma~\ref{lem:radner_projection}, with both $x^\star$ and $u^{\rm loc}$ mean zero), $2R_{\rm loc}=\|x^\star\|_Q^2-\|u^{\rm loc}\|_Q^2=2R_\infty-\|u^{\rm loc}\|_Q^2$. Since $u^{\rm loc}=\theta/(q+\gamma)$ and $\operatorname{tr}(Q)=n(q+\gamma)$,
+
+\[
+\|u^{\rm loc}\|_Q^2=\frac{\sigma^2\operatorname{tr}(Q)}{(q+\gamma)^2}=\frac{n\sigma^2}{q+\gamma}.
+\]
+
+Therefore
+
+\[
+R_{\rm loc}=\frac{n\sigma^2}{2}\left[\frac{q+\gamma(n-1)}{q(q+\gamma n)}-\frac{1}{q+\gamma}\right]=\frac{n\sigma^2}{2}\cdot\frac{(q+\gamma(n-1))(q+\gamma)-q(q+\gamma n)}{q(q+\gamma)(q+\gamma n)} .
+\]
+
+The numerator reduces to $\gamma^2(n-1)$, which gives \eqref{eq:aggregate_Rloc}.
+
+\emph{Share.} Dividing \eqref{eq:aggregate_Rloc} by \eqref{eq:aggregate_Rinf}, the factors $n\sigma^2/2$ and $q(q+\gamma n)$ cancel, leaving \eqref{eq:aggregate_eta}.
+
+\end{proof}
+
+\section{Canonical spatial omission: detailed calculation}
+\label{supp:canonical}
+We expand the proof of Lemma~\ref{prop:canonical_eta_S} in the main paper,
+including the equal-inverse-length case in the variance integral.
+\begin{proof}
+By spatial stationarity, take $z=0$ and suppress the time argument. Write $\beta_c\triangleq1/\ell_c$ and $\beta_s\triangleq1/\ell_s$ for the inverse lengths, so $w(u)=\tfrac{\beta_c}{2}e^{-\beta_c|u|}$ and $\operatorname{Cov}(\theta(u),\theta(u'))=\sigma^2e^{-\beta_s|u-u'|}$.
+
+\textbf{Step 0 (omission is a variance ratio).} With $Q=qI$ the optimal policy given $\mathcal O_r$ is $\mathbb E[x^\star(0)\mid\mathcal O_r]$. Its expected loss is $\tfrac q2\,\mathbb E\big[\operatorname{Var}(x^\star(0)\mid\mathcal O_r)\big]$. For a Gaussian field the conditional variance is a deterministic number: it does not depend on the observed values (companion Section~\ref{app:toolkit-3}). Since $R_\infty=\tfrac q2\operatorname{Var}(x^\star(0))$,
+
+\[
+\eta_S(r)=\frac{\operatorname{Var}(x^\star(0)\mid\mathcal O_r)}{\operatorname{Var}(x^\star(0))}.
+\]
+
+\textbf{Step 1 (split into observed middle and two tails).} Write $x^\star(0)=M_r+T_r^++T_r^-$, where
+
+\[
+M_r=\int_{-r}^{r}w(u)\theta(u)\,du,\qquad T_r^+=\int_r^\infty w(u)\theta(u)\,du,\qquad T_r^-=\int_{-\infty}^{-r}w(u)\theta(u)\,du .
+\]
+
+The middle $M_r$ is computed from observed values, so it contributes no conditional variance.
+
+\textbf{Step 2 (rewrite the right tail).} Substituting $u=r+s$,
+
+\[
+T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{-\beta_c s}\,\theta(r+s)\,ds .
+\]
+
+\textbf{Step 3 (spatial Markov property).} By Section~\ref{sec:spatiotemporal_predictability}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
+
+\[
+\operatorname{Var}(T_r^+\mid\mathcal O_r)=\operatorname{Var}(T_r^+\mid\theta(r)),\qquad \operatorname{Var}(T_r^-\mid\mathcal O_r)=\operatorname{Var}(T_r^-\mid\theta(-r)),\qquad \operatorname{Cov}(T_r^+,T_r^-\mid\mathcal O_r)=0 .
+\]
+
+\textbf{Step 4 (the tail variance does not depend on $r$).} Define $C\triangleq\operatorname{Var}(Y_0\mid\theta(0))$. Shifting the field by $r$ does not change its law, so $\operatorname{Var}(Y_r\mid\theta(r))=C$ for every $r$. By reflection symmetry (the covariance depends only on $|u-u'|$), the left tail gives the same value. Hence
+
+\[
+\operatorname{Var}(x^\star(0)\mid\mathcal O_r)=2\Big(\frac{\beta_c}{2}\Big)^2e^{-2\beta_c r}\,C=\frac{\beta_c^2}{2}e^{-2\beta_c r}\,C .
+\]
+
+At $r=0$ the same argument applies with $\mathcal O_0=\sigma(\theta(0))$ and $M_0=0$, giving $\operatorname{Var}(x^\star(0)\mid\theta(0))=\tfrac{\beta_c^2}{2}C$. Dividing, $\eta_S(r)=\eta_S(0)\,e^{-2\beta_c r}=\eta_S(0)\,e^{-2r/\ell_c}$. The unknown constant $C$ cancels, so it never has to be computed.
+
+\textbf{Step 5 (the constant $\eta_S(0)$).} Conditioning on the single Gaussian variable $\theta(0)$ gives $\operatorname{Var}(x^\star(0)\mid\theta(0))=\operatorname{Var}(x^\star(0))\big(1-\operatorname{Corr}(x^\star(0),\theta(0))^2\big)$ (companion Section~\ref{app:toolkit-3}), so $\eta_S(0)=1-\operatorname{Corr}^2$. Two moments are needed.
+
+\emph{Covariance with the local value:}
+
+\[
+\operatorname{Cov}(x^\star(0),\theta(0))=\int_{\mathbb R}w(u)\,\sigma^2e^{-\beta_s|u|}\,du=\frac{\sigma^2\beta_c}{2}\int_{\mathbb R}e^{-(\beta_c+\beta_s)|u|}\,du=\frac{\sigma^2\beta_c}{\beta_c+\beta_s}.
+\]
+
+\emph{Variance of the target:} $\operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c^2}{4}\,I$, where $I\triangleq\iint e^{-\beta_c(|u|+|v|)-\beta_s|u-v|}\,du\,dv$.
+
+To evaluate $I$, define the inner integral $h(u)\triangleq\int_{\mathbb R}e^{-\beta_c|v|}e^{-\beta_s|u-v|}\,dv$. Then $h$ is even, so $I=2\int_0^\infty e^{-\beta_c u}h(u)\,du$. For $u\ge0$, split the $v$-integral at $0$ and $u$:
+
+\[
+h(u)=\underbrace{\frac{e^{-\beta_s u}}{\beta_c+\beta_s}}_{v<0}+\underbrace{\frac{e^{-\beta_c u}-e^{-\beta_s u}}{\beta_s-\beta_c}}_{0\le v\le u}+\underbrace{\frac{e^{-\beta_c u}}{\beta_c+\beta_s}}_{v>u}.
+\]
+
+(The middle term is read as $u\,e^{-\beta_c u}$ when $\beta_s=\beta_c$.) Multiply by $e^{-\beta_c u}$ and integrate over $u\ge0$ term by term:
+
+\[
+\frac{1}{(\beta_c+\beta_s)^2},\qquad \frac{1}{\beta_s-\beta_c}\Big(\frac{1}{2\beta_c}-\frac{1}{\beta_c+\beta_s}\Big)=\frac{1}{2\beta_c(\beta_c+\beta_s)},\qquad \frac{1}{2\beta_c(\beta_c+\beta_s)} .
+\]
+
+Summing and doubling,
+
+\begin{equation}
+I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]=\frac{2(2\beta_c+\beta_s)}{\beta_c(\beta_c+\beta_s)^2},\qquad \operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c(2\beta_c+\beta_s)}{2(\beta_c+\beta_s)^2}.
+\end{equation}
+
+\emph{Combine.} With $\operatorname{Var}(\theta(0))=\sigma^2$,
+
+\[
+\operatorname{Corr}^2=\frac{\big(\sigma^2\beta_c/(\beta_c+\beta_s)\big)^2}{\sigma^2\cdot\sigma^2\beta_c(2\beta_c+\beta_s)/\big(2(\beta_c+\beta_s)^2\big)}=\frac{2\beta_c}{2\beta_c+\beta_s},\qquad \eta_S(0)=\frac{\beta_s}{2\beta_c+\beta_s}=\frac{\ell_c}{\ell_c+2\ell_s}.
+\]
+\end{proof}
+
+\section{Numerical settings and diagnostics}
+\label{supp:numerics}
+The six experiments and their principal findings appear in Section~\ref{sec:numerical-evaluation}
+of the main paper. The original detailed methodology and diagnostics follow;
+figure references point to that paper. No experiments have been regenerated.
+\subsection{Numerical Methodology and Synthetic Environments}
+
+The numerical objects are architecture regrets, so each calculation uses the
+same information structure as its analytical counterpart.  We work with an
+exogenous common-rate Gaussian-affine environment: actions do not alter later
+states.  For
+$x^\star=K\theta+k_0$, with $K=Q^{-1}B$, we evaluate
+\begin{equation*}
+    R(\mathcal A)=\tfrac12
+    \left\|x^\star-u_{\mathcal A}^\star\right\|_Q^2
+\end{equation*}
+from conditional covariance and, where appropriate, from independently
+sampled quadratic losses.  The solvers respect the information structure: the
+common delayed snapshot in Experiment 1 permits a joint conditional mean even
+for non-diagonal $Q$; Experiment 2 uses the exact fresh-local rule; Experiments
+3 and 4 evaluate the scalar composition; and Experiments 5 and 6 use $Q=I$ so
+agentwise Gaussian conditional variances are exact.  Experiment 5 holds the
+graph and covariance fixed while changing decision sensitivity.  The graph
+covariances are scaled to average marginal variance one.
+
+For an arbitrary graph, a convenient alternative is to define the covariance
+spectrally through the graph Laplacian $L_G$. The covariance in main-paper Eq.~\eqref{eq:graph_spectral_covariance}
+is positive semidefinite and places more state energy in low graph-frequency
+modes. Such constructions are closely related to graph signal smoothness and
+Gaussian Markov random-field models
+\cite{shuman2013emerging,lindgren2011explicit}.
+
+Pointwise Monte Carlo means use 95\% normal confidence intervals.  The
+Experiment 2 boundary intervals apply the delta method to the paired
+fresh-local/open-loop regret means, so their uncertainty reflects that
+the two regrets use the same draws.
+
+Table~\ref{tab:numerical-parameters} summarizes the reference settings.  The
+repository stores fixed configurations, processed tables, selected raw arrays,
+and graph covariance/distance inputs where applicable, together with run
+metadata and diagnostics; it is not a complete archive of every random draw.
+The exact system construction, graph seeds, conditioning safeguards, boundary
+conventions, radius grids, crossover estimator, and interval calculation are
+specified in the reproduction documentation.  Robustness beyond the
+common-rate Gaussian-affine model is discussed in
+Section~\ref{sec:discussion_conclusions}.
+
+\begin{table}[H]
+\centering
+\caption{Reference numerical settings. The shared-resource sweep fixes $q=1$;
+graph covariances in Experiments 5--6 are scaled to average marginal variance
+one. Quantities not being swept retain the experiment-specific values in the
+configuration files.}
+\label{tab:numerical-parameters}
+\small
+\begin{tabular}{llll}
+\toprule
+Experiment & principal sweep & fixed setting/size & evaluation \\
+\midrule
+1. Temporal pairs & $\tau/T\in[0,3]$ (25 points) & A--D; $n=8,20,50,32$ & $20{,}000$/point \\
+2. Local--global & 9 $\gamma/q$ values in $[0,10]$ & $n=5,10,25,100$; $q=1$ & $30{,}000$/setting \\
+3. Scalar radius & $r/\ell_c\in[0,2]$ (1,001 points) & 3 regimes; $D/\ell_c=2$ & $50{,}000$/point \\
+4. Canonical map & $(vT/\ell_c,\ell_s/\ell_c)$; $72\times68$ & $r/\ell_c\in[0,4]$; $\Delta r=0.0016$ & direct scalar \\
+5. Decision relevance & $\ell_c=0.7,2,6$ & 64-node ring; $T=6$ & $12{,}000$/check \\
+6. General graphs & path, ring, grid, geometric & 64 nodes; $T=5$ & exact covariance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Temporal Scaling and the Local--Global Crossover}
+
+The first two experiments test two different consequences of common-rate
+temporal predictability: the exact stale-global law
+\eqref{eq:OU_exact_regret}, and the endpoint crossover threshold
+\eqref{eq:aggregate_rho_star}.
+
+Experiment 1 asks whether the normalized regret of a delayed global snapshot
+depends only on $\rho=\tau/T$, even when spatial covariance, objective
+coupling, and the decision operator change.  We used the four systems in
+Table~\ref{tab:numerical-parameters} and drew 20,000 exact stationary OU pairs
+$(\theta_{t-\tau},\theta_t)$ at each of 25 values of $\rho$.  The first member
+has covariance $\Sigma_S$ and the second is generated as
+$e^{-\rho}\theta_{t-\tau}+(1-e^{-2\rho})^{1/2}\varepsilon$, with an
+independent innovation $\varepsilon$ of covariance $\Sigma_S$.  For each pair,
+the optimal delayed-snapshot action was evaluated with the known common-rate
+coefficient and the quadratic loss was computed in the system's $Q$ metric.
+
+Across the 100 system--parameter combinations, the Monte Carlo curves collapse
+onto $1-e^{-2\tau/T}$ (Fig.~\ref{fig:temporal-scaling}).  The largest absolute
+normalized deviation was $0.0155$ and the root-mean-square deviation was
+$0.00471$.  This supports the exact temporal scaling for these stationary
+common-rate pairs.
+
+Experiment 2 asks whether the finite-$n$ threshold in
+Eq.~\eqref{eq:aggregate_rho_star} describes the point at which fresh local
+information becomes preferable to a stale global snapshot.  We used the
+shared-resource model
+$Q=qI+\gamma\mathbf 1\mathbf 1^\top$, $q=1$, with independent OU
+components.  For each of 36 $(n,\gamma/q)$ settings, the fresh-local and
+open-loop regrets were evaluated on the same 30,000 current-state draws.  The
+empirical boundary was then inferred by inserting these two estimates into
+the OU temporal law,
+\begin{equation*}
+    \widehat\rho^\star
+    =
+    \frac12\log\left(
+        \frac{\widehat R_\infty}
+        {\widehat R_\infty-\widehat R_{\rm loc}}
+    \right).
+\end{equation*}
+Accordingly, Fig.~\ref{fig:local-global-phase} reports the temporal-law boundary
+inferred from paired local/open-loop losses.
+
+The mean absolute boundary error was $0.00111$ and the maximum was $0.00557$.
+Finite size matters most under strong coupling: at $n=5$ and $\gamma/q=10$,
+the exact threshold is $0.109$ below the large-system limit.  As $n$ grows,
+the inferred boundary approaches $\tfrac12\log(1+\gamma/q)$.  Stronger
+decision coupling therefore makes older global information worth tolerating
+in this independent-component model.
+
+\subsection{Emergence of an Optimal Coordination Radius}
+
+Experiment 3 illustrates why expanding the information radius can help at
+first and hurt later: reduced spatial omission competes with increasing
+staleness.  We used
+$\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$ on
+$0\le r\le D=2$, with local $(\eta_0,vT)=(0.25,0.2)$, interior
+$(0.7,4)$, and maximum allowed radius $(0.9,100)$ regimes (all with
+$\ell_c=1$). At each
+radius, independent standard-normal draws were scaled by the two prescribed
+component variances and added before squaring.  This is a scalar loss check:
+no spatial field, graph, or neighborhood conditional distribution is sampled.
+
+The grid minima were $0$, $0.626$, and $2$; the corresponding analytical
+minima after imposing the cap were $0$, $0.62638$, and $2$.  At the interior
+grid minimum, the marginal-slope gap was
+\mbox{$|m_S(\hat r^\star)-m_T(\hat r^\star)|=4.77\times10^{-4}$}, and the largest
+Monte Carlo deviation from the prescribed scalar curve was about $0.020$.
+The maximum allowed radius case is not a global endpoint: its
+unconstrained minimizer lies beyond $D$, while
+$\eta_S(D)=\eta_0e^{-2D/\ell_c}>0$.  Thus the cap still omits
+decision-relevant state.  The three curves distinguish immediate dominance of
+staleness, an interior balance, and a benefit from expansion throughout the
+allowed range.
+
+\subsection{Scaling Laws and Regime Map}
+
+Experiment 4 asks whether the canonical closed form predicts both the
+zero-radius region and the interior radius over a two-parameter sweep, rather
+than only at selected examples.  We swept 4,896 points over
+$vT/\ell_c\in[0.1,20]$ and $\ell_s/\ell_c\in[0.05,5]$, using $\ell_c=1$
+as the unit of length. Independently of the closed form, every point was minimized by direct scalar evaluation of
+Eq.~\eqref{eq:regret_composition_normalized} on the same fixed grid
+$r_j=0.0016j$, $j=0,\ldots,2500$, so $r\in[0,4]$ for every parameter pair.
+No covariance simulation or adaptive radius range was used.  Separate
+one-dimensional sweeps tested the four comparative statics.
+
+The gray region in Fig.~\ref{fig:radius-phase} selects fresh local information;
+above the threshold $vT=2\ell_s$, positive scope becomes worthwhile.
+Moving upward increases the distance information can travel within a coherence
+time and raises the preferred radius. Moving right increases spatial
+correlation, making remote observations more redundant and lowering the
+preferred radius. The slices show these changes as ordinary radius curves.
+The mean absolute grid-versus-closed-form error was
+$2.25\times10^{-4}$ and the maximum was $8.00\times10^{-4}$, below the
+$0.0016$ grid step.  Ordinary grid error occurs throughout the positive-radius
+interior because the minimizer is discretized; it is not confined to the
+threshold.  There were five zero/positive classification disagreements, all
+adjacent to the threshold where the continuous optimum fell below the first
+positive grid point.  The one-dimensional sweeps were monotone in all four
+predicted directions: $r^\star$ increased with $T$, $v$, and $\ell_c$, and
+decreased with $\ell_s$.  This validates the scalar search and canonical
+scaling within the stated range.
+
+\subsection{State Predictability versus Decision-Relevant Predictability}
+
+Experiment 5 asks whether the architecture depends on which state modes affect
+the decision, rather than only on raw state correlation.  We held a 64-node
+ring, its Laplacian covariance, $T=6$, and the latency law (0.12 time units per
+hop) fixed, and changed only the decision-sensitivity operator
+$K_{ij}=e^{-d_G(i,j)/\ell_c}/\|e^{-d_G(i,\cdot)/\ell_c}\|_2$, using
+$\ell_c\in\{0.7,2,6\}$ and $Q=I$.  Exact Gaussian conditioning gives the
+decision-weighted omission $\eta_S(r)$ at every graph radius.  The raw
+state-correlation statistic was computed separately from the fixed covariance;
+it is not the same quantity as $\eta_S(r)$.  Each curve is normalized by its
+own $R_\infty=\tfrac12\operatorname{tr}(K\Sigma_S K^\top)$, so normalized
+regrets compare unexplained fractions rather than equal absolute cost scales.
+
+Increasing $\ell_c$ from $0.7$ to $2$ to $6$ increased $\eta_S(0)$ from
+$0.0460$ to $0.258$ to $0.572$ and moved the discrete optimum from 1 to 2 to
+5 hops, even though the raw state correlation was identical.  Independent
+12,000-sample conditioning checks differed from the exact omission by at most
+$2.39\times10^{-3}$ (the largest pointwise standard error was
+$3.20\times10^{-3}$).  Thus changing only decision sensitivity in a fixed
+environment produced substantially different preferred architectures.
+
+\subsection{Finite Graphs beyond the Canonical Geometry}
+
+Experiment 6 asks whether the conditional-variance construction and discrete
+radius comparison remain usable when the geometry is not the homogeneous line
+assumed by the canonical formula.  We considered one 64-node graph of each of
+a path, ring, two-dimensional grid, and random geometric type; the geometric
+graph uses the fixed configured seed.  For each instance we formed the covariance \eqref{eq:graph_spectral_covariance},
+scaled it to average marginal variance one, and computed every $\eta_S(r)$
+directly from the Gaussian conditional
+covariance of the desired action given the radius-$r$ neighborhood.  The
+reference setting uses $Q=I$, $T=5$, $\ell_c=2$, and latency $0.12$ per hop.
+No exponential omission fit or canonical line formula was used, and no graph
+ensemble average was taken.
+
+Under the reference setting, Fig.~\ref{fig:general-graphs} gives exact integer
+optima of 2, 2, 3, and 2 hops for the path, ring, grid, and geometric instance,
+respectively.  In these four sampled instances, increasing $T$ over the
+configured values $1.5,2.5,4,6,9,14$ changed the optimum from 1 to 3 hops on
+the path and ring, from 1 to 4 on the grid, and from 1 to 3 on the geometric
+graph.  The sampled $\ell_c$ sweep from $0.7$ to $6$ moved the optima from
+$(0,0,1,1)$ to $(5,5,5,3)$ in the same graph order. Increasing per-hop latency
+weakly decreased the optimum, as did decreasing $\kappa_s$, which increases
+spatial smoothness after variance normalization. These comparative statics
+describe the four specified graph instances. Since radii are integer-valued,
+the appropriate comparison is the one-hop regret difference in
+Eq.~\eqref{eq:discrete_radius_improvement}. For example, the geometric graph's
+three-hop regret exceeds its two-hop minimum by only $0.00362R_\infty$;
+the archived neighbor differences quantify such shallow minima.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}

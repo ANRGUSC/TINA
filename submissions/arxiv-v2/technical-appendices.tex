@@ -140,55 +140,36 @@ I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]
 
 \section{Numerical reproducibility details}
 \label{app:technical-numerics}
-This section records settings, estimators, grids, normalization conventions,
-and diagnostics for the six experiments in Section~\ref{sec:numerical-evaluation}
-which reports the findings and their interpretation.
-Each calculation evaluates architecture regret under the corresponding
-information structure: a common delayed snapshot in Experiment 1, the exact
-fresh-local rule in Experiment 2, scalar composition in Experiments 3--4,
-and agentwise Gaussian conditioning with $Q=I$ in Experiments 5--6.
-Normalized losses use the analytical open-loop regret $R_\infty$;
-Experiment 2 instead estimates its boundary from paired sample means.
+This section gives the settings and estimators for the three figures in
+Section~\ref{sec:numerical-evaluation}. The crossover uses the exact coupled
+fresh-local rule; the radius curves use scalar variance composition; and
+the ring uses agentwise Gaussian conditioning with $Q=I$.
+Normalized scalar and ring losses use analytical open-loop regret
+$R_\infty$. The crossover instead uses paired sample means.
 Pointwise Monte Carlo means have 95\% normal intervals
 $\bar L\pm1.96s_L/\sqrt N$, with sample standard deviation $s_L$.
 Conditioning uses linear solves rather than explicit matrix inverses.
 
 \begin{table}[H]
 \centering
-\caption{Reference numerical settings. The shared-resource sweep fixes $q=1$;
-graph covariances in Experiments 5--6 are scaled to average marginal variance
-one. Quantities not being swept retain the experiment-specific values in the
-configuration files.}
+\caption{Settings for the three numerical illustrations. The shared-resource
+model fixes $q=1$; the ring covariance has average marginal variance one.}
 \label{tab:numerical-parameters}
 \small
 \begin{tabular}{llll}
 \toprule
-Experiment & principal sweep & fixed setting/size & evaluation \\
+Figure & principal sweep & fixed setting/size & samples \\
 \midrule
-1. Temporal pairs & $\tau/T\in[0,3]$ (25 points) & A--D; $n=8,20,50,32$ & $20{,}000$/point \\
-2. Local--global & 9 $\gamma/q$ values in $[0,10]$ & $n=5,10,25,100$; $q=1$ & $30{,}000$/setting \\
-3. Scalar radius & $r/\ell_c\in[0,2]$ (1,001 points) & 3 regimes; $D/\ell_c=2$ & $50{,}000$/point \\
-4. Canonical map & $(vT/\ell_c,\ell_s/\ell_c)$; $72\times68$ & $r/\ell_c\in[0,4]$; $\Delta r=0.0016$ & direct scalar \\
-5. Decision relevance & $\ell_c=0.7,2,6$ & 64-node ring; $T=6$ & $12{,}000$/check \\
-6. General graphs & path, ring, grid, geometric & 64 nodes; $T=5$ & exact covariance \\
+\ref{fig:local-global-phase} & 9 $\gamma/q$ values in $[0,10]$ & $n=5,10,25,100$ & $30{,}000$/setting \\
+\ref{fig:radius-regret} & $r/\ell_c\in[0,2]$ (1,001 points) & 3 regimes; $D/\ell_c=2$ & $50{,}000$/point \\
+\ref{fig:decision-relevance} & $\ell_c=0.7,2,6$ & 64-node ring; $T=6$ & $12{,}000$/check \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{1. Temporal scaling.}
-At each of 25 equally spaced $\rho=\tau/T\in[0,3]$, each system uses
-20,000 independent stationary OU pairs:
-$\theta_t=e^{-\rho}\theta_{t-\tau}+\sqrt{1-e^{-2\rho}}\,\varepsilon$,
-where $\theta_{t-\tau}$ and $\varepsilon$ are independent
-$\mathcal N(0,\Sigma_S)$ draws. Systems A--D have dimensions 8, 20, 50, and 32
-and respectively identity, Toeplitz, ring-Laplacian, and geometric-graph
-covariances; their matrices are archived in
-\path{numerics/results/raw/exp01_system_matrices.npz}.
-The known optimal delayed-snapshot action is evaluated in each system's
-$Q$-metric; no time stepping or burn-in is needed.
-
-\paragraph{2. Fresh-local/stale-global crossover.}
-We fix $q=1$ and use $n\in\{5,10,25,100\}$.
+\paragraph{Fresh-local/stale-global crossover (Fig.~\ref{fig:local-global-phase}).}
+We fix $q=1$, use $n\in\{5,10,25,100\}$, and sample independent
+standard-normal state components ($\sigma^2=1$).
 The nine coupling ratios are $\gamma/q\in\{0,0.05,0.1,0.2,0.5,1,2,5,10\}$.
 At each setting, 30,000 independent current-state draws give paired open-loop and fresh-local
 losses, using $u_i=\theta_i/(q+\gamma)$.
@@ -204,7 +185,7 @@ g=\left(-\frac{l}{2o(o-l)},\,\frac{1}{2(o-l)}\right)^\top.
 The paired covariance is retained; $o-l\le0$ is rejected rather than clipped.
 The zero-coupling boundary is zero and is omitted from the logarithmic plot.
 
-\paragraph{3. Three radius regimes.}
+\paragraph{Three radius regimes (Fig.~\ref{fig:radius-regret}).}
 The scalar calculation uses $\eta_S(r)=\eta_0e^{-2r/\ell_c}$,
 $\tau(r)=r/v$, $\ell_c=1$, and $D=2$, with
 $(\eta_0,vT)=(0.25,0.2),(0.7,4),(0.9,100)$.
@@ -215,18 +196,7 @@ $R_T/R_\infty$ and $R_S/R_\infty$ in
 and squared. This checks scalar variance composition; it does not simulate
 a spatial field.
 
-\paragraph{4. Canonical regime map.}
-The logarithmic parameter grid has $72\times68$ points over
-$vT/\ell_c\in[0.1,20]$ and $\ell_s/\ell_c\in[0.05,5]$.
-At every point, direct scalar evaluation of
-\eqref{eq:regret_composition_normalized} uses the same radius grid
-$r/\ell_c=0.0016j$, $j=0,\ldots,2500$, without an adaptive radius range or
-covariance simulation. The maximum grid-versus-closed-form error is
-$8.00\times10^{-4}$; five zero/positive classifications disagree adjacent
-to the threshold, where the continuous optimum is below the first positive
-grid point.
-
-\paragraph{5. Decision relevance.}
+\paragraph{Decision relevance on a ring (Fig.~\ref{fig:decision-relevance}).}
 The graph and covariance are fixed on a 64-node ring, with $T=6$ and latency
 0.12 per hop. For $\ell_c\in\{0.7,2,6\}$ the operator is
 $K_{ij}=e^{-d_G(i,j)/\ell_c}/\|e^{-d_G(i,\cdot)/\ell_c}\|_2$.
@@ -235,24 +205,28 @@ checks evaluate selected radii. Each operator has its own analytical
 $R_\infty=\tfrac12\operatorname{tr}(K\Sigma_S K^\top)$.
 Raw state correlation is computed separately from the fixed covariance.
 
-\paragraph{6. Finite graphs.}
-One 64-node path, ring, grid, and geometric graph is used, with geometric-graph
-seed 20260839. For both graph experiments,
-$\Sigma_S\propto(\kappa_s^2I+L_G)^{-\nu}$ is scaled to average marginal
-variance one; $(\kappa_s,\nu)=(0.75,1.5)$ in Experiment 5 and $(0.8,1.5)$
-here. The reference setting uses $Q=I$, $T=5$, $\ell_c=2$, and latency 0.12
-per hop. Exact Gaussian conditioning evaluates every integer radius through
-the graph diameter, with no canonical-line fit or graph-ensemble averaging.
-Neighbor regret differences and parameter sweeps are archived in
-\path{numerics/results/processed/exp06_general_graphs.csv} and
-\path{numerics/results/processed/exp06_comparative_statics.csv}.
+The covariance in Eq.~\eqref{eq:graph_spectral_covariance} uses
+$(\kappa_s,\nu)=(0.75,1.5)$ and is scaled to average marginal variance one.
+Every integer radius from 0 through the ring diameter 32 is evaluated.
+For each operator, Monte Carlo checks use radii
+$\{0,r^\star,\min(r^\star+3,32),32\}$. Independent current-state Gaussian
+draws are passed through the exact conditional policies; summed squared
+prediction errors are divided by $\operatorname{tr}(K\Sigma_SK^\top)$
+to estimate the omission share.
 
-\paragraph{Reproduction and audit.}
-The \href{https://github.com/ANRGUSC/TINA}{public TINA repository} contains
-\path{numerics/config/experiment_01.yaml} through
-\path{experiment_06.yaml}, with seeds 20260823 through 20260828,
-and run metadata in \path{numerics/results/metadata/}.
-The archive includes selected raw arrays, not every random draw.
+\paragraph{Reproduction.}
+The \href{https://github.com/ANRGUSC/TINA}{public TINA repository} retains
+the original experiment identifiers. Figures~\ref{fig:local-global-phase},
+\ref{fig:radius-regret}, and \ref{fig:decision-relevance} correspond to
+\path{numerics/config/experiment_02.yaml},
+\path{numerics/config/experiment_03.yaml}, and
+\path{numerics/config/experiment_05.yaml}, with seeds 20260824, 20260825,
+and 20260827, respectively. Their drivers are
+\path{numerics/experiments/exp02_local_global_crossover.py},
+\path{numerics/experiments/exp03_radius_regret.py}, and
+\path{numerics/experiments/exp05_decision_relevance.py}.
+Run metadata, processed results, and selected raw arrays are stored under
+\path{numerics/results/}; not every random draw is archived.
 \path{docs/numerical_method.md} and \path{docs/experiment_parameters.md}
-specify system construction, conditioning safeguards, sweeps, and environment
-versions; \path{numerics/README.md} gives reproduction commands.
+specify conditioning safeguards and environment versions;
+\path{numerics/README.md} gives reproduction commands.

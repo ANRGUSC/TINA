@@ -9,7 +9,7 @@
 +\usepackage{xr-hyper}
 +\usepackage{xurl}
  \usepackage[hidelinks]{hyperref}
-+\externaldocument[][nocite]{tina-v2-e-companion}
++\externaldocument[][nocite]{tina-v2-f-companion}
  \usepackage{cite}
  \setlength{\emergencystretch}{1em}
  \newtheorem{lemma}{Lemma}
@@ -199,11 +199,10 @@
  
  In summary, this paper makes two technical contributions and one conceptual
  contribution:
-@@ -242,16 +225,6 @@
-     sensitivity and coupling, information geometry, and freshness; the
+@@ -243,22 +226,11 @@
      communication graph and decision geometry therefore need not coincide.
  \end{enumerate}
--
+ 
 -To situate the contribution precisely: scope-dependent communication delay and
 -optimal architectures of intermediate sparsity both appear in prior
 -networked-control work \cite{ballotta2023latency,ballotta2023sparser,
@@ -213,10 +212,18 @@
 -full-information decision. This formulation yields the composition identity
 -between spatial omission and temporal staleness, the fresh-local versus
 -stale-global crossover, and the coordination-radius laws that follow.
- 
+-
  Section~\ref{sec:model} formalizes architectures and regret.
  Section~\ref{sec:fresh_local_global} compares the fresh-local and stale-global
-@@ -273,94 +246,35 @@
+ endpoints, and Sections~\ref{sec:spatiotemporal_predictability}--
+ \ref{sec:optimal_coordination_scale} develop the radius family and its optimal
+-coordination scale. Section~\ref{sec:numerical-evaluation} reports numerical
+-checks, Section~\ref{sec:related_work} situates the work, and
++coordination scale. Section~\ref{sec:numerical-evaluation} illustrates the crossover, the radius tradeoff, and decision relevance on a fixed ring, Section~\ref{sec:related_work} situates the work, and
+ Section~\ref{sec:discussion_conclusions} concludes.
+ 
+ \section{Networked Decisions and Information Architectures}
+@@ -273,94 +245,35 @@
  which determines what information is available to each agent and with what
  delay. These three structures need not coincide.
  
@@ -336,7 +343,7 @@
  
  The agents share a common per-stage cost
  \begin{equation}
-@@ -376,25 +290,10 @@
+@@ -376,25 +289,10 @@
  where $Q\in\mathbb{R}^{d\times d}$ is symmetric and positive definite,
  $b:\mathbb{R}^{m}\rightarrow\mathbb{R}^{d}$ is measurable, and
  $c:\mathbb{R}^{m}\rightarrow\mathbb{R}$ is an additive state-dependent term.
@@ -366,7 +373,7 @@
  
  If the complete current state $\theta_t$ is available without information
  constraints, the unique optimal joint action is
-@@ -456,35 +355,28 @@
+@@ -456,35 +354,28 @@
  A decision rule for agent $i$ is admissible only if it is measurable with
  respect to $\mathcal{G}_i$.
  
@@ -406,7 +413,7 @@
  
  \paragraph{Radius-$r$ information.}
  More generally, agent $i$ may obtain state information from nodes within graph
-@@ -507,51 +399,20 @@
+@@ -507,51 +398,20 @@
  contains more information and weakly dominates either source alone; such
  mixed-age architectures are outside the principal family analyzed here.
  
@@ -470,7 +477,7 @@
  
  For a given architecture $\mathcal{A}$, define the admissible joint-policy set
  \begin{equation}
-@@ -565,63 +426,26 @@
+@@ -565,63 +425,26 @@
      \right\}.
      \label{eq:policy_subspace}
  \end{equation}
@@ -550,7 +557,7 @@
  
  If two architectures $\mathcal{A}$ and $\mathcal{A}'$ satisfy
  \begin{equation}
-@@ -749,6 +573,15 @@
+@@ -749,6 +572,15 @@
  yielding \eqref{eq:optimal_projection} and \eqref{eq:projection_regret}.
  \end{proof}
  
@@ -566,7 +573,7 @@
  \begin{corollary}[Coupled conditional normal equations]
  \label{cor:conditional_normal_equations}
  The unique team optimum in Lemma~\ref{lem:radner_projection} satisfies
-@@ -793,57 +626,16 @@
+@@ -793,57 +625,16 @@
  closed-form prediction and composition results.
  \end{remark}
  
@@ -630,7 +637,7 @@
  \renewcommand{\arraystretch}{0.96}
  \caption{Core notation. Quantities labeled as shares are normalized by
  $R_\infty$.}
-@@ -863,6 +655,10 @@
+@@ -863,6 +654,10 @@
  $\tau(r)$ & information latency at radius $r$ & $v$ & effective propagation speed \\
  $\ell_s$ & spatial correlation length & $\ell_c$ & decision-relevance length \\
  $L_T=vT$ & temporal propagation length & $r^\star$ & optimal synchronized-snapshot radius \\
@@ -641,7 +648,7 @@
  \bottomrule
  \end{tabular}
  \end{table}
-@@ -870,76 +666,50 @@
+@@ -870,76 +665,50 @@
  \section{Fresh-Local versus Stale-Global Information}
  \label{sec:fresh_local_global}
  
@@ -760,7 +767,7 @@
  \end{equation}
  
  For reference, define also the \emph{open-loop} architecture, whose decision is
-@@ -949,209 +719,47 @@
+@@ -949,209 +718,47 @@
      R_\infty
      \triangleq
      \frac{1}{2}
@@ -1000,7 +1007,7 @@
  
  \subsection{Gauss--Markov Temporal Model}
  \label{subsec:OU_model}
-@@ -1177,6 +785,8 @@
+@@ -1177,6 +784,8 @@
  cross-correlation among agents through $\Sigma_\infty$; the simplifying
  assumption is that all temporal modes share the same decay time $T$.
  
@@ -1009,7 +1016,7 @@
  Assume further that
  \begin{equation}
      b(\theta)=B\theta+b_0,
-@@ -1199,39 +809,55 @@
+@@ -1199,39 +808,55 @@
  \end{equation}
  denote the dimensionless staleness ratio.
  
@@ -1098,7 +1105,7 @@
  
  \begin{theorem}[Exact stale-global regret]
  \label{thm:OU_stale_regret}
-@@ -1270,70 +896,25 @@
+@@ -1270,70 +895,25 @@
  \end{theorem}
  
  \begin{proof}
@@ -1182,7 +1189,7 @@
  \eqref{eq:OU_etaT} yields the first main architectural result.
  
  \begin{theorem}[Fresh-local versus stale-global crossover]
-@@ -1352,64 +933,23 @@
+@@ -1352,64 +932,23 @@
      }
      \label{eq:OU_crossover}
  \end{equation}
@@ -1259,7 +1266,7 @@
  
  \subsection{Role of Decision Coupling}
  \label{subsec:coupling_example}
-@@ -1446,11 +986,14 @@
+@@ -1446,11 +985,14 @@
      \label{eq:shared_resource_Q}
  \end{equation}
  
@@ -1275,7 +1282,7 @@
  \begin{equation}
      x_i^\star
      =
-@@ -1517,40 +1060,23 @@
+@@ -1517,40 +1059,23 @@
  \end{proposition}
  
  \begin{proof}
@@ -1328,7 +1335,7 @@
  \begin{equation}
      \boxed{
      \rho^\star(\gamma,n)
-@@ -1595,22 +1121,9 @@
+@@ -1595,22 +1120,9 @@
      }
      \label{eq:large_n_threshold}
  \end{equation}
@@ -1354,7 +1361,7 @@
  
  When $\gamma=0$, the decisions decouple and
  $\eta_S(0)=0$: current local information is sufficient, so any
-@@ -1627,22 +1140,13 @@
+@@ -1627,22 +1139,13 @@
  and ask how spatial predictability and temporal staleness jointly determine
  the optimal coordination scale.
  
@@ -1381,7 +1388,7 @@
  
  \subsection{Spatial Structure of the Environment}
  \label{subsec:spatial_structure}
-@@ -1697,123 +1201,30 @@
+@@ -1697,123 +1200,30 @@
  exponential, or Ornstein--Uhlenbeck, covariance model
  \cite{williams2006gaussian}.
  
@@ -1523,7 +1530,7 @@
  \label{subsec:joint_spatiotemporal}
  
  For radius $r$, define the zero-delay information available to agent $i$ at
-@@ -1826,6 +1237,7 @@
+@@ -1826,6 +1236,7 @@
      \right).
      \label{eq:zero_delay_radius_information}
  \end{equation}
@@ -1531,7 +1538,7 @@
  The corresponding zero-delay radius-$r$ architecture is
  \begin{equation}
      \mathcal{A}_{r,0}
-@@ -1850,130 +1262,6 @@
+@@ -1850,130 +1261,6 @@
      \right).
      \label{eq:delayed_radius_architecture}
  \end{equation}
@@ -1662,7 +1669,7 @@
  
  Define the normalized zero-delay spatial omission function
  \begin{equation}
-@@ -1989,26 +1277,13 @@
+@@ -1989,26 +1276,13 @@
  The quantity $\eta_S(r)$ is the fraction of decision-relevant variation that
  cannot be captured using current information within radius $r$.
  
@@ -1696,7 +1703,7 @@
  If radius zero observes precisely the local current component, then
  \begin{equation}
      \eta_S(0)
-@@ -2016,11 +1291,7 @@
+@@ -2016,11 +1290,7 @@
      \frac{R_{\mathrm{loc}}}{R_\infty}.
      \label{eq:eta_S_zero}
  \end{equation}
@@ -1709,7 +1716,7 @@
  $r=D$, so
  \begin{equation}
      \eta_S(D)=0.
-@@ -2030,24 +1301,12 @@
+@@ -2030,24 +1300,12 @@
  \subsection{Decision-Relevant Smoothness}
  \label{subsec:decision_relevant_smoothness}
  
@@ -1740,7 +1747,7 @@
  The matrix $K$ is the decision-sensitivity operator: its block $K_{ij}$
  describes how the state at node $j$ influences the full-information decision
  at node $i$.
-@@ -2061,36 +1320,17 @@
+@@ -2061,36 +1319,17 @@
      K\Sigma_S K^\top.
      \label{eq:decision_covariance}
  \end{equation}
@@ -1769,7 +1776,7 @@
 -exact law.
 +The function $\eta_S(r)$ therefore depends on four ingredients at once: (i) the state covariance $\Sigma_S$; (ii) the decision-sensitivity operator $K$; (iii) the cost metric $Q$; and (iv) the observation geometry $\{\mathcal N_r(i)\}$.
 +
-+A spatial correlation length alone does not determine regret. By a \emph{mode} we mean a direction $\xi$ in state space, representing a spatial pattern of variation, such as an eigenvector of $\Sigma_S$. A pattern in the null space of $K$ ($K\xi=0$) changes the state without changing the desired decision, so residual uncertainty confined to that direction contributes no decision error. Conversely, a pattern with large $\sqrt{(K\xi)^\top Q(K\xi)}$ is amplified into the decision, so even small residual uncertainty about it can dominate regret. Experiment 5 illustrates this dependence with the covariance held fixed.
++A spatial correlation length alone does not determine regret. By a \emph{mode} we mean a direction $\xi$ in state space, representing a spatial pattern of variation, such as an eigenvector of $\Sigma_S$. A pattern in the null space of $K$ ($K\xi=0$) changes the state without changing the desired decision, so residual uncertainty confined to that direction contributes no decision error. Conversely, a pattern with large $\sqrt{(K\xi)^\top Q(K\xi)}$ is amplified into the decision, so even small residual uncertainty about it can dominate regret. The ring example in Section~\ref{subsec:numerical-decision-relevance} illustrates this dependence with the covariance held fixed.
  
  \begin{theorem}[Spatio-temporal predictability composition law]
  \label{thm:spatiotemporal_composition}
@@ -1785,7 +1792,7 @@
  \begin{equation}
      \boxed{
      R(\mathcal{A}_{r,\tau})
-@@ -2104,203 +1344,43 @@
+@@ -2104,203 +1343,43 @@
      }
      \label{eq:regret_composition_unnormalized}
  \end{equation}
@@ -2022,7 +2029,7 @@
  
  \section{Optimal Coordination Scale}
  \label{sec:optimal_coordination_scale}
-@@ -2317,63 +1397,18 @@
+@@ -2317,63 +1396,18 @@
  to a neighboring integer is justified only when the interpolated regret curve
  is unimodal.
  
@@ -2096,7 +2103,7 @@
  By Theorem~\ref{thm:spatiotemporal_composition},
  \begin{equation}
      \boxed{
-@@ -2409,11 +1444,11 @@
+@@ -2409,11 +1443,11 @@
  \frac{2\bigl(\tau(r+1)-\tau(r)\bigr)}{T}.
  \label{eq:discrete_radius_log_improvement}
  \end{equation}
@@ -2113,7 +2120,7 @@
  
  At radius zero,
  \begin{equation}
-@@ -2437,14 +1472,6 @@
+@@ -2437,14 +1471,6 @@
      R_{\mathrm{glob}}(\tau(D)).
      \label{eq:radius_D_global}
  \end{equation}
@@ -2128,7 +2135,7 @@
  Equation~\eqref{eq:radius_regret_master} can be written as
  \begin{equation}
      R(r)
-@@ -2472,38 +1499,18 @@
+@@ -2472,38 +1498,18 @@
  although its contribution is discounted by the temporal relevance factor
  $e^{-2\tau(r)/T}$.
  
@@ -2179,7 +2186,7 @@
  \label{thm:marginal_balance}
  Under the assumptions of
  Theorem~\ref{thm:spatiotemporal_composition}, additionally assume that
-@@ -2547,239 +1554,35 @@
+@@ -2547,239 +1553,35 @@
      \label{eq:marginal_balance_condition}
  \end{equation}
  
@@ -2439,7 +2446,7 @@
  $z\in\mathbb{R}$. This is also the continuum approximation of a sufficiently
  long path graph away from its boundaries.
  
-@@ -2825,8 +1628,9 @@
+@@ -2825,8 +1627,9 @@
      \right).
      \label{eq:exponential_decision_kernel}
  \end{equation}
@@ -2451,7 +2458,7 @@
  
  For example, \eqref{eq:canonical_target} is generated pointwise by the
  quadratic tracking-loss density
-@@ -2840,16 +1644,10 @@
+@@ -2840,16 +1643,10 @@
      \qquad q>0.
      \label{eq:canonical_tracking_cost}
  \end{equation}
@@ -2472,7 +2479,7 @@
  
  At zero delay, the radius-$r$ observation at location $z$ is
  \begin{equation}
-@@ -2863,7 +1661,10 @@
+@@ -2863,7 +1660,10 @@
      \label{eq:canonical_radius_observation}
  \end{equation}
  
@@ -2484,7 +2491,7 @@
  \label{prop:canonical_eta_S}
  For the field \eqref{eq:canonical_space_time_covariance}, decision
  \eqref{eq:canonical_target}, and observation
-@@ -2898,166 +1699,58 @@
+@@ -2898,166 +1698,58 @@
      }.
      \label{eq:canonical_eta_zero}
  \end{equation}
@@ -2694,7 +2701,7 @@
  the infinite line satisfies the dimensionless law
  \begin{equation}
      \boxed{
-@@ -3114,58 +1807,56 @@
+@@ -3114,58 +1806,56 @@
  \end{enumerate}
  \end{theorem}
  
@@ -2800,7 +2807,7 @@
  \begin{equation}
      r^\star
      =
-@@ -3179,7 +1870,8 @@
+@@ -3179,7 +1869,8 @@
      ds.
      \label{eq:rstar_integral_representation}
  \end{equation}
@@ -2810,7 +2817,7 @@
  $r^\star$ increases with the range over which remote state affects the
  desired decision.
  \end{proof}
-@@ -3198,26 +1890,15 @@
+@@ -3198,26 +1889,15 @@
      \label{eq:three_length_scales}
  \end{equation}
  
@@ -2846,7 +2853,7 @@
  
  On a finite graph, Theorem~\ref{thm:spatiotemporal_composition} and minimization
  over integer radii remain exact, with the one-hop comparison
-@@ -3225,105 +1906,47 @@
+@@ -3225,319 +1905,116 @@
  as the discrete form of marginal balance; Eq.~\eqref{eq:canonical_optimal_radius}
  is the closed-form counterpart on the homogeneous line.
  
@@ -2854,7 +2861,8 @@
 -
 -
 -
- \section{Numerical Consistency Checks and Finite-Graph Illustrations}
+-\section{Numerical Consistency Checks and Finite-Graph Illustrations}
++\section{Numerical Illustrations}
  \label{sec:numerical-evaluation}
  
 -This section checks the implementations against the closed-form predictions
@@ -2864,13 +2872,10 @@
 -Experiment 5 separates state statistics from decision-relevant omission; and
 -Experiment 6 evaluates exact integer radii on several noncanonical graph
 -instances.
-+Experiments 1--4 check the temporal law, local--global crossover, and scalar
-+radius predictions. Experiments 5--6 illustrate decision relevance and
-+integer-radius optimization on finite graphs beyond the canonical line.
- 
- \subsection{Numerical Methodology and Synthetic Environments}
- \label{subsec:numerical-methodology}
- 
+-
+-\subsection{Numerical Methodology and Synthetic Environments}
+-\label{subsec:numerical-methodology}
+-
 -The numerical objects are architecture regrets, so each calculation uses the
 -same information structure as its analytical counterpart.  We work with an
 -exogenous common-rate Gaussian-affine environment: actions do not alter later
@@ -2925,26 +2930,16 @@
 -\bottomrule
 -\end{tabular}
 -\end{table}
-+We evaluate the same architecture regret as in the theory, using conditional
-+covariances and independently sampled quadratic losses. Experiment 1 uses
-+the common-snapshot conditional mean even for non-diagonal $Q$; Experiment 2
-+uses the coupled fresh-local solution. Experiments 3--4 evaluate the scalar
-+composition law. Experiments 5--6 use $Q=I$, so agentwise Gaussian conditional
-+variances give the team regret exactly.
+-
+-\subsection{Temporal Scaling and the Local--Global Crossover}
++We ask three questions: when fresh local information beats a delayed global
++view, why an intermediate snapshot radius can be best, and whether changing
++the decision alone can change the best radius on a fixed network. The
++examples use common-rate Gaussian-affine environments.
++Appendix~\ref{app:technical-numerics} gives the settings and sampling
++procedures needed to reproduce the three figures.
 +
-+For the graph experiments, the spatial covariance is
-+\begin{equation}
-+\Sigma_S=\sigma^2(\kappa_s^2I+L_G)^{-\nu},\qquad \kappa_s,\nu>0,
-+\label{eq:graph_spectral_covariance}
-+\end{equation}
-+where $L_G$ is the graph Laplacian; we scale the covariance to average marginal variance
-+one. This emphasizes low graph-frequency modes
-+\cite{shuman2013emerging,lindgren2011explicit}. All experiments use common-rate
-+Gaussian-affine environments. Appendix~\ref{app:technical-numerics}
-+gives the reference settings, sampling procedures, confidence intervals,
-+and grid-error diagnostics; the repository contains the reproduction package.
- 
- \subsection{Temporal Scaling and the Local--Global Crossover}
++\subsection{When does fresh local information beat a delayed global view?}
  \label{subsec:numerical-temporal-crossover}
  
 -The first two experiments test two different consequences of common-rate
@@ -2970,22 +2965,16 @@
 -common-rate pairs.
 -
 -\begin{figure}[t]
-+Experiment 1 tests \eqref{eq:OU_exact_regret} using four systems with different
-+dimensions, spatial covariances, objectives, and decision operators. At each
-+of 25 staleness values in $[0,3]$, we drew 20,000 exact stationary OU pairs
-+per system and evaluated the optimal stale-global action. The normalized
-+curves collapse onto $1-e^{-2\tau/T}$ (Fig.~\ref{fig:temporal-scaling});
-+the maximum absolute deviation is $0.0155$ and the root-mean-square deviation
-+is $0.00471$.
-+
-+\begin{figure}[!htbp]
- \centering
- \includegraphics[width=0.82\linewidth]{figures/fig7_1_temporal_scaling.pdf}
- \caption{Temporal scaling collapse from exact stationary OU pairs. Markers are
-@@ -3334,34 +1957,19 @@
- \label{fig:temporal-scaling}
- \end{figure}
- 
+-\centering
+-\includegraphics[width=0.82\linewidth]{figures/fig7_1_temporal_scaling.pdf}
+-\caption{Temporal scaling collapse from exact stationary OU pairs. Markers are
+-Monte Carlo estimates for four systems with different dimensions, spatial
+-covariances, objective matrices, and decision operators; bars are 95\%
+-confidence intervals. The solid curve is the exact law
+-$1-e^{-2\tau/T}$. Normalization by $R_\infty$ removes system-specific scale.}
+-\label{fig:temporal-scaling}
+-\end{figure}
+-
 -Experiment 2 asks whether the finite-$n$ threshold in
 -Eq.~\eqref{eq:aggregate_rho_star} describes the point at which fresh local
 -information becomes preferable to a stale global snapshot.  We used the
@@ -3014,28 +3003,47 @@
 -in this independent-component model.
 -
 -\begin{figure}[t]
-+Experiment 2 uses the shared-resource model with $q=1$, independent OU
-+components, four sizes $n\in\{5,10,25,100\}$, and nine coupling values in
-+$[0,10]$. Paired local and open-loop losses from 30,000 current-state draws
-+per setting give the inferred temporal-law boundary
++Stronger decision coupling increases the delay worth tolerating for a global
++view. Figure~\ref{fig:local-global-phase} illustrates this in the
++shared-resource model of Section~\ref{subsec:coupling_example}.
++The exact finite-$n$ boundary is Eq.~\eqref{eq:aggregate_rho_star}; its
++large-$n$ limit is $\rho^\star=\tfrac12\log(1+\gamma/q)$
++from Eq.~\eqref{eq:large_n_threshold}. Above the boundary, fresh local
++information gives lower regret. The finite-size curves approach the
++large-system limit as $n$ increases.
++
++We fix $q=1$ and compare $n\in\{5,10,25,100\}$ over nine coupling values.
++The Monte Carlo estimates infer the crossover from paired local and
++open-loop losses sampled at the current time, using
 +$\widehat\rho^\star=\tfrac12\log[\widehat R_\infty/
 +(\widehat R_\infty-\widehat R_{\rm loc})]$.
-+Its mean absolute error is $0.00111$ and its maximum error is $0.00557$
-+(Fig.~\ref{fig:local-global-phase}). At $n=5$, $\gamma/q=10$, the finite-size
-+threshold lies $0.109$ below the large-system limit. Increasing coupling
-+makes older global information worth tolerating, while increasing $n$ moves
-+the boundary toward $\tfrac12\log(1+\gamma/q)$.
++Their agreement with the exact curves checks the loss calculation and the
++inferred boundary; the estimates do not sample a separate delayed system
++at each age.
 +
 +\begin{figure}[!htbp]
  \centering
  \includegraphics[width=0.98\linewidth]{figures/fig7_2_local_global_phase.pdf}
- \caption{Fresh-local versus stale-global crossover. Left: the phase map uses the
-@@ -3376,33 +1984,20 @@
+-\caption{Fresh-local versus stale-global crossover. Left: the phase map uses the
+-exact finite-$n=100$ boundary (solid) and the large-$n$ limit (dashed),
+-Eqs.~\eqref{eq:aggregate_rho_star} and \eqref{eq:large_n_threshold}.
+-Upper right: exact theory curves and inferred Monte Carlo
+-boundaries (crosses) for four system sizes, with paired delta-method 95\%
+-intervals. Lower right: empirical minus theoretical boundary, on a scale that
+-reveals the sampling differences and their uncertainty.
+-The zero-coupling setting is evaluated at $\rho^\star=0$ but omitted from the
+-logarithmic positive-coupling axes.}
++\caption{Fresh-local versus stale-global crossover in the shared-resource
++model. Left: the exact finite-$n=100$ boundary (solid) and large-$n$ limit
++(dashed). Upper right: exact boundaries and Monte Carlo estimates inferred
++from sampled local and open-loop losses for four system sizes, with paired
++delta-method 95\% intervals. Lower right: estimated minus exact boundary.
++The zero-coupling boundary is zero and is omitted from logarithmic axes.}
  \label{fig:local-global-phase}
  \end{figure}
  
 -\subsection{Emergence of an Optimal Coordination Radius}
-+\subsection{Coordination Radius and Canonical Regime Map}
++\subsection{Why can an intermediate radius be best?}
  \label{subsec:numerical-radius-curves}
  
 -Experiment 3 illustrates why expanding the information radius can help at
@@ -3062,21 +3070,38 @@
 -allowed range.
 -
 -\begin{figure}[t]
-+Experiment 3 checks the radius curve and its temporal and spatial components
-+under $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and linear delay. With $\ell_c=1$
-+and cap $D=2$, the settings $(\eta_0,vT)=(0.25,0.2)$, $(0.7,4)$, and $(0.9,100)$
-+give local, interior, and capped optima. Independent Gaussian draws with the
-+prescribed component variances provide a scalar-loss check, without sampling
-+a spatial field or graph. The grid minima are $0$, $0.626$, and $2$,
-+compared with analytical values $0$, $0.62638$, and $2$
-+(Fig.~\ref{fig:radius-regret}). The capped case retains positive spatial
-+omission and is distinct from the complete-information endpoint of a finite graph.
++Figure~\ref{fig:radius-regret} shows three possibilities for a synchronized
++snapshot: the best radius is local (left), interior (middle), or as wide as
++the imposed cap permits (right). With
++$\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$, the temporal loss grows
++with radius, while the residual spatial loss falls. Their sum can therefore
++be minimized at either endpoint or at an interior balance. For $\ell_c=1$
++and cap $D=2$, the three settings give constrained analytical optima
++$0$, $0.62638$, and $2$, respectively. The cap limits observation on an
++infinite spatial field: even at $D$, the snapshot omits some of that field.
++
++The open markers check this decomposition using independent Gaussian
++samples with prescribed scalar component variances. They check variance
++addition in Eq.~\eqref{eq:R_decomposition}, rather than simulate a spatial
++field. The spatial and temporal curves explain which component limits the
++value of widening each snapshot.
 +
 +\begin{figure}[!htbp]
  \centering
  \includegraphics[width=\linewidth]{figures/fig7_3_radius_regret.pdf}
- \caption{Emergence of local, interior, and maximum allowed radius optima under
-@@ -3415,37 +2010,18 @@
+-\caption{Emergence of local, interior, and maximum allowed radius optima under
+-$\eta_S(r)=\eta_0e^{-2r/\ell_c}$ and $\tau(r)=r/v$. Curves show total regret
+-and its temporal and residual-spatial terms from Eq.~\eqref{eq:R_decomposition};
+-open markers with 95\% intervals are independent scalar-innovation estimates.
+-Dash-dotted lines and crosses mark the analytical constrained and grid
+-minimizers. At the maximum allowed radius, positive omission remains:
+-$\eta_S(D)>0$.}
++\caption{Local, interior, and capped optimal radii, from left to right.
++Curves show total regret and its temporal and residual-spatial components
++under exponential omission and linear delay. Open markers with 95\%
++intervals use prescribed scalar variances. Dash-dotted lines and crosses
++mark analytical constrained and grid minimizers. At the cap,
++$\eta_S(D)>0$: the snapshot still omits part of the infinite field.}
  \label{fig:radius-regret}
  \end{figure}
  
@@ -3111,23 +3136,21 @@
 -scaling within the stated range.
 -
 -\begin{figure}[t]
-+Experiment 4 sweeps 4,896 canonical settings over
-+$vT/\ell_c\in[0.1,20]$ and $\ell_s/\ell_c\in[0.05,5]$. Direct scalar
-+minimization on a fixed radius grid with step $0.0016\ell_c$ agrees with
-+the closed form to within one grid step. Figure~\ref{fig:radius-phase}
-+shows the zero-radius region and the transition $vT=2\ell_s$.
-+Increasing temporal propagation length raises the preferred radius;
-+increasing spatial correlation lowers it by making additional observations
-+more redundant. Separate sweeps confirm all four canonical comparative
-+statics. Detailed discretization errors, including the near-threshold
-+zero/positive disagreements, appear in Appendix~\ref{app:technical-numerics}.
-+
-+\begin{figure}[!htbp]
- \centering
- \includegraphics[width=0.98\linewidth]{figures/fig7_4_radius_phase.pdf}
- \caption{Dimensionless optimal-radius law from direct scalar minimization. Left:
-@@ -3462,27 +2038,19 @@
- \subsection{State Predictability versus Decision-Relevant Predictability}
+-\centering
+-\includegraphics[width=0.98\linewidth]{figures/fig7_4_radius_phase.pdf}
+-\caption{Dimensionless optimal-radius law from direct scalar minimization. Left:
+-the numerical map, with the numerical zero-radius region shown in gray and the
+-dashed curve marking the theoretical transition $vT=2\ell_s$. Upper right:
+-selected $\ell_s/\ell_c$ slices comparing grid minimizers with the closed form
+-in Eq.~\eqref{eq:canonical_dimensionless_law}. Lower right: the histogram of
+-$(\hat r^\star-r^\star)/\Delta r$ over all 4,896 points; its zero spike
+-includes local-regime points and the remaining grid errors are of order a
+-half-step.}
+-\label{fig:radius-phase}
+-\end{figure}
+-
+-\subsection{State Predictability versus Decision-Relevant Predictability}
++\subsection{Can the best radius change on the same network?}
  \label{subsec:numerical-decision-relevance}
  
 -Experiment 5 asks whether the architecture depends on which state modes affect
@@ -3151,26 +3174,50 @@
 -environment produced substantially different preferred architectures.
 -
 -\begin{figure}[t]
-+Experiment 5 holds a 64-node ring, its Laplacian covariance, $T=6$, and
-+latency $0.12$ per hop fixed, changing only the decision operator
-+$K_{ij}=e^{-d_G(i,j)/\ell_c}/\|e^{-d_G(i,\cdot)/\ell_c}\|_2$ with $Q=I$.
-+For $\ell_c=0.7,2,6$, exact Gaussian conditioning gives local omission
-+shares $0.0460,0.258,0.572$ and optimal radii $1,2,5$ hops, respectively
-+(Fig.~\ref{fig:decision-relevance}). Each regret is normalized by its own
-+$R_\infty=\tfrac12\operatorname{tr}(K\Sigma_SK^\top)$, so the comparison is
-+between unexplained fractions. The raw state correlation is identical across
-+the three cases: changing decision sensitivity alone changes the preferred
-+architecture. Independent 12,000-sample conditioning checks agree within
-+$2.39\times10^{-3}$ (maximum pointwise standard error $3.20\times10^{-3}$).
++On the same 64-node ring, changing only the decision operator moves the
++optimal radius from 1 to 2 to 5 hops (Fig.~\ref{fig:decision-relevance}).
++The graph, state covariance, coherence time $T=6$, and latency $0.12$ per
++hop stay fixed. With $Q=I$, we use the row-normalized operators
++$K_{ij}=e^{-d_G(i,j)/\ell_c}/\|e^{-d_G(i,\cdot)/\ell_c}\|_2$
++for $\ell_c=0.7,2,6$. The fixed covariance is
++\begin{equation}
++\Sigma_S=\sigma^2(\kappa_s^2I+L_G)^{-\nu},\qquad \kappa_s,\nu>0,
++\label{eq:graph_spectral_covariance}
++\end{equation}
++where $L_G$ is the ring Laplacian and the scale gives average marginal
++variance one. This covariance emphasizes low graph-frequency modes
++\cite{shuman2013emerging,lindgren2011explicit}.
 +
-+\begin{figure}[!htbp]
++Exact Gaussian conditioning gives each operator's omission curve, and the
++composition law gives regret at every integer radius. Each curve is
++normalized by its own $R_\infty=\tfrac12\operatorname{tr}(K\Sigma_SK^\top)$.
++The raw state correlation is identical in all three cases, but the value of
++remote observations depends on how they affect the decision. State
++correlation alone therefore cannot determine the preferred radius.
++This ring example illustrates the exact one-hop comparison in
++Eq.~\eqref{eq:discrete_radius_improvement}.
++
++\begin{figure}[H]
  \centering
  \includegraphics[width=0.94\linewidth]{figures/fig7_5_decision_relevance.pdf}
- \caption{Decision relevance with the graph and state covariance held fixed.
-@@ -3498,34 +2066,22 @@
- \subsection{Finite Graphs beyond the Canonical Geometry}
- \label{subsec:numerical-general-graphs}
- 
+-\caption{Decision relevance with the graph and state covariance held fixed.
+-The decision-weighted omission and normalized composed regret are shown for
+-three row-$\ell_2$-normalized operators with $Q=I$.  Raw state correlation is
+-shown in a separate context panel and is identical across operators; it is
+-not an omission estimate.  Each regret is normalized by its operator-specific
+-$R_\infty$, and the minimizing integer radius is marked.  Changing only the
+-decision-relevance range moves the optimum from 1 to 5 hops.}
++\caption{Changing the decision on a fixed 64-node ring. Left: decision-weighted
++omission for three decision operators. Middle: composed regret, normalized
++by each operator's open-loop regret, with optimal radii 1, 2, and 5 hops
++marked. Right: raw state correlation, identical across operators.
++The graph, covariance, temporal coherence, and per-hop latency are fixed.}
+ \label{fig:decision-relevance}
+ \end{figure}
+-
+-\subsection{Finite Graphs beyond the Canonical Geometry}
+-\label{subsec:numerical-general-graphs}
+-
 -Experiment 6 asks whether the conditional-variance construction and discrete
 -radius comparison remain usable when the geometry is not the homogeneous line
 -assumed by the canonical formula.  We considered one 64-node graph of each of
@@ -3199,26 +3246,22 @@
 -the archived neighbor differences quantify such shallow minima.
 -
 -\begin{figure}[p]
-+Experiment 6 evaluates one 64-node path, ring, grid, and fixed-seed geometric
-+graph. For each instance, we compute $\eta_S(r)$ directly by Gaussian
-+conditioning on every integer-radius neighborhood, and then use the composition
-+law. With $Q=I$, $T=5$, $\ell_c=2$, and latency $0.12$ per hop, the optimal
-+radii are $2,2,3,2$ hops (Fig.~\ref{fig:general-graphs}). No canonical
-+omission fit or graph-ensemble average is used.
-+
-+Over the sampled coherence times $1.5,2.5,4,6,9,14$, the optima move from
-+1 to 3 hops on the path, ring, and geometric graph and from 1 to 4 on the grid.
-+Increasing decision range also increases the sampled optima; increasing
-+per-hop latency or spatial smoothness weakly decreases them. These are
-+observations for the four specified instances. The one-hop criterion
-+\eqref{eq:discrete_radius_improvement} remains the exact comparison on each
-+graph, including when adjacent radii have nearly equal regret.
-+
-+\begin{figure}[!htbp]
- \centering
- \includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
- \caption{Finite noncanonical graphs. Top: $\eta_S(r)$ computed from exact
-@@ -3548,6 +2104,7 @@
+-\centering
+-\includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
+-\caption{Finite noncanonical graphs. Top: $\eta_S(r)$ computed from exact
+-Gaussian conditional covariances and the resulting regret under one common
+-normalized setting; lines join integer-radius evaluations. Bottom: exact
+-integer optima at the sampled coherence times and decision ranges; no
+-transition locations between those settings are inferred. Distinct marker
+-shapes identify coincident graph results. The canonical line closed form is
+-not used.}
+-\label{fig:general-graphs}
+-\end{figure}
+-\clearpage
+ 
+ \section{Related Work}
+ \label{sec:related_work}
+@@ -3548,6 +2025,7 @@
  These distinctions frame the more specific connections developed below.
  
  \subsection{Static Team Decision Theory}
@@ -3226,7 +3269,7 @@
  
  Radner established foundational optimality conditions for static teams, in which decision makers share a common objective but act on different information \cite{radner1962team}. Under appropriate convexity and regularity conditions, the resulting stationarity conditions are sufficient for global team optimality; in the quadratic Gaussian specialization, the optimal decision rules are affine \cite{radner1962team,marschak1972economic}. In the deterministic-Hessian quadratic model used here, these fixed-information optimality conditions admit the equivalent Hilbert-space formulation developed in Section~\ref{subsec:projection}: for a fixed information architecture $\mathcal A$, the team-optimal policy is the $Q$-orthogonal projection of the full-information action onto the closed subspace $\mathcal S(\mathcal A)$ of implementable policies. This projection identity specializes the classical static-team framework to our quadratic model; Radner's theorem is not stated in this literal form. Krainak, Speyer, and Marcus subsequently relaxed the sufficient conditions associated with Radner's stationarity result and extended the theory to an exponential-quadratic criterion with jointly Gaussian state and observations \cite{krainak1982staticI}. In a companion paper, they formulated affine linear-quadratic-Gaussian and linear-exponential-Gaussian team problems as constrained parameter optimizations and represented optimal team gains as projections of the corresponding centralized gains \cite{krainak1982staticII}.
  
-@@ -3610,6 +2167,7 @@
+@@ -3610,6 +2088,7 @@
  through prediction of an exogenously varying full-information decision.
  
  \subsection{Freshness and Age of Information}
@@ -3234,7 +3277,7 @@
  
  Age of Information (AoI) formalizes the timeliness of status information through the age of the freshest received update, $\Delta(t)=t-u(t)$. Seminal work showed that minimizing AoI is distinct from maximizing throughput or minimizing packet delay and initiated a large literature on update generation, queueing, and scheduling \cite{kaul2012realtime,yates2021aoi}. Subsequent work generalized linear age to application-specific nonlinear age penalties \cite{sun2017update}. Connections to remote estimation make the distinction between age and task loss explicit: for a Gauss--Markov Ornstein--Uhlenbeck process, estimation error under signal-agnostic sampling is a nonlinear function of age, whereas signal-aware sampling can exploit the realized estimation error and outperform age-optimal policies \cite{ornee2021ou}.
  
-@@ -3622,6 +2180,7 @@
+@@ -3622,6 +2101,7 @@
  A complementary delegation literature makes decision rights endogenous when information and objectives are dispersed. Aghion and Tirole distinguish formal from real authority \cite{aghion1997formal}, while Dessein studies delegation as an alternative to strategic communication \cite{dessein2002authority}. Most closely related to our centralization framing, Alonso, Dessein, and Matouschek compare centralized and decentralized coordination when managers privately observe local conditions \cite{alonso2008coordination}. Our model abstracts from incentive conflicts and endogenous information acquisition: agents share a common objective and the environment evolves exogenously. The tradeoff studied here is spatio-temporal: broader synchronized snapshots can improve coordination but arrive older. This yields a pure-benchmark crossover and, in the canonical spatial model, an interior optimum within the synchronized-snapshot family.
  
  \subsection{Spatial Statistics and Graph Signal Processing}
@@ -3242,7 +3285,7 @@
  
  Spatial statistics provides the closest statistical antecedent to our spatial-predictability model. Kriging casts spatial prediction as an optimal linear prediction problem under spatial dependence \cite{cressie1990origins}. For lattice data, Besag's conditional formulation represents spatial dependence through local Markov neighborhoods \cite{besag1974spatial}; Lindgren, Rue, and Lindstr\"om later connect Mat\'ern Gaussian fields to sparse Gaussian Markov random fields through stochastic partial differential equation representations \cite{lindgren2011explicit}. Space--time statistics treats separability as an optional modeling restriction: Gneiting constructs broad classes of stationary nonseparable covariance functions \cite{gneiting2002nonseparable}. These works provide the statistical context for our covariance-based spatial model and its separable and nonseparable distinction.
  
-@@ -3641,52 +2200,37 @@
+@@ -3641,52 +2121,38 @@
  under the architecture.
  
  Theorem~\ref{thm:local_global_crossover} characterizes the fresh-local versus
@@ -3274,7 +3317,7 @@
 -decision mode. An architecture based only on physical distance can therefore
 -communicate extensively about irrelevant variation while omitting a remote
 -mode with high decision value.
-+The fixed-covariance comparison in Section~\ref{subsec:numerical-decision-relevance}
++The fixed-covariance ring comparison in Section~\ref{subsec:numerical-decision-relevance}
 +shows the design consequence of decision relevance: changing only the target
 +operator moves the preferred scope. Graph distance governs acquisition, while
 +the objective determines the value of the acquired information. This suggests
@@ -3309,13 +3352,14 @@
 -formula uses a separable homogeneous field and linear propagation delay.
 +and a stationary common-rate innovation structure with conditionally
 +mean-zero innovations. Gaussianity is used to evaluate spatial prediction
-+errors from covariances in the canonical model and Experiments~5--6;
++errors from covariances in the canonical model and the ring example in
++Section~\ref{subsec:numerical-decision-relevance};
 +the canonical radius formula further uses a separable homogeneous field
 +and linear propagation delay.
  Nonquadratic or discrete decisions, state-dependent Hessians, and feasibility
  constraints such as nonnegativity, capacity, or simplex restrictions require
  different analytical tools. Outside the stated assumptions, one should work
-@@ -3697,15 +2241,9 @@
+@@ -3697,15 +2163,9 @@
  covariance, non-Gaussian evolution, nonlinear decisions, or mixed-age
  architectures; each remains an extension.
  
@@ -3334,7 +3378,7 @@
  
  \paragraph{Most important extensions.}
  A first extension is to price information acquisition explicitly. The present
-@@ -3742,6 +2280,10 @@
+@@ -3742,6 +2202,10 @@
  accept full responsibility for its contents.
  
  \paragraph{Code and Data Availability.}
@@ -3345,7 +3389,7 @@
  The manuscript source, numerical code, experiment configurations, processed
  reference results, and figure-generation pipeline are available in the public
  TINA repository at \url{https://github.com/ANRGUSC/TINA}
-@@ -3750,5 +2292,9 @@
+@@ -3750,5 +2214,9 @@
  \bibliographystyle{IEEEtran}
  \bibliography{references}
  

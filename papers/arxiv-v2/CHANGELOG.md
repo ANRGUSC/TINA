@@ -100,3 +100,8 @@ Applied `revs-v2-c.md` without expanding the 32-page main paper. Moved a compact
 ## Revision e (September 27, 2026)
 
 Merged the compact technical supplement into the main arXiv PDF after the references as Appendices A-C. Updated cross-references and equation numbering. The main PDF is 37 pages; the separate companion remains 8 pages. The active technical source is `technical-appendices.tex`; the standalone supplement wrapper is retired. Earlier PDFs remain unchanged. No mathematical content or numerical results changed.
+
+
+## Revision f: focused numerical presentation
+
+Rebuilt Section 6 around three questions, retaining original Figures 2, 3, and 5 as Figures 1-3. Removed the temporal-collapse, canonical parameter-grid, and general-graph experiment write-ups and their Appendix C entries. Retained reproduction settings, estimators, seeds, and archive paths for the three remaining illustrations. Updated affected roadmap and discussion references to describe the finite-graph evidence as a ring example. All theorem statements, proofs, analytical results, and Appendices A-B are unchanged. Numerical scripts and archived data remain intact. No supplement was added. The main PDF is 34 pages, and the companion remains 8 pages; revision-e PDFs are preserved.

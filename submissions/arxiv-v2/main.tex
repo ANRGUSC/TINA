@@ -1190,9 +1190,12 @@ $\Sigma_\infty=\Sigma_S$. Its stationary space-time covariance is
     \label{eq:separable_space_time_covariance}
 \end{equation}
 
-This separable covariance gives every spatial mode the same normalized temporal
-correlation. More general fields may have scale-dependent persistence
-\cite{gneiting2002nonseparable}.
+Imagine two edge servers. Their average workload changes slowly, while the
+difference between their workloads changes quickly. An old report from both
+servers could still help estimate total demand, even after it has lost much of
+its value for deciding which server should take the next job. Our common-rate
+model assigns both patterns the same coherence time. This is why a single
+factor, $e^{-2\tau/T}$, describes how much predictive value survives a delay.
 
 \subsection{Snapshot Architectures}
 \label{subsec:joint_spatiotemporal}
@@ -2211,15 +2214,9 @@ The experiments do not probe temporal-rate heterogeneity, nonseparable
 covariance, non-Gaussian evolution, nonlinear decisions, or mixed-age
 architectures; each remains an extension.
 
-Finally, the common-rate assumption suppresses possible alignment between
-temporal coherence, spatial scale, and decision relevance. If long-range
-decision-relevant modes evolve more slowly than local modes, a scalar
-common-rate approximation may understate the value of broad delayed
-information; the reverse alignment may overstate it. There is no universal
-direction of bias without specifying the mode weights and the procedure used
-to select an effective coherence time. With heterogeneous temporal modes, the
-scalar composition law generally gives way to a joint spatio-temporal
-decision-prediction error.
+When spatial patterns change at different rates, a single coherence time can
+overstate or understate the value of delayed information, depending on which
+patterns drive the decision.
 
 \paragraph{Most important extensions.}
 A first extension is to price information acquisition explicitly. The present

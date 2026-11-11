@@ -1777,6 +1777,12 @@ Within the interior regime, $r^\star$:
 \end{enumerate}
 \end{theorem}
 
+Suppose a nearby sensor has already reported a new reading when an older
+reading arrives from farther away. To form a synchronized snapshot, the agent
+uses an older reading from the nearby sensor too. This is why widening the
+snapshot can hurt. An agent that keeps both readings can always ignore the
+distant one, so widening its access cannot increase its optimal decision cost.
+
 \begin{proof}
 
 For any omission law $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ with

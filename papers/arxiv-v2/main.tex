@@ -83,6 +83,33 @@ simply between centralized and distributed control, but between
 \emph{information architectures} that differ simultaneously in spatial scope
 and temporal freshness.
 
+\paragraph*{A two-sensor example.}
+Two sensors report independent signals $X_t$ and $Y_t$, each with mean zero
+and variance $\sigma^2$. We want to estimate their current average
+$Z_t=(X_t+Y_t)/2$. Which is more useful: one sensor's reading now, or both
+sensors' readings from $\tau$ seconds ago?
+
+With only $X_t$, our best estimate is $X_t/2$. The error is the missing term
+$Y_t/2$, so the mean squared error is $\sigma^2/4$. With both old readings,
+we know the old average $Z_{t-\tau}$ exactly. Suppose each signal follows
+the same stationary Gauss--Markov model, independently of the other signal,
+with correlation $e^{-\tau/T}$ across a delay $\tau$, where $T$ is the
+coherence time. Our best estimate today is then $e^{-\tau/T}Z_{t-\tau}$.
+Its mean squared error is
+$\operatorname{Var}(Z_t)(1-e^{-2\tau/T})$. Since
+$\operatorname{Var}(Z_t)=\sigma^2/2$, the fresh reading wins when
+\[
+    \frac{\sigma^2}{4}
+    <\frac{\sigma^2}{2}(1-e^{-2\tau/T})
+    \quad\Longleftrightarrow\quad
+    \tau>\frac{T\log 2}{2}\approx 0.35T.
+\]
+One fresh sensor leaves half the variation in the desired average
+unexplained. Once the old pair leaves more than half unexplained, the fresh
+reading is more useful. Theorem~\ref{thm:local_global_crossover} gives the
+corresponding crossover when several agents choose actions that interact
+through a shared cost.
+
 This tension appears in several literatures under different performance
 models. Work on stale information in distributed systems shows that old global
 state can lose much of its value \cite{mitzenmacher2000old}, and Age of

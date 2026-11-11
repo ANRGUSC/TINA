@@ -2,7 +2,7 @@
 
 This is a local revision draft of [arXiv:2609.06351v1](https://arxiv.org/html/2609.06351v1), prepared September 26, 2026. It has not been submitted or published as v2.
 
-- [Read the current v2-e draft](tina-v2-e.pdf) (37 pages: 32 through references, followed by Appendices A-C on pages 33-37).
+- [Read the current v2-e draft](tina-v2-e.pdf) (38 pages: 33 through references, followed by Appendices A-C on pages 34-38).
 - [Earlier v2-d paper](tina-v2-d.pdf), [supplement](tina-v2-d-supplement.pdf), and [companion](tina-v2-d-companion.pdf).
 - [Mathematical companion](tina-v2-e-companion.pdf) (8 pages: toolkit, glossary, timing diagram, and marginal-rate illustration).
 - [Earlier v2-c PDF](tina-v2-c.pdf) (32 pages), with its [supplement](tina-v2-c-supplement.pdf) and [companion](tina-v2-c-companion.pdf).
@@ -19,7 +19,7 @@ This is a local revision draft of [arXiv:2609.06351v1](https://arxiv.org/html/26
 
 The baseline is `../full/main.tex`, which is byte-identical to `../../submissions/arxiv/source/main.tex`. Its SHA256 is `9476b7a7a155a79076c818b20bd6362b77990e4e24d6cccdf0e9df743bf44238`. The original manuscript and submission folder were not modified.
 
-Revision e incorporates the compact technical supplement into the main PDF after the references: Appendix A (aggregate-coupling calculations), Appendix B (canonical spatial omission), and Appendix C (numerical reproducibility). References and links use ordinary appendix numbering. The mathematical companion remains separate. Mathematical content, proofs, numerical results, and figures are preserved from d; edits are restricted to integration, numbering, and document-role wording. The title-page date remains September 2026.
+Revision e incorporates the compact technical supplement into the main PDF after the references: Appendix A (aggregate-coupling calculations), Appendix B (canonical spatial omission), and Appendix C (numerical reproducibility). References and links use ordinary appendix numbering. The mathematical companion remains separate. Subsequent explanatory edits add a two-sensor crossover example immediately after the introduction's opening paragraph, an edge-server example after Eq. (54), a sensor-reading explanation after Theorem 4, and a shorter common-rate limitation in Section 8. The established results, proofs, numerical experiments, figures, and Section 3.4 shared-resource example are preserved. The title-page date remains September 2026.
 
 ## Build and verify
 

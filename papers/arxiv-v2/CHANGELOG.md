@@ -110,3 +110,12 @@ Rebuilt Section 6 around three questions, retaining original Figures 2, 3, and 5
 ## Revision g: simplify Section 5
 
 Kept Sections 5.1 and 5.2 with distinct questions. Section 5.1 now uses G(r), the exact one-hop comparison, one loss decomposition, and a short log-derivative proof of Proposition 2. Retained the strict single-crossing condition, endpoint qualifications, and conditional comparative statics. Section 5.2 retains the spatial model, Lemma 3, and Theorem 4 in physical units, with all four comparative statics and a combined general-exponential/capped-radius formula. Moved the observation measurability detail and integral monotonicity proof to Appendix B. Removed equivalent displays and the less informative asymptotic limit. Updated the notation table, companion explanations, and Appendix C component reference. The radius plot remains Figure 2 after revision f. The paper is 32 pages; the companion remains 8 pages. Earlier PDFs, numerical scripts, data, and figure assets are preserved.
+
+
+## Revision h: reader-oriented derivations
+
+Used revision g as the baseline. Section 2 now leads with excess cost as weighted prediction error and gives three compact observation architectures. Lemma 1 remains in the body; its Hilbert-space construction, closedness proof, and coupled normal equations are in new Appendix D of the same PDF. Section 3 leads with the state transition, expands the innovation identity, and explains the shared-resource local rule using zero means and independence. The individual regret calculations are retained in Appendix A. Section 4 begins with the fresh omission share and Theorem 3's product law, with an explicit policy-rescaling proof. The spatial Markov model appears where Lemma 3 uses it in Section 5.2.
+
+Kept the two-sensor and edge-server examples, all four theorems and their scope, crossover endpoints, stationary non-Gaussian extension, Section 5 qualifications and limits, and all three numerical figures. Shortened introduction and related-work repetitions; the discussion leads with the fixed-ring result. Unified stationary covariance notation, updated both tables and appendix references, and synchronized the mathematical companion.
+
+Validation: 29-page manuscript and 8-page companion compiled with resolved references and no overfull boxes; every rendered page inspected. Theorems 2 and 4 and Section 6 match revision g verbatim. Revision verification passes, including preserved PDF hashes, figure assets, and numerical identity checks. Numerical scripts and archived data remain unchanged.

@@ -1,12 +1,36 @@
 \section{Aggregate-coupling calculations}
 \label{app:technical-aggregate}
 This section supplies the matrix arithmetic for Proposition~\ref{prop:aggregate_local}
-above. For $Q=qI+\gamma\mathbf1\mathbf1^\top$,
+above. The individual regrets are
+\begin{align}
+    R_\infty
+    &=
+    \frac{
+        n\sigma^2
+        \left(
+            q+\gamma(n-1)
+        \right)
+    }{
+        2q(q+\gamma n)
+    },
+    \label{eq:aggregate_Rinf}
+    \\
+    R_{\mathrm{loc}}
+    &=
+    \frac{
+        n\sigma^2\gamma^2(n-1)
+    }{
+        2q(q+\gamma)(q+\gamma n)
+    }.
+    \label{eq:aggregate_Rloc}
+\end{align}
+For $Q=qI+\gamma\mathbf1\mathbf1^\top$,
 \[
 Q^{-1}=\frac1q\left(I-\frac{\gamma}{q+\gamma n}\mathbf1\mathbf1^\top\right).
 \]
 \begin{proof}
-Recall the coupled normal equations \eqref{eq:block_conditional_normal_equations}:
+Recall the coupled normal equations \eqref{eq:block_conditional_normal_equations}
+from Appendix~\ref{app:technical-projection}:
 \[
  Q_{ii}u_i+\sum_{j\ne i}Q_{ij}\mathbb E[u_j\mid\mathcal G_i]
  =\mathbb E[b_i(\theta_t)\mid\mathcal G_i].
@@ -36,7 +60,7 @@ $u_i=\theta_{i,t}/(q+\gamma)$, which proves
 square integrability, and strict convexity; Gaussianity is not required for the
 local-policy formula.
 
-\emph{Open-loop regret.} Here $B=I$ and $\Sigma_\infty=\sigma^2I$, so by \eqref{eq:OU_Rinf}, $R_\infty=\tfrac{\sigma^2}2\operatorname{tr}(Q^{-1})$. From the Sherman--Morrison formula above,
+\emph{Open-loop regret.} Here $B=I$ and $\Sigma_S=\sigma^2I$, so by \eqref{eq:OU_Rinf}, $R_\infty=\tfrac{\sigma^2}2\operatorname{tr}(Q^{-1})$. From the Sherman--Morrison formula above,
 
 \[
 \operatorname{tr}(Q^{-1})=\frac1q\Big(n-\frac{\gamma n}{q+\gamma n}\Big)=\frac{n\,(q+\gamma(n-1))}{q\,(q+\gamma n)},
@@ -44,7 +68,7 @@ local-policy formula.
 
 which gives \eqref{eq:aggregate_Rinf}.
 
-\emph{Local regret.} By the Pythagorean form of Lemma~\ref{lem:radner_projection} (the orthogonality identity after Lemma~\ref{lem:radner_projection}, with both $x^\star$ and $u^{\rm loc}$ mean zero), $2R_{\rm loc}=\|x^\star\|_Q^2-\|u^{\rm loc}\|_Q^2=2R_\infty-\|u^{\rm loc}\|_Q^2$. Since $u^{\rm loc}=\theta/(q+\gamma)$ and $\operatorname{tr}(Q)=n(q+\gamma)$,
+\emph{Local regret.} By the Pythagorean form of Lemma~\ref{lem:radner_projection} (the orthogonality identity in Appendix~\ref{app:technical-projection}, with both $x^\star$ and $u^{\rm loc}$ mean zero), $2R_{\rm loc}=\|x^\star\|_Q^2-\|u^{\rm loc}\|_Q^2=2R_\infty-\|u^{\rm loc}\|_Q^2$. Since $u^{\rm loc}=\theta/(q+\gamma)$ and $\operatorname{tr}(Q)=n(q+\gamma)$,
 
 \[
 \|u^{\rm loc}\|_Q^2=\frac{\sigma^2\operatorname{tr}(Q)}{(q+\gamma)^2}=\frac{n\sigma^2}{q+\gamma}.
@@ -92,7 +116,7 @@ The middle $M_r$ is computed from observed values, so it contributes no conditio
 T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{-\beta_c s}\,\theta(r+s)\,ds .
 \]
 
-\textbf{Step 3 (spatial Markov property).} By Section~\ref{sec:spatiotemporal_predictability}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
+\textbf{Step 3 (spatial Markov property).} By the exponential-covariance model in Section~\ref{subsec:canonical_line_model}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
 
 \[
 \operatorname{Var}(T_r^+\mid\mathcal O_r)=\operatorname{Var}(T_r^+\mid\theta(r)),\qquad \operatorname{Var}(T_r^-\mid\mathcal O_r)=\operatorname{Var}(T_r^-\mid\theta(-r)),\qquad \operatorname{Cov}(T_r^+,T_r^-\mid\mathcal O_r)=0 .
@@ -244,3 +268,126 @@ Run metadata, processed results, and selected raw arrays are stored under
 \path{docs/numerical_method.md} and \path{docs/experiment_parameters.md}
 specify conditioning safeguards and environment versions;
 \path{numerics/README.md} gives reproduction commands.
+
+
+\section{Projection and coupled optimality conditions}
+\label{app:technical-projection}
+This appendix gives the construction and proof behind Lemma~\ref{lem:radner_projection}
+and the conditional optimality equations used in Section~\ref{subsec:coupling_example}
+and Appendix~\ref{app:technical-aggregate}.
+
+Let
+\begin{equation}
+    \mathcal{H}
+    =
+    L^2(
+        \Omega,\mathcal{F},\mathbb{P};
+        \mathbb{R}^{d}
+    )
+    \label{eq:hilbert_space}
+\end{equation}
+and equip $\mathcal{H}$ with the weighted inner product
+\begin{equation}
+    \langle u,v\rangle_Q
+    \triangleq
+    \mathbb{E}
+    \left[
+        u^\top Qv
+    \right],
+    \qquad
+    \|u\|_Q^2
+    \triangleq
+    \langle u,u\rangle_Q.
+    \label{eq:q_inner_product}
+\end{equation}
+Since $Q\succ0$, the induced norm is equivalent to the ordinary $L^2$ norm.
+
+\paragraph{Proof of Lemma~\ref{lem:radner_projection}.}
+\begin{proof}
+Linearity of $\mathcal{S}(\mathcal{A})$ follows because
+$\mathcal{G}_i$-measurability is preserved under linear combinations.
+Closedness follows because an $L^2$ limit of
+$\mathcal{G}_i$-measurable random variables admits a
+$\mathcal{G}_i$-measurable version.
+
+For any admissible policy $u$, \eqref{eq:complete_square} gives
+\begin{align}
+    \mathbb{E}
+    \left[
+        f(u,\theta_t)
+        -
+        f(x_t^\star,\theta_t)
+    \right]
+    &=
+    \frac{1}{2}
+    \mathbb{E}
+    \left[
+        (u-x_t^\star)^\top
+        Q
+        (u-x_t^\star)
+    \right]
+    \nonumber\\
+    &=
+    \frac{1}{2}
+    \|u-x_t^\star\|_Q^2.
+    \label{eq:projection_proof}
+\end{align}
+Minimizing this expression over the closed subspace
+$\mathcal{S}(\mathcal{A})$ is the standard Hilbert-space projection problem,
+yielding \eqref{eq:optimal_projection} and \eqref{eq:projection_regret}.
+\end{proof}
+
+The projection error is $Q$-orthogonal to every admissible policy. In particular,
+$2R(\mathcal A)=\|x_t^\star\|_Q^2-\|u_{\mathcal A}^\star\|_Q^2$,
+which is often useful for computing regret.
+
+\begin{corollary}[Coupled conditional normal equations]
+\label{cor:conditional_normal_equations}
+The unique team optimum in Lemma~\ref{lem:radner_projection} satisfies
+\begin{equation}
+    \boxed{
+    \mathbb E\!\left[
+      \bigl(Q u_{\mathcal A}^{\star}-b(\theta_t)\bigr)_i
+      \;\middle|\;
+      \mathcal G_i
+    \right]
+    =0,
+    \qquad i=1,\ldots,n.
+    }
+    \label{eq:conditional_normal_equations}
+\end{equation}
+With $Q$ partitioned into action blocks, this is equivalently
+\begin{equation}
+Q_{ii}u_i^\star
++
+\sum_{j\ne i}Q_{ij}\,
+\mathbb E[u_j^\star\mid\mathcal G_i]
+=
+\mathbb E[b_i(\theta_t)\mid\mathcal G_i].
+\label{eq:block_conditional_normal_equations}
+\end{equation}
+These are the coupled person-by-person stationarity equations associated with
+the classical static-team formulation \cite{radner1962team}. Strict convexity
+makes them sufficient for the unique team optimum here. With heterogeneous
+information and
+off-diagonal $Q$, one generally does not have
+$u_i^\star=\mathbb E[x_i^\star\mid\mathcal G_i]$. When all components share a
+common information sigma-algebra, deterministic $Q$ makes the joint solution
+the ordinary vector conditional expectation.
+\end{corollary}
+
+
+\begin{proof}[Justification of the conditional normal equations]
+For an admissible perturbation $h$, differentiating expected quadratic cost
+at the optimum gives $\mathbb E[h^\top(Qu^\star-b(\theta_t))]=0$.
+Choose perturbations supported on one agent's action block, with that block
+an arbitrary square-integrable function of its observations. Conditional
+expectation then gives Eq.~\eqref{eq:conditional_normal_equations}.
+Conversely, these conditional equations make the linear term vanish in
+\[
+\mathbb E[f(u^\star+h,\theta_t)-f(u^\star,\theta_t)]
+=\mathbb E[h^\top(Qu^\star-b(\theta_t))]+\tfrac12\mathbb E[h^\top Qh].
+\]
+Positive definiteness makes the remaining term positive for any nonzero
+$L^2$ perturbation, proving sufficiency and uniqueness up to almost-sure equality.
+\end{proof}

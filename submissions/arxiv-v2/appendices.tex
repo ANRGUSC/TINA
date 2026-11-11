@@ -76,7 +76,7 @@ of the past, which gives innovation independence in Section~\ref{app:toolkit-4}.
 
 \textbf{Correlation.} In stationarity, $\operatorname{Corr}(\theta_t,\theta_s)=e^{-|t-s|/T}$. The coherence time $T$ is the lag at which correlation falls to $1/e\approx0.37$.
 
-\textbf{Multivariate, common rate \eqref{eq:OU_process}.} Replace $\sigma$ by $\Sigma_\infty^{1/2}$, the symmetric positive-semidefinite matrix whose square is $\Sigma_\infty$. Every formula above holds with $\sigma^2$ replaced by $\Sigma_\infty$, because the drift $-\tfrac1T I$ treats all directions alike.
+\textbf{Multivariate, common rate \eqref{eq:OU_process}.} Replace $\sigma$ by $\Sigma_S^{1/2}$, the symmetric positive-semidefinite matrix whose square is $\Sigma_S$. Every formula above holds with $\sigma^2$ replaced by $\Sigma_S$, because the drift $-\tfrac1T I$ treats all directions alike.
 
 \textbf{Markov property.} The future after time $s$ depends on the past only through $\theta_s$.
 
@@ -164,7 +164,7 @@ Open-loop & Using no state information; the best constant action & \eqref{eq:Rin
 Open-loop regret $R_\infty$ & Regret of the best constant; the normalizer for all shares & \eqref{eq:Rinf_general} \\
 Omission share $\eta_S$ & Fraction of decision variance not captured by current information in a given scope & \eqref{eq:eta_S_local}, \eqref{eq:eta_S_definition} \\
 Temporal unpredictability $\eta_T$ & Fraction of decision variance not predictable from a complete snapshot of age $\tau$ & \eqref{eq:temporal_unpredictability} \\
-Staleness ratio $\rho$ & $\tau/T$, delay measured in coherence times & \eqref{eq:rho_definition} \\
+Staleness ratio $\rho$ & $\tau/T$, delay measured in coherence times & Section~\ref{subsec:OU_model} \\
 Stationary & Joint distributions are invariant under time (or spatial) translations & \eqref{eq:state_partition} \\
 Ergodic & Time averages along one realization converge to expectations & Section~\ref{subsec:architecture_regret} \\
 Square-integrable & Finite second moment, $\mathbb E\|Y\|^2<\infty$ & \eqref{eq:state_partition} \\
@@ -175,16 +175,16 @@ Common-rate model & All components and modes decorrelate with the same time cons
 Innovation & Part of the current state not predictable from an earlier snapshot & \eqref{eq:state_innovation_decomposition} \\
 Mixing & Decay of statistical dependence with separation; strong mixing suffices for the temporal limit & Section~\ref{subsec:two_architectures} \\
 Data-processing inequality & Processing or aging information along a Markov chain cannot improve prediction & Section~\ref{subsec:two_architectures} \\
-Nested (architectures) & One architecture's information contains the other's, at every agent & \eqref{eq:info_inclusion}, \eqref{eq:eta_S_monotone} \\
+Nested (architectures) & One architecture's information contains the other's, at every agent & \eqref{eq:info_inclusion}, Section~\ref{sec:spatiotemporal_predictability} \\
 Synchronized snapshot & All observations used in a decision share one time stamp & Section~\ref{subsec:architectures} \\
 Mode & A direction or spatial pattern in state space, often an eigenvector of $\Sigma_S$ & Section~\ref{subsec:decision_relevant_smoothness} \\
 Null space of $K$ & State directions that do not change the desired decision & Section~\ref{subsec:decision_relevant_smoothness}, Section~\ref{app:toolkit-6} \\
 Decision-sensitivity operator $K$ & $Q^{-1}B$; maps state to desired action & \eqref{eq:affine_map_and_sensitivity} \\
 Separable covariance & Space--time covariance that factors into a time part times a space part & \eqref{eq:separable_space_time_covariance} \\
-Spatial correlation length $\ell_s$ & Distance over which the state stays correlated & \eqref{eq:spatial_exponential_covariance} \\
+Spatial correlation length $\ell_s$ & Distance over which the state stays correlated & \eqref{eq:canonical_space_time_covariance} \\
 Decision-relevance length $\ell_c$ & Distance over which remote state affects the desired local action & \eqref{eq:canonical_target} \\
 Temporal propagation length $L_T$ & $vT$: how far information travels in one coherence time & \eqref{eq:temporal_propagation_length} \\
-Spatial Markov property & Given the field at a point, the two sides are conditionally independent & Section~\ref{subsec:spatial_structure}, Section~\ref{app:toolkit-5} \\
+Spatial Markov property & Given the field at a point, the two sides are conditionally independent & Section~\ref{subsec:canonical_line_model}, Section~\ref{app:toolkit-5} \\
 Gaussian Markov random field & Gaussian vector with graph-based conditional independence & Section~\ref{app:toolkit-5} \\
 Graph Laplacian $L_G$ & $D_G-A_G$; measures roughness of signals on a graph & \eqref{eq:graph_spectral_covariance}, Section~\ref{app:toolkit-5} \\
 Graph frequency & Eigenvalue of $L_G$; low values correspond to smooth patterns & Section~\ref{subsec:related_spatial}, Section~\ref{app:toolkit-5} \\

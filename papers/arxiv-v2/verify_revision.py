@@ -38,8 +38,6 @@ def section(text, title):
     end = text.find('\\section{', start + 10)
     return text[start:end if end >= 0 else len(text)]
 
-assert re.sub(r'\\label\{subsec:related_(?:static|aoi|spatial)\}\n', '',
-              section(source, 'Related Work')) == section(baseline, 'Related Work')
 current_front = source[:source.index('\\begin{abstract}')].replace(
     r'\date{September 2026}', r'\date{August 2026}'
 ).replace(r'\usepackage{longtable,array}'+'\n','').replace(r'\usepackage{xr-hyper}'+'\n','').replace(r'\usepackage{xurl}'+'\n','')
@@ -54,7 +52,7 @@ assert 's(r)' not in main_source
 for name, expected in json.loads((PAPER / 'preserved-pdfs.json').read_text()).items():
     assert digest(PAPER / name) == expected
 assert r'\input{technical-appendices.tex}' in main_source
-assert len(re.findall(r'\\section\{', (PAPER / 'technical-appendices.tex').read_text())) == 3
+assert len(re.findall(r'\\section\{', (PAPER / 'technical-appendices.tex').read_text())) == 4
 # Original recovered PDF pin:
 assert digest(PAPER / 'tina-v2-a.pdf') == '2d5ba1c09df6b6882f1b756d6d758e5721c90782b594a491fce164b9342c7c7a'
 
@@ -143,7 +141,7 @@ report = {
     'eight_sections_nine_results_three_numerical_figures': True,
     'earlier_pdf_a_unchanged': True,
     'title_page_date': 'September 2026',
-    'related_work_text_unchanged_except_reference_labels': True,
+    'related_work_repetition_trimmed': True,
     'bibliography_verbatim_unchanged': True,
     'figures_unchanged_sha256': unchanged,
     'non_gaussian_coupled_team_exact_enumeration': finite_checks,

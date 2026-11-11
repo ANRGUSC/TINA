@@ -10,7 +10,7 @@
 \usepackage{xr-hyper}
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
-\externaldocument[][nocite]{tina-v2-g-companion}
+\externaldocument[][nocite]{tina-v2-h-companion}
 \usepackage{cite}
 \setlength{\emergencystretch}{1em}
 \newtheorem{lemma}{Lemma}
@@ -128,24 +128,13 @@ scope-dependent delay can make sparse feedback outperform all-to-all control
 \cite{ballotta2023latency}; Section~\ref{subsec:related_distributed_control}
 develops the comparison with this literature.
 
-The environment considered here evolves exogenously, and each epoch is a static
-team decision. We value an information architecture by its prediction error for
-the current full-information decision, and vary spatial scope and information
-age jointly. Under a common-rate temporal model, this yields a local--global
-crossover and an exact composition of spatial omission and temporal staleness.
-
-This paper develops a theory for this tradeoff. We consider a collection of
-agents operating in an exogenously evolving stochastic environment
-$\theta_t=(\theta_{1,t},\ldots,\theta_{n,t})$. At each decision epoch the agents
-select a joint action $x_t=(x_{1,t},\ldots,x_{n,t})$ that incurs a common cost
-$f(x_t,\theta_t)$. An \emph{information architecture} specifies the information
-available to each agent when this decision is made. Thus a fresh-local
-architecture may allow agent $i$ to condition on the current $\theta_{i,t}$,
-a neighborhood architecture may provide the states of agents within a given
-spatial radius, and a global architecture may provide the entire state vector
-only after a delay $\tau$. Each of these architectures uses a synchronized
-snapshot of current or delayed state. More generally, an architecture specifies
-\emph{who knows what, from where, and at what age}.
+We consider agents whose actions incur a shared quadratic cost in an
+environment that evolves independently of those actions. An information
+architecture specifies which state observations each agent can use and how
+old they are. We compare a fresh local reading, a delayed global view, and
+synchronized neighborhood snapshots by how well they support the current
+full-information decision. Current actions affect neither future state nor
+any agent's later information; this is a repeated static-team problem.
 
 Our analysis uses the classical fixed-information framework of static team
 decision theory initiated by Radner \cite{radner1962team}. With a constant,
@@ -156,56 +145,12 @@ whose scope and age vary jointly. Information and organizational networks have
 also been treated as design objects in classical team theory
 \cite{marschak1972economic,summers2017information}.
 
-Our first result answers the two extreme points of this tradeoff. We compare a
-\emph{fresh-local} architecture, in which each agent observes its current local
-state, against a \emph{stale-global} architecture, in which every agent has
-access to the complete system state with delay $\tau$. In general, the loss
-from staleness is governed by the prediction error of the current
-decision-relevant state from information $\tau$ units old. For a
-Gauss--Markov environment with temporal coherence time $T$, and for an affine
-full-information decision, stale-global regret grows as
-$1-e^{-2\tau/T}$ toward the open-loop regret. Fresh-local information is
-preferred once this temporal loss exceeds the share of decision-relevant
-variation not captured locally. In a canonical shared-resource quadratic
-model, where $\tau$ is the global-information delay, $T$ is the temporal
-coherence time, $q$ is local stiffness, and $\gamma$ is coordination strength,
-the large-system threshold is
-\begin{equation}
-    \left(\frac{\tau}{T}\right)^\star
-    =
-    \frac{1}{2}\log\left(1+\frac{\gamma}{q}\right),
-    \label{eq:intro_coupling}
-\end{equation}
-making explicit how stronger decision coupling increases the amount of
-staleness that is worth tolerating in exchange for global coordination.
+In the shared-resource example, stronger decision coupling makes a global
+view worth waiting longer for. The choice of scope also depends on which
+state changes matter to the decision, not only on how strongly nearby states
+are correlated.
 
-The local--global comparison concerns two pure benchmark regimes. Our second
-result considers agents embedded in a graph or spatial domain and a
-synchronized-snapshot family in which each agent bases its decision on a
-time-aligned neighborhood snapshot of radius $r$. Increasing $r$ replaces a
-narrower, fresher snapshot by a broader snapshot of greater age $\tau(r)$.
-The resulting architecture faces two
-competing sources of error: a \emph{spatial omission error}, caused by
-excluding decision-relevant state beyond radius $r$, and a
-\emph{temporal staleness error}, caused by the delay required to acquire the
-broader information.
-
-In the canonical spatial model, the optimal radius depends on temporal
-coherence, spatial correlation, decision-relevance length, and propagation
-speed. Faster variation favors fresher, narrower views; faster propagation
-supports broader coordination. Section~\ref{sec:optimal_coordination_scale}
-derives these effects as comparative statics of an explicit radius law.
-
-The framework separates information architecture from its implementing
-algorithm. It applies to repeated networked optimization against an exogenous
-environment, including stylized quadratic models of rate, power, compute, or
-sensing decisions driven by changing demand, channel, or resource conditions.
-The static-team assumption means that current actions do not change future
-state or anyone's later information. Action-dependent dynamics and signaling
-require a different analysis, as discussed in Section~\ref{sec:discussion_conclusions}.
-
-In summary, this paper makes two technical contributions and one conceptual
-contribution:
+The contributions are:
 \begin{enumerate}
     \item We derive an exact \emph{fresh-local versus stale-global crossover
     law} for two pure information regimes, expressed through decision-relevant
@@ -269,6 +214,8 @@ with discrete or continuous time. Write
 \quad \mathbb E\|\theta_t\|^2<\infty.
 \label{eq:state_partition}
 \end{equation}
+Write $\bar\theta=\mathbb E[\theta_t]$ and
+$\Sigma_S=\operatorname{Cov}(\theta_t)$ for its stationary mean and covariance.
 The local state $\theta_{i,t}$ may describe channel conditions, demand,
 workload, or sensing quality. Independence, Gaussianity, and Markov dynamics
 are only imposed in later specializations. Agent $i$ chooses
@@ -307,6 +254,19 @@ constraints, the unique optimal joint action is
 We call $x_t^\star$ the \emph{clairvoyant} or \emph{full-information}
 decision.
 
+Completing the square in \eqref{eq:quadratic_cost} gives
+\begin{equation}
+    f(x,\theta)-f(x^\star(\theta),\theta)
+    =
+    \frac{1}{2}
+    \left(x-x^\star(\theta)\right)^\top
+    Q
+    \left(x-x^\star(\theta)\right).
+    \label{eq:complete_square}
+\end{equation}
+Hence, for the quadratic model, excess decision cost is exactly a weighted
+squared error in reproducing the full-information action.
+
 For the affine specializations used to obtain closed forms, we write
 \begin{equation}
     b(\theta)=B\theta+b_0,
@@ -322,18 +282,6 @@ The matrix $B$ maps state into the linear term of the objective, while $K$ is
 the resulting decision-sensitivity operator. The general projection results do
 not require this affine form.
 
-Completing the square in \eqref{eq:quadratic_cost} gives
-\begin{equation}
-    f(x,\theta)-f(x^\star(\theta),\theta)
-    =
-    \frac{1}{2}
-    \left(x-x^\star(\theta)\right)^\top
-    Q
-    \left(x-x^\star(\theta)\right).
-    \label{eq:complete_square}
-\end{equation}
-Hence, for the quadratic model, excess decision cost is exactly a weighted
-squared error in reproducing the full-information action.
 
 \subsection{Information Architectures}
 \label{subsec:architectures}
@@ -354,64 +302,37 @@ $i$. An information architecture is the tuple
 A decision rule for agent $i$ is admissible only if it is measurable with
 respect to $\mathcal{G}_i$.
 
-\paragraph{Fresh-local information.}
-Agent $i$ observes its own current state:
+The three observations used below are:
+\begin{itemize}
+\item \textbf{Fresh local:} agent $i$ observes its current local state,
 \begin{equation}
-    \mathcal{G}_{i,t}^{\mathrm{loc}}
-    =
-    \sigma\!\left(
-        \theta_{i,t}
-    \right).
-    \label{eq:fresh_local_arch}
+\mathcal G_{i,t}^{\rm loc}=\sigma(\theta_{i,t}).
+\label{eq:fresh_local_arch}
 \end{equation}
-
-\paragraph{Stale-global information.}
-Every agent has access to the complete state snapshot at time $t-\tau$:
+\item \textbf{Stale global:} every agent observes the same complete old state,
 \begin{equation}
-    \mathcal{G}_{i,t}^{\mathrm{glob}}(\tau)
-    =
-    \sigma\!\left(
-        \theta_{t-\tau}
-    \right),
-    \qquad i=1,\ldots,n.
-    \label{eq:stale_global_arch}
+\mathcal G_{i,t}^{\rm glob}(\tau)=\sigma(\theta_{t-\tau}).
+\label{eq:stale_global_arch}
 \end{equation}
-
-\paragraph{Radius-$r$ information.}
-More generally, agent $i$ may obtain state information from nodes within graph
-distance $r$:
+\item \textbf{Synchronized neighborhood:} agent $i$ observes all nodes within
+radius $r$, with every reading taken at the same time $t-\tau$,
 \begin{equation}
-    \mathcal{G}_{i,t}^{(r)}
-    =
-    \sigma\!\left(
-        \theta_{j,t-\tau(r)}:
-        j\in\mathcal{N}_r(i)
-    \right).
-    \label{eq:radius_arch}
+\mathcal G_{i,t}^{(r,\tau)}=\sigma(\theta_{j,t-\tau}:j\in\mathcal N_r(i)),
+\qquad \mathcal A_{r,\tau}=(\mathcal G_{1,t}^{(r,\tau)},\ldots,\mathcal G_{n,t}^{(r,\tau)}).
+\label{eq:radius_arch}
 \end{equation}
-The radius family studied below is a synchronized-snapshot architecture. At
-radius $r$, the decision is formed from a time-aligned neighborhood snapshot
-whose age is $\tau(r)$; increasing $r$ replaces, rather than augments, the
-fresher narrow snapshot. This restriction models applications requiring temporal
-consistency or a common decision epoch. If fresh local and delayed remote
-information can instead be freely combined, the resulting hybrid architecture
-contains more information and weakly dominates either source alone; such
-mixed-age architectures are outside the principal family analyzed here.
+\end{itemize}
+Section~\ref{sec:spatiotemporal_predictability} treats $r$ and $\tau$ as
+separate parameters. Section~\ref{sec:optimal_coordination_scale} sets
+$\tau=\tau(r)$, nondecreasing with $\tau(0)=0$, so a wider snapshot replaces
+a narrower, fresher one. This models applications requiring a common
+observation time; a related scope-dependent delay appears in
+\cite{ballotta2023latency}.
 
-We assume the latency $\tau(r)$ is nondecreasing with $\tau(0)=0$.
-Thus radius zero is fresh-local; on a finite connected graph, radius equal to
-the diameter is stale-global. A related common-delay-by-scope abstraction
-appears in \cite{ballotta2023latency}.
-
-\paragraph{Local information plus a global summary.}
-An agent may also combine its current state with a delayed global statistic
-$z_t=h(\theta_t)$, such as a congestion price or aggregate load:
-\begin{equation}
-\mathcal G_{i,t}^{\mathrm{hyb}}=\sigma(\theta_{i,t})\vee\sigma(z_{t-\tau_z}).
-\label{eq:hybrid_arch}
-\end{equation}
-This contains fresh-local information. It also contains stale-global information
-if the summary preserves the complete delayed state; an arbitrary summary need not.
+A delayed global summary can also be combined with current local data.
+Such a mixed-age architecture retains fresh-local information and contains
+the stale-global snapshot only if the summary preserves the complete old
+state. It lies outside the synchronized family studied here.
 
 For a given architecture $\mathcal{A}$, define the admissible joint-policy set
 \begin{equation}
@@ -432,8 +353,14 @@ which rules are admissible, rather than an algorithm for computing them.
 \subsection{Architecture Regret}
 \label{subsec:architecture_regret}
 
-We evaluate an architecture by its best achievable expected cost, relative to
-the full-information decision:
+Regret is the smallest expected excess cost achievable when each agent uses
+only its own observations. By Eq.~\eqref{eq:complete_square}, it is the
+smallest expected weighted squared error in the full-information action:
+\[
+R(\mathcal A)=\inf_{u\in\mathcal S(\mathcal A)}
+\frac12\mathbb E[(u-x_t^\star)^\top Q(u-x_t^\star)].
+\]
+Equivalently, in terms of expected costs,
 \begin{align}
 J(\mathcal A)&\triangleq\inf_{u\in\mathcal S(\mathcal A)}\mathbb E[f(u,\theta_t)],
 &J^\star&\triangleq\mathbb E[f(x_t^\star,\theta_t)],
@@ -467,42 +394,16 @@ Thus additional information cannot hurt when it is available with the same
 freshness. The interesting architectural tradeoff arises because increasing
 spatial scope generally also increases information age.
 
-\subsection{Fixed-Architecture Quadratic Projection}
+\subsection{The best decision under fixed observations}
 \label{subsec:projection}
 
-The classical fixed-information static-team formulation supplies coupled
-person-by-person optimality conditions \cite{radner1962team}. In this
-quadratic model, completing the square turns those conditions into the
-projection characterization below. We use this fixed-architecture result as the
-inner optimization primitive for the outer scope--age comparison. Related
-affine-gain projection formulations appear
-in Krainak, Speyer, and Marcus \cite{krainak1982staticII}.
-
-Let
-\begin{equation}
-    \mathcal{H}
-    =
-    L^2(
-        \Omega,\mathcal{F},\mathbb{P};
-        \mathbb{R}^{d}
-    )
-    \label{eq:hilbert_space}
-\end{equation}
-and equip $\mathcal{H}$ with the weighted inner product
-\begin{equation}
-    \langle u,v\rangle_Q
-    \triangleq
-    \mathbb{E}
-    \left[
-        u^\top Qv
-    \right],
-    \qquad
-    \|u\|_Q^2
-    \triangleq
-    \langle u,u\rangle_Q.
-    \label{eq:q_inner_product}
-\end{equation}
-Since $Q\succ0$, the induced norm is equivalent to the ordinary $L^2$ norm.
+The best admissible decision is the closest implementable approximation to
+$x_t^\star$, with errors weighted by $Q$. We write
+$\|u\|_Q^2=\mathbb E[u^\top Qu]$; this norm already includes expectation.
+Let $\mathcal H$ denote the space of square-integrable joint actions.
+Projection onto $\mathcal S(\mathcal A)$ means choosing its closest element
+in this norm. The following result is a quadratic specialization of the
+classical static-team formulation \cite{radner1962team,krainak1982staticII}.
 
 \begin{lemma}[Fixed-architecture quadratic projection; Radner-type specialization]
 \label{lem:radner_projection}
@@ -538,98 +439,20 @@ This identity specializes the classical static-team formulation
 \cite{radner1962team} to the quadratic model used here.
 \end{lemma}
 
-\begin{proof}
-Linearity of $\mathcal{S}(\mathcal{A})$ follows because
-$\mathcal{G}_i$-measurability is preserved under linear combinations.
-Closedness follows because an $L^2$ limit of
-$\mathcal{G}_i$-measurable random variables admits a
-$\mathcal{G}_i$-measurable version.
+The proof and Hilbert-space construction are in
+Appendix~\ref{app:technical-projection}. Regret measures the part of the
+full-information action that the available observations cannot reproduce.
+The result requires square integrability, deterministic $Q\succ0$, and
+unconstrained Euclidean actions. It does not require Gaussianity, an affine
+map $b$, Markov dynamics, stationarity, or independent observations at a
+fixed decision epoch.
 
-For any admissible policy $u$, \eqref{eq:complete_square} gives
-\begin{align}
-    \mathbb{E}
-    \left[
-        f(u,\theta_t)
-        -
-        f(x_t^\star,\theta_t)
-    \right]
-    &=
-    \frac{1}{2}
-    \mathbb{E}
-    \left[
-        (u-x_t^\star)^\top
-        Q
-        (u-x_t^\star)
-    \right]
-    \nonumber\\
-    &=
-    \frac{1}{2}
-    \|u-x_t^\star\|_Q^2.
-    \label{eq:projection_proof}
-\end{align}
-Minimizing this expression over the closed subspace
-$\mathcal{S}(\mathcal{A})$ is the standard Hilbert-space projection problem,
-yielding \eqref{eq:optimal_projection} and \eqref{eq:projection_regret}.
-\end{proof}
-
-Architecture regret measures the part of the full-information decision that
-cannot be reproduced using the admissible information. The relevant error is
-therefore prediction error for the full-information action, measured in the
-$Q$-metric.
-
-The projection error is $Q$-orthogonal to every admissible policy. In particular,
-$2R(\mathcal A)=\|x_t^\star\|_Q^2-\|u_{\mathcal A}^\star\|_Q^2$,
-which is often useful for computing regret.
-
-\begin{corollary}[Coupled conditional normal equations]
-\label{cor:conditional_normal_equations}
-The unique team optimum in Lemma~\ref{lem:radner_projection} satisfies
-\begin{equation}
-    \boxed{
-    \mathbb E\!\left[
-      \bigl(Q u_{\mathcal A}^{\star}-b(\theta_t)\bigr)_i
-      \;\middle|\;
-      \mathcal G_i
-    \right]
-    =0,
-    \qquad i=1,\ldots,n.
-    }
-    \label{eq:conditional_normal_equations}
-\end{equation}
-With $Q$ partitioned into action blocks, this is equivalently
-\begin{equation}
-Q_{ii}u_i^\star
-+
-\sum_{j\ne i}Q_{ij}\,
-\mathbb E[u_j^\star\mid\mathcal G_i]
-=
-\mathbb E[b_i(\theta_t)\mid\mathcal G_i].
-\label{eq:block_conditional_normal_equations}
-\end{equation}
-These are the coupled person-by-person stationarity equations associated with
-the classical static-team formulation \cite{radner1962team}. Strict convexity
-makes them sufficient for the unique team optimum here. With heterogeneous
-information and
-off-diagonal $Q$, one generally does not have
-$u_i^\star=\mathbb E[x_i^\star\mid\mathcal G_i]$. When all components share a
-common information sigma-algebra, deterministic $Q$ makes the joint solution
-the ordinary vector conditional expectation.
-\end{corollary}
-
-\begin{remark}[Scope of the projection identity]
-The fixed-architecture projection identity requires square integrability, a
-deterministic positive-definite matrix $Q$, unconstrained Euclidean actions,
-and a closed linear space of admissible policies. It does not require
-Gaussianity, an affine map $b(\theta)$, Markov dynamics, temporal stationarity,
-or independent observations. Those stronger assumptions enter only in later
-closed-form prediction and composition results.
-\end{remark}
-
-The architecture's regret is one-half the squared $Q$-distance from the
-full-information decision to the closest implementable rule. We first compare fresh-local and
-stale-global information, then optimize the radius of a delayed neighborhood
-snapshot. Background on projections and conditional expectation is collected
-in the separate mathematical companion.
+When all agents share the same observation, the optimal joint action is
+the vector conditional mean of $x_t^\star$ given that observation. With
+different observations and off-diagonal blocks in $Q$, separate conditional
+means generally fail to minimize the shared cost: each agent's best action
+depends on what the others will do. Appendix~\ref{app:technical-projection}
+gives the coupled normal equations that account for this interaction.
 
 \begin{table}[H]
 \centering
@@ -646,15 +469,15 @@ Symbol & Meaning & Symbol & Meaning \\
 $n$ & number of agents & $G=(V,E)$ & network or geometry graph \\
 $\theta_t$ & exogenous environment state & $x_t$ & joint action \\
 $Q$ & positive-definite action-coupling matrix & $B$ & affine state-to-objective map \\
-$K=Q^{-1}B$ & decision-sensitivity operator & $x_t^\star$ & full-information decision \\
+$K$ & decision-sensitivity operator & $x_t^\star$ & full-information decision \\
 $\mathcal A$ & information architecture & $R(\mathcal A)$ & architecture regret; includes $R_{\rm loc}$ and $R_{\rm glob}(\tau)$ \\
 $R_\infty$ & open-loop regret & $\eta_S(0)$ & fresh-local omission share \\
 $\eta_T(\tau)$ & temporal unpredictability & $\eta_S(r)$ & radius-$r$ zero-delay spatial omission \\
-$\eta_{ST}(r,\tau)$ & normalized joint spatio-temporal regret & $T$ & temporal coherence time \\
+$\Sigma_S$ & stationary state covariance & $T$ & temporal coherence time \\
 $\tau(r)$ & information latency at radius $r$ & $v$ & effective propagation speed \\
 $\ell_s$ & spatial correlation length & $\ell_c$ & decision-relevance length \\
 $L_T=vT$ & temporal propagation length & $r^\star$ & optimal synchronized-snapshot radius \\
-$\mathbf 1$ & all-ones vector & $\eta_0=\eta_S(0)$ & radius-zero omission share \\
+$\bar\theta$ & stationary state mean & $\eta_0=\eta_S(0)$ & radius-zero omission share \\
 $\rho=\tau/T$ & dimensionless staleness & $\varepsilon_{t,\tau}$ & temporal innovation \\
 $X_t=x_t^\star-\bar x^\star$ & centered decision & $[z]_+=\max\{z,0\}$ & positive part \\
 $G(r)$ & fraction of open-loop loss eliminated & $D$ & maximum allowed radius \\
@@ -763,8 +586,74 @@ unavailable locally.
 \subsection{Gauss--Markov Temporal Model}
 \label{subsec:OU_model}
 
-We now specialize the temporal unpredictability function to obtain a closed
-form. Suppose the environment follows the stationary multivariate
+The prediction rule has a simple form: the centered current state is a
+discounted old state plus a new disturbance. For a stationary common-rate
+Gauss--Markov environment, write $\rho=\tau/T$, where $T>0$ is the coherence
+time. The transition is \cite[eqs.~(8)--(10), (14)]{ornee2021ou}
+\begin{equation}
+\theta_t-\bar\theta=e^{-\rho}(\theta_{t-\tau}-\bar\theta)+\varepsilon_{t,\tau}.
+\label{eq:state_innovation_decomposition}
+\end{equation}
+The Gaussian disturbance is independent of the old snapshot, with
+\[
+\mathbb E[\varepsilon_{t,\tau}\mid\theta_{t-\tau}]=0,\qquad
+\operatorname{Cov}(\varepsilon_{t,\tau})=(1-e^{-2\rho})\Sigma_S.
+\]
+The stationary covariance $\Sigma_S$ may be arbitrary and positive
+semidefinite, allowing correlations between any agents. The common-rate
+assumption is that every spatial pattern decays with the same time $T$.
+
+Imagine two edge servers. Their average workload changes slowly, while the
+difference between their workloads changes quickly. An old report from both
+servers could still help estimate total demand, even after it has lost much of
+its value for deciding which server should take the next job. Our common-rate
+model assigns both patterns the same coherence time. This is why a single
+factor, $e^{-2\tau/T}$, describes how much predictive value survives a delay.
+
+Use the affine decision model in Eq.~\eqref{eq:affine_map_and_sensitivity}
+and center the desired action:
+\begin{equation}
+\bar x^\star=\mathbb E[x_t^\star],\qquad X_t=x_t^\star-\bar x^\star
+=K(\theta_t-\bar\theta).
+\label{eq:centered_clairvoyant_action}
+\end{equation}
+Applying $K$ to the transition gives
+\begin{equation}
+X_t=e^{-\rho}X_{t-\tau}+K\varepsilon_{t,\tau}.
+\label{eq:xstar_innovation_decomposition}
+\end{equation}
+Subtracting the known mean preserves the information each policy uses and
+its prediction error. Also $\|X_t\|_Q^2=2R_\infty$.
+
+\begin{lemma}[Innovation split]
+\label{lem:innovation_split}
+Under the stationary Gauss--Markov transition
+\eqref{eq:state_innovation_decomposition} and affine decision model
+\eqref{eq:affine_map_and_sensitivity}, every square-integrable
+$\mathbb R^d$-valued function $u$ of $\theta_{t-\tau}$ satisfies
+\begin{equation}
+\|X_t-u\|_Q^2=\|e^{-\rho}X_{t-\tau}-u\|_Q^2
++(1-e^{-2\rho})\,2R_\infty.
+\label{eq:innovation_split}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Insert Eq.~\eqref{eq:xstar_innovation_decomposition} and expand the square:
+\begin{align*}
+\|X_t-u\|_Q^2
+={}&\|e^{-\rho}X_{t-\tau}-u\|_Q^2+\|K\varepsilon_{t,\tau}\|_Q^2\\
+&+2\mathbb E[(e^{-\rho}X_{t-\tau}-u)^\top QK\varepsilon_{t,\tau}].
+\end{align*}
+Conditioning the cross term on $\theta_{t-\tau}$ makes the first factor
+known and replaces the disturbance by its conditional mean, zero.
+Applying the same calculation with $u=0$ and using stationarity gives
+$\|K\varepsilon_{t,\tau}\|_Q^2=(1-e^{-2\rho})\|X_t\|_Q^2$,
+which proves the claim.
+\end{proof}
+
+The first term is the error in reproducing the predictable old decision;
+the second is the new disturbance that no old snapshot can predict.
+The continuous-time process realizing this transition is the stationary
 Ornstein--Uhlenbeck process
 \begin{equation}
     d\theta_t
@@ -775,92 +664,21 @@ Ornstein--Uhlenbeck process
     \right)dt
     +
     \sqrt{\frac{2}{T}}\,
-    \Sigma_\infty^{1/2}dW_t,
+    \Sigma_S^{1/2}dW_t,
     \label{eq:OU_process}
 \end{equation}
-where $T>0$ is the temporal coherence time,
-$\bar{\theta}$ is the stationary mean, and $\Sigma_\infty$ is the stationary
-covariance matrix. The process may exhibit arbitrary instantaneous
-cross-correlation among agents through $\Sigma_\infty$; the simplifying
-assumption is that all temporal modes share the same decay time $T$.
-
-Here $W_t$ is standard multivariate Brownian motion.
-
-Assume further that
+where $W_t$ is standard multivariate Brownian motion. Its covariance is
 \begin{equation}
-    b(\theta)=B\theta+b_0,
-    \label{eq:affine_b}
+\operatorname{Cov}(\theta_t,\theta_s)=e^{-|t-s|/T}\Sigma_S.
+\label{eq:separable_space_time_covariance}
 \end{equation}
-so that the full-information decision is affine:
-\begin{equation}
-    x^\star(\theta)
-    =
-    Q^{-1}B\theta+Q^{-1}b_0.
-    \label{eq:affine_xstar}
-\end{equation}
-
-Let
-\begin{equation}
-    \rho
-    \triangleq
-    \frac{\tau}{T}
-    \label{eq:rho_definition}
-\end{equation}
-denote the dimensionless staleness ratio.
-
-The OU transition law \cite[eqs.~(8)--(10), (14)]{ornee2021ou} gives the decomposition
-
-\begin{equation}
-\theta_t-\bar\theta=e^{-\rho}(\theta_{t-\tau}-\bar\theta)+\varepsilon_{t,\tau},\qquad \mathbb E[\varepsilon_{t,\tau}\mid\theta_{t-\tau}]=0,\qquad \operatorname{Cov}(\varepsilon_{t,\tau})=(1-e^{-2\rho})\Sigma_\infty.
-\label{eq:state_innovation_decomposition}
-\end{equation}
-
-The innovation $\varepsilon_{t,\tau}$ is independent of the old snapshot and
-has mean zero.
-
-Define the centered full-information decision by
-\begin{equation}
-    \bar x^\star\triangleq\mathbb E[x_t^\star],
-    \qquad X_t\triangleq x_t^\star-\bar x^\star.
-    \label{eq:centered_clairvoyant_action}
-\end{equation}
-Because $x^\star(\theta)=K\theta+Q^{-1}b_0$ is affine, $\bar x^\star=K\bar\theta+Q^{-1}b_0$ and $X_t=K(\theta_t-\bar\theta)$. Applying $K$ to \eqref{eq:state_innovation_decomposition} gives
-
-\begin{equation}
-X_t=e^{-\rho}X_{t-\tau}+K\varepsilon_{t,\tau},\qquad K=Q^{-1}B.
-\label{eq:xstar_innovation_decomposition}
-\end{equation}
-
-Subtracting the known constant $\bar x^\star$ preserves admissibility and every
-prediction error. Also $\|X_t\|_Q^2=2R_\infty$.
-
-\begin{lemma}[Innovation split]
-\label{lem:innovation_split}
-Under \eqref{eq:OU_process}--\eqref{eq:affine_b}, every square-integrable
-$\mathbb R^d$-valued function $u$ of $\theta_{t-\tau}$ satisfies
-\begin{equation}
-    \|X_t-u\|_Q^2
-    =\|e^{-\rho}X_{t-\tau}-u\|_Q^2
-      +(1-e^{-2\rho})\,2R_\infty.
-    \label{eq:innovation_split}
-\end{equation}
-\end{lemma}
-\begin{proof}
-In \eqref{eq:xstar_innovation_decomposition}, $K\varepsilon_{t,\tau}$ is
-$Q$-orthogonal to every square-integrable function of $\theta_{t-\tau}$,
-because its conditional mean is zero. Expanding the squared norm leaves
-$\|e^{-\rho}X_{t-\tau}-u\|_Q^2+\|K\varepsilon_{t,\tau}\|_Q^2$.
-Stationarity and the same orthogonality with $u=0$ give
-$\|K\varepsilon_{t,\tau}\|_Q^2=(1-e^{-2\rho})\|X_t\|_Q^2$.
-\end{proof}
-
-The first term is the error in reproducing the predictable old decision;
-the second is the fresh innovation that the old snapshot cannot predict.
-For global information, the first error can be eliminated entirely.
+The calculations above use the transition and its conditional mean, rather
+than stochastic calculus. A complete global snapshot eliminates the first
+error term in Lemma~\ref{lem:innovation_split}.
 
 \begin{theorem}[Exact stale-global regret]
 \label{thm:OU_stale_regret}
-Under \eqref{eq:OU_process}--\eqref{eq:affine_b},
+Under the stationary common-rate model \eqref{eq:OU_process} and affine decision model \eqref{eq:affine_map_and_sensitivity},
 \begin{equation}
     \boxed{
     R_{\mathrm{glob}}(\tau)
@@ -879,7 +697,7 @@ where
     \operatorname{tr}
     \left(
         B^\top Q^{-1}B\,
-        \Sigma_\infty
+        \Sigma_S
     \right).
     \label{eq:OU_Rinf}
 \end{equation}
@@ -899,7 +717,7 @@ The global snapshot permits $u=e^{-\rho}X_{t-\tau}$, eliminating the first
 term in \eqref{eq:innovation_split}. Thus the uncentered optimal action is
 $\bar x^\star+e^{-\rho}(x_{t-\tau}^\star-\bar x^\star)$ and the remaining
 regret is the innovation term. Finally,
-$2R_\infty=\operatorname{tr}(K^\top QK\Sigma_\infty)$ and
+$2R_\infty=\operatorname{tr}(K^\top QK\Sigma_S)$ and
 $K^\top QK=B^\top Q^{-1}B$ give \eqref{eq:OU_Rinf}.
 \end{proof}
 
@@ -1017,30 +835,7 @@ is
     \frac{\theta_i}{q+\gamma},
     \label{eq:optimal_local_shared}
 \end{equation}
-and
-\begin{align}
-    R_\infty
-    &=
-    \frac{
-        n\sigma^2
-        \left(
-            q+\gamma(n-1)
-        \right)
-    }{
-        2q(q+\gamma n)
-    },
-    \label{eq:aggregate_Rinf}
-    \\
-    R_{\mathrm{loc}}
-    &=
-    \frac{
-        n\sigma^2\gamma^2(n-1)
-    }{
-        2q(q+\gamma)(q+\gamma n)
-    }.
-    \label{eq:aggregate_Rloc}
-\end{align}
-Consequently, the fresh-local omission share is
+and the fresh-local omission share is
 \begin{equation}
     \boxed{
     \eta_S(0)
@@ -1059,18 +854,18 @@ Consequently, the fresh-local omission share is
 \end{proposition}
 
 \begin{proof}
-Independence makes $\mathbb E[u_j\mid\theta_i]=\mu_j\triangleq\mathbb E[u_j]$
-for $j\ne i$. The coupled normal equations become
-$(q+\gamma)u_i+\gamma\sum_{j\ne i}\mu_j=\theta_i$.
-Taking expectations gives $Q\mu=0$, hence $\mu=0$ and
-$u_i=\theta_i/(q+\gamma)$. The projection identity then gives
+Let $\mu_i=\mathbb E[u_i]$. Taking expectations of the first-order
+conditions in Appendix~\ref{app:technical-projection} gives $Q\mu=0$,
+because the states have mean zero. Since $Q\succ0$, every optimal action
+has mean zero. Independence then gives
+$\mathbb E[u_j\mid\theta_i]=\mathbb E[u_j]=0$ for $j\ne i$.
+The part of agent $i$'s conditional expected cost that depends on $u_i$ is
 \[
-2R_\infty=\sigma^2\operatorname{tr}(Q^{-1}),\qquad
-2R_{\rm loc}=2R_\infty-\frac{n\sigma^2}{q+\gamma}.
+\frac{q+\gamma}{2}u_i^2-\theta_i u_i.
 \]
-Evaluating the trace with the rank-one inverse of $Q$ yields the stated
-regrets and their ratio. Appendix~\ref{app:technical-aggregate} records
-the matrix arithmetic.
+Its unique minimizer is $u_i=\theta_i/(q+\gamma)$.
+Appendix~\ref{app:technical-aggregate} computes the individual local and
+open-loop regrets; dividing them gives Eq.~\eqref{eq:aggregate_eta}.
 \end{proof}
 
 Combining Proposition~\ref{prop:aggregate_local} with
@@ -1133,253 +928,91 @@ $\tau/T$. Thus stronger coordination coupling makes the system willing to
 tolerate increasingly stale-global information before abandoning global
 coordination in favor of fresh-local decisions.
 
-The result provides the first endpoint characterization of the broader
-freshness--scope problem. The next sections move beyond the binary
-local--global comparison by allowing the information radius itself to vary,
-and ask how spatial predictability and temporal staleness jointly determine
-the optimal coordination scale.
-
-\section{Spatial and Temporal Predictability}
+\section{How much is a delayed neighborhood snapshot worth?}
 \label{sec:spatiotemporal_predictability}
 
-We now introduce intermediate architectures in which each agent observes a
-synchronized snapshot within radius $r$. Temporal predictability determines
-the freshness loss, while decision-relevant spatial predictability determines
-the omission loss.
-
-\subsection{Spatial Structure of the Environment}
-\label{subsec:spatial_structure}
-
-We first describe the spatial statistics that determine what nearby
-observations reveal about remote state.
-
-For simplicity of exposition, first suppose that each node has a scalar local
-state, so that
-\[
-    \theta_t
-    =
-    (\theta_{1,t},\ldots,\theta_{n,t})^\top.
-\]
-The vector-valued case follows by replacing scalar covariances with block
-covariances.
-
-Let
+Recall the synchronized neighborhood snapshot in Section~\ref{subsec:architectures}:
+under $\mathcal A_{r,\tau}$, each agent observes states within radius $r$,
+all measured at time $t-\tau$. Here the age $\tau\ge0$ is a free parameter;
+Section~\ref{sec:optimal_coordination_scale} later sets $\tau=\tau(r)$.
+Define
 \begin{equation}
-    \bar{\theta}
-    \triangleq
-    \mathbb{E}[\theta_t],
-    \qquad
-    \Sigma_S
-    \triangleq
-    \operatorname{Cov}(\theta_t)
-    \succeq 0
-    \label{eq:spatial_covariance_general}
+\eta_S(r)=\frac{R(\mathcal A_{r,0})}{R_\infty},\qquad 0\le\eta_S(r)\le1,
+\label{eq:eta_S_definition}
 \end{equation}
-denote the stationary mean and spatial covariance. The entry
-$(\Sigma_S)_{ij}$ measures the instantaneous statistical dependence between
-the states associated with nodes $i$ and $j$.
-
-On a path, line, or Euclidean spatial domain, a canonical covariance model is
-\begin{equation}
-    \operatorname{Cov}
-    \left(
-        \theta_{i,t},
-        \theta_{j,t}
-    \right)
-    =
-    \sigma^2
-    \exp
-    \left(
-        -\frac{d_G(i,j)}{\ell_s}
-    \right),
-    \label{eq:spatial_exponential_covariance}
-\end{equation}
-where $\ell_s>0$ is a spatial correlation length. Larger $\ell_s$ means that
-states remain strongly correlated over greater network distance. In one
-spatial dimension, \eqref{eq:spatial_exponential_covariance} is the
-exponential, or Ornstein--Uhlenbeck, covariance model
-\cite{williams2006gaussian}.
-
-On the line, the Gaussian field with exponential covariance is an OU process
-indexed by position. Its spatial Markov property makes the two sides of a
-point conditionally independent given the value there. This is the key to
-Lemma~\ref{prop:canonical_eta_S}.
-
-\subsection{Temporal Structure}
-\label{subsec:temporal_structure}
-
-We use the common-rate model \eqref{eq:OU_process} with
-$\Sigma_\infty=\Sigma_S$. Its stationary space-time covariance is
-\begin{equation}
-    \operatorname{Cov}(\theta_t,\theta_s)
-    =e^{-|t-s|/T}\Sigma_S.
-    \label{eq:separable_space_time_covariance}
-\end{equation}
-
-Imagine two edge servers. Their average workload changes slowly, while the
-difference between their workloads changes quickly. An old report from both
-servers could still help estimate total demand, even after it has lost much of
-its value for deciding which server should take the next job. Our common-rate
-model assigns both patterns the same coherence time. This is why a single
-factor, $e^{-2\tau/T}$, describes how much predictive value survives a delay.
-
-\subsection{Snapshot Architectures}
-\label{subsec:joint_spatiotemporal}
-
-For radius $r$, define the zero-delay information available to agent $i$ at
-time $t$ as
-\begin{equation}
-    \mathcal{I}_{i,t}^{(r)}
-    \triangleq
-    \sigma\!\left(
-        \theta_{j,t}:j\in\mathcal{N}_r(i)
-    \right).
-    \label{eq:zero_delay_radius_information}
-\end{equation}
-
-The corresponding zero-delay radius-$r$ architecture is
-\begin{equation}
-    \mathcal{A}_{r,0}
-    \triangleq
-    \left(
-        \mathcal{I}_{1,t}^{(r)},
-        \ldots,
-        \mathcal{I}_{n,t}^{(r)}
-    \right).
-    \label{eq:zero_delay_radius_architecture}
-\end{equation}
-
-A delayed synchronized-snapshot radius-$r$ architecture provides the same type
-of information, shifted backward by $\tau$:
-\begin{equation}
-    \mathcal{A}_{r,\tau}
-    \triangleq
-    \left(
-        \mathcal{I}_{1,t-\tau}^{(r)},
-        \ldots,
-        \mathcal{I}_{n,t-\tau}^{(r)}
-    \right).
-    \label{eq:delayed_radius_architecture}
-\end{equation}
-
-Define the normalized zero-delay spatial omission function
-\begin{equation}
-    \eta_S(r)
-    \triangleq
-    \frac{
-        R(\mathcal{A}_{r,0})
-    }{
-        R_\infty
-    }.
-    \label{eq:eta_S_definition}
-\end{equation}
-The quantity $\eta_S(r)$ is the fraction of decision-relevant variation that
-cannot be captured using current information within radius $r$.
-
-The zero-delay observation sets are nested in $r$, so
-\begin{equation}
-r_2\ge r_1\quad\Longrightarrow\quad
-0\le\eta_S(r_2)\le\eta_S(r_1)\le1.
-\label{eq:eta_S_monotone}
-\end{equation}
-
-If radius zero observes precisely the local current component, then
-\begin{equation}
-    \eta_S(0)
-    =
-    \frac{R_{\mathrm{loc}}}{R_\infty}.
-    \label{eq:eta_S_zero}
-\end{equation}
-On a finite connected graph with diameter $D$, complete current state is available at
-$r=D$, so
-\begin{equation}
-    \eta_S(D)=0.
-    \label{eq:eta_S_diameter}
-\end{equation}
-
-\subsection{Decision-Relevant Smoothness}
-\label{subsec:decision_relevant_smoothness}
-
-For the affine decision model \eqref{eq:affine_map_and_sensitivity}, write
-\begin{equation}
-x_t^\star=K\theta_t+k_0,\qquad K=Q^{-1}B,\qquad k_0=Q^{-1}b_0.
-\label{eq:decision_sensitivity_operator}
-\end{equation}
-
-The matrix $K$ is the decision-sensitivity operator: its block $K_{ij}$
-describes how the state at node $j$ influences the full-information decision
-at node $i$.
-
-The covariance of the clairvoyant decision is
-\begin{equation}
-    \Sigma_x
-    \triangleq
-    \operatorname{Cov}(x_t^\star)
-    =
-    K\Sigma_S K^\top.
-    \label{eq:decision_covariance}
-\end{equation}
-The function $\eta_S(r)$ therefore depends on four ingredients at once: (i) the state covariance $\Sigma_S$; (ii) the decision-sensitivity operator $K$; (iii) the cost metric $Q$; and (iv) the observation geometry $\{\mathcal N_r(i)\}$.
-
-A spatial correlation length alone does not determine regret. By a \emph{mode} we mean a direction $\xi$ in state space, representing a spatial pattern of variation, such as an eigenvector of $\Sigma_S$. A pattern in the null space of $K$ ($K\xi=0$) changes the state without changing the desired decision, so residual uncertainty confined to that direction contributes no decision error. Conversely, a pattern with large $\sqrt{(K\xi)^\top Q(K\xi)}$ is amplified into the decision, so even small residual uncertainty about it can dominate regret. The ring example in Section~\ref{subsec:numerical-decision-relevance} illustrates this dependence with the covariance held fixed.
+the fraction of no-information loss remaining with a fresh radius-$r$ view.
+It decreases or stays constant as $r$ grows because an agent can ignore
+additional observations in a larger fresh neighborhood. Radius zero gives
+the fresh-local share $\eta_S(0)=R_{\rm loc}/R_\infty$; on a finite connected
+graph, the diameter gives complete current information and zero omission.
 
 \begin{theorem}[Spatio-temporal predictability composition law]
 \label{thm:spatiotemporal_composition}
-Suppose the environment follows \eqref{eq:OU_process} with
-$\Sigma_\infty=\Sigma_S$, and the full-information decision is affine
-as in \eqref{eq:decision_sensitivity_operator}. For the snapshot family
-\eqref{eq:delayed_radius_architecture}, every radius $r$ and finite delay
-$\tau\ge0$ satisfy
+Suppose the environment follows the stationary common-rate process
+\eqref{eq:OU_process}, with arbitrary spatial covariance $\Sigma_S$, and the
+full-information decision is affine as in
+Eq.~\eqref{eq:affine_map_and_sensitivity}. For the synchronized snapshot
+family \eqref{eq:radius_arch}, every radius $r$ and finite delay $\tau\ge0$
+satisfy, when $R_\infty>0$,
 \begin{equation}
-    \boxed{
-    R(\mathcal{A}_{r,\tau})
-    =
-    \left(
-        1-e^{-2\tau/T}
-    \right)R_\infty
-    +
-    e^{-2\tau/T}
-    R(\mathcal{A}_{r,0}).
-    }
-    \label{eq:regret_composition_unnormalized}
-\end{equation}
-
-Equivalently, with $\eta_{ST}(r,\tau)\triangleq R(\mathcal A_{r,\tau})/R_\infty$,
-\begin{equation}
-1-\eta_{ST}(r,\tau)=e^{-2\tau/T}(1-\eta_S(r)).
+\boxed{1-\frac{R(\mathcal A_{r,\tau})}{R_\infty}
+=e^{-2\tau/T}\bigl(1-\eta_S(r)\bigr).}
 \label{eq:regret_composition_normalized}
 \end{equation}
-The explained share is the product of the share surviving the delay and the
-share captured by the spatial scope.
+The fraction of loss eliminated is the product of the fraction surviving
+the delay and the fraction captured by a fresh neighborhood.
+Equivalently, without requiring positive $R_\infty$,
+\begin{equation}
+R(\mathcal A_{r,\tau})=(1-e^{-2\tau/T})R_\infty
++e^{-2\tau/T}R(\mathcal A_{r,0}).
+\label{eq:regret_composition_unnormalized}
+\end{equation}
 \end{theorem}
 
 \begin{proof}
 Center the target and policies as in Section~\ref{subsec:OU_model}.
-Every admissible policy under $\mathcal A_{r,\tau}$ is a function of
-$\theta_{t-\tau}$, so Lemma~\ref{lem:innovation_split} applies.
-Writing $u=e^{-\rho}\tilde u$ preserves each agent's measurability and gives
+Every admissible joint policy is a function of the old global state, though
+each component uses only its agent's neighborhood. Lemma~\ref{lem:innovation_split}
+separates the unpredictable change since the snapshot from the error in
+predicting the discounted old action. For the latter, write
+$u=e^{-\rho}\widetilde u$, with $\rho=\tau/T$. Multiplication by this
+known nonzero scalar changes no agent's observations: $u_i$ and
+$\widetilde u_i$ are functions of exactly the same local snapshot.
+The rescaling is therefore a bijection of the admissible joint-policy set,
+even when $Q$ couples agents' actions. Thus
 \[
 \inf_u\|e^{-\rho}X_{t-\tau}-u\|_Q^2
-=e^{-2\rho}\inf_{\tilde u}\|X_{t-\tau}-\tilde u\|_Q^2
-=e^{-2\rho}\,2R(\mathcal A_{r,0}),
+=e^{-2\rho}\inf_{\widetilde u}\|X_{t-\tau}-\widetilde u\|_Q^2
+=e^{-2\rho}\,2R(\mathcal A_{r,0}).
 \]
-where stationarity identifies the old-time prediction problem with the
-zero-delay problem at time $t$. Adding the innovation term and dividing by
-two proves \eqref{eq:regret_composition_unnormalized}.
+Stationarity gives the last equality by identifying the old-time prediction
+problem with the fresh one. Add the innovation loss from Lemma~\ref{lem:innovation_split}
+and divide by two to obtain Eq.~\eqref{eq:regret_composition_unnormalized};
+normalization gives the product form.
 \end{proof}
 
-Theorem~\ref{thm:OU_stale_regret} is the case $r=D$ on a finite connected
-graph, where $\eta_S(D)=0$. The temporal term
-$(1-e^{-2\tau/T})R_\infty$ is the innovation that the delayed snapshot
-cannot predict. The remaining spatial omission is discounted by
-$e^{-2\tau/T}$, so broader information helps only with the part of the
-current decision that remains temporally predictable.
+Theorem~\ref{thm:OU_stale_regret} is the full-graph case, where no spatial
+omission remains. Theorem~\ref{thm:spatiotemporal_composition} requires no
+exponential spatial covariance or spatial Markov property. As in Section~\ref{subsec:OU_model},
+the same proof extends to stationary scalar-decay innovations with conditional
+mean zero and an affine target, without Gaussianity. Gaussian assumptions
+are used later to calculate the spatial omission from covariance.
 
-As in Lemma~\ref{lem:innovation_split}, a stationary scalar-decay innovation
-with conditional mean zero suffices. Gaussianity is used below to compute
-spatial prediction errors from covariance. With $Q=qI$, each agent uses its own
-conditional mean; with off-diagonal $Q$, $\eta_S(r)$ requires the joint team
-solution of \eqref{eq:block_conditional_normal_equations}.
+\paragraph{What makes information decision-relevant?}
+\label{subsec:decision_relevant_smoothness}
+A change in state by a vector $\xi$ changes the desired action by $K\xi$.
+If $K\xi=0$, the state changes but the desired action does not; uncertainty
+in that direction causes no decision error. A direction with large
+$(K\xi)^\top Q(K\xi)$ matters more to the decision. Accordingly,
+\begin{equation}
+\operatorname{Cov}(x_t^\star)=K\Sigma_S K^\top,
+\label{eq:decision_covariance}
+\end{equation}
+and spatial omission depends on the state covariance, the decision operator,
+the cost matrix, and the observation neighborhoods together. In
+Fig.~\ref{fig:decision-relevance}, changing only the decision operator on
+the same ring moves the best radius from 1 to 2 to 5 hops, despite identical
+raw state correlation.
 
 \section{Optimal Coordination Scale}
 \label{sec:optimal_coordination_scale}
@@ -1475,6 +1108,11 @@ temporal coherence time. The zero-mean Gaussian field has covariance
 =\sigma^2e^{-|z-z'|/\ell_s}e^{-|t-s|/T}.
 \label{eq:canonical_space_time_covariance}
 \end{equation}
+At a fixed time, this exponential covariance makes the field a spatial
+Ornstein--Uhlenbeck process \cite{williams2006gaussian}. Given the field
+value at a point, its two sides are conditionally independent; given an
+observed interval, each unobserved tail depends only on the adjacent boundary
+value. This spatial Markov property is used in Lemma~\ref{prop:canonical_eta_S}.
 The decision-relevance length $\ell_c>0$ determines how far remote states
 influence the desired local action. Define
 \begin{equation}
@@ -1715,11 +1353,13 @@ These distinctions frame the more specific connections developed below.
 \subsection{Static Team Decision Theory}
 \label{subsec:related_static}
 
-Radner established foundational optimality conditions for static teams, in which decision makers share a common objective but act on different information \cite{radner1962team}. Under appropriate convexity and regularity conditions, the resulting stationarity conditions are sufficient for global team optimality; in the quadratic Gaussian specialization, the optimal decision rules are affine \cite{radner1962team,marschak1972economic}. In the deterministic-Hessian quadratic model used here, these fixed-information optimality conditions admit the equivalent Hilbert-space formulation developed in Section~\ref{subsec:projection}: for a fixed information architecture $\mathcal A$, the team-optimal policy is the $Q$-orthogonal projection of the full-information action onto the closed subspace $\mathcal S(\mathcal A)$ of implementable policies. This projection identity specializes the classical static-team framework to our quadratic model; Radner's theorem is not stated in this literal form. Krainak, Speyer, and Marcus subsequently relaxed the sufficient conditions associated with Radner's stationarity result and extended the theory to an exponential-quadratic criterion with jointly Gaussian state and observations \cite{krainak1982staticI}. In a companion paper, they formulated affine linear-quadratic-Gaussian and linear-exponential-Gaussian team problems as constrained parameter optimizations and represented optimal team gains as projections of the corresponding centralized gains \cite{krainak1982staticII}.
+Radner established foundational optimality conditions for static teams, in which decision makers share a common objective but act on different information \cite{radner1962team}. Under appropriate convexity and regularity conditions, the resulting stationarity conditions are sufficient for global team optimality; in the quadratic Gaussian specialization, the optimal decision rules are affine \cite{radner1962team,marschak1972economic}. Lemma~\ref{lem:radner_projection} specializes this framework to the weighted
+prediction problem induced by a deterministic quadratic Hessian; it is not a
+literal restatement of Radner's theorem. Krainak, Speyer, and Marcus subsequently relaxed the sufficient conditions associated with Radner's stationarity result and extended the theory to an exponential-quadratic criterion with jointly Gaussian state and observations \cite{krainak1982staticI}. In a companion paper, they formulated affine linear-quadratic-Gaussian and linear-exponential-Gaussian team problems as constrained parameter optimizations and represented optimal team gains as projections of the corresponding centralized gains \cite{krainak1982staticII}.
 
 Classical team theory also treated information itself as an organizational design object. Marschak and Radner analyzed the value of information, delayed information and the tradeoff between timeliness and completeness, and formulated team organization in terms of optimal networks \cite{marschak1972economic}. More recently, Summers, Li, and Kamgarpour formulated information-structure design as the selection of additional measurements or communication links jointly with the corresponding team decision strategies \cite{summers2017information}. Afshari and Mahajan characterized quadratic Gaussian static teams whose observations decompose into information common to all agents and agent-specific local information \cite{afshari2017static}. They subsequently applied this decomposition to team-optimal decentralized filtering over communication graphs with delayed information sharing, where sufficiently old measurements constitute common information while more recent measurements remain local \cite{afshari2018team}. Rusmevichientong and Van Roy studied large teams in which each agent observes the local cost structure only within a graph radius, using centralized performance as a benchmark \cite{rusmevichientong2003decentralized}. Gamarnik, Goldberg, and Weber studied decentralized decisions based on local information in random decision networks and related their near-optimality to a correlation-decay, or long-range-independence, property \cite{gamarnik2014correlation}.
 
-Relative to these works, the distinctive object studied here is a structured family of information architectures in which spatial scope and temporal freshness are coupled through the scope--latency relation $\tau(r)$. Each spatial scope induces an acquisition delay, and the resulting architecture is valued through its prediction error for the full-information decision. This coupling yields the freshness--locality crossover and coordination-scale laws developed in Sections~\ref{sec:fresh_local_global} and \ref{sec:optimal_coordination_scale}.
+Relative to these works, the distinctive object studied here is a structured family of information architectures in which spatial scope and temporal freshness are coupled through the scope--latency relation $\tau(r)$. Each spatial scope induces an acquisition delay, and the resulting architecture is valued through its prediction error for the full-information decision. 
 
 \subsection{Distributed Optimization, Communication Constraints, and Scope}
 \label{subsec:related_distributed_control}
@@ -1764,10 +1404,7 @@ intermediate optimal control architecture.
 
 Our setting differs in the decision problem: an exogenous-state static team,
 with the current full-information action as the benchmark and an architecture
-valued by the prediction error it induces for that action. This yields the
-decision-relevant spatial omission function $\eta_S(r)$, temporal
-unpredictability $\eta_T(\tau)$, their exact common-rate composition law, and
-the fresh-local versus stale-global and coordination-radius laws derived above.
+valued by the prediction error it induces for that action. 
 Ballotta, Arbelaiz, Gupta, Schenato, and Jovanovi\'c study a different but
 complementary question for spatially invariant dynamic plants: how delayed
 measurements from different spatial locations alter the spatial locality of the
@@ -1780,52 +1417,38 @@ through prediction of an exogenously varying full-information decision.
 
 Age of Information (AoI) formalizes the timeliness of status information through the age of the freshest received update, $\Delta(t)=t-u(t)$. Seminal work showed that minimizing AoI is distinct from maximizing throughput or minimizing packet delay and initiated a large literature on update generation, queueing, and scheduling \cite{kaul2012realtime,yates2021aoi}. Subsequent work generalized linear age to application-specific nonlinear age penalties \cite{sun2017update}. Connections to remote estimation make the distinction between age and task loss explicit: for a Gauss--Markov Ornstein--Uhlenbeck process, estimation error under signal-agnostic sampling is a nonlinear function of age, whereas signal-aware sampling can exploit the realized estimation error and outperform age-optimal policies \cite{ornee2021ou}.
 
-More recent work has pushed freshness metrics toward task-aware objectives. Shisher et al. showed that remote-inference loss can be nonmonotonic in age and designed communication policies around inference performance \cite{shisher2024timely}; subsequent work considers correlated sources for which inference penalties depend jointly on multiple sources' ages \cite{shisher2026correlated}. Li et al. go further toward decision-aware freshness by jointly optimizing sampling and remote decision making under stale observations \cite{li2026freshness}. Those works optimize when or which updates reach a fixed remote receiver; we instead choose the information architecture available to a decentralized team: what is observed, from what spatial scope, and at what age. Because broader scope itself incurs greater acquisition delay, spatial omission and temporal staleness are coupled by the architecture. This leads to the fresh-local versus stale-global crossover and optimal coordination-scale results developed here.
+More recent work has pushed freshness metrics toward task-aware objectives. Shisher et al. showed that remote-inference loss can be nonmonotonic in age and designed communication policies around inference performance \cite{shisher2024timely}; subsequent work considers correlated sources for which inference penalties depend jointly on multiple sources' ages \cite{shisher2026correlated}. Li et al. go further toward decision-aware freshness by jointly optimizing sampling and remote decision making under stale observations \cite{li2026freshness}. Those works optimize when or which updates reach a fixed remote receiver; we instead choose the information architecture available to a decentralized team: what is observed, from what spatial scope, and at what age. Because broader scope itself incurs greater acquisition delay, spatial omission and temporal staleness are coupled by the architecture. 
 
 \subsection{Centralization, Delegation, and Organizational Economics}
 
 A closely related organizational-economics literature asks how dispersed information, communication constraints, and decision rights determine organizational form. Aoki compares hierarchical and horizontal information structures when local conditions are uncertain and central monitoring or response is limited \cite{aoki1986horizontal}. In the information-processing tradition, Radner studies organizations of limited-capacity processors trading off processing resources against decision delay \cite{radner1993organization}; Bolton and Dewatripont derive communication networks from processing and communication costs \cite{bolton1994firm}; and Van Zandt studies real-time decentralized processing in which computational delay constrains the use of recent information \cite{vanzandt1999realtime}. Dessein and Santos likewise study adaptation to local information versus coordination under imperfect communication \cite{dessein2006adaptive}.
 
-A complementary delegation literature makes decision rights endogenous when information and objectives are dispersed. Aghion and Tirole distinguish formal from real authority \cite{aghion1997formal}, while Dessein studies delegation as an alternative to strategic communication \cite{dessein2002authority}. Most closely related to our centralization framing, Alonso, Dessein, and Matouschek compare centralized and decentralized coordination when managers privately observe local conditions \cite{alonso2008coordination}. Our model abstracts from incentive conflicts and endogenous information acquisition: agents share a common objective and the environment evolves exogenously. The tradeoff studied here is spatio-temporal: broader synchronized snapshots can improve coordination but arrive older. This yields a pure-benchmark crossover and, in the canonical spatial model, an interior optimum within the synchronized-snapshot family.
+A complementary delegation literature makes decision rights endogenous when information and objectives are dispersed. Aghion and Tirole distinguish formal from real authority \cite{aghion1997formal}, while Dessein studies delegation as an alternative to strategic communication \cite{dessein2002authority}. Most closely related to our centralization framing, Alonso, Dessein, and Matouschek compare centralized and decentralized coordination when managers privately observe local conditions \cite{alonso2008coordination}. Our model abstracts from incentive conflicts and endogenous information acquisition: agents share a common objective and the environment evolves exogenously. The tradeoff studied here is spatio-temporal: broader synchronized snapshots can improve coordination but arrive older. 
 
 \subsection{Spatial Statistics and Graph Signal Processing}
 \label{subsec:related_spatial}
 
 Spatial statistics provides the closest statistical antecedent to our spatial-predictability model. Kriging casts spatial prediction as an optimal linear prediction problem under spatial dependence \cite{cressie1990origins}. For lattice data, Besag's conditional formulation represents spatial dependence through local Markov neighborhoods \cite{besag1974spatial}; Lindgren, Rue, and Lindstr\"om later connect Mat\'ern Gaussian fields to sparse Gaussian Markov random fields through stochastic partial differential equation representations \cite{lindgren2011explicit}. Space--time statistics treats separability as an optional modeling restriction: Gneiting constructs broad classes of stationary nonseparable covariance functions \cite{gneiting2002nonseparable}. These works provide the statistical context for our covariance-based spatial model and its separable and nonseparable distinction.
 
-Graph signal processing extends analogous ideas to irregular domains. Shuman et al.\ use graph-Laplacian eigenvectors to define a graph Fourier domain and associate low graph frequencies with signals that vary slowly over the graph \cite{shuman2013emerging}. Graph-sampling theory asks when bandlimited graph signals can be exactly recovered from partial observations \cite{chen2015discrete}, while stationary graph signal processing gives spectral descriptions and Wiener-type estimators for random graph signals \cite{perraudin2017stationary}. Our objective is different: we do not value accurate reconstruction of $\theta_t$ per se. A radius-$r$ architecture is evaluated by its loss in reproducing the full-information decision $x_t^\star$, and increasing $r$ also increases information age through $\tau(r)$. Thus spatial omission and temporal staleness are priced jointly, and graph-smooth modes matter only insofar as they are decision-relevant.
-
+Graph signal processing extends analogous ideas to irregular domains. Shuman et al.\ use graph-Laplacian eigenvectors to define a graph Fourier domain and associate low graph frequencies with signals that vary slowly over the graph \cite{shuman2013emerging}. Graph-sampling theory asks when bandlimited graph signals can be exactly recovered from partial observations \cite{chen2015discrete}, while stationary graph signal processing gives spectral descriptions and Wiener-type estimators for random graph signals \cite{perraudin2017stationary}. Here the prediction target is the full-information action, so a state pattern's
+importance depends on the decision operator as well as on its spatial smoothness.
 
 \section{Discussion and Conclusions}
 \label{sec:discussion_conclusions}
 
-\paragraph{What the theory establishes.}
-The central constraint in networked decision making is that information breadth
-and freshness generally cannot be chosen independently. Nearby observations can
-be used quickly but may omit remote state needed for coordination; a broader
-view can improve coordination but loses predictive value while it is collected
-and disseminated. Architecture regret measures this loss relative to the
-full-information decision after optimizing over every policy implementable
-under the architecture.
-
-Theorem~\ref{thm:local_global_crossover} characterizes the fresh-local versus
-stale-global endpoints. Proposition~\ref{thm:marginal_balance} gives the
-interior marginal-balance condition for the synchronized-snapshot radius, and
-Theorem~\ref{thm:canonical_optimal_radius} gives its closed-form scaling law in
-the canonical model. Normalization by open-loop regret separates the overall
-scale of the decision problem from the fraction of decision-relevant variation
-preserved by an architecture, enabling comparisons across modeled systems.
-
-The fixed-covariance ring comparison in Section~\ref{subsec:numerical-decision-relevance}
-shows the design consequence of decision relevance: changing only the target
-operator moves the preferred scope. Graph distance governs acquisition, while
-the objective determines the value of the acquired information. This suggests
-architectures that target remote decision-relevant modes rather than simply
-expanding physical neighborhoods.
+\paragraph{What the examples show.}
+On the same 64-node ring in Fig.~\ref{fig:decision-relevance}, changing only
+the decision target moves the preferred radius from 1 to 2 to 5 hops.
+The graph, state covariance, coherence time, and per-hop latency stay fixed.
+Graph distance determines what it takes to acquire information; the decision
+determines whether that information is useful. This suggests selecting remote
+observations for their effect on the action, rather than expanding scope
+solely because remote states remain correlated.
 
 \paragraph{Scope and limitations.}
-The static-team boundary allows the fixed-architecture projection benchmark.
-When actions affect later observations, they may also signal information;
+The environment evolves exogenously: actions do not change its future state
+or the information available to other agents. When actions affect later
+observations, they may also signal information;
 the dynamic-team extension is discussed below. The principal family uses
 synchronized snapshots, while mixed-age and history-based architectures can
 retain information that these snapshots discard. Stationarity makes the
@@ -1891,7 +1514,9 @@ accept full responsibility for its contents.
 
 \paragraph{Code and Data Availability.}
 Appendices~\ref{app:technical-aggregate}--\ref{app:technical-numerics} provide detailed algebraic
-derivations and numerical reproducibility information. A separate mathematical
+derivations and numerical reproducibility information;
+Appendix~\ref{app:technical-projection} contains the projection proof and
+coupled optimality equations. A separate mathematical
 companion in the repository provides background on the projection and
 stochastic-process tools used here.
 The manuscript source, numerical code, experiment configurations, processed

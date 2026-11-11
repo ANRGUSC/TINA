@@ -1,0 +1,258 @@
+\section{Aggregate-coupling calculations}
+\label{app:technical-aggregate}
+This section supplies the matrix arithmetic for Proposition~\ref{prop:aggregate_local}
+above. For $Q=qI+\gamma\mathbf1\mathbf1^\top$,
+\[
+Q^{-1}=\frac1q\left(I-\frac{\gamma}{q+\gamma n}\mathbf1\mathbf1^\top\right).
+\]
+\begin{proof}
+Recall the coupled normal equations \eqref{eq:block_conditional_normal_equations}:
+\[
+ Q_{ii}u_i+\sum_{j\ne i}Q_{ij}\mathbb E[u_j\mid\mathcal G_i]
+ =\mathbb E[b_i(\theta_t)\mid\mathcal G_i].
+\]
+Here $Q_{ii}=q+\gamma$, $Q_{ij}=\gamma$ for $j\ne i$, and $b_i(\theta)=\theta_i$.
+Let $\mu_j=\mathbb E[u_j]$. For $j\ne i$, the policy $u_j$ is a function of $\theta_{j,t}$,
+which is independent of $\theta_{i,t}$, so
+\[
+\mathbb E[u_j\mid\mathcal G^{\mathrm{loc}}_{i,t}]
+=\mathbb E[u_j]=\mu_j,
+\]
+while $\theta_{i,t}$ is
+$\mathcal G^{\mathrm{loc}}_{i,t}$-measurable. The conditional normal equation
+\eqref{eq:block_conditional_normal_equations} therefore gives
+\[
+(q+\gamma)u_i
++\gamma\sum_{j\ne i}\mu_j
+-\theta_{i,t}=0.
+\]
+Taking expectations yields
+\[
+q\mu_i+\gamma\sum_j\mu_j=0.
+\]
+Summing over $i$ implies $\sum_j\mu_j=0$, hence every $\mu_i=0$ and
+$u_i=\theta_{i,t}/(q+\gamma)$, which proves
+\eqref{eq:optimal_local_shared}. This argument uses independence, zero means,
+square integrability, and strict convexity; Gaussianity is not required for the
+local-policy formula.
+
+\emph{Open-loop regret.} Here $B=I$ and $\Sigma_\infty=\sigma^2I$, so by \eqref{eq:OU_Rinf}, $R_\infty=\tfrac{\sigma^2}2\operatorname{tr}(Q^{-1})$. From the Sherman--Morrison formula above,
+
+\[
+\operatorname{tr}(Q^{-1})=\frac1q\Big(n-\frac{\gamma n}{q+\gamma n}\Big)=\frac{n\,(q+\gamma(n-1))}{q\,(q+\gamma n)},
+\]
+
+which gives \eqref{eq:aggregate_Rinf}.
+
+\emph{Local regret.} By the Pythagorean form of Lemma~\ref{lem:radner_projection} (the orthogonality identity after Lemma~\ref{lem:radner_projection}, with both $x^\star$ and $u^{\rm loc}$ mean zero), $2R_{\rm loc}=\|x^\star\|_Q^2-\|u^{\rm loc}\|_Q^2=2R_\infty-\|u^{\rm loc}\|_Q^2$. Since $u^{\rm loc}=\theta/(q+\gamma)$ and $\operatorname{tr}(Q)=n(q+\gamma)$,
+
+\[
+\|u^{\rm loc}\|_Q^2=\frac{\sigma^2\operatorname{tr}(Q)}{(q+\gamma)^2}=\frac{n\sigma^2}{q+\gamma}.
+\]
+
+Therefore
+
+\[
+R_{\rm loc}=\frac{n\sigma^2}{2}\left[\frac{q+\gamma(n-1)}{q(q+\gamma n)}-\frac{1}{q+\gamma}\right]=\frac{n\sigma^2}{2}\cdot\frac{(q+\gamma(n-1))(q+\gamma)-q(q+\gamma n)}{q(q+\gamma)(q+\gamma n)} .
+\]
+
+The numerator reduces to $\gamma^2(n-1)$, which gives \eqref{eq:aggregate_Rloc}.
+
+\emph{Share.} Dividing \eqref{eq:aggregate_Rloc} by \eqref{eq:aggregate_Rinf}, the factors $n\sigma^2/2$ and $q(q+\gamma n)$ cancel, leaving \eqref{eq:aggregate_eta}.
+
+\end{proof}
+
+\section{Canonical spatial omission calculation}
+\label{app:technical-canonical}
+We expand the proof of Lemma~\ref{prop:canonical_eta_S} above,
+including the equal-inverse-length case in the variance integral.
+\begin{proof}
+By spatial stationarity, take $z=0$ and suppress the time argument. Write $\beta_c\triangleq1/\ell_c$ and $\beta_s\triangleq1/\ell_s$ for the inverse lengths, so $w(u)=\tfrac{\beta_c}{2}e^{-\beta_c|u|}$ and $\operatorname{Cov}(\theta(u),\theta(u'))=\sigma^2e^{-\beta_s|u-u'|}$.
+
+\textbf{Step 0 (omission is a variance ratio).} With $Q=qI$ the optimal policy given $\mathcal O_r$ is $\mathbb E[x^\star(0)\mid\mathcal O_r]$. Its expected loss is $\tfrac q2\,\mathbb E\big[\operatorname{Var}(x^\star(0)\mid\mathcal O_r)\big]$. For a Gaussian field the conditional variance is a deterministic number: it does not depend on the observed values (companion Section~\ref{app:toolkit-3}). Since $R_\infty=\tfrac q2\operatorname{Var}(x^\star(0))$,
+
+\[
+\eta_S(r)=\frac{\operatorname{Var}(x^\star(0)\mid\mathcal O_r)}{\operatorname{Var}(x^\star(0))}.
+\]
+
+\textbf{Step 1 (split into observed middle and two tails).} Write $x^\star(0)=M_r+T_r^++T_r^-$, where
+
+\[
+M_r=\int_{-r}^{r}w(u)\theta(u)\,du,\qquad T_r^+=\int_r^\infty w(u)\theta(u)\,du,\qquad T_r^-=\int_{-\infty}^{-r}w(u)\theta(u)\,du .
+\]
+
+The middle $M_r$ is computed from observed values, so it contributes no conditional variance.
+
+\textbf{Step 2 (rewrite the right tail).} Substituting $u=r+s$,
+
+\[
+T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{-\beta_c s}\,\theta(r+s)\,ds .
+\]
+
+\textbf{Step 3 (spatial Markov property).} By Section~\ref{sec:spatiotemporal_predictability}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
+
+\[
+\operatorname{Var}(T_r^+\mid\mathcal O_r)=\operatorname{Var}(T_r^+\mid\theta(r)),\qquad \operatorname{Var}(T_r^-\mid\mathcal O_r)=\operatorname{Var}(T_r^-\mid\theta(-r)),\qquad \operatorname{Cov}(T_r^+,T_r^-\mid\mathcal O_r)=0 .
+\]
+
+\textbf{Step 4 (the tail variance does not depend on $r$).} Define $C\triangleq\operatorname{Var}(Y_0\mid\theta(0))$. Shifting the field by $r$ does not change its law, so $\operatorname{Var}(Y_r\mid\theta(r))=C$ for every $r$. By reflection symmetry (the covariance depends only on $|u-u'|$), the left tail gives the same value. Hence
+
+\[
+\operatorname{Var}(x^\star(0)\mid\mathcal O_r)=2\Big(\frac{\beta_c}{2}\Big)^2e^{-2\beta_c r}\,C=\frac{\beta_c^2}{2}e^{-2\beta_c r}\,C .
+\]
+
+At $r=0$ the same argument applies with $\mathcal O_0=\sigma(\theta(0))$ and $M_0=0$, giving $\operatorname{Var}(x^\star(0)\mid\theta(0))=\tfrac{\beta_c^2}{2}C$. Dividing, $\eta_S(r)=\eta_S(0)\,e^{-2\beta_c r}=\eta_S(0)\,e^{-2r/\ell_c}$. The unknown constant $C$ cancels, so it never has to be computed.
+
+\textbf{Step 5 (the constant $\eta_S(0)$).} Conditioning on the single Gaussian variable $\theta(0)$ gives $\operatorname{Var}(x^\star(0)\mid\theta(0))=\operatorname{Var}(x^\star(0))\big(1-\operatorname{Corr}(x^\star(0),\theta(0))^2\big)$ (companion Section~\ref{app:toolkit-3}), so $\eta_S(0)=1-\operatorname{Corr}^2$. Two moments are needed.
+
+\emph{Covariance with the local value:}
+
+\[
+\operatorname{Cov}(x^\star(0),\theta(0))=\int_{\mathbb R}w(u)\,\sigma^2e^{-\beta_s|u|}\,du=\frac{\sigma^2\beta_c}{2}\int_{\mathbb R}e^{-(\beta_c+\beta_s)|u|}\,du=\frac{\sigma^2\beta_c}{\beta_c+\beta_s}.
+\]
+
+\emph{Variance of the target:} $\operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c^2}{4}\,I$, where $I\triangleq\iint e^{-\beta_c(|u|+|v|)-\beta_s|u-v|}\,du\,dv$.
+
+To evaluate $I$, define the inner integral $h(u)\triangleq\int_{\mathbb R}e^{-\beta_c|v|}e^{-\beta_s|u-v|}\,dv$. Then $h$ is even, so $I=2\int_0^\infty e^{-\beta_c u}h(u)\,du$. For $u\ge0$, split the $v$-integral at $0$ and $u$:
+
+\[
+h(u)=\underbrace{\frac{e^{-\beta_s u}}{\beta_c+\beta_s}}_{v<0}+\underbrace{\frac{e^{-\beta_c u}-e^{-\beta_s u}}{\beta_s-\beta_c}}_{0\le v\le u}+\underbrace{\frac{e^{-\beta_c u}}{\beta_c+\beta_s}}_{v>u}.
+\]
+
+(The middle term is read as $u\,e^{-\beta_c u}$ when $\beta_s=\beta_c$.) Multiply by $e^{-\beta_c u}$ and integrate over $u\ge0$ term by term:
+
+\[
+\frac{1}{(\beta_c+\beta_s)^2},\qquad \frac{1}{\beta_s-\beta_c}\Big(\frac{1}{2\beta_c}-\frac{1}{\beta_c+\beta_s}\Big)=\frac{1}{2\beta_c(\beta_c+\beta_s)},\qquad \frac{1}{2\beta_c(\beta_c+\beta_s)} .
+\]
+
+Summing and doubling,
+
+\begin{equation}
+I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]=\frac{2(2\beta_c+\beta_s)}{\beta_c(\beta_c+\beta_s)^2},\qquad \operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c(2\beta_c+\beta_s)}{2(\beta_c+\beta_s)^2}.
+\end{equation}
+
+\emph{Combine.} With $\operatorname{Var}(\theta(0))=\sigma^2$,
+
+\[
+\operatorname{Corr}^2=\frac{\big(\sigma^2\beta_c/(\beta_c+\beta_s)\big)^2}{\sigma^2\cdot\sigma^2\beta_c(2\beta_c+\beta_s)/\big(2(\beta_c+\beta_s)^2\big)}=\frac{2\beta_c}{2\beta_c+\beta_s},\qquad \eta_S(0)=\frac{\beta_s}{2\beta_c+\beta_s}=\frac{\ell_c}{\ell_c+2\ell_s}.
+\]
+\end{proof}
+
+\section{Numerical reproducibility details}
+\label{app:technical-numerics}
+This section records settings, estimators, grids, normalization conventions,
+and diagnostics for the six experiments in Section~\ref{sec:numerical-evaluation}
+which reports the findings and their interpretation.
+Each calculation evaluates architecture regret under the corresponding
+information structure: a common delayed snapshot in Experiment 1, the exact
+fresh-local rule in Experiment 2, scalar composition in Experiments 3--4,
+and agentwise Gaussian conditioning with $Q=I$ in Experiments 5--6.
+Normalized losses use the analytical open-loop regret $R_\infty$;
+Experiment 2 instead estimates its boundary from paired sample means.
+Pointwise Monte Carlo means have 95\% normal intervals
+$\bar L\pm1.96s_L/\sqrt N$, with sample standard deviation $s_L$.
+Conditioning uses linear solves rather than explicit matrix inverses.
+
+\begin{table}[H]
+\centering
+\caption{Reference numerical settings. The shared-resource sweep fixes $q=1$;
+graph covariances in Experiments 5--6 are scaled to average marginal variance
+one. Quantities not being swept retain the experiment-specific values in the
+configuration files.}
+\label{tab:numerical-parameters}
+\small
+\begin{tabular}{llll}
+\toprule
+Experiment & principal sweep & fixed setting/size & evaluation \\
+\midrule
+1. Temporal pairs & $\tau/T\in[0,3]$ (25 points) & A--D; $n=8,20,50,32$ & $20{,}000$/point \\
+2. Local--global & 9 $\gamma/q$ values in $[0,10]$ & $n=5,10,25,100$; $q=1$ & $30{,}000$/setting \\
+3. Scalar radius & $r/\ell_c\in[0,2]$ (1,001 points) & 3 regimes; $D/\ell_c=2$ & $50{,}000$/point \\
+4. Canonical map & $(vT/\ell_c,\ell_s/\ell_c)$; $72\times68$ & $r/\ell_c\in[0,4]$; $\Delta r=0.0016$ & direct scalar \\
+5. Decision relevance & $\ell_c=0.7,2,6$ & 64-node ring; $T=6$ & $12{,}000$/check \\
+6. General graphs & path, ring, grid, geometric & 64 nodes; $T=5$ & exact covariance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{1. Temporal scaling.}
+At each of 25 equally spaced $\rho=\tau/T\in[0,3]$, each system uses
+20,000 independent stationary OU pairs:
+$\theta_t=e^{-\rho}\theta_{t-\tau}+\sqrt{1-e^{-2\rho}}\,\varepsilon$,
+where $\theta_{t-\tau}$ and $\varepsilon$ are independent
+$\mathcal N(0,\Sigma_S)$ draws. Systems A--D have dimensions 8, 20, 50, and 32
+and respectively identity, Toeplitz, ring-Laplacian, and geometric-graph
+covariances; their matrices are archived in
+\path{numerics/results/raw/exp01_system_matrices.npz}.
+The known optimal delayed-snapshot action is evaluated in each system's
+$Q$-metric; no time stepping or burn-in is needed.
+
+\paragraph{2. Fresh-local/stale-global crossover.}
+We fix $q=1$ and use $n\in\{5,10,25,100\}$.
+The nine coupling ratios are $\gamma/q\in\{0,0.05,0.1,0.2,0.5,1,2,5,10\}$.
+At each setting, 30,000 independent current-state draws give paired open-loop and fresh-local
+losses, using $u_i=\theta_i/(q+\gamma)$.
+Writing their means as $o=\widehat R_\infty$ and
+$l=\widehat R_{\rm loc}$, the estimator is
+$\widehat\rho^\star=\tfrac12\log[o/(o-l)]$.
+Its 95\% delta-method interval is
+$\widehat\rho^\star\pm1.96\sqrt{g^\top Cg/N}$, where $C$ is the sample
+covariance of the paired losses and
+\[
+g=\left(-\frac{l}{2o(o-l)},\,\frac{1}{2(o-l)}\right)^\top.
+\]
+The paired covariance is retained; $o-l\le0$ is rejected rather than clipped.
+The zero-coupling boundary is zero and is omitted from the logarithmic plot.
+
+\paragraph{3. Three radius regimes.}
+The scalar calculation uses $\eta_S(r)=\eta_0e^{-2r/\ell_c}$,
+$\tau(r)=r/v$, $\ell_c=1$, and $D=2$, with
+$(\eta_0,vT)=(0.25,0.2),(0.7,4),(0.9,100)$.
+The radius grid has spacing 0.002. At each point, 50,000 pairs of independent
+standard normals are scaled by the square roots of the normalized components
+$R_T/R_\infty$ and $R_S/R_\infty$ in
+\eqref{eq:temporal_component}--\eqref{eq:spatial_component}, then added
+and squared. This checks scalar variance composition; it does not simulate
+a spatial field.
+
+\paragraph{4. Canonical regime map.}
+The logarithmic parameter grid has $72\times68$ points over
+$vT/\ell_c\in[0.1,20]$ and $\ell_s/\ell_c\in[0.05,5]$.
+At every point, direct scalar evaluation of
+\eqref{eq:regret_composition_normalized} uses the same radius grid
+$r/\ell_c=0.0016j$, $j=0,\ldots,2500$, without an adaptive radius range or
+covariance simulation. The maximum grid-versus-closed-form error is
+$8.00\times10^{-4}$; five zero/positive classifications disagree adjacent
+to the threshold, where the continuous optimum is below the first positive
+grid point.
+
+\paragraph{5. Decision relevance.}
+The graph and covariance are fixed on a 64-node ring, with $T=6$ and latency
+0.12 per hop. For $\ell_c\in\{0.7,2,6\}$ the operator is
+$K_{ij}=e^{-d_G(i,j)/\ell_c}/\|e^{-d_G(i,\cdot)/\ell_c}\|_2$.
+With $Q=I$, exact Gaussian conditioning gives spatial omission; 12,000-sample
+checks evaluate selected radii. Each operator has its own analytical
+$R_\infty=\tfrac12\operatorname{tr}(K\Sigma_S K^\top)$.
+Raw state correlation is computed separately from the fixed covariance.
+
+\paragraph{6. Finite graphs.}
+One 64-node path, ring, grid, and geometric graph is used, with geometric-graph
+seed 20260839. For both graph experiments,
+$\Sigma_S\propto(\kappa_s^2I+L_G)^{-\nu}$ is scaled to average marginal
+variance one; $(\kappa_s,\nu)=(0.75,1.5)$ in Experiment 5 and $(0.8,1.5)$
+here. The reference setting uses $Q=I$, $T=5$, $\ell_c=2$, and latency 0.12
+per hop. Exact Gaussian conditioning evaluates every integer radius through
+the graph diameter, with no canonical-line fit or graph-ensemble averaging.
+Neighbor regret differences and parameter sweeps are archived in
+\path{numerics/results/processed/exp06_general_graphs.csv} and
+\path{numerics/results/processed/exp06_comparative_statics.csv}.
+
+\paragraph{Reproduction and audit.}
+The \href{https://github.com/ANRGUSC/TINA}{public TINA repository} contains
+\path{numerics/config/experiment_01.yaml} through
+\path{experiment_06.yaml}, with seeds 20260823 through 20260828,
+and run metadata in \path{numerics/results/metadata/}.
+The archive includes selected raw arrays, not every random draw.
+\path{docs/numerical_method.md} and \path{docs/experiment_parameters.md}
+specify system construction, conditioning safeguards, sweeps, and environment
+versions; \path{numerics/README.md} gives reproduction commands.

@@ -1,0 +1,32 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable,array}
+\usepackage{float}
+\usepackage{xr-hyper}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\setlength{\emergencystretch}{1em}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\externaldocument[][nocite]{tina-v2-e}
+
+\begin{document}
+\title{TINA: Mathematical Companion}
+\author{Scott Moeller \and Bhaskar Krishnamachari}
+\date{September 2026}
+\maketitle
+\noindent Mathematical companion to \emph{A Theory of Information Architecture for Networked
+Decisions: Freshness, Locality, and Coordination}, revision e of arXiv v2.
+Unqualified references to main-paper results and equations use the accompanying paper's numbering.
+
+\input{appendices.tex}
+\end{document}

@@ -2,10 +2,11 @@
 
 This is a local revision draft of [arXiv:2609.06351v1](https://arxiv.org/html/2609.06351v1), prepared September 26, 2026. It has not been submitted or published as v2.
 
-- [Read the current v2-f draft](tina-v2-f.pdf) (34 pages: 30 through references, followed by Appendices A-C on pages 31-34).
+- [Read the current v2-g draft](tina-v2-g.pdf) (32 pages: 28 through references, followed by Appendices A-C on pages 29-32).
+- [Earlier v2-f paper](tina-v2-f.pdf) and [companion](tina-v2-f-companion.pdf).
 - [Earlier v2-e paper](tina-v2-e.pdf) and [companion](tina-v2-e-companion.pdf).
 - [Earlier v2-d paper](tina-v2-d.pdf), [supplement](tina-v2-d-supplement.pdf), and [companion](tina-v2-d-companion.pdf).
-- [Mathematical companion](tina-v2-f-companion.pdf) (8 pages: toolkit, glossary, timing diagram, and marginal-rate illustration).
+- [Mathematical companion](tina-v2-g-companion.pdf) (8 pages: toolkit, glossary, timing diagram, and marginal-rate illustration).
 - [Earlier v2-c PDF](tina-v2-c.pdf) (32 pages), with its [supplement](tina-v2-c-supplement.pdf) and [companion](tina-v2-c-companion.pdf).
 - [Earlier v2-b PDF](tina-v2-b.pdf) (52 pages, restored unchanged from commit `25185a8`).
 - [Earlier v2-a PDF](tina-v2-a.pdf) (39 pages, recovered unchanged from commit `8c41a50`).
@@ -20,7 +21,7 @@ This is a local revision draft of [arXiv:2609.06351v1](https://arxiv.org/html/26
 
 The baseline is `../full/main.tex`, which is byte-identical to `../../submissions/arxiv/source/main.tex`. Its SHA256 is `9476b7a7a155a79076c818b20bd6362b77990e4e24d6cccdf0e9df743bf44238`. The original manuscript and submission folder were not modified.
 
-Revision e incorporates the compact technical supplement into the main PDF after the references: Appendix A (aggregate-coupling calculations), Appendix B (canonical spatial omission), and Appendix C (numerical reproducibility). References and links use ordinary appendix numbering. The mathematical companion remains separate. Subsequent explanatory edits add a two-sensor crossover example immediately after the introduction's opening paragraph, an edge-server example after Eq. (54), a sensor-reading explanation after Theorem 4, and a shorter common-rate limitation in Section 8. Revision f reduces Section 6 to three question-led illustrations: the local-global crossover, the scalar radius tradeoff, and decision relevance on a fixed ring. Original Figures 2, 3, and 5 are now Figures 1, 2, and 3; Appendix C covers only these illustrations. All theorem statements, proofs, analytical results, and the Section 3.4 shared-resource example are preserved. Existing numerical scripts and data remain unchanged; no supplement was added. The title-page date remains September 2026.
+Revision e incorporates the compact technical supplement into the main PDF after the references: Appendix A (aggregate-coupling calculations), Appendix B (canonical spatial omission), and Appendix C (numerical reproducibility). References and links use ordinary appendix numbering. The mathematical companion remains separate. Subsequent explanatory edits add a two-sensor crossover example immediately after the introduction's opening paragraph, an edge-server example after Eq. (54), a sensor-reading explanation after Theorem 4, and a shorter common-rate limitation in Section 8. Revision f reduces Section 6 to three question-led illustrations: the local-global crossover, the scalar radius tradeoff, and decision relevance on a fixed ring. Original Figures 2, 3, and 5 are now Figures 1, 2, and 3; Appendix C covers only these illustrations. All theorem statements, proofs, analytical results, and the Section 3.4 shared-resource example are preserved. Existing numerical scripts and data remain unchanged; no supplement was added. Revision g simplifies Section 5 around the captured fraction G(r) and the physical-unit radius formula, retaining Proposition 2, Lemma 3, Theorem 4, single-crossing conditions, and comparative statics. The countable-observation detail and integral proof of monotonicity in the decision-relevance length appear in Appendix B. The title-page date remains September 2026.
 
 ## Build and verify
 
@@ -32,9 +33,11 @@ python papers/arxiv-v2/verify_revision.py
 python -m unittest discover -s tests -v
 ```
 
-The build writes the two current revision-f PDFs above, with intermediate files in `build/`. It never overwrites `tina-v2-a.pdf` `tina-v2-b.pdf`, or any revision-c, revision-d, or revision-e PDF. The source closure is `main.tex`, `technical-appendices.tex`, `companion.tex`, `appendices.tex`, `references.bib`, and `figures/*.pdf`. Repeated LaTeX passes resolve linked references between the paper and companion using `xr-hyper`; keep them together when downloading. To regenerate the two explanatory figures in the companion, run `python papers/arxiv-v2/make_clarity_figures.py` (requires Matplotlib and NumPy). The verification script writes `verification.json` and refreshes `changes-from-v1.diff`; it reads the archived numerical results without overwriting them. The root repository build continues to target v1.
+The build writes the two current revision-g PDFs above, with intermediate files in `build/`. It never overwrites `tina-v2-a.pdf` `tina-v2-b.pdf`, or any revision-c, revision-d, revision-e, or revision-f PDF. The source closure is `main.tex`, `technical-appendices.tex`, `companion.tex`, `appendices.tex`, `references.bib`, and `figures/*.pdf`. Repeated LaTeX passes resolve linked references between the paper and companion using `xr-hyper`; keep them together when downloading. To regenerate the two explanatory figures in the companion, run `python papers/arxiv-v2/make_clarity_figures.py` (requires Matplotlib and NumPy). The verification script writes `verification.json` and refreshes `changes-from-v1.diff`; it reads the archived numerical results without overwriting them. The root repository build continues to target v1.
 
 ## Completed checks
+
+- Revision g: resolved cross-references, retained result numbering, unchanged numerical figure assets, preserved earlier PDFs, and inspected Section 5 and the Appendix B proof. Sections 1-4 are unchanged except the notation table and companion link target; Sections 6-8 are unchanged in source.
 
 - Revision f: direct source comparisons confirm unchanged theorem, lemma, proposition, corollary, and proof blocks, and unchanged Appendices A-B. The retained figure assets match their archived bytes; the PDF has exactly three numerical figures in the requested order. Earlier independent reviews remain historical records of their respective drafts.
 - The earlier revisions passed all 25 existing repository tests. These check the shared numerical implementation and v1 package integrity; the separate v2 verification script checks this revision's source and numerical identities.
@@ -44,4 +47,4 @@ The build writes the two current revision-f PDFs above, with intermediate files 
 
 No numerical experiments were regenerated. The initial simplification produced 39 pages; the clarity pass produced 52 pages. Revision d retains the 32-page paper and reduces the supplement from 7 to 5 pages. The 52-page PDF remains available in commit `25185a8` at its historical path `papers/arxiv-v2/tina-v2.pdf`.
 
-Each substantive future revision should use a new letter, preserving the earlier PDFs. The current source and build target are revision f. All earlier PDFs remain preserved.
+Each substantive future revision should use a new letter, preserving the earlier PDFs. The current source and build target are revision g. All earlier PDFs remain preserved.

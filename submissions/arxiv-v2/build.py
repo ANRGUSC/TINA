@@ -1,4 +1,4 @@
-"""Build revision f with technical appendices and a separate companion; preserve earlier PDFs."""
+"""Build revision g with technical appendices and a separate companion; preserve earlier PDFs."""
 from pathlib import Path
 import re
 import shutil
@@ -10,8 +10,8 @@ BUILD.mkdir(exist_ok=True)
 for name in ('main.tex', 'appendices.tex', 'technical-appendices.tex', 'companion.tex', 'references.bib'):
     shutil.copy2(PAPER / name, BUILD / name)
 shutil.copytree(PAPER / 'figures', BUILD / 'figures', dirs_exist_ok=True)
-documents = {'tina-v2-f': 'main.tex',
-             'tina-v2-f-companion': 'companion.tex'}
+documents = {'tina-v2-g': 'main.tex',
+             'tina-v2-g-companion': 'companion.tex'}
 
 def run(command, name):
     result = subprocess.run(command, cwd=BUILD, text=True,
@@ -26,7 +26,7 @@ for pass_number in range(4):
         run(['pdflatex', '-interaction=nonstopmode', '-halt-on-error',
              '-file-line-error', f'-jobname={job}', source],
             f'{job}-pass-{pass_number}')
-        if pass_number == 0 and job == 'tina-v2-f':
+        if pass_number == 0 and job == 'tina-v2-g':
             run(['bibtex', job], f'{job}-bibtex')
 
 for job in documents:

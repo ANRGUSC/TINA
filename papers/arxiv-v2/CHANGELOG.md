@@ -105,3 +105,8 @@ Merged the compact technical supplement into the main arXiv PDF after the refere
 ## Revision f: focused numerical presentation
 
 Rebuilt Section 6 around three questions, retaining original Figures 2, 3, and 5 as Figures 1-3. Removed the temporal-collapse, canonical parameter-grid, and general-graph experiment write-ups and their Appendix C entries. Retained reproduction settings, estimators, seeds, and archive paths for the three remaining illustrations. Updated affected roadmap and discussion references to describe the finite-graph evidence as a ring example. All theorem statements, proofs, analytical results, and Appendices A-B are unchanged. Numerical scripts and archived data remain intact. No supplement was added. The main PDF is 34 pages, and the companion remains 8 pages; revision-e PDFs are preserved.
+
+
+## Revision g: simplify Section 5
+
+Kept Sections 5.1 and 5.2 with distinct questions. Section 5.1 now uses G(r), the exact one-hop comparison, one loss decomposition, and a short log-derivative proof of Proposition 2. Retained the strict single-crossing condition, endpoint qualifications, and conditional comparative statics. Section 5.2 retains the spatial model, Lemma 3, and Theorem 4 in physical units, with all four comparative statics and a combined general-exponential/capped-radius formula. Moved the observation measurability detail and integral monotonicity proof to Appendix B. Removed equivalent displays and the less informative asymptotic limit. Updated the notation table, companion explanations, and Appendix C component reference. The radius plot remains Figure 2 after revision f. The paper is 32 pages; the companion remains 8 pages. Earlier PDFs, numerical scripts, data, and figure assets are preserved.

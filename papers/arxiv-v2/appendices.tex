@@ -118,7 +118,7 @@ the original graph.
 
 \subsection{Calculus, asymptotics, and optimization}
 \label{app:toolkit-7}
-\textbf{Log-derivative.} $\frac{d}{dr}\log f(r)=f'(r)/f(r)$ is the \emph{relative} growth rate of $f$, the fractional change per unit $r$. The spatial rate $m_S$ is the log-derivative of the explained spatial share; $m_T$ is the negative log-derivative of the temporal factor $e^{-2\tau(r)/T}$.
+\textbf{Log-derivative.} $\frac{d}{dr}\log f(r)=f'(r)/f(r)$ is the \emph{relative} growth rate of $f$, the fractional change per unit $r$. The marginal-balance condition compares the log-derivative of the fresh captured share with the negative log-derivative of the temporal survival factor.
 
 \textbf{First-order conditions.} At an interior minimum of a differentiable function the derivative vanishes. The converse fails: a zero derivative identifies candidates only.
 
@@ -214,8 +214,9 @@ the wider snapshot is older. Cost is evaluated against the current state $\theta
 
 \clearpage
 \section{Marginal-rate illustration}
-Figure~\ref{fig:marginal-balance} illustrates how the marginal rates determine the optimal radius for the
-canonical model in the main paper.
+Figure~\ref{fig:marginal-balance} illustrates the marginal-balance condition
+for the canonical model. In this diagram only, write
+$m_S=(d/dr)\log[1-\eta_S(r)]$ and $m_T=2\tau'(r)/T$.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.92\linewidth]{figures/marginal_balance.pdf}

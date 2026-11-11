@@ -10,7 +10,7 @@
 \usepackage{xr-hyper}
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
-\externaldocument[][nocite]{tina-v2-f-companion}
+\externaldocument[][nocite]{tina-v2-g-companion}
 \usepackage{cite}
 \setlength{\emergencystretch}{1em}
 \newtheorem{lemma}{Lemma}
@@ -657,7 +657,7 @@ $L_T=vT$ & temporal propagation length & $r^\star$ & optimal synchronized-snapsh
 $\mathbf 1$ & all-ones vector & $\eta_0=\eta_S(0)$ & radius-zero omission share \\
 $\rho=\tau/T$ & dimensionless staleness & $\varepsilon_{t,\tau}$ & temporal innovation \\
 $X_t=x_t^\star-\bar x^\star$ & centered decision & $[z]_+=\max\{z,0\}$ & positive part \\
-$m_T(r)$ & marginal freshness-loss rate & $m_S(r)$ & marginal spatial-gain rate \\
+$G(r)$ & fraction of open-loop loss eliminated & $D$ & maximum allowed radius \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1384,130 +1384,50 @@ solution of \eqref{eq:block_conditional_normal_equations}.
 \section{Optimal Coordination Scale}
 \label{sec:optimal_coordination_scale}
 
-We now make information radius an architectural design variable. For each
-$r$, an agent may base its action on observations available within radius $r$,
-but those observations arrive after latency $\tau(r)$. The objective is to
-select the spatial scope that minimizes architecture regret.
+We first ask when a wider synchronized snapshot is worth its extra delay,
+then compute the optimal radius in a concrete spatial model.
 
-On a graph, admissible radii are generally integers. We first analyze the
-continuous relaxation $r\in[0,D]$, where $D$ is the maximum allowed
-information radius. On a finite graph, the exact optimizer is obtained by
-minimizing over the admissible integer radii. Rounding the continuous optimum
-to a neighboring integer is justified only when the interpolated regret curve
-is unimodal.
-
-\subsection{Radius Family and Marginal Balance}
+\subsection{When is one more hop worthwhile?}
 \label{subsec:radius_dependent_architectures}
 
-Let $\tau:[0,D]\to[0,\infty)$ be nondecreasing with $\tau(0)=0$, and write
+Let $D$ be the maximum allowed radius and let
+$\tau:[0,D]\to[0,\infty)$ be nondecreasing, with $\tau(0)=0$.
+Define the fraction of open-loop loss eliminated by the snapshot as
 \begin{equation}
-R(r)\triangleq R(\mathcal A_{r,\tau(r)}).
-\label{eq:R_of_r}
+G(r)=\underbrace{1-\eta_S(r)}_{\text{share captured by a fresh snapshot}}
+     \;\underbrace{e^{-2\tau(r)/T}}_{\text{fraction surviving the delay}}.
+\label{eq:snapshot_gain}
 \end{equation}
-The synchronized-snapshot convention is as in Section~\ref{subsec:architectures}:
-an interior optimum is possible because increasing $r$ replaces a fresher
-snapshot with an older, broader one. The radius family is generally not nested.
+Writing $R(r)=R(\mathcal A_{r,\tau(r)})$,
+Theorem~\ref{thm:spatiotemporal_composition} gives
+$R(r)=R_\infty[1-G(r)]$, so the best radius maximizes $G(r)$.
 
-By Theorem~\ref{thm:spatiotemporal_composition},
-\begin{equation}
-    \boxed{
-    R(r)
-    =
-    R_\infty
-    \left[
-        1
-        -
-        e^{-2\tau(r)/T}
-        \left(
-            1-\eta_S(r)
-        \right)
-    \right].
-    }
-    \label{eq:radius_regret_master}
-\end{equation}
+Suppose a nearby sensor has already reported a new reading when an older
+reading arrives from farther away. To form a synchronized snapshot, the agent
+uses an older reading from the nearby sensor too. This is why widening the
+snapshot can hurt. An agent that keeps both readings can always ignore the
+distant one, so widening its access cannot increase its optimal decision cost.
 
-On a finite graph, moving from radius $r$ to $r+1$ strictly improves
-performance exactly when
+On a finite graph, one more hop improves performance exactly when
 \begin{equation}
-e^{-2\tau(r+1)/T}\bigl(1-\eta_S(r+1)\bigr)
->
-e^{-2\tau(r)/T}\bigl(1-\eta_S(r)\bigr),
+G(r+1)>G(r).
 \label{eq:discrete_radius_improvement}
 \end{equation}
-or, provided $1-\eta_S(r)>0$, equivalently
-\begin{equation}
-\log\!\left(
-\frac{1-\eta_S(r+1)}{1-\eta_S(r)}
-\right)
->
-\frac{2\bigl(\tau(r+1)-\tau(r)\bigr)}{T}.
-\label{eq:discrete_radius_log_improvement}
-\end{equation}
+Compare all admissible integer radii on a general graph; stopping at the
+first decline requires unimodality. Likewise, rounding a continuous optimum
+to a neighboring integer is justified only for a unimodal interpolated
+regret curve. Radius zero gives fresh-local information, while the diameter
+of a finite connected graph gives a complete stale-global snapshot.
 
-Thus a hop is worthwhile when its proportional spatial gain exceeds its
-freshness loss. If $1-\eta_S(r)=0$, use
-\eqref{eq:discrete_radius_improvement}: improvement requires
-$1-\eta_S(r+1)>0$.
-
-At radius zero,
+The loss separates into the two components plotted in
+Fig.~\ref{fig:radius-regret}:
 \begin{equation}
-    R(0)
-    =
-    R_\infty\eta_S(0)
-    =
-    R_{\mathrm{loc}}.
-    \label{eq:radius_zero_local}
+\frac{R(r)}{R_\infty}
+=\underbrace{1-e^{-2\tau(r)/T}}_{\text{loss from delay}}
++\underbrace{e^{-2\tau(r)/T}\eta_S(r)}_{\text{remaining loss from limited scope}}.
+\label{eq:R_decomposition}
 \end{equation}
-On a finite graph, if $D=\operatorname{diam}(G)$ and radius $D$ provides the
-entire state, then
-\begin{equation}
-    R(D)
-    =
-    R_\infty
-    \left(
-        1-e^{-2\tau(D)/T}
-    \right)
-    =
-    R_{\mathrm{glob}}(\tau(D)).
-    \label{eq:radius_D_global}
-\end{equation}
-Equation~\eqref{eq:radius_regret_master} can be written as
-\begin{equation}
-    R(r)
-    =
-    R_T(r)+R_S(r),
-    \label{eq:R_decomposition}
-\end{equation}
-where
-\begin{align}
-    R_T(r)
-    &\triangleq
-    \left(
-        1-e^{-2\tau(r)/T}
-    \right)R_\infty,
-    \label{eq:temporal_component}
-    \\
-    R_S(r)
-    &\triangleq
-    e^{-2\tau(r)/T}
-    \eta_S(r)R_\infty.
-    \label{eq:spatial_component}
-\end{align}
-The temporal term increases with information radius whenever $\tau(r)$ does.
-The zero-delay spatial omission fraction $\eta_S(r)$ decreases with radius,
-although its contribution is discounted by the temporal relevance factor
-$e^{-2\tau(r)/T}$.
-
-Minimizing regret is equivalent to maximizing the explained share
-$e^{-2\tau(r)/T}(1-\eta_S(r))$. Define its marginal temporal loss and
-spatial gain rates by
-\begin{equation}
-m_T(r)\triangleq\frac{2\tau'(r)}{T},\qquad
-m_S(r)\triangleq-\frac{\eta_S'(r)}{1-\eta_S(r)}
-=\frac{d}{dr}\log(1-\eta_S(r)).
-\label{eq:marginal_temporal_cost}
-\end{equation}
-Both measure fractional change per unit radius.
+The delay term grows with radius, while the remaining scope term falls.
 
 \begin{proposition}[Continuous marginal-balance characterization]
 \label{thm:marginal_balance}
@@ -1515,153 +1435,73 @@ Under the assumptions of
 Theorem~\ref{thm:spatiotemporal_composition}, additionally assume that
 $\tau(r)$ and $\eta_S(r)$ are continuously differentiable on $[0,D]$, with
 \[
-    \tau'(r)\ge0,
-    \qquad
-    \eta_S'(r)\le0,
-    \qquad
-    0\le\eta_S(r)<1.
+    \tau'(r)\ge0,\qquad \eta_S'(r)\le0,\qquad 0\le\eta_S(r)<1.
 \]
-Then
+Every interior optimal radius $r^\star\in(0,D)$ satisfies
 \begin{equation}
-    R'(r)
-    =
-    R_\infty
-    e^{-2\tau(r)/T}
-    \left(
-        1-\eta_S(r)
-    \right)
-    \left[
-        m_T(r)-m_S(r)
-    \right].
-    \label{eq:R_derivative_marginal}
+\left.\frac{d}{dr}\log[1-\eta_S(r)]\right|_{r=r^\star}
+=\frac{2\tau'(r^\star)}{T}.
+\label{eq:marginal_balance_condition}
 \end{equation}
-Consequently, every interior optimal radius $r^\star\in(0,D)$ satisfies
-\begin{equation}
-    \boxed{
-    -\frac{
-        \eta_S'(r^\star)
-    }{
-        1-\eta_S(r^\star)
-    }
-    =
-    \frac{
-        2\tau'(r^\star)
-    }{
-        T
-    }.
-    }
-    \label{eq:marginal_balance_condition}
-\end{equation}
-
 \end{proposition}
 
 \begin{proof}
-Differentiating \eqref{eq:radius_regret_master} gives
-\[
-    \frac{R'(r)}{R_\infty}
-    =e^{-2\tau(r)/T}
-      \left[\frac{2\tau'(r)}{T}(1-\eta_S(r))+\eta_S'(r)\right].
-\]
-Factoring $1-\eta_S(r)>0$ yields \eqref{eq:R_derivative_marginal}.
-At an interior minimum the derivative vanishes, giving
-\eqref{eq:marginal_balance_condition}.
+Since $G(r)>0$, maximizing $G$ is equivalent to maximizing $\log G$.
+At an interior optimum, $(\log G)'=0$; differentiating
+Eq.~\eqref{eq:snapshot_gain} gives the stated equality.
 \end{proof}
 
-The balance condition is necessary at an interior optimum. It gives a unique
-optimum if $\Delta(r)=m_S(r)-m_T(r)$ is strictly decreasing: the optimum is
-zero when $\Delta(0)\le0$, is $D$ when $\Delta(D)\ge0$, and otherwise is
-the unique crossing. A sufficient condition is strictly decreasing $m_S$ and
-nondecreasing $m_T$. Under these conditions, increasing $T$ or raising $m_S$
-moves the optimum outward; increasing the latency scale moves it inward.
-These are conditions on decision-relevant predictability, not automatic
-consequences of changing raw covariance parameters. The companion illustrates
-the rate comparison.
+The proportional gain from wider scope equals the proportional loss from
+delay. If the difference between the left and right sides of
+Eq.~\eqref{eq:marginal_balance_condition}, evaluated at radius $r$, is
+strictly decreasing in $r$, its sign identifies the unique optimum:
+radius zero if the difference is nonpositive at zero, radius $D$ if it is
+nonnegative at $D$, and otherwise the unique interior crossing.
+Holding the spatial omission curve fixed and preserving this single-crossing
+condition, increasing $T$ moves the preferred radius weakly outward, while
+increasing the latency scale in $\tau(r)=a\tau_0(r)$ moves it weakly inward.
+The optimum can stay unchanged at a boundary. These conclusions concern
+decision-relevant prediction, rather than changes in raw state covariance.
 
-\subsection{Canonical Line Model and Closed-Form Radius}
+\subsection{How large is the optimal radius on a line?}
 \label{subsec:canonical_line_model}
 
-We now derive the spatial omission function and the optimal radius from a
-concrete stochastic field and decision model. Consider a dense one-dimensional network, represented by locations
-$z\in\mathbb{R}$. This is also the continuum approximation of a sufficiently
-long path graph away from its boundaries.
-
-Let $\theta(z,t)$ be a zero-mean Gaussian field with covariance
+Consider a dense one-dimensional network, represented by locations
+$z\in\mathbb R$. Let $\ell_s>0$ be the spatial correlation length, the
+distance over which field values remain correlated, and let $T>0$ be the
+temporal coherence time. The zero-mean Gaussian field has covariance
 \begin{equation}
-    \mathbb{E}
-    \left[
-        \theta(z,t)\theta(z',s)
-    \right]
-    =
-    \sigma^2
-    \exp
-    \left(
-        -\frac{|z-z'|}{\ell_s}
-    \right)
-    \exp
-    \left(
-        -\frac{|t-s|}{T}
-    \right).
-    \label{eq:canonical_space_time_covariance}
+\mathbb E[\theta(z,t)\theta(z',s)]
+=\sigma^2e^{-|z-z'|/\ell_s}e^{-|t-s|/T}.
+\label{eq:canonical_space_time_covariance}
 \end{equation}
-The parameter $\ell_s$ is the spatial correlation length, and $T$ is the
-temporal coherence time.
-
-Suppose the full-information decision at location $z$ is the exponentially
-weighted spatial aggregate
+The decision-relevance length $\ell_c>0$ determines how far remote states
+influence the desired local action. Define
 \begin{equation}
-    x^\star(z,t)
-    =
-    \int_{-\infty}^{\infty}
-    w_{\ell_c}(u)
-    \theta(z+u,t)\,du,
-    \label{eq:canonical_target}
+x^\star(z,t)=\int_{-\infty}^{\infty}w_{\ell_c}(u)\theta(z+u,t)\,du,
+\qquad w_{\ell_c}(u)=\frac{1}{2\ell_c}e^{-|u|/\ell_c}.
+\label{eq:canonical_target}
 \end{equation}
-where
+The kernel integrates to one. Each location incurs squared tracking loss
 \begin{equation}
-    w_{\ell_c}(u)
-    \triangleq
-    \frac{1}{2\ell_c}
-    \exp
-    \left(
-        -\frac{|u|}{\ell_c}
-    \right).
-    \label{eq:exponential_decision_kernel}
+f_z(x,\theta)=\frac q2[x(z)-x^\star(z,\theta)]^2,\qquad q>0.
+\label{eq:canonical_tracking_cost}
 \end{equation}
-
-The kernel integrates to one, and the decision-relevance length $\ell_c$
-controls how broadly remote states influence the desired local action.
-
-For example, \eqref{eq:canonical_target} is generated pointwise by the
-quadratic tracking-loss density
+There is no action coupling, so the optimal policy is the conditional mean.
+We measure regret per unit length, equal by stationarity to expected
+pointwise loss, with $R_\infty=(q/2)\operatorname{Var}(x^\star(z,t))$.
+The radius-$r$ observation consists of all field values within distance $r$:
 \begin{equation}
-    f_z(x,\theta)
-    =
-    \frac{q}{2}
-    \left[
-        x(z)-x^\star(z,\theta)
-    \right]^2,
-    \qquad q>0.
-    \label{eq:canonical_tracking_cost}
+\mathcal O_r(z,t)=\sigma(\theta(z+u,t):|u|\le r).
+\label{eq:canonical_radius_observation}
 \end{equation}
-The pointwise loss has no action coupling, so each location's optimal policy
-is its conditional mean. We measure regret per unit length, equal by
-stationarity to expected pointwise loss; then
-$R_\infty=(q/2)\operatorname{Var}(x^\star(z,t))$.
-
-At zero delay, the radius-$r$ observation at location $z$ is
+Information propagates at speed $v>0$, giving
 \begin{equation}
-    \mathcal{O}_r(z,t)
-    \triangleq
-    \sigma
-    \left(
-        \theta(z+u,t):
-        |u|\le r
-    \right).
-    \label{eq:canonical_radius_observation}
+\tau(r)=r/v,\qquad L_T=vT.
+\label{eq:temporal_propagation_length}
 \end{equation}
-
-We use a continuous version of the field; the observations can equivalently be
-generated by a countable dense subset of the interval (including $z$ at $r=0$).
+The propagation length $vT$ is the distance information travels in one
+coherence time.
 
 \begin{lemma}[Exponential omission by self-similarity]
 \label{prop:canonical_eta_S}
@@ -1670,134 +1510,41 @@ For the field \eqref{eq:canonical_space_time_covariance}, decision
 \eqref{eq:canonical_radius_observation}, the normalized zero-delay spatial
 omission error is
 \begin{equation}
-    \boxed{
-    \eta_S(r)
-    =
-    \frac{
-        \ell_c
-    }{
-        \ell_c+2\ell_s
-    }
-    \exp
-    \left(
-        -\frac{2r}{\ell_c}
-    \right).
-    }
-    \label{eq:canonical_eta_S}
-\end{equation}
-In particular,
-\begin{equation}
-    \eta_0
-    =
-    \eta_S(0)
-    =
-    \frac{
-        \ell_c
-    }{
-        \ell_c+2\ell_s
-    }.
-    \label{eq:canonical_eta_zero}
+\eta_S(r)=\eta_0e^{-2r/\ell_c},\qquad
+\eta_0=\frac{\ell_c}{\ell_c+2\ell_s}.
+\label{eq:canonical_eta_S}
 \end{equation}
 \end{lemma}
 
 \begin{proof}
-By stationarity set $z=0$ and suppress time. Gaussian conditioning gives
-$\eta_S(r)=\operatorname{Var}(x^\star(0)\mid\mathcal O_r)/\operatorname{Var}(x^\star(0))$.
-Split the target integral into the observed middle and the two exterior tails.
-The middle contributes no conditional variance. The spatial Markov property
-makes the two tails conditionally independent given the segment, with each
-depending only on its adjacent endpoint. Translating the right tail by $r$
-gives
-\[
-\int_r^\infty w_{\ell_c}(u)\theta(u)\,du
-=\frac{e^{-r/\ell_c}}{2\ell_c}
-\int_0^\infty e^{-s/\ell_c}\theta(r+s)\,ds.
-\]
-The conditional variance of the last integral given $\theta(r)$ is independent
-of $r$. Reflection gives the same conclusion for the left tail. Hence
+By stationarity, set $z=0$ and suppress time. The observed middle of the
+target integral contributes no uncertainty. Conditional on the two boundary
+values, the unobserved tails are independent by the spatial Markov property.
+Moving each tail outward by $r$ scales its weight by $e^{-r/\ell_c}$,
+while stationarity leaves its conditional variance relative to its boundary
+unchanged. Squaring the weight therefore gives
 $\eta_S(r)=e^{-2r/\ell_c}\eta_S(0)$.
-
-To obtain the constant, covariance integration gives
-\begin{equation}
-\operatorname{Cov}(x^\star(0),\theta(0))=\frac{\sigma^2\ell_s}{\ell_c+\ell_s},
-\qquad
-\operatorname{Var}(x^\star(0))=
-\frac{\sigma^2\ell_s(\ell_c+2\ell_s)}{2(\ell_c+\ell_s)^2}.
-\label{eq:unconditional_target_variance}
-\end{equation}
-Thus $\eta_S(0)=1-\operatorname{Corr}(x^\star(0),\theta(0))^2
-=\ell_c/(\ell_c+2\ell_s)$.
-Appendix~\ref{app:technical-canonical} evaluates the integrals explicitly.
+The covariance integrals in Appendix~\ref{app:technical-canonical} give
+$\eta_S(0)=\ell_c/(\ell_c+2\ell_s)$.
 \end{proof}
-
-Assume information propagates at effective speed $v>0$, so
-\begin{equation}
-    \tau(r)=r/v,
-    \label{eq:linear_propagation_delay}
-\end{equation}
-and define the temporal propagation length
-\begin{equation}
-    L_T\triangleq vT.
-    \label{eq:temporal_propagation_length}
-\end{equation}
-This is the distance information can travel during one coherence time.
-We write $[z]_+\triangleq\max\{z,0\}$.
 
 \begin{theorem}[Optimal synchronized-snapshot radius in the canonical model]
 \label{thm:canonical_optimal_radius}
-Suppose the state field obeys
-\eqref{eq:canonical_space_time_covariance}, the full-information decision is
-given by \eqref{eq:canonical_target}, the loss is
-\eqref{eq:canonical_tracking_cost}, and the latency is
-\eqref{eq:linear_propagation_delay}. Then the unique optimal radius on
-the infinite line satisfies the dimensionless law
+Suppose the field obeys Eq.~\eqref{eq:canonical_space_time_covariance},
+the target is Eq.~\eqref{eq:canonical_target}, the loss is
+Eq.~\eqref{eq:canonical_tracking_cost}, and $\tau(r)=r/v$.
+The unique optimal radius on the infinite line is
 \begin{equation}
-    \boxed{
-    \frac{r^\star}{\ell_c}
-    =
-    \frac{1}{2}
-    \left[
-        \log
-        \left(
-            \frac{
-                1+L_T/\ell_c
-            }{
-                1+2\ell_s/\ell_c
-            }
-        \right)
-    \right]_+.
-    }
-    \label{eq:canonical_dimensionless_law}
+\boxed{r^\star=\frac{\ell_c}{2}
+\left[\log\frac{\ell_c+vT}{\ell_c+2\ell_s}\right]_+,}
+\label{eq:canonical_optimal_radius}
 \end{equation}
-Equivalently,
+where $[z]_+=\max\{z,0\}$. In particular,
 \begin{equation}
-    \boxed{
-    r^\star
-    =
-    \frac{\ell_c}{2}
-    \left[
-        \log
-        \left(
-            \frac{
-                \ell_c+L_T
-            }{
-                \ell_c+2\ell_s
-            }
-        \right)
-    \right]_+.
-    }
-    \label{eq:canonical_optimal_radius}
-\end{equation}
-
-The optimal radius is strictly positive if and only if
-\begin{equation}
-    \boxed{
-    L_T>2\ell_s.
-    }
-    \label{eq:positive_radius_condition}
+r^\star>0\quad\Longleftrightarrow\quad vT>2\ell_s.
+\label{eq:positive_radius_condition}
 \end{equation}
 Within the interior regime, $r^\star$:
-
 \begin{enumerate}
     \item increases with the temporal coherence time $T$;
     \item increases with the information-propagation speed $v$;
@@ -1806,104 +1553,45 @@ Within the interior regime, $r^\star$:
 \end{enumerate}
 \end{theorem}
 
-Suppose a nearby sensor has already reported a new reading when an older
-reading arrives from farther away. To form a synchronized snapshot, the agent
-uses an older reading from the nearby sensor too. This is why widening the
-snapshot can hurt. An agent that keeps both readings can always ignore the
-distant one, so widening its access cannot increase its optimal decision cost.
-
 \begin{proof}
-
-For any omission law $\eta_S(r)=\eta_0e^{-2r/\ell_c}$ with
-$0<\eta_0<1$, minimizing \eqref{eq:radius_regret_master} under linear delay
-is equivalent to maximizing
+For a general exponential omission curve $\eta_S(r)=\eta_0e^{-2r/\ell_c}$,
+with $0<\eta_0<1$, differentiation gives
 \[
-    g(r)=e^{-2r/L_T}-\eta_0e^{-2r(1/L_T+1/\ell_c)}.
+G'(r)=2e^{-2r/(vT)}\left[
+\eta_0\left(\frac{1}{vT}+\frac{1}{\ell_c}\right)e^{-2r/\ell_c}
+-\frac{1}{vT}\right].
 \]
-Differentiation gives
-\[
-    g'(r)=2e^{-2r/L_T}
-    \left[\eta_0\left(\frac{1}{L_T}+\frac{1}{\ell_c}\right)
-    e^{-2r/\ell_c}-\frac{1}{L_T}\right].
-\]
-The bracket is strictly decreasing and has a negative limit, so $g'$ changes
-sign at most once, from positive to negative. If its value at zero is
-nonpositive, radius zero is the unique optimum; otherwise the unique
-stationary point is the optimum.
-
-Thus the general exponential law gives
+The bracket is strictly decreasing and has a negative limit, so the
+derivative changes sign at most once, from positive to negative.
+If its value at zero is nonpositive, zero is the unique optimum;
+otherwise the unique crossing is the optimum. Solving for the crossing
+and imposing a radius cap $D$ gives
 \begin{equation}
-    r^\star=\frac{\ell_c}{2}
-       \left[\log\!\left(\eta_0\left(1+\frac{L_T}{\ell_c}\right)\right)\right]_+,
-    \label{eq:generic_exponential_rstar}
+r^\star=\frac{\ell_c}{2}
+\left[\log\!\left(\eta_0\left(1+\frac{vT}{\ell_c}\right)\right)\right]_+,
+\qquad r_D^\star=\min\{D,r^\star\}.
+\label{eq:generic_exponential_rstar}
 \end{equation}
-and a maximum allowed radius $D$ gives
-\begin{equation}
-    r_D^\star=\min\{D,r^\star\}.
-    \label{eq:capped_generic_rstar}
-\end{equation}
-Substituting $\eta_0=\ell_c/(\ell_c+2\ell_s)$ gives
-\eqref{eq:canonical_dimensionless_law}--\eqref{eq:positive_radius_condition}.
-The cap $D$ limits how far each agent may look, but the environment remains an
-infinite line. In particular $\eta_S(D)=\eta_0e^{-2D/\ell_c}>0$. Unlike the
-finite-graph endpoint $r=\operatorname{diam}(G)$, the capped radius still omits
-decision-relevant state (compare Fig.~\ref{fig:radius-regret}, right panel).
-
-In the positive-radius regime,
-$\partial r^\star/\partial L_T=\ell_c/[2(\ell_c+L_T)]>0$ and
-$\partial r^\star/\partial\ell_s=-\ell_c/(\ell_c+2\ell_s)<0$.
-Since $L_T=vT$, these establish the first three comparative statics.
-For the fourth, write the difference of logarithms as an integral.
-
-When $L_T>2\ell_s$ this gives
-\begin{equation}
-    r^\star
-    =
-    \frac{1}{2}
-    \int_{2\ell_s}^{L_T}
-    \frac{
-        \ell_c
-    }{
-        \ell_c+s
-    }
-    ds.
-    \label{eq:rstar_integral_representation}
-\end{equation}
-The integrand $\ell_c/(\ell_c+s)=1-s/(\ell_c+s)$ is strictly increasing
-in $\ell_c$ for every $s>0$, proving that
-$r^\star$ increases with the range over which remote state affects the
-desired decision.
+Substituting $\eta_0=\ell_c/(\ell_c+2\ell_s)$ yields the stated radius
+and positivity threshold. In the positive-radius regime,
+$\partial r^\star/\partial(vT)=\ell_c/[2(\ell_c+vT)]>0$ and
+$\partial r^\star/\partial\ell_s=-\ell_c/(\ell_c+2\ell_s)<0$,
+which establish the first three comparative statics.
+The integral argument in Appendix~\ref{app:technical-canonical} establishes
+monotonicity in $\ell_c$.
 \end{proof}
 
-Theorem~\ref{thm:canonical_optimal_radius} identifies three physical length
-scales:
+Equation~\eqref{eq:generic_exponential_rstar} also covers the free-$\eta_0$
+curves in Fig.~\ref{fig:radius-regret}; its right panel reaches the widest
+allowed radius on an infinite field and still omits information beyond $D$.
+The threshold $vT>2\ell_s$ has a direct interpretation: when nearby states
+are strongly correlated, the local reading already tells the agent more,
+so propagation must be faster before a wider view pays.
 
-\begin{equation}
-    \boxed{
-    \underbrace{\ell_s}_{\text{spatial correlation}}
-    \qquad
-    \underbrace{\ell_c}_{\text{decision relevance}}
-    \qquad
-    \underbrace{L_T=vT}_{\text{temporal propagation}}.
-    }
-    \label{eq:three_length_scales}
-\end{equation}
-
-At radius zero, $m_S(0)=1/\ell_s$ and $m_T=2/L_T$, explaining why the
-threshold $L_T>2\ell_s$ is independent of $\ell_c$. Stronger spatial
-correlation lowers omission at each radius: the local value already predicts
-more of the decision-relevant field, reducing the gain from a wider snapshot.
-
-Two limits clarify the radius law. In the positive-radius regime,
-$\ell_c\gg L_T,\ell_s$ gives $r^\star\approx(L_T-2\ell_s)/2$,
-whereas $\ell_c\ll L_T,\ell_s$ gives
-$r^\star\approx(\ell_c/2)\log(L_T/(2\ell_s))$.
-
-On a finite graph, Theorem~\ref{thm:spatiotemporal_composition} and minimization
-over integer radii remain exact, with the one-hop comparison
-\eqref{eq:discrete_radius_improvement}--\eqref{eq:discrete_radius_log_improvement}
-as the discrete form of marginal balance; Eq.~\eqref{eq:canonical_optimal_radius}
-is the closed-form counterpart on the homogeneous line.
+When $\ell_c\gg vT,\ell_s$ and $vT>2\ell_s$,
+$r^\star\to(vT-2\ell_s)/2$ as $\ell_c\to\infty$ with $vT,\ell_s$ fixed.
+Even as increasingly distant states matter to the decision, propagation
+delay limits how far the agent should look.
 
 \section{Numerical Illustrations}
 \label{sec:numerical-evaluation}

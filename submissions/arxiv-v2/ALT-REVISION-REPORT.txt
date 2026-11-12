@@ -1,0 +1,125 @@
+Alternative manuscript comparison
+=================================
+
+Baseline: revision h, main commit 69c6e62217a04b63adcd21ae79a204ee3f4cfcbb.
+Specification: major-revision.md in this directory.
+Outputs: main-alt.tex, technical-appendices-alt.tex, tina-v2-alt.pdf;
+         companion-alt.tex, appendices-alt.tex, tina-v2-alt-companion.pdf.
+
+The alternative leads with the conditional-mean model and elementary
+spatiotemporal composition proof. It retains arbitrary positive-definite Q
+and optimization over all admissible finite-second-moment policies. The
+Gaussian spatial model is confined to the canonical specialization. Formal
+projection machinery remains in the submission PDF. Per the new revision
+specification, the OU differential equation is an appendix special case in
+this alternative; it remains in the main text of unchanged revision h.
+
+Result-preservation ledger
+-------------------------
+Baseline content/location           | Alternative location          | Status
+------------------------------------|-------------------------------|--------------------------
+Projection Lemma 1, Sec. 2/App. D    | Lemma 2, Appendix A           | Moved; complete proof and broader fixed-epoch model retained
+Coupled normal equations, App. D    | Corollary 2, Appendix A       | Moved; proof retained
+Innovation Lemma 2, Sec. 3.2        | Theorem 1 proof, Sec. 3       | Absorbed into elementary expansion; assumptions explicit
+Stale-global Theorem 1              | Corollary 1, Sec. 3.1         | Special-case consequence; non-Gaussian scope retained
+Crossover Theorem 2                | Theorem 2, Sec. 3.1           | Retained; strict, equality and endpoint cases explicit
+Aggregate Proposition 1, Sec. 3.4  | Proposition 1, Sec. 3.2/App. B| Proof simplified; policy, both regrets, omission and both thresholds retained
+Composition Theorem 3, Sec. 4      | Theorem 1, Sec. 3             | Promoted; general Q, all rules, stationary conditional-mean assumptions
+Decision relevance, Sec. 4         | Sec. 2.1 and Figure 3         | Retained
+Marginal Proposition 2, Sec. 5.1   | Proposition 2, Sec. 4.1       | Retained; single-crossing qualification and discrete comparison
+Exponential radius calculation    | Proposition 3, Sec. 4.2       | Explicit generic result; global optimum, boundary and cap proved
+Canonical Lemma 3/Theorem 4        | Lemma 1/Theorem 3, Sec. 4.3   | Retained; derived omission, threshold, statics and broad-decision limit
+Canonical detailed calculation B  | Appendix C                    | Moved; complete calculation retained
+Numerical illustrations, Sec. 6    | Sec. 5                        | Verbatim; all four figure environments and assets unchanged
+Numerical reproducibility, App. C  | Appendix D                    | Moved; finite-graph parameters/instructions retained
+Related work, Sec. 7               | Sec. 6                        | Verbatim
+Discussion, Sec. 8                 | Sec. 7                        | Updated to match non-Gaussian scope; limitations retained
+
+No scientific result was deleted. Repeated scaffolding and the body notation
+and assumptions tables were removed in favor of definitions at use. The
+general fixed-epoch result is distinct from the affine temporal composition
+law and the specialized Gaussian infinite-line radius theorem. The finite
+graph experiment invokes the composition law, not the canonical radius formula.
+
+Actual PDF lengths
+------------------
+                                   Revision h     Alternative
+Through references                 25 pages       22 pages
+Submission appendices               6 pages        8 pages
+Total paper                        31 pages       30 pages
+Separate companion                  8 pages        8 pages
+
+Validation and reproduction
+---------------------------
+Run from the repository root:
+  python submissions/arxiv-v2/build-alt.py
+  python submissions/arxiv-v2/verify-alt.py
+
+The build uses separate build-alt products and does not overwrite v2-h.
+MiKTeX required permission to access its installed configuration/cache.
+Main and companion compiled successfully with no unresolved references,
+undefined citations, duplicate labels, or overfull boxes. All 30 main and
+8 companion pages were rendered and reviewed as contact sheets; central
+proof pages and the changed coupling page were additionally inspected at
+full page resolution. No clipping or overlapping content was observed.
+
+Existing baseline checks also passed:
+  python papers/arxiv-v2/verify_revision.py
+  python -m unittest discover -s tests -v  (25 tests)
+The baseline source closure was compiled separately in tmp/alt-baseline,
+confirming 31 main and 8 companion pages without overwriting the originals.
+
+New deterministic regression results are in alt-verification.json:
+- Non-Gaussian finite-state, unrestricted-table policy optimization with
+  non-diagonal Q: local, full, and no observations; a=0,.05,.25,.6,.95,1.
+  Maximum composition-regret discrepancy: 3.11e-15. The a=0 case checks
+  the independent-snapshot limiting law, not an invertible rescaling.
+  The local optimizer is non-affine (affine-fit residual 0.0757); innovation
+  conditional energy varies with the old state (range 0.5376).
+- Aggregate formulas: 27 finite-dimensional cases, including zero coupling;
+  maximum regret discrepancy 2.00e-15.
+- Generic radius: local, interior, capped, and derivative-zero boundary
+  cases agree with direct scalar optimization including endpoints.
+- Canonical substitution, threshold, comparative statics with varying
+  eta_0, and broad-decision asymptote pass.
+- Original finite-graph routines evaluate all integer radii through each
+  diameter. Recomputed regret curves match archived values within 1e-12;
+  minimizing radii are path 2, ring 2, grid 3, geometric 2.
+- All 130 baseline tracked files in the manuscript/numerics scope retain
+  their recorded SHA256 hashes, including original PDFs, figure assets,
+  source code and data. No figure/data differences require explanation.
+- Numerical and related-work sections and all four figure environments
+  are textually identical to the baseline. Main PDF references resolve
+  within its own source closure; no essential proof depends on the companion.
+
+Limitations and unresolved issues
+---------------------------------
+No unresolved build, reference, or mathematical discrepancy was found.
+The regression checks supplement proof review; they are not proofs or new
+publication experiments. No independent human review was performed. The
+four finite-graph curves were recomputed; the full original simulation
+suite was not rerun, and preserved assets/data were checked by hashes.
+At initial delivery this was a separate local alternative, without a commit,
+push, or merge. See the subsequent publication update below.
+
+2026-11-12 editorial follow-up
+-----------------------------
+Reduced repeated non-Gaussian scope reminders to three explicit statements:
+abstract, temporal assumptions, and the general fixed-epoch appendix.
+The canonical section explicitly introduces its Gaussian specialization.
+Equations and theorem statements are unchanged. Rebuilt both PDFs and reran
+verify-alt.py successfully; all pages were rendered and visually reviewed.
+Page counts remain 30 and 8, and revision h remains unchanged.
+
+2026-11-12 publication update
+----------------------------
+Replaced the abstract with the author's supplied text verbatim. Added the
+Section 3.1 paragraph on independent stationary OU modes with unequal
+coherence times, restricted to a complete old snapshot and linked to the
+two-server example in Section 2.4. The loss weights sum to one and require
+positive no-information loss. A direct two-mode quadratic check at five
+delays agreed within 1.63e-16. Rebuilt both PDFs, reran verify-alt.py, and
+inspected the abstract and new paragraph in the rendered PDF. Both builds
+remain 30/8 pages with resolved references. The alternative source, PDFs,
+specification and supporting verification files are now prepared for the
+author-requested commit and push to main; v2-h files remain unchanged.

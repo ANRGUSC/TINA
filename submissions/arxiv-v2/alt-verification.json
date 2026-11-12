@@ -1,0 +1,172 @@
+{
+  "baseline_commit": "69c6e62217a04b63adcd21ae79a204ee3f4cfcbb",
+  "baseline_files_unchanged": 130,
+  "all_references_resolve_in_submission_and_companion": true,
+  "numerical_section_and_related_work_verbatim": true,
+  "all_four_figure_environments_verbatim": true,
+  "non_gaussian_all_policy_checks": [
+    {
+      "observations": "local",
+      "a": 0.0,
+      "regret_error": 2.6645352591003757e-15,
+      "policy_error": 7.914718146405024e-17
+    },
+    {
+      "observations": "local",
+      "a": 0.05,
+      "regret_error": 4.440892098500626e-16,
+      "policy_error": 1.5265566588595902e-16
+    },
+    {
+      "observations": "local",
+      "a": 0.25,
+      "regret_error": 8.881784197001252e-16,
+      "policy_error": 2.220446049250313e-16
+    },
+    {
+      "observations": "local",
+      "a": 0.6,
+      "regret_error": 1.7763568394002505e-15,
+      "policy_error": 3.3306690738754696e-16
+    },
+    {
+      "observations": "local",
+      "a": 0.95,
+      "regret_error": 7.771561172376096e-16,
+      "policy_error": 2.220446049250313e-16
+    },
+    {
+      "observations": "local",
+      "a": 1.0,
+      "regret_error": 0.0,
+      "policy_error": 0.0
+    },
+    {
+      "observations": "full",
+      "a": 0.0,
+      "regret_error": 2.6645352591003757e-15,
+      "policy_error": 2.2111616137450851e-16
+    },
+    {
+      "observations": "full",
+      "a": 0.05,
+      "regret_error": 8.881784197001252e-16,
+      "policy_error": 2.0816681711721685e-16
+    },
+    {
+      "observations": "full",
+      "a": 0.25,
+      "regret_error": 1.3322676295501878e-15,
+      "policy_error": 2.7755575615628914e-16
+    },
+    {
+      "observations": "full",
+      "a": 0.6,
+      "regret_error": 2.220446049250313e-15,
+      "policy_error": 3.3306690738754696e-16
+    },
+    {
+      "observations": "full",
+      "a": 0.95,
+      "regret_error": 2.7755575615628914e-17,
+      "policy_error": 8.881784197001252e-16
+    },
+    {
+      "observations": "full",
+      "a": 1.0,
+      "regret_error": 0.0,
+      "policy_error": 0.0
+    },
+    {
+      "observations": "none",
+      "a": 0.0,
+      "regret_error": 2.6645352591003757e-15,
+      "policy_error": 3.9703178147356494e-17
+    },
+    {
+      "observations": "none",
+      "a": 0.05,
+      "regret_error": 3.1086244689504383e-15,
+      "policy_error": 1.217727014685691e-16
+    },
+    {
+      "observations": "none",
+      "a": 0.25,
+      "regret_error": 8.881784197001252e-16,
+      "policy_error": 9.968551805613202e-17
+    },
+    {
+      "observations": "none",
+      "a": 0.6,
+      "regret_error": 2.220446049250313e-15,
+      "policy_error": 5.199283882927669e-17
+    },
+    {
+      "observations": "none",
+      "a": 0.95,
+      "regret_error": 2.220446049250313e-15,
+      "policy_error": 1.2392278126977977e-16
+    },
+    {
+      "observations": "none",
+      "a": 1.0,
+      "regret_error": 0.0,
+      "policy_error": 0.0
+    }
+  ],
+  "nonlinear_local_policy_affine_fit_residual": 0.07570478514626322,
+  "innovation_conditional_energy_range": 0.5376000000000002,
+  "aggregate_cases": 27,
+  "aggregate_max_regret_error": 1.9984014443252818e-15,
+  "generic_radius_cases": [
+    {
+      "case": "local",
+      "closed_radius": 0.0,
+      "numerical_radius": 0.0
+    },
+    {
+      "case": "interior",
+      "closed_radius": 0.626381484247684,
+      "numerical_radius": 0.6263814756085728
+    },
+    {
+      "case": "capped",
+      "closed_radius": 2.0,
+      "numerical_radius": 2.0
+    },
+    {
+      "case": "zero_derivative",
+      "closed_radius": 0.0,
+      "numerical_radius": 0.0
+    }
+  ],
+  "canonical_substitution_threshold_comparative_statics_and_limit": "pass",
+  "finite_graph_exhaustive_search": {
+    "path": {
+      "radius_count": 64,
+      "diameter": 63,
+      "rstar": 2
+    },
+    "ring": {
+      "radius_count": 33,
+      "diameter": 32,
+      "rstar": 2
+    },
+    "grid": {
+      "radius_count": 15,
+      "diameter": 14,
+      "rstar": 3
+    },
+    "geometric": {
+      "radius_count": 9,
+      "diameter": 8,
+      "rstar": 2
+    }
+  },
+  "source_sha256": {
+    "main-alt.tex": "f590a2e890bdf8b12faab1aa921db92cb693c1ee439b38fd1ee8fe5b595b942b",
+    "technical-appendices-alt.tex": "e9c724d438a9475b9b43caf68f00ea569b1fb540451660fb47bed7e3ba01d277",
+    "appendices-alt.tex": "d1513250d61a0fe30f6a14a1ab3e93da1993b07dd9588e3f4be4ee2c2b46be0d",
+    "companion-alt.tex": "cbfac0948298846a7d95f0d1fec80ab711566e1bdad651b4839ed44d36e3bec9"
+  }
+}

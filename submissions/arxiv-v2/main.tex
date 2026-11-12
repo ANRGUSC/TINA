@@ -175,7 +175,9 @@ Section~\ref{sec:model} formalizes architectures and regret.
 Section~\ref{sec:fresh_local_global} compares the fresh-local and stale-global
 endpoints, and Sections~\ref{sec:spatiotemporal_predictability}--
 \ref{sec:optimal_coordination_scale} develop the radius family and its optimal
-coordination scale. Section~\ref{sec:numerical-evaluation} illustrates the crossover, the radius tradeoff, and decision relevance on a fixed ring, Section~\ref{sec:related_work} situates the work, and
+coordination scale. Section~\ref{sec:numerical-evaluation} illustrates the crossover, the radius tradeoff, and decision relevance on a fixed ring.
+It also evaluates delayed neighborhoods on four finite, noncanonical graph geometries.
+Section~\ref{sec:related_work} situates the work, and
 Section~\ref{sec:discussion_conclusions} concludes.
 
 \section{Networked Decisions and Information Architectures}
@@ -1234,12 +1236,12 @@ delay limits how far the agent should look.
 \section{Numerical Illustrations}
 \label{sec:numerical-evaluation}
 
-We ask three questions: when fresh local information beats a delayed global
-view, why an intermediate snapshot radius can be best, and whether changing
-the decision alone can change the best radius on a fixed network. The
+We ask when fresh local information beats a delayed global view, why an
+intermediate snapshot radius can be best, whether changing the decision alone
+can change the best radius, and how the framework applies across graph geometries. The
 examples use common-rate Gaussian-affine environments.
 Appendix~\ref{app:technical-numerics} gives the settings and sampling
-procedures needed to reproduce the three figures.
+procedures needed to reproduce the four figures.
 
 \subsection{When does fresh local information beat a delayed global view?}
 \label{subsec:numerical-temporal-crossover}
@@ -1340,6 +1342,49 @@ by each operator's open-loop regret, with optimal radii 1, 2, and 5 hops
 marked. Right: raw state correlation, identical across operators.
 The graph, covariance, temporal coherence, and per-hop latency are fixed.}
 \label{fig:decision-relevance}
+\end{figure}
+
+\subsection{Does the framework extend beyond the canonical spatial model?}
+\label{subsec:numerical-general-graphs}
+
+The closed-form radius in Theorem~\ref{thm:canonical_optimal_radius} assumes
+a homogeneous infinite line. To illustrate the more general composition law
+of Theorem~\ref{thm:spatiotemporal_composition}, we return to the finite-graph
+quadratic model and compare one 64-node path, ring, $8\times8$ grid, and
+random geometric graph. All use $Q=I$, the Laplacian covariance in
+Eq.~\eqref{eq:graph_spectral_covariance} with $(\kappa_s,\nu)=(0.8,1.5)$,
+and average marginal variance one. The reference setting fixes $T=5$,
+decision range $\ell_c=2$, and delay $\tau(r)=0.12r$.
+
+For each graph, the row-normalized operator
+$K_{ij}\propto e^{-d_G(i,j)/\ell_c}$ defines the desired action.
+Gaussian conditional covariance gives each agent's residual action variance
+given its fresh neighborhood. Summing these variances and dividing by
+$\operatorname{tr}(K\Sigma_S K^\top)$ gives $\eta_S(r)$.
+The common-rate composition law then gives delayed regret. We evaluate every
+integer radius from zero through the graph diameter and select the minimum,
+without assuming unimodality or fitting an exponential omission curve.
+
+Figure~\ref{fig:general-graphs} gives reference optima of 2, 2, 3, and 2 hops,
+respectively: all are interior. Across the displayed decision-range sweep,
+the path and ring also have local optima at $\ell_c=0.7$; none of the displayed
+settings selects the full graph. The sampled coherence-time and decision-range
+sweeps weakly increase the preferred radius on these four instances.
+These calculations illustrate architecture selection on finite graphs when
+no closed-form radius is available. They use synchronized snapshots and
+common-rate Gaussian dynamics; they neither extend the canonical radius
+formula to these geometries nor establish a new theorem.
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
+\caption{Composition-law evaluation on four 64-node graphs. Top: spatial
+omission and delayed regret with $Q=I$, $T=5$, $\ell_c=2$, and delay $0.12r$;
+curves show integer radii up to 16, or the diameter if smaller, while
+optimization uses every radius. Bottom: varying $T$ or $\ell_c$ alone,
+holding each graph and covariance fixed. Markers show sampled integer
+optima, not transition locations. The canonical radius formula is not used.}
+\label{fig:general-graphs}
 \end{figure}
 
 \section{Related Work}
@@ -1444,6 +1489,9 @@ Graph distance determines what it takes to acquire information; the decision
 determines whether that information is useful. This suggests selecting remote
 observations for their effect on the action, rather than expanding scope
 solely because remote states remain correlated.
+Figure~\ref{fig:general-graphs} also illustrates the common-rate composition
+law on finite path, ring, grid, and geometric graphs beyond the canonical
+spatial model, with optimal radii found by exhaustive comparison.
 
 \paragraph{Scope and limitations.}
 The environment evolves exogenously: actions do not change its future state

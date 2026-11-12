@@ -227,7 +227,7 @@
  \begin{enumerate}
      \item We derive an exact \emph{fresh-local versus stale-global crossover
      law} for two pure information regimes, expressed through decision-relevant
-@@ -243,22 +171,11 @@
+@@ -243,22 +171,13 @@
      communication graph and decision geometry therefore need not coincide.
  \end{enumerate}
  
@@ -247,11 +247,13 @@
  \ref{sec:optimal_coordination_scale} develop the radius family and its optimal
 -coordination scale. Section~\ref{sec:numerical-evaluation} reports numerical
 -checks, Section~\ref{sec:related_work} situates the work, and
-+coordination scale. Section~\ref{sec:numerical-evaluation} illustrates the crossover, the radius tradeoff, and decision relevance on a fixed ring, Section~\ref{sec:related_work} situates the work, and
++coordination scale. Section~\ref{sec:numerical-evaluation} illustrates the crossover, the radius tradeoff, and decision relevance on a fixed ring.
++It also evaluates delayed neighborhoods on four finite, noncanonical graph geometries.
++Section~\ref{sec:related_work} situates the work, and
  Section~\ref{sec:discussion_conclusions} concludes.
  
  \section{Networked Decisions and Information Architectures}
-@@ -273,94 +190,37 @@
+@@ -273,94 +192,37 @@
  which determines what information is available to each agent and with what
  delay. These three structures need not coincide.
  
@@ -373,7 +375,7 @@
  
  The agents share a common per-stage cost
  \begin{equation}
-@@ -376,25 +236,10 @@
+@@ -376,25 +238,10 @@
  where $Q\in\mathbb{R}^{d\times d}$ is symmetric and positive definite,
  $b:\mathbb{R}^{m}\rightarrow\mathbb{R}^{d}$ is measurable, and
  $c:\mathbb{R}^{m}\rightarrow\mathbb{R}$ is an additive state-dependent term.
@@ -403,7 +405,7 @@
  
  If the complete current state $\theta_t$ is available without information
  constraints, the unique optimal joint action is
-@@ -408,6 +253,19 @@
+@@ -408,6 +255,19 @@
  \end{equation}
  We call $x_t^\star$ the \emph{clairvoyant} or \emph{full-information}
  decision.
@@ -423,7 +425,7 @@
  
  For the affine specializations used to obtain closed forms, we write
  \begin{equation}
-@@ -424,18 +282,6 @@
+@@ -424,18 +284,6 @@
  the resulting decision-sensitivity operator. The general projection results do
  not require this affine form.
  
@@ -442,7 +444,7 @@
  
  \subsection{Information Architectures}
  \label{subsec:architectures}
-@@ -456,102 +302,37 @@
+@@ -456,102 +304,37 @@
  A decision rule for agent $i$ is admissible only if it is measurable with
  respect to $\mathcal{G}_i$.
  
@@ -576,7 +578,7 @@
  
  For a given architecture $\mathcal{A}$, define the admissible joint-policy set
  \begin{equation}
-@@ -565,63 +346,32 @@
+@@ -565,63 +348,32 @@
      \right\}.
      \label{eq:policy_subspace}
  \end{equation}
@@ -662,7 +664,7 @@
  
  If two architectures $\mathcal{A}$ and $\mathcal{A}'$ satisfy
  \begin{equation}
-@@ -644,42 +394,16 @@
+@@ -644,42 +396,16 @@
  freshness. The interesting architectural tradeoff arises because increasing
  spatial scope generally also increases information age.
  
@@ -713,7 +715,7 @@
  
  \begin{lemma}[Fixed-architecture quadratic projection; Radner-type specialization]
  \label{lem:radner_projection}
-@@ -715,135 +439,25 @@
+@@ -715,135 +441,25 @@
  \cite{radner1962team} to the quadratic model used here.
  \end{lemma}
  
@@ -864,7 +866,7 @@
  \renewcommand{\arraystretch}{0.96}
  \caption{Core notation. Quantities labeled as shares are normalized by
  $R_\infty$.}
-@@ -855,14 +469,18 @@
+@@ -855,14 +471,18 @@
  $n$ & number of agents & $G=(V,E)$ & network or geometry graph \\
  $\theta_t$ & exogenous environment state & $x_t$ & joint action \\
  $Q$ & positive-definite action-coupling matrix & $B$ & affine state-to-objective map \\
@@ -885,7 +887,7 @@
  \bottomrule
  \end{tabular}
  \end{table}
-@@ -870,76 +488,50 @@
+@@ -870,76 +490,50 @@
  \section{Fresh-Local versus Stale-Global Information}
  \label{sec:fresh_local_global}
  
@@ -1004,7 +1006,7 @@
  \end{equation}
  
  For reference, define also the \emph{open-loop} architecture, whose decision is
-@@ -949,215 +541,119 @@
+@@ -949,215 +543,119 @@
      R_\infty
      \triangleq
      \frac{1}{2}
@@ -1318,7 +1320,7 @@
  Ornstein--Uhlenbeck process
  \begin{equation}
      d\theta_t
-@@ -1168,74 +664,21 @@
+@@ -1168,74 +666,21 @@
      \right)dt
      +
      \sqrt{\frac{2}{T}}\,
@@ -1403,7 +1405,7 @@
  \begin{equation}
      \boxed{
      R_{\mathrm{glob}}(\tau)
-@@ -1254,7 +697,7 @@
+@@ -1254,7 +699,7 @@
      \operatorname{tr}
      \left(
          B^\top Q^{-1}B\,
@@ -1412,7 +1414,7 @@
      \right).
      \label{eq:OU_Rinf}
  \end{equation}
-@@ -1270,70 +713,25 @@
+@@ -1270,70 +715,25 @@
  \end{theorem}
  
  \begin{proof}
@@ -1496,7 +1498,7 @@
  \eqref{eq:OU_etaT} yields the first main architectural result.
  
  \begin{theorem}[Fresh-local versus stale-global crossover]
-@@ -1352,64 +750,23 @@
+@@ -1352,64 +752,23 @@
      }
      \label{eq:OU_crossover}
  \end{equation}
@@ -1573,7 +1575,7 @@
  
  \subsection{Role of Decision Coupling}
  \label{subsec:coupling_example}
-@@ -1446,11 +803,14 @@
+@@ -1446,11 +805,14 @@
      \label{eq:shared_resource_Q}
  \end{equation}
  
@@ -1589,7 +1591,7 @@
  \begin{equation}
      x_i^\star
      =
-@@ -1475,30 +835,7 @@
+@@ -1475,30 +837,7 @@
      \frac{\theta_i}{q+\gamma},
      \label{eq:optimal_local_shared}
  \end{equation}
@@ -1621,7 +1623,7 @@
  \begin{equation}
      \boxed{
      \eta_S(0)
-@@ -1517,40 +854,23 @@
+@@ -1517,40 +856,23 @@
  \end{proposition}
  
  \begin{proof}
@@ -1674,7 +1676,7 @@
  \begin{equation}
      \boxed{
      \rho^\star(\gamma,n)
-@@ -1595,22 +915,9 @@
+@@ -1595,22 +917,9 @@
      }
      \label{eq:large_n_threshold}
  \end{equation}
@@ -1700,7 +1702,7 @@
  
  When $\gamma=0$, the decisions decouple and
  $\eta_S(0)=0$: current local information is sufficient, so any
-@@ -1621,1491 +928,261 @@
+@@ -1621,1491 +930,261 @@
  tolerate increasingly stale-global information before abandoning global
  coordination in favor of fresh-local decisions.
  
@@ -3403,7 +3405,7 @@
  \begin{enumerate}
      \item increases with the temporal coherence time $T$;
      \item increases with the information-propagation speed $v$;
-@@ -3115,429 +1192,155 @@
+@@ -3115,429 +1194,198 @@
  \end{theorem}
  
  \begin{proof}
@@ -3627,12 +3629,12 @@
 -\end{table}
 -
 -\subsection{Temporal Scaling and the Local--Global Crossover}
-+We ask three questions: when fresh local information beats a delayed global
-+view, why an intermediate snapshot radius can be best, and whether changing
-+the decision alone can change the best radius on a fixed network. The
++We ask when fresh local information beats a delayed global view, why an
++intermediate snapshot radius can be best, whether changing the decision alone
++can change the best radius, and how the framework applies across graph geometries. The
 +examples use common-rate Gaussian-affine environments.
 +Appendix~\ref{app:technical-numerics} gives the settings and sampling
-+procedures needed to reproduce the three figures.
++procedures needed to reproduce the four figures.
 +
 +\subsection{When does fresh local information beat a delayed global view?}
  \label{subsec:numerical-temporal-crossover}
@@ -3909,10 +3911,11 @@
 +The graph, covariance, temporal coherence, and per-hop latency are fixed.}
  \label{fig:decision-relevance}
  \end{figure}
--
+ 
 -\subsection{Finite Graphs beyond the Canonical Geometry}
--\label{subsec:numerical-general-graphs}
--
++\subsection{Does the framework extend beyond the canonical spatial model?}
+ \label{subsec:numerical-general-graphs}
+ 
 -Experiment 6 asks whether the conditional-variance construction and discrete
 -radius comparison remain usable when the geometry is not the homogeneous line
 -assumed by the canonical formula.  We considered one 64-node graph of each of
@@ -3941,8 +3944,37 @@
 -the archived neighbor differences quantify such shallow minima.
 -
 -\begin{figure}[p]
--\centering
--\includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
++The closed-form radius in Theorem~\ref{thm:canonical_optimal_radius} assumes
++a homogeneous infinite line. To illustrate the more general composition law
++of Theorem~\ref{thm:spatiotemporal_composition}, we return to the finite-graph
++quadratic model and compare one 64-node path, ring, $8\times8$ grid, and
++random geometric graph. All use $Q=I$, the Laplacian covariance in
++Eq.~\eqref{eq:graph_spectral_covariance} with $(\kappa_s,\nu)=(0.8,1.5)$,
++and average marginal variance one. The reference setting fixes $T=5$,
++decision range $\ell_c=2$, and delay $\tau(r)=0.12r$.
++
++For each graph, the row-normalized operator
++$K_{ij}\propto e^{-d_G(i,j)/\ell_c}$ defines the desired action.
++Gaussian conditional covariance gives each agent's residual action variance
++given its fresh neighborhood. Summing these variances and dividing by
++$\operatorname{tr}(K\Sigma_S K^\top)$ gives $\eta_S(r)$.
++The common-rate composition law then gives delayed regret. We evaluate every
++integer radius from zero through the graph diameter and select the minimum,
++without assuming unimodality or fitting an exponential omission curve.
++
++Figure~\ref{fig:general-graphs} gives reference optima of 2, 2, 3, and 2 hops,
++respectively: all are interior. Across the displayed decision-range sweep,
++the path and ring also have local optima at $\ell_c=0.7$; none of the displayed
++settings selects the full graph. The sampled coherence-time and decision-range
++sweeps weakly increase the preferred radius on these four instances.
++These calculations illustrate architecture selection on finite graphs when
++no closed-form radius is available. They use synchronized snapshots and
++common-rate Gaussian dynamics; they neither extend the canonical radius
++formula to these geometries nor establish a new theorem.
++
++\begin{figure}[!htb]
+ \centering
+ \includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
 -\caption{Finite noncanonical graphs. Top: $\eta_S(r)$ computed from exact
 -Gaussian conditional covariances and the resulting regret under one common
 -normalized setting; lines join integer-radius evaluations. Bottom: exact
@@ -3950,13 +3982,19 @@
 -transition locations between those settings are inferred. Distinct marker
 -shapes identify coincident graph results. The canonical line closed form is
 -not used.}
--\label{fig:general-graphs}
--\end{figure}
++\caption{Composition-law evaluation on four 64-node graphs. Top: spatial
++omission and delayed regret with $Q=I$, $T=5$, $\ell_c=2$, and delay $0.12r$;
++curves show integer radii up to 16, or the diameter if smaller, while
++optimization uses every radius. Bottom: varying $T$ or $\ell_c$ alone,
++holding each graph and covariance fixed. Markers show sampled integer
++optima, not transition locations. The canonical radius formula is not used.}
+ \label{fig:general-graphs}
+ \end{figure}
 -\clearpage
  
  \section{Related Work}
  \label{sec:related_work}
-@@ -3548,12 +1351,15 @@
+@@ -3548,12 +1396,15 @@
  These distinctions frame the more specific connections developed below.
  
  \subsection{Static Team Decision Theory}
@@ -3975,7 +4013,7 @@
  
  \subsection{Distributed Optimization, Communication Constraints, and Scope}
  \label{subsec:related_distributed_control}
-@@ -3598,10 +1404,7 @@
+@@ -3598,10 +1449,7 @@
  
  Our setting differs in the decision problem: an exogenous-state static team,
  with the current full-information action as the benchmark and an architecture
@@ -3987,7 +4025,7 @@
  Ballotta, Arbelaiz, Gupta, Schenato, and Jovanovi\'c study a different but
  complementary question for spatially invariant dynamic plants: how delayed
  measurements from different spatial locations alter the spatial locality of the
-@@ -3610,83 +1413,57 @@
+@@ -3610,83 +1458,60 @@
  through prediction of an exogenously varying full-information decision.
  
  \subsection{Freshness and Age of Information}
@@ -4062,6 +4100,9 @@
 +determines whether that information is useful. This suggests selecting remote
 +observations for their effect on the action, rather than expanding scope
 +solely because remote states remain correlated.
++Figure~\ref{fig:general-graphs} also illustrates the common-rate composition
++law on finite path, ring, grid, and geometric graphs beyond the canonical
++spatial model, with optimal radii found by exhaustive comparison.
  
  \paragraph{Scope and limitations.}
 -The paper establishes an exogenous-state, static-team baseline. Environmental
@@ -4099,7 +4140,7 @@
  Nonquadratic or discrete decisions, state-dependent Hessians, and feasibility
  constraints such as nonnegativity, capacity, or simplex restrictions require
  different analytical tools. Outside the stated assumptions, one should work
-@@ -3697,15 +1474,9 @@
+@@ -3697,15 +1522,9 @@
  covariance, non-Gaussian evolution, nonlinear decisions, or mixed-age
  architectures; each remains an extension.
  
@@ -4118,7 +4159,7 @@
  
  \paragraph{Most important extensions.}
  A first extension is to price information acquisition explicitly. The present
-@@ -3742,6 +1513,12 @@
+@@ -3742,6 +1561,12 @@
  accept full responsibility for its contents.
  
  \paragraph{Code and Data Availability.}
@@ -4131,7 +4172,7 @@
  The manuscript source, numerical code, experiment configurations, processed
  reference results, and figure-generation pipeline are available in the public
  TINA repository at \url{https://github.com/ANRGUSC/TINA}
-@@ -3750,5 +1527,9 @@
+@@ -3750,5 +1575,9 @@
  \bibliographystyle{IEEEtran}
  \bibliography{references}
  

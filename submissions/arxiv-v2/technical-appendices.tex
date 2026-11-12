@@ -179,11 +179,11 @@ regime, proving the fourth comparative static.
 
 \section{Numerical reproducibility details}
 \label{app:technical-numerics}
-This section gives the settings and estimators for the three figures in
+This section gives the settings and estimators for the four figures in
 Section~\ref{sec:numerical-evaluation}. The crossover uses the exact coupled
 fresh-local rule; the radius curves use scalar variance composition; and
-the ring uses agentwise Gaussian conditioning with $Q=I$.
-Normalized scalar and ring losses use analytical open-loop regret
+the ring and four-geometry comparison use agentwise Gaussian conditioning with $Q=I$.
+Normalized scalar and graph losses use analytical open-loop regret
 $R_\infty$. The crossover instead uses paired sample means.
 Pointwise Monte Carlo means have 95\% normal intervals
 $\bar L\pm1.96s_L/\sqrt N$, with sample standard deviation $s_L$.
@@ -191,8 +191,8 @@ Conditioning uses linear solves rather than explicit matrix inverses.
 
 \begin{table}[H]
 \centering
-\caption{Settings for the three numerical illustrations. The shared-resource
-model fixes $q=1$; the ring covariance has average marginal variance one.}
+\caption{Settings for the four numerical illustrations. The shared-resource
+model fixes $q=1$; graph covariances have average marginal variance one.}
 \label{tab:numerical-parameters}
 \small
 \begin{tabular}{llll}
@@ -202,6 +202,7 @@ Figure & principal sweep & fixed setting/size & samples \\
 \ref{fig:local-global-phase} & 9 $\gamma/q$ values in $[0,10]$ & $n=5,10,25,100$ & $30{,}000$/setting \\
 \ref{fig:radius-regret} & $r/\ell_c\in[0,2]$ (1,001 points) & 3 regimes; $D/\ell_c=2$ & $50{,}000$/point \\
 \ref{fig:decision-relevance} & $\ell_c=0.7,2,6$ & 64-node ring; $T=6$ & $12{,}000$/check \\
+\ref{fig:general-graphs} & all integer radii; $T,\ell_c$ & four 64-node graphs & exact \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -252,7 +253,43 @@ draws are passed through the exact conditional policies; summed squared
 prediction errors are divided by $\operatorname{tr}(K\Sigma_SK^\top)$
 to estimate the omission share.
 
-\paragraph{Reproduction.}
+\paragraph{Finite noncanonical graphs (Fig.~\ref{fig:general-graphs}).}
+The original Experiment 6 uses a 64-node path and cycle, an $8\times8$
+grid without wraparound, and one connected random geometric graph.
+For the latter, NumPy's \texttt{default\_rng(20260839)} draws 64 independent
+uniform positions in $[0,1]^2$. Edges join pairs within Euclidean distance
+0.22; the construction increases this threshold by 0.02 until connected
+(0.22 suffices for this seed). Observation radii use hop distance in every
+graph. Their diameters are 63, 32, 14, and 8, respectively.
+There is no graph-ensemble average or Monte Carlo estimation in this experiment.
+
+The covariance is proportional to $(0.8^2I+L_G)^{-1.5}$, scaled to average
+marginal variance one. The target rows are
+$K_{ij}=e^{-d_G(i,j)/\ell_c}/\|e^{-d_G(i,\cdot)/\ell_c}\|_2$ and $Q=I$.
+For neighborhood $O_i=\mathcal N_r(i)$, the residual variance is
+$K_i\Sigma_S K_i^\top-c_i^\top\Sigma_{S,O_iO_i}^{-1}c_i$,
+where $c_i=\Sigma_{S,O_i,:}K_i^\top$; linear solves evaluate this expression.
+The sum divided by $\operatorname{tr}(K\Sigma_S K^\top)$ gives $\eta_S(r)$.
+We evaluate $1-e^{-2ar/T}(1-\eta_S(r))$ at every integer radius from zero
+through the diameter, using reference $(T,\ell_c,a)=(5,2,0.12)$.
+
+The plotted sweeps vary $T\in\{1.5,2.5,4,6,9,14\}$ or
+$\ell_c\in\{0.7,1.2,2,3.5,6\}$ alone. The original archive also retains
+per-hop delays $a\in\{0.05,0.08,0.12,0.18,0.28\}$ and covariance parameters
+$\kappa_s\in\{1.5,1,0.7,0.45,0.3\}$, each varied alone.
+Configuration \path{numerics/config/experiment_06.yaml} records experiment
+seed 20260828 and graph seed 20260839. The original driver is
+\path{numerics/experiments/exp06_general_graphs.py}, which calls
+\texttt{exp06()} in \path{numerics/experiments/run_all.py}.
+From the repository root, run \texttt{python scripts/verify\_graph\_restoration.py}
+to rerun that function in scratch space and compare both processed CSVs and
+all four raw graph archives under \path{numerics/results/}.
+The audit checks positive-definite covariances, conditioning through an
+independent residual-error calculation, and exhaustive integer-radius minima.
+Its report is \path{submissions/arxiv-v2/graph-restoration-verification.json}.
+The restored figure reuses the original PDF bytes.
+
+\paragraph{Reproduction of Figures~\ref{fig:local-global-phase}--\ref{fig:decision-relevance}.}
 The \href{https://github.com/ANRGUSC/TINA}{public TINA repository} retains
 the original experiment identifiers. Figures~\ref{fig:local-global-phase},
 \ref{fig:radius-regret}, and \ref{fig:decision-relevance} correspond to

@@ -2,7 +2,7 @@
 
 This is a local revision draft of [arXiv:2609.06351v1](https://arxiv.org/html/2609.06351v1), prepared September 26, 2026. It has not been submitted or published as v2.
 
-- [Read the current v2-h draft](tina-v2-h.pdf) (29 pages: 24 through references, followed by Appendices A-D on pages 25-29).
+- [Read the current v2-h draft](tina-v2-h.pdf) (31 pages: 25 through references, followed by Appendices A-D on pages 26-31).
 - [Earlier v2-g paper](tina-v2-g.pdf) and [companion](tina-v2-g-companion.pdf).
 - [Earlier v2-f paper](tina-v2-f.pdf) and [companion](tina-v2-f-companion.pdf).
 - [Earlier v2-e paper](tina-v2-e.pdf) and [companion](tina-v2-e-companion.pdf).
@@ -38,6 +38,8 @@ The build writes the two current revision-h PDFs above, with intermediate files 
 
 ## Completed checks
 
+- Targeted graph restoration in revision h: restored original Figure 6 as current Figure 4, following the decision-relevance figure, with a short Section 6.4 and Appendix C reproduction details. The manuscript grows by one page through references and one appendix page. Original figure bytes, existing figures, abstract, contributions, related work, theorem statements, and proofs are preserved. The OU equation remains in Section 3.2. `python scripts/verify_graph_restoration.py` reproduces the original experiment in scratch space: all 121 radius rows and 84 sweep rows agree with the archive to at most 2.34e-15, all graph inputs match, and an independent residual-error calculation validates conditioning. Reference optimal radii remain 2, 2, 3, and 2. See `../../submissions/arxiv-v2/graph-restoration-verification.json`. The original numerical code and archives are unchanged.
+
 - Revision h: compiled and visually inspected all 29 manuscript pages and 8 companion pages. References and citations resolve without duplicate labels or overfull boxes. Theorem 3 now leads Section 4; Appendix D retains the projection proof and coupled normal equations. Theorems 2 and 4 and Section 6 match revision g verbatim. Earlier PDFs and numerical assets remain unchanged.
 
 - Revision g: resolved cross-references, retained result numbering, unchanged numerical figure assets, preserved earlier PDFs, and inspected Section 5 and the Appendix B proof. Sections 1-4 are unchanged except the notation table and companion link target; Sections 6-8 are unchanged in source.
@@ -48,6 +50,6 @@ The build writes the two current revision-h PDFs above, with intermediate files 
 - The old and new canonical omission expressions agree to `1.11e-16`. Direct scalar minimization reproduces all 4,896 archived Experiment 4 grid optima; the closed form agrees with the archived theory to `2.22e-16`.
 - The current PDFs compile without unresolved references or citations, duplicate labels, or overfull boxes. Rendered pages and cross-document link destinations were checked.
 
-No numerical experiments were regenerated. The initial simplification produced 39 pages; the clarity pass produced 52 pages. Revision d retains the 32-page paper and reduces the supplement from 7 to 5 pages. The 52-page PDF remains available in commit `25185a8` at its historical path `papers/arxiv-v2/tina-v2.pdf`.
+The graph-restoration audit reruns only Experiment 6 in scratch space; the publication figure is reused unchanged. Earlier simplification passes did not regenerate experiments. The initial simplification produced 39 pages; the clarity pass produced 52 pages. Revision d retains the 32-page paper and reduces the supplement from 7 to 5 pages. The 52-page PDF remains available in commit `25185a8` at its historical path `papers/arxiv-v2/tina-v2.pdf`.
 
-Each substantive future revision should use a new letter, preserving the earlier PDFs. The current source and build target are revision h. All earlier PDFs remain preserved.
+The current source and build target remain revision h at the author's explicit request for this targeted restoration; its pre-restoration PDF is retained in commit `751902f`. Earlier lettered PDFs remain preserved.

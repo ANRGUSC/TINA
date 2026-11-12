@@ -1,0 +1,145 @@
+{
+  "configuration": {
+    "experiment": "general_graphs",
+    "seed": 20260828,
+    "graph_seed": 20260839,
+    "n": 64,
+    "T": 5.0,
+    "latency_per_hop": 0.12,
+    "ell_c": 2.0,
+    "kappa": 0.8,
+    "nu": 1.5,
+    "latency_sweep": [
+      0.05,
+      0.08,
+      0.12,
+      0.18,
+      0.28
+    ],
+    "T_sweep": [
+      1.5,
+      2.5,
+      4.0,
+      6.0,
+      9.0,
+      14.0
+    ],
+    "ell_c_sweep": [
+      0.7,
+      1.2,
+      2.0,
+      3.5,
+      6.0
+    ],
+    "kappa_sweep": [
+      1.5,
+      1.0,
+      0.7,
+      0.45,
+      0.3
+    ],
+    "graphs": [
+      "path",
+      "ring",
+      "grid",
+      "geometric"
+    ]
+  },
+  "tables": {
+    "exp06_general_graphs.csv": {
+      "rows": 121,
+      "max_absolute_difference": 2.220446049250313e-16
+    },
+    "exp06_comparative_statics.csv": {
+      "rows": 84,
+      "max_absolute_difference": 2.3314683517128287e-15
+    }
+  },
+  "graphs": {
+    "path": {
+      "nodes": 64,
+      "edges": 63,
+      "diameter": 63,
+      "rstar": 2,
+      "regret_at_optimum": 0.12486827038385329,
+      "minimum_covariance_eigenvalue": 0.1859929141560983,
+      "independent_conditioning_max_error": 9.754646907208673e-17,
+      "archive_array_max_errors": {
+        "sigma": 2.0816681711721685e-15,
+        "distances": 0.0,
+        "laplacian": 0.0,
+        "decision_operator": 0.0,
+        "radii": 0.0,
+        "eta": 1.1102230246251565e-16,
+        "regret": 1.1102230246251565e-16,
+        "graph_seed": 0.0
+      }
+    },
+    "ring": {
+      "nodes": 64,
+      "edges": 64,
+      "diameter": 32,
+      "rstar": 2,
+      "regret_at_optimum": 0.12695959222209063,
+      "minimum_covariance_eigenvalue": 0.19098395915622057,
+      "independent_conditioning_max_error": 2.1050313250909122e-16,
+      "archive_array_max_errors": {
+        "sigma": 4.832245714680994e-14,
+        "distances": 0.0,
+        "laplacian": 0.0,
+        "decision_operator": 0.0,
+        "radii": 0.0,
+        "eta": 1.8183444214143237e-16,
+        "regret": 2.220446049250313e-16,
+        "graph_seed": 0.0
+      }
+    },
+    "grid": {
+      "nodes": 64,
+      "edges": 112,
+      "diameter": 14,
+      "rstar": 3,
+      "regret_at_optimum": 0.1596918773087883,
+      "minimum_covariance_eigenvalue": 0.16325800047436653,
+      "independent_conditioning_max_error": 1.1102230246251565e-16,
+      "archive_array_max_errors": {
+        "sigma": 3.9968028886505635e-15,
+        "distances": 0.0,
+        "laplacian": 0.0,
+        "decision_operator": 0.0,
+        "radii": 0.0,
+        "eta": 1.6653345369377348e-16,
+        "regret": 2.220446049250313e-16,
+        "graph_seed": 0.0
+      }
+    },
+    "geometric": {
+      "nodes": 64,
+      "edges": 262,
+      "diameter": 8,
+      "rstar": 2,
+      "regret_at_optimum": 0.14175328079728866,
+      "minimum_covariance_eigenvalue": 0.10203713508020684,
+      "independent_conditioning_max_error": 5.551115123125783e-17,
+      "archive_array_max_errors": {
+        "sigma": 1.0880185641326534e-14,
+        "distances": 0.0,
+        "laplacian": 0.0,
+        "decision_operator": 0.0,
+        "radii": 0.0,
+        "eta": 2.220446049250313e-16,
+        "regret": 2.220446049250313e-16,
+        "graph_seed": 0.0
+      },
+      "connection_radius": 0.22
+    }
+  },
+  "original_figure_sha256": "4b78791b53fc788e2c910499fbac8f7d9e3324d628dd39a8c6d4c29e2d82047c",
+  "figure_policy": "Reuse original PDF bytes; regenerated numerical tables agree within floating-point tolerance.",
+  "reproduced_environment": {
+    "numpy": "2.4.3",
+    "scipy": "1.17.1",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  }
+}

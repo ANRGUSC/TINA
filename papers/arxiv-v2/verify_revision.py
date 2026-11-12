@@ -45,7 +45,7 @@ current_front = re.sub(r'\\externaldocument\[\]\[nocite\]\{[^}]+\}\n', '', curre
 assert current_front == baseline[:baseline.index('\\begin{abstract}')]
 assert len(re.findall(r'\\section\{', main_source)) == 8
 assert len(re.findall(r'\\begin\{(?:lemma|theorem|proposition)\}', main_source)) == 9
-assert len(re.findall(r'\\includegraphics', main_source)) == 3
+assert len(re.findall(r'\\includegraphics', main_source)) == 4
 assert r'\input{appendices.tex}' not in main_source
 assert 's(r)' not in main_source
 # Preserve every earlier PDF independently of the active manuscript.
@@ -138,7 +138,7 @@ report = {
     'references_and_labels': 'pass',
     'baseline_matches_arxiv_source': True,
     'title_authors_preamble_unchanged_except_date_table_and_external_reference_packages': True,
-    'eight_sections_nine_results_three_numerical_figures': True,
+    'eight_sections_nine_results_four_numerical_figures': True,
     'earlier_pdf_a_unchanged': True,
     'title_page_date': 'September 2026',
     'related_work_repetition_trimmed': True,

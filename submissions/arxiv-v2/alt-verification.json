@@ -5,7 +5,8 @@
   "all_references_resolve_in_submission_and_companion": true,
   "numerical_section_preserved_except_terminology_and_final_float_placement": true,
   "related_work_preserved_with_authorized_reordering_and_consolidation": true,
-  "abstract_and_all_numbered_result_statements_unchanged_from_pre_audit": true,
+  "all_numbered_result_statements_unchanged_from_pre_audit": true,
+  "narrative_revision_preserves_model_all_figures_and_theorem_1_onward": true,
   "four_numerical_figures_preserved_except_caption_terminology_and_final_float_placement": true,
   "two_explanatory_figures_added": true,
   "non_gaussian_all_policy_checks": [
@@ -168,7 +169,7 @@
     }
   },
   "source_sha256": {
-    "main-alt.tex": "3128c03c0bbaf5454811b02122999da69ca54bcfd7e6775ec1f79e88e1bf4a4a",
+    "main-alt.tex": "b07fe1b958414676819ecb06dfab9db4f4420900ff5f5be0fe11eb47c2c33652",
     "technical-appendices-alt.tex": "4383b2cce5799021cfa0fe097e0ff94790a7d297643e4435701c6fe53a81ab09",
     "appendices-alt.tex": "418e43239861621d0ed288ca4b82e7d5eb143168d9b16cac6cd26b7365ec9e38",
     "companion-alt.tex": "cbfac0948298846a7d95f0d1fec80ab711566e1bdad651b4839ed44d36e3bec9"

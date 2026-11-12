@@ -80,14 +80,21 @@ expected_related = expected_related.replace(
     'These works connect spatial scope and propagation time to dynamic feedback\nfor controlled plants.')
 # Authorized paragraph reordering preserves every other word and citation.
 assert Counter(actual_related.split()) == Counter(expected_related.split())
-for block in revision_blocks:
+for index, block in enumerate(revision_blocks):
+    if index in (0, 1):
+        continue  # Contributions and Section 3 opening rewritten by author approval.
     block = block.replace(r'\mid O_r(z,t-\tau)', r'\mid \mathcal O_r(z,t-\tau)')
     assert block in main
 
 pre_audit = subprocess.check_output(
     ['git', 'show', '284a0e0:submissions/arxiv-v2/main-alt.tex'], cwd=ROOT).decode('utf-8').replace('\r\n', '\n')
-abstract = lambda text: text.split(r'\begin{abstract}')[1].split(r'\end{abstract}')[0]
-assert abstract(main) == abstract(pre_audit)
+pre_narrative = subprocess.check_output(
+    ['git', 'show', '886659b:submissions/arxiv-v2/main-alt.tex'], cwd=ROOT).decode('utf-8').replace('\r\n', '\n')
+assert section(main, 'Model and observations') == section(pre_narrative, 'Model and observations')
+assert main[main.index(r'\begin{theorem}'): ] == pre_narrative[pre_narrative.index(r'\begin{theorem}'): ]
+figure_pattern = r'\\begin\{figure\}.*?\\end\{figure\}'
+assert re.findall(figure_pattern, main, re.S) == re.findall(figure_pattern, pre_narrative, re.S)
+assert r'\cite[Ch.~7, Sec.~4, Eqs.~(4.21)--(4.22)]{marschak1972economic}.\footnote{' in main
 for env in ('theorem', 'proposition', 'lemma', 'corollary'):
     pattern = r'\\begin\{' + env + r'\}.*?\\end\{' + env + r'\}'
     assert re.findall(pattern, main, re.S) == re.findall(pattern, pre_audit, re.S)
@@ -219,7 +226,8 @@ report = {'baseline_commit': manifest['commit'],
           'all_references_resolve_in_submission_and_companion': True,
           'numerical_section_preserved_except_terminology_and_final_float_placement': True,
           'related_work_preserved_with_authorized_reordering_and_consolidation': True,
-          'abstract_and_all_numbered_result_statements_unchanged_from_pre_audit': True,
+          'all_numbered_result_statements_unchanged_from_pre_audit': True,
+          'narrative_revision_preserves_model_all_figures_and_theorem_1_onward': True,
           'four_numerical_figures_preserved_except_caption_terminology_and_final_float_placement': True,
           'two_explanatory_figures_added': True,
           'non_gaussian_all_policy_checks': composition_checks,

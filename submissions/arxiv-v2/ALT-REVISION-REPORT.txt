@@ -183,3 +183,18 @@ Build and mathematical/preservation verification pass with no unresolved
 references or overfull boxes. Changed pages were rendered and inspected.
 The paper is 33 pages and the companion 8. The abstract, theory, numerical
 data and revision h remain unchanged. No unresolved issue was identified.
+
+2026-11-12: Restore the narrative emphasis (user-approved proposal)
+Rewrote the abstract and introduction to lead with the fresh-local versus
+stale-global finding, its two-sensor crossover, and the radius and decision-
+relevance questions. Restored three contributions. Kept clear classical
+attribution while consolidating the early literature discussion. Section 3
+now opens with the value-of-delay question and puts the historical notation
+crosswalk in a footnote. Figure 1 and its explanation remain in the intro.
+
+This pass explicitly authorizes the new abstract. The model section, all
+six figure blocks, and all source from Theorem 1 onward are unchanged from
+886659b. Revision h remains unchanged. Both PDFs rebuilt successfully;
+mathematical and preservation checks pass, all references resolve, and no
+overfull boxes were reported. Rendered opening pages and the Section 3
+footnote were inspected. The paper remains 33 pages and companion 8 pages.

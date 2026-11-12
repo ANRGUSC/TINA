@@ -44,7 +44,7 @@ Bhaskar Krishnamachari\\
 \maketitle
 
 \begin{abstract}
-A broader view of a network can help agents coordinate, but collecting that view takes time. When is a fresh local observation more useful than an older view of the whole network, and when should an agent look only partway across it? We study agents that repeatedly choose actions to minimize a shared quadratic cost in an environment that evolves independently of their actions. All readings in a neighborhood snapshot come from the same instant, so looking farther across the network means using older readings even for nearby nodes. We assume that the full-information action is affine in the state and that the conditional mean of the current state equals the old state scaled by a common exponential decay factor. Under these conditions, the Marschak--Radner decomposition implies that the cost reduction from a delayed snapshot, relative to acting without observations, equals the cost reduction from a fresh snapshot of the same neighborhood multiplied by the square of the decay factor. This rule allows non-Gaussian states and nonlinear decision rules and gives the delay at which fresh local information overtakes a stale global view. In a Gaussian spatial model on a line, the optimal observation radius depends on how far state correlations extend, how far away observations matter to the decision, and how far information travels in one coherence time. Looking beyond the local node pays only if information travels more than twice the correlation length in one coherence time. On a fixed 64-node ring, increasing only the reach of the decision weights from 0.7 to 6 hops shifts the optimal observation radius from one to five hops.
+Fresh local information can support better networked decisions than a complete but delayed view of the network. We characterize when this happens and how far an agent should look when a wider view takes longer to obtain. We study agents that repeatedly minimize a shared quadratic cost in an environment that evolves independently of their actions. Each agent uses a synchronized neighborhood snapshot, so extending its scope also ages the nearby readings used in the decision. For affine full-information actions under a common exponential conditional-mean prediction rule, we obtain an explicit delay threshold at which fresh local information overtakes a stale global view. The calculation uses the classical Marschak--Radner decomposition: a delayed snapshot retains the fresh snapshot's decision benefit multiplied by the square of the temporal prediction factor. The result allows non-Gaussian states and nonlinear decision rules. In a Gaussian spatial model on a line, we derive the optimal observation radius and show that looking beyond the local node pays only when information travels more than twice the spatial correlation length in one coherence time. The preferred scope also depends on the decision itself. On a fixed 64-node ring, changing only the decision weights moves the optimal radius from one to five hops. These results quantify when timely local knowledge outweighs broader but older information, and how the desired action determines the value of looking farther.
 \end{abstract}
 
 \section{Introduction}
@@ -84,29 +84,19 @@ $\operatorname{Var}(Z_t)=\sigma^2/2$, the fresh reading wins when
     \quad\Longleftrightarrow\quad
     \tau>\frac{T\log 2}{2}\approx 0.35T.
 \]
-One fresh sensor leaves half the variation in the desired average
-unexplained. Once the old pair leaves more than half unexplained, the fresh
-reading is more useful. Theorem~\ref{thm:local_global_crossover} gives the
+Thus, one current reading predicts the two-sensor average better than both
+readings once the pair is more than about $0.35T$ old. The older snapshot
+contains the entire spatial state, but its additional scope no longer
+compensates for its age. Theorem~\ref{thm:local_global_crossover} gives the
 corresponding crossover when several agents choose actions that interact
 through a shared cost.
 
-This tension appears in several literatures under different performance
-models. Work on stale information in distributed systems shows that old global
-state can lose much of its value \cite{mitzenmacher2000old}, and Age of
-Information formalizes freshness as a system resource \cite{kaul2012realtime}.
-Distributed optimization studies computation under communication constraints
-\cite{nedic2009distributed}, organizational economics studies adaptation to
-local information versus coordination \cite{alonso2008coordination}, and
-networked-control work examines how communication scope, topology, and
-propagation delay interact with closed-loop performance.
-
-Distributed-control work establishes controller localization and models
-finite-speed or distance-dependent communication
-\cite{bamieh2002spatial,voulgaris2003optimal,bamieh2005convex,
-fardad2011finite}. Most directly, Ballotta, Jovanovi\'c, and Schenato show that
-scope-dependent delay can make sparse feedback outperform all-to-all control
-\cite{ballotta2023latency}; Section~\ref{subsec:related_distributed_control}
-develops the comparison with this literature.
+The example raises two design questions. How much delay can a global view
+tolerate before fresh local information becomes preferable? And when
+neither endpoint is best, how wide a neighborhood should an agent observe?
+Both questions depend on which parts of the state matter to the decision:
+information about a remote node is useful to the extent that it helps
+predict the action the agent should take.
 
 We consider agents whose actions incur a shared quadratic cost in an
 environment that evolves independently of those actions. An information
@@ -116,12 +106,6 @@ synchronized neighborhood snapshots by how well they support the current
 full-information decision. Current actions affect neither future state nor
 any agent's later information; this is a repeated static-team problem.
 
-We build on the classical team theory of Radner and of Marschak and
-Radner \cite{radner1962team,marschak1972economic}, which asks how agents with different information can
-best pursue a shared objective. We use the best decision rules available
-to the team under each information architecture to quantify how much is
-gained by observing a wider neighborhood and how much is lost when those
-observations arrive later.
 For the main results, each agent acts on a synchronized snapshot: widening
 scope can replace a fresh local reading by an older one. Architectures that
 retain fresh local data while adding remote data have different information
@@ -144,26 +128,57 @@ that global snapshot, including the deciding agent's own, is $D/v$ old.}
 \label{fig:snapshot-architectures}
 \end{figure}
 
-In the shared-resource example, stronger decision coupling makes a global
-view worth waiting longer for. The choice of scope also depends on which
-state changes matter to the decision, not only on how strongly nearby states
-are correlated.
+Within this snapshot family, a wider view is worthwhile only while its
+additional decision information compensates for its greater age. We
+quantify this tradeoff through a local--global crossover and an optimal
+neighborhood radius. Stronger decision coupling can make a global view
+worth waiting longer for, while changing which remote states matter to
+the desired action can change the preferred radius even on the same network.
 
 The contributions are:
 \begin{enumerate}
-\item We derive the optimal synchronized observation radius when spatial
-omission decays exponentially with radius and delay grows linearly with
-distance. For a Gaussian field on a line, we calculate the omission curve
-and express the optimal radius in terms of the spatial
-correlation length, the reach of the decision weights, and the distance
-information travels in one coherence time.
-\item We apply the Marschak--Radner decomposition to synchronized
-neighborhoods under a common conditional-mean prediction rule. This gives
-the delay at which a fresh local reading overtakes a delayed global view.
-On a fixed ring, we show how changing the decision weights alone moves
-the optimal radius, and we evaluate the same radius criterion on other
-finite graphs.
+\item \textbf{When does fresh local information beat a stale global view?}
+We characterize the crossover by an explicit threshold on delay relative
+to coherence time. The threshold depends on the fraction of decision loss
+eliminated by fresh local observations. In a shared-resource model,
+stronger coupling increases the delay worth tolerating for a global view.
+
+\item \textbf{How far should an agent look?}
+We characterize the optimal synchronized neighborhood by balancing the
+gain from broader scope against the loss from older observations. For a
+Gaussian field on a line, we derive an explicit radius in terms of
+spatial correlation, decision reach, and information propagation. The
+result identifies when the optimum is local and when a positive radius
+is worthwhile.
+
+\item \textbf{Why can different decisions require different information architectures?}
+We show how the desired action determines the value of remote observations.
+On a fixed 64-node ring, changing only the decision weights moves the
+preferred radius from one to five hops. We also evaluate the radius
+criterion on path, ring, grid, and random geometric graphs.
 \end{enumerate}
+
+We build on the classical team theory of Radner and of Marschak and
+Radner \cite{radner1962team,marschak1972economic}, which asks how agents
+with different information can best pursue a shared objective. Their
+delayed-information decomposition provides the analytical basis for our
+comparison. We use it to evaluate synchronized neighborhoods through
+their ability to predict the desired action, derive the spatial omission
+curve and optimal radius for a Gaussian field on a line, and compare
+decision-dependent scopes on finite graphs.
+
+Related questions arise in stale-information analysis
+\cite{mitzenmacher2000old}, age of information \cite{kaul2012realtime},
+distributed optimization \cite{nedic2009distributed}, organizational
+economics \cite{alonso2008coordination}, and networked control with
+finite-speed communication
+\cite{bamieh2002spatial,voulgaris2003optimal,bamieh2005convex,fardad2011finite}.
+Scope-dependent communication delay can also make sparse feedback
+outperform all-to-all control, as shown by Ballotta, Jovanovi\'c, and
+Schenato \cite{ballotta2023latency}. Here we compare information
+architectures for repeated decisions in an exogenous environment,
+valuing each architecture by the error it induces in the desired action.
+Section~\ref{sec:related_work} develops these connections.
 
 Section~\ref{sec:model} defines observations, regret, and the temporal
 prediction assumption. Section~\ref{sec:spatiotemporal_predictability}
@@ -174,10 +189,6 @@ including noncanonical graphs; Sections~\ref{sec:related_work} and
 \ref{sec:discussion_conclusions} discuss related work and implications.
 Technical appendices retain the broader formulation, proofs, and
 reproducibility details.
-
-We choose the observation radius by balancing the decision information
-captured by a wider neighborhood against the age of its readings. The line
-model supplies an explicit spatial omission curve for this calculation.
 
 \section{Model and observations}
 \label{sec:model}
@@ -353,14 +364,17 @@ coefficient $c^k$ at integer lag $k$.
 \label{sec:spatiotemporal_predictability}
 \label{sec:fresh_local_global}
 
-Marschak and Radner derived the loss from delayed information in a
-quadratic team with scalar autoregression
-\cite[Ch.~7, Sec.~4, Eqs.~(4.21)--(4.22)]{marschak1972economic}.
-Their $w^d$ is the prediction factor $a$ below, their $\widehat V(0)$
-corresponds to $R_\infty$, and their $L(0)$ is the regret with the same
-information at zero delay. We use this decomposition for synchronized
-neighborhoods in continuous time, assuming that the conditional mean of
-the current centered state is $a$ times the old centered state.
+How much of a fresh neighborhood's value survives when its readings are
+delayed? Under the common-rate prediction assumption, the surviving
+fraction is the square of the temporal prediction factor. Marschak and
+Radner derived the corresponding delayed-information decomposition for
+quadratic teams with scalar autoregression
+\cite[Ch.~7, Sec.~4, Eqs.~(4.21)--(4.22)]{marschak1972economic}.\footnote{Their
+$w^d$ is the prediction factor $a$ below, their $\widehat V(0)$ corresponds
+to $R_\infty$, and their $L(0)$ is the regret with the same information at
+zero delay.}
+We state it here for synchronized neighborhoods under the conditional-mean
+assumptions of Section~\ref{subsec:OU_model}.
 
 \begin{theorem}[Spatio-temporal composition]
 \label{thm:spatiotemporal_composition}

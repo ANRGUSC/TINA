@@ -175,6 +175,10 @@ including noncanonical graphs; Sections~\ref{sec:related_work} and
 Technical appendices retain the broader formulation, proofs, and
 reproducibility details.
 
+We choose the observation radius by balancing the decision information
+captured by a wider neighborhood against the age of its readings. The line
+model supplies an explicit spatial omission curve for this calculation.
+
 \section{Model and observations}
 \label{sec:model}
 
@@ -665,7 +669,7 @@ then compute the optimal radius in a concrete spatial model.
 
 Let $D$ be the maximum allowed radius and let
 $\tau:[0,D]\to[0,\infty)$ be nondecreasing, with $\tau(0)=0$.
-Define the fraction of open-loop loss eliminated by the snapshot as
+Define the fraction of no-information loss eliminated by the snapshot as
 \begin{equation}
 G(r)=\underbrace{1-\eta_S(r)}_{\text{share captured by a fresh snapshot}}
      \;\underbrace{e^{-2\tau(r)/T}}_{\text{fraction surviving the delay}}.
@@ -675,11 +679,7 @@ Writing $R(r)=R(\mathcal A_{r,\tau(r)})$,
 Theorem~\ref{thm:spatiotemporal_composition} gives
 $R(r)=R_\infty[1-G(r)]$, so the best radius maximizes $G(r)$.
 
-Suppose a nearby sensor has already reported a new reading when an older
-reading arrives from farther away. To form a synchronized snapshot, the agent
-uses an older reading from the nearby sensor too. This is why widening the
-snapshot can hurt. An agent that keeps both readings can always ignore the
-distant one, so widening its access cannot increase its optimal decision cost.
+Under the synchronized-snapshot convention of Section~\ref{subsec:architectures}, widening the neighborhood trades more spatial information for older readings.
 
 On a finite graph, one more hop improves performance exactly when
 \begin{equation}
@@ -831,8 +831,8 @@ the innovation field independent of the entire field at time $t-\tau$.
 Integrating against the decision kernel in \eqref{eq:canonical_target}
 and conditioning on the observed interval gives
 \[
-\mathbb E[x^\star(z,t)\mid O_r(z,t-\tau)]
-= a\,\mathbb E[x^\star(z,t-\tau)\mid O_r(z,t-\tau)].
+\mathbb E[x^\star(z,t)\mid \mathcal O_r(z,t-\tau)]
+= a\,\mathbb E[x^\star(z,t-\tau)\mid \mathcal O_r(z,t-\tau)].
 \]
 Under the pointwise squared loss, the gain over acting without observations
 is $q/2$ times the variance of the conditional mean. By stationarity,
@@ -911,6 +911,9 @@ allowed radius on an infinite field and still omits information beyond $D$.
 The threshold $vT>2\ell_s$ has a direct interpretation: when nearby states
 are strongly correlated, the local reading already tells the agent more,
 so propagation must be faster before a wider view pays.
+In this canonical model, longer state correlations let a local reading predict
+farther-away state, whereas broader decision weights make remote states
+matter more to the target.
 
 When $\ell_c\gg vT,\ell_s$ and $vT>2\ell_s$,
 $r^\star\to(vT-2\ell_s)/2$ as $\ell_c\to\infty$ with $vT,\ell_s$ fixed.
@@ -941,7 +944,7 @@ large-system limit as $n$ increases.
 
 We fix $q=1$ and compare $n\in\{5,10,25,100\}$ over nine coupling values.
 The Monte Carlo estimates infer the crossover from paired local and
-open-loop losses sampled at the current time, using
+no-information losses sampled at the current time, using
 $\widehat\rho^\star=\tfrac12\log[\widehat R_\infty/
 (\widehat R_\infty-\widehat R_{\rm loc})]$.
 Their agreement with the exact curves checks the loss calculation and the
@@ -954,7 +957,7 @@ at each age.
 \caption{Fresh-local versus stale-global crossover in the shared-resource
 model. Left: the exact finite-$n=100$ boundary (solid) and large-$n$ limit
 (dashed). Upper right: exact boundaries and Monte Carlo estimates inferred
-from sampled local and open-loop losses for four system sizes, with paired
+from sampled local and no-information losses for four system sizes, with paired
 delta-method 95\% intervals. Lower right: estimated minus exact boundary.
 The zero-coupling boundary is zero and is omitted from logarithmic axes.}
 \label{fig:local-global-phase}
@@ -1022,7 +1025,7 @@ Eq.~\eqref{eq:discrete_radius_improvement}.
 \includegraphics[width=0.94\linewidth]{figures/fig7_5_decision_relevance.pdf}
 \caption{Changing the decision on a fixed 64-node ring. Left: decision-weighted
 omission for three decision operators. Middle: composed regret, normalized
-by each operator's open-loop regret, with optimal radii 1, 2, and 5 hops
+by each operator's no-information regret, with optimal radii 1, 2, and 5 hops
 marked. Right: raw state correlation, identical across operators.
 The graph, covariance, temporal coherence, and per-hop latency are fixed.}
 \label{fig:decision-relevance}
@@ -1059,7 +1062,7 @@ no closed-form radius is available. They use synchronized snapshots and
 common-rate Gaussian dynamics; they neither extend the canonical radius
 formula to these geometries nor establish a new theorem.
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
 \caption{Composition-law evaluation on four 64-node graphs. Top: spatial
@@ -1082,12 +1085,6 @@ These distinctions frame the more specific connections developed below.
 \subsection{Static Team Decision Theory}
 \label{subsec:related_static}
 
-Radner established foundational optimality conditions for static teams, in which decision makers share a common objective but act on different information \cite{radner1962team}. Under appropriate convexity and regularity conditions, the resulting stationarity conditions are sufficient for global team optimality; in the quadratic Gaussian specialization, the optimal decision rules are affine \cite{radner1962team,marschak1972economic}. Lemma~\ref{lem:radner_projection} specializes this framework to the weighted
-prediction problem induced by a deterministic quadratic Hessian; it is not a
-literal restatement of Radner's theorem. Krainak, Speyer, and Marcus subsequently relaxed the sufficient conditions associated with Radner's stationarity result and extended the theory to an exponential-quadratic criterion with jointly Gaussian state and observations \cite{krainak1982staticI}. In a companion paper, they formulated affine linear-quadratic-Gaussian and linear-exponential-Gaussian team problems as constrained parameter optimizations and represented optimal team gains as projections of the corresponding centralized gains \cite{krainak1982staticII}.
-
-Classical team theory also treated information itself as an organizational design object. Marschak and Radner analyzed the value of information, delayed information and the tradeoff between timeliness and completeness, and formulated team organization in terms of optimal networks \cite{marschak1972economic}. More recently, Summers, Li, and Kamgarpour formulated information-structure design as the selection of additional measurements or communication links jointly with the corresponding team decision strategies \cite{summers2017information}. Afshari and Mahajan characterized quadratic Gaussian static teams whose observations decompose into information common to all agents and agent-specific local information \cite{afshari2017static}. They subsequently applied this decomposition to team-optimal decentralized filtering over communication graphs with delayed information sharing, where sufficiently old measurements constitute common information while more recent measurements remain local \cite{afshari2018team}. Rusmevichientong and Van Roy studied large teams in which each agent observes the local cost structure only within a graph radius, using centralized performance as a benchmark \cite{rusmevichientong2003decentralized}. Gamarnik, Goldberg, and Weber studied decentralized decisions based on local information in random decision networks and related their near-optimality to a correlation-decay, or long-range-independence, property \cite{gamarnik2014correlation}.
-
 Marschak and Radner also optimize the extent of information when more
 information takes longer to obtain. Their marginal condition
 \cite[Ch.~7, Eq.~(6.5)]{marschak1972economic} gives the balance in
@@ -1099,28 +1096,16 @@ radius of a synchronized neighborhood. Computing how much that
 neighborhood reveals about the desired action gives the radius formula
 on the line and the comparison of decision weights on finite graphs.
 
+\paragraph{Optimal team rules.}
+Radner established foundational optimality conditions for static teams, in which decision makers share a common objective but act on different information \cite{radner1962team}. Under appropriate convexity and regularity conditions, the resulting stationarity conditions are sufficient for global team optimality; in the quadratic Gaussian specialization, the optimal decision rules are affine \cite{radner1962team,marschak1972economic}. Lemma~\ref{lem:radner_projection} specializes this framework to the weighted
+prediction problem induced by a deterministic quadratic Hessian; it is not a
+literal restatement of Radner's theorem. Krainak, Speyer, and Marcus subsequently relaxed the sufficient conditions associated with Radner's stationarity result and extended the theory to an exponential-quadratic criterion with jointly Gaussian state and observations \cite{krainak1982staticI}. In a companion paper, they formulated affine linear-quadratic-Gaussian and linear-exponential-Gaussian team problems as constrained parameter optimizations and represented optimal team gains as projections of the corresponding centralized gains \cite{krainak1982staticII}.
+
+\paragraph{Information as a design variable.}
+Classical team theory also treated information itself as an organizational design object. Marschak and Radner analyzed the value of information, delayed information and the tradeoff between timeliness and completeness, and formulated team organization in terms of optimal networks \cite{marschak1972economic}. More recently, Summers, Li, and Kamgarpour formulated information-structure design as the selection of additional measurements or communication links jointly with the corresponding team decision strategies \cite{summers2017information}. Afshari and Mahajan characterized quadratic Gaussian static teams whose observations decompose into information common to all agents and agent-specific local information \cite{afshari2017static}. They subsequently applied this decomposition to team-optimal decentralized filtering over communication graphs with delayed information sharing, where sufficiently old measurements constitute common information while more recent measurements remain local \cite{afshari2018team}. Rusmevichientong and Van Roy studied large teams in which each agent observes the local cost structure only within a graph radius, using centralized performance as a benchmark \cite{rusmevichientong2003decentralized}. Gamarnik, Goldberg, and Weber studied decentralized decisions based on local information in random decision networks and related their near-optimality to a correlation-decay, or long-range-independence, property \cite{gamarnik2014correlation}.
+
 \subsection{Distributed Optimization, Communication Constraints, and Scope}
 \label{subsec:related_distributed_control}
-
-Distributed optimization studies how agents compute a common solution using local computation and message exchange. Classical asynchronous gradient methods allow delayed interprocessor communication while retaining convergence guarantees under suitable boundedness conditions \cite{tsitsiklis1986distributed}, while distributed subgradient methods establish convergence when agents exchange information locally over time-varying network topologies \cite{nedic2009distributed}. In these canonical formulations, the communication process constrains an iterative computation of an optimizer. Our setting separates that computational question from information architecture: the full-information decision at each epoch is the benchmark, and the object of design is the information available when that decision must be made.
-
-Networked and decentralized control place communication restrictions directly
-in the feedback loop, including sampling, packet loss, communication topology,
-and delay \cite{hespanha2007survey}. For spatially invariant plants, early work
-showed that optimal controllers can exhibit inherent spatial localization
-\cite{bamieh2002spatial}, while subsequent work imposed explicit finite-speed
-communication structure. Arbelaiz, Bamieh, Hosoi, and Jadbabaie characterize
-the spatial decay of optimal estimator gains, using the decay rate as a proxy
-for the distance over which measurements are useful in a spatially distributed
-dynamic estimation problem \cite{arbelaiz2025estimation}. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
-under delayed communication requirements \cite{voulgaris2003optimal}; Bamieh
-and Voulgaris formulated distance-dependent information propagation through
-funnel causality \cite{bamieh2005convex}; and Fardad and Jovanovi\'c developed
-state-space models for distributed controllers with finite communication speed
-\cite{fardad2011finite}. These works are important antecedents to our use of
-spatial scope and propagation time, but they optimize dynamic feedback for
-controlled plants rather than information-constrained stage decisions in an
-exogenous environment.
 
 Communication structure has also been treated as a design variable. Langbort
 and Gupta study interconnection topology when communication is assigned a
@@ -1140,6 +1125,24 @@ under hop-dependent communication delay \cite{ballotta2023sparser}. These
 results establish that scope-dependent delay can itself induce a sparse or
 intermediate optimal control architecture.
 
+Distributed optimization studies how agents compute a common solution using local computation and message exchange. Classical asynchronous gradient methods allow delayed interprocessor communication while retaining convergence guarantees under suitable boundedness conditions \cite{tsitsiklis1986distributed}, while distributed subgradient methods establish convergence when agents exchange information locally over time-varying network topologies \cite{nedic2009distributed}. In these canonical formulations, the communication process constrains an iterative computation of an optimizer. Our setting separates that computational question from information architecture: the full-information decision at each epoch is the benchmark, and the object of design is the information available when that decision must be made.
+
+Networked and decentralized control place communication restrictions directly
+in the feedback loop, including sampling, packet loss, communication topology,
+and delay \cite{hespanha2007survey}. For spatially invariant plants, early work
+showed that optimal controllers can exhibit inherent spatial localization
+\cite{bamieh2002spatial}, while subsequent work imposed explicit finite-speed
+communication structure. Arbelaiz, Bamieh, Hosoi, and Jadbabaie characterize
+the spatial decay of optimal estimator gains, using the decay rate as a proxy
+for the distance over which measurements are useful in a spatially distributed
+dynamic estimation problem \cite{arbelaiz2025estimation}. Voulgaris, Bianchini, and Bamieh studied $H_2$ control
+under delayed communication requirements \cite{voulgaris2003optimal}; Bamieh
+and Voulgaris formulated distance-dependent information propagation through
+funnel causality \cite{bamieh2005convex}; and Fardad and Jovanovi\'c developed
+state-space models for distributed controllers with finite communication speed
+\cite{fardad2011finite}. These works connect spatial scope and propagation time to dynamic feedback
+for controlled plants.
+
 Our setting differs in the decision problem: an exogenous-state static team,
 with the current full-information action as the benchmark and an architecture
 valued by the prediction error it induces for that action. 
@@ -1153,9 +1156,7 @@ through prediction of an exogenously varying full-information decision.
 \subsection{Freshness and Age of Information}
 \label{subsec:related_aoi}
 
-Age of Information (AoI) formalizes the timeliness of status information through the age of the freshest received update, $\Delta(t)=t-u(t)$. Seminal work showed that minimizing AoI is distinct from maximizing throughput or minimizing packet delay and initiated a large literature on update generation, queueing, and scheduling \cite{kaul2012realtime,yates2021aoi}. Subsequent work generalized linear age to application-specific nonlinear age penalties \cite{sun2017update}. Connections to remote estimation make the distinction between age and task loss explicit: for a Gauss--Markov Ornstein--Uhlenbeck process, estimation error under signal-agnostic sampling is a nonlinear function of age, whereas signal-aware sampling can exploit the realized estimation error and outperform age-optimal policies \cite{ornee2021ou}.
-
-More recent work has pushed freshness metrics toward task-aware objectives. Shisher et al. showed that remote-inference loss can be nonmonotonic in age and designed communication policies around inference performance \cite{shisher2024timely}; subsequent work considers correlated sources for which inference penalties depend jointly on multiple sources' ages \cite{shisher2026correlated}. Li et al. go further toward decision-aware freshness by jointly optimizing sampling and remote decision making under stale observations \cite{li2026freshness}. Jiang and Zhou \cite{jiang2019status} study a one-dimensional
+Jiang and Zhou \cite{jiang2019status} study a one-dimensional
 Gauss--Markov field with exponential correlation in space and time.
 They choose the sampling density to minimize remote field-estimation
 error when the density also affects queueing delay.
@@ -1164,6 +1165,10 @@ correlation and update freshness affect the choice of communication
 range for remote monitoring. Here the design variable is the radius
 of a synchronized snapshot. Its value depends on how strongly the
 states inside that radius predict the agent's desired action.
+
+Age of Information (AoI) formalizes the timeliness of status information through the age of the freshest received update, $\Delta(t)=t-u(t)$. Seminal work showed that minimizing AoI is distinct from maximizing throughput or minimizing packet delay and initiated a large literature on update generation, queueing, and scheduling \cite{kaul2012realtime,yates2021aoi}. Subsequent work generalized linear age to application-specific nonlinear age penalties \cite{sun2017update}. Connections to remote estimation make the distinction between age and task loss explicit: for a Gauss--Markov Ornstein--Uhlenbeck process, estimation error under signal-agnostic sampling is a nonlinear function of age, whereas signal-aware sampling can exploit the realized estimation error and outperform age-optimal policies \cite{ornee2021ou}.
+
+More recent work has pushed freshness metrics toward task-aware objectives. Shisher et al. showed that remote-inference loss can be nonmonotonic in age and designed communication policies around inference performance \cite{shisher2024timely}; subsequent work considers correlated sources for which inference penalties depend jointly on multiple sources' ages \cite{shisher2026correlated}. Li et al. go further toward decision-aware freshness by jointly optimizing sampling and remote decision making under stale observations \cite{li2026freshness}.
 
 \subsection{Centralization, Delegation, and Organizational Economics}
 
@@ -1254,9 +1259,11 @@ why: once control and signaling interact, the fixed-subspace projection
 characterization generally no longer solves the team problem.
 
 \paragraph{Design implication.}
-Taken together, the theory yields a practical design heuristic: expand
-information scope as long as the marginal decision value of broader information
-exceeds the predictive value lost in obtaining it.
+Under the single-crossing condition, an interior optimal radius balances
+the marginal gain in decision information against the loss from delay.
+If there is no interior crossing, the optimum lies at a boundary.
+On a general finite graph,
+compare composed regret over all admissible radii.
 
 \paragraph{AI Use Statement.}
 The development of this paper made substantial use of AI tools, including

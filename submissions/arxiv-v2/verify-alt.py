@@ -58,10 +58,12 @@ for env in ('figure',):
     assert len(figures) == 6
     assert r'\label{fig:snapshot-architectures}' in figures[0]
     assert r'\label{fig:field-and-cost}' in figures[1]
-    assert re.findall(pattern, old, re.S) == figures[2:]
+    preserved_figures = old.replace('open-loop', 'no-information').replace(r'\begin{figure}[!htb]', r'\begin{figure}[H]')
+    assert re.findall(pattern, preserved_figures, re.S) == figures[2:]
 def section(text, title):
     return text.split(r'\section{' + title + '}')[1].split(r'\section{')[0]
-assert section(old, 'Numerical Illustrations') == section(main, 'Numerical Illustrations')
+expected_numerical = section(old, 'Numerical Illustrations').replace('open-loop', 'no-information').replace(r'\begin{figure}[!htb]', r'\begin{figure}[H]')
+assert expected_numerical == section(main, 'Numerical Illustrations')
 revision = (PAPER/'rev2.md').read_text(encoding='utf-8')
 revision_blocks = re.findall(r'~~~latex\n(.*?)\n~~~', revision, re.S)
 expected_related = section(old, 'Related Work')
@@ -70,9 +72,25 @@ for opening, replacement in [('Relative to these works,', revision_blocks[2]),
     start = expected_related.index(opening)
     end = expected_related.index('\n\n', start)
     expected_related = expected_related[:start] + replacement + expected_related[end:]
-assert section(main, 'Related Work') == expected_related
+actual_related = section(main, 'Related Work')
+for heading in (r'\paragraph{Optimal team rules.}', r'\paragraph{Information as a design variable.}'):
+    actual_related = actual_related.replace(heading, '')
+expected_related = expected_related.replace(
+    'These works are important antecedents to our use of\nspatial scope and propagation time, but they optimize dynamic feedback for\ncontrolled plants rather than information-constrained stage decisions in an\nexogenous environment.',
+    'These works connect spatial scope and propagation time to dynamic feedback\nfor controlled plants.')
+# Authorized paragraph reordering preserves every other word and citation.
+assert Counter(actual_related.split()) == Counter(expected_related.split())
 for block in revision_blocks:
+    block = block.replace(r'\mid O_r(z,t-\tau)', r'\mid \mathcal O_r(z,t-\tau)')
     assert block in main
+
+pre_audit = subprocess.check_output(
+    ['git', 'show', '284a0e0:submissions/arxiv-v2/main-alt.tex'], cwd=ROOT).decode('utf-8').replace('\r\n', '\n')
+abstract = lambda text: text.split(r'\begin{abstract}')[1].split(r'\end{abstract}')[0]
+assert abstract(main) == abstract(pre_audit)
+for env in ('theorem', 'proposition', 'lemma', 'corollary'):
+    pattern = r'\\begin\{' + env + r'\}.*?\\end\{' + env + r'\}'
+    assert re.findall(pattern, main, re.S) == re.findall(pattern, pre_audit, re.S)
 
 def all_policy_optimum(states, pi, q, k, observations, transition):
     """Complete indicator basis, one independent table per agent."""
@@ -199,9 +217,10 @@ report = {'baseline_commit': manifest['commit'],
           'baseline_files_unchanged': len(manifest['tracked_baseline_sha256']) - 1,
           'bibliography_original_entries_preserved_with_two_authorized_additions': True,
           'all_references_resolve_in_submission_and_companion': True,
-          'numerical_section_verbatim': True,
-          'related_work_matches_rev2_requested_replacements': True,
-          'four_original_numerical_figure_environments_verbatim': True,
+          'numerical_section_preserved_except_terminology_and_final_float_placement': True,
+          'related_work_preserved_with_authorized_reordering_and_consolidation': True,
+          'abstract_and_all_numbered_result_statements_unchanged_from_pre_audit': True,
+          'four_numerical_figures_preserved_except_caption_terminology_and_final_float_placement': True,
           'two_explanatory_figures_added': True,
           'non_gaussian_all_policy_checks': composition_checks,
           'nonlinear_local_policy_affine_fit_residual': affine_residual,

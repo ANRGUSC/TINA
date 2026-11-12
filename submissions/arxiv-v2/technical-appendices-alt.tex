@@ -268,19 +268,23 @@ Positive definiteness makes the remaining term positive for any nonzero
 $L^2$ perturbation, proving sufficiency and uniqueness up to almost-sure equality.
 \end{proof}
 
-\paragraph{Common information and degenerate normalization.}
+\paragraph{Common-information optimality.}
 If every agent observes the same $Z$, let $m=\mathbb E[x^\star\mid Z]$.
 For every admissible perturbation $h$, conditioning gives
 $\mathbb E[h^\top Q(x^\star-m)]=0$. The error expansion then proves that
 $m$ is the unique optimum, regardless of the off-diagonal entries of $Q$.
 For different observations this argument does not apply componentwise.
-More generally, a common old snapshot gives regret
-$\tfrac12\mathbb E[(x_t^\star-\mathbb E[x_t^\star\mid\theta_{t-\tau}])^\top
-Q(x_t^\star-\mathbb E[x_t^\star\mid\theta_{t-\tau}])]$ even for a non-affine
-target. If its conditional mean converges in mean square to the unconditional
+\paragraph{Delayed common snapshots.}
+A common old snapshot gives regret
+\[
+\tfrac12\mathbb E[(x_t^\star-\mathbb E[x_t^\star\mid\theta_{t-\tau}])^\top
+Q(x_t^\star-\mathbb E[x_t^\star\mid\theta_{t-\tau}])]
+\]
+even for a non-affine target. If its conditional mean converges in mean square to the unconditional
 mean, this regret converges to the no-information value. Under a stationary
 Markov environment, data processing makes this prediction loss nondecreasing
 in delay; arbitrary snapshot information sets themselves need not be nested.
+\paragraph{Degenerate normalization.}
 The best constant is $\mathbb E[x^\star]$; its regret is half the weighted
 variance of $x^\star$. In centered coordinates, $R_\infty=0$ and $Q\succ0$
 imply $x_t^\star=0$ almost surely. The zero rule has zero regret under
@@ -372,7 +376,7 @@ Summing over $i$ implies $\sum_j\mu_j=0$, hence every $\mu_i=0$ and
 $u_i=\theta_{i,t}/(q+\gamma)$, which proves
 \eqref{eq:optimal_local_shared}.
 
-\emph{Open-loop regret.} Here $B=I$ and $\Sigma_S=\sigma^2I$, so by \eqref{eq:Rinf_general}, $R_\infty=\tfrac{\sigma^2}2\operatorname{tr}(Q^{-1})$. From the Sherman--Morrison formula above,
+\emph{No-information regret.} Here $B=I$ and $\Sigma_S=\sigma^2I$, so by \eqref{eq:Rinf_general}, $R_\infty=\tfrac{\sigma^2}2\operatorname{tr}(Q^{-1})$. From the Sherman--Morrison formula above,
 
 \[
 \operatorname{tr}(Q^{-1})=\frac1q\Big(n-\frac{\gamma n}{q+\gamma n}\Big)=\frac{n\,(q+\gamma(n-1))}{q\,(q+\gamma n)},
@@ -495,7 +499,7 @@ This section gives the settings and estimators for the four figures in
 Section~\ref{sec:numerical-evaluation}. The crossover uses the exact coupled
 fresh-local rule; the radius curves use scalar variance composition; and
 the ring and four-geometry comparison use agentwise Gaussian conditioning with $Q=I$.
-Normalized scalar and graph losses use analytical open-loop regret
+Normalized scalar and graph losses use analytical no-information regret
 $R_\infty$. The crossover instead uses paired sample means.
 Pointwise Monte Carlo means have 95\% normal intervals
 $\bar L\pm1.96s_L/\sqrt N$, with sample standard deviation $s_L$.
@@ -523,7 +527,7 @@ Figure & principal sweep & fixed setting/size & samples \\
 We fix $q=1$, use $n\in\{5,10,25,100\}$, and sample independent
 standard-normal state components ($\sigma^2=1$).
 The nine coupling ratios are $\gamma/q\in\{0,0.05,0.1,0.2,0.5,1,2,5,10\}$.
-At each setting, 30,000 independent current-state draws give paired open-loop and fresh-local
+At each setting, 30,000 independent current-state draws give paired no-information and fresh-local
 losses, using $u_i=\theta_i/(q+\gamma)$.
 Writing their means as $o=\widehat R_\infty$ and
 $l=\widehat R_{\rm loc}$, the estimator is
@@ -566,7 +570,7 @@ prediction errors are divided by $\operatorname{tr}(K\Sigma_SK^\top)$
 to estimate the omission share.
 
 \paragraph{Finite noncanonical graphs (Fig.~\ref{fig:general-graphs}).}
-The original Experiment 6 uses a 64-node path and cycle, an $8\times8$
+Experiment 6 uses a 64-node path and cycle, an $8\times8$
 grid without wraparound, and one connected random geometric graph.
 For the latter, NumPy's \texttt{default\_rng(20260839)} draws 64 independent
 uniform positions in $[0,1]^2$. Edges join pairs within Euclidean distance
@@ -582,15 +586,16 @@ For neighborhood $O_i=\mathcal N_r(i)$, the residual variance is
 $K_i\Sigma_S K_i^\top-c_i^\top\Sigma_{S,O_iO_i}^{-1}c_i$,
 where $c_i=\Sigma_{S,O_i,:}K_i^\top$; linear solves evaluate this expression.
 The sum divided by $\operatorname{tr}(K\Sigma_S K^\top)$ gives $\eta_S(r)$.
-We evaluate $1-e^{-2ar/T}(1-\eta_S(r))$ at every integer radius from zero
-through the diameter, using reference $(T,\ell_c,a)=(5,2,0.12)$.
+Writing $\delta$ for the per-hop delay, so $\tau(r)=\delta r$,
+we evaluate $1-e^{-2\delta r/T}(1-\eta_S(r))$ at every integer radius from zero
+through the diameter, using reference $(T,\ell_c,\delta)=(5,2,0.12)$.
 
 The plotted sweeps vary $T\in\{1.5,2.5,4,6,9,14\}$ or
-$\ell_c\in\{0.7,1.2,2,3.5,6\}$ alone. The original archive also retains
-per-hop delays $a\in\{0.05,0.08,0.12,0.18,0.28\}$ and covariance parameters
+$\ell_c\in\{0.7,1.2,2,3.5,6\}$ alone. The archive also retains
+per-hop delays $\delta\in\{0.05,0.08,0.12,0.18,0.28\}$ and covariance parameters
 $\kappa_s\in\{1.5,1,0.7,0.45,0.3\}$, each varied alone.
 Configuration \path{numerics/config/experiment_06.yaml} records experiment
-seed 20260828 and graph seed 20260839. The original driver is
+seed 20260828 and graph seed 20260839. The driver is
 \path{numerics/experiments/exp06_general_graphs.py}, which calls
 \texttt{exp06()} in \path{numerics/experiments/run_all.py}.
 From the repository root, run \texttt{python scripts/verify\_graph\_restoration.py}
@@ -599,7 +604,6 @@ all four raw graph archives under \path{numerics/results/}.
 The audit checks positive-definite covariances, conditioning through an
 independent residual-error calculation, and exhaustive integer-radius minima.
 Its report is \path{submissions/arxiv-v2/graph-restoration-verification.json}.
-The restored figure reuses the original PDF bytes.
 
 \paragraph{Reproduction of Figures~\ref{fig:local-global-phase}--\ref{fig:decision-relevance}.}
 The \href{https://github.com/ANRGUSC/TINA}{public TINA repository} retains

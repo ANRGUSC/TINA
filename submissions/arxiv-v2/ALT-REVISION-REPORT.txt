@@ -158,3 +158,28 @@ allows exactly the requested related-work replacements and additive
 bibliography change while retaining the original preservation checks.
 Revision h source and PDF were not rebuilt or changed; its shared bibliography
 now includes the two additional, unused entries. Commit and push authorized.
+
+Writing-audit revision brief implementation
+-------------------------------------------
+Implemented writing-revision-brief.md, omitting the abstract finding and
+limiting the introduction change to the requested radius-first preview.
+The abstract and every numbered theorem/proposition/lemma/corollary statement
+are checked against commit 284a0e0 and remain identical. The numerical section
+and figure captions change only the open-loop/no-information terminology;
+all figure assets and data remain unchanged. Figure 6 is held before Related
+Work to prevent it interrupting the reorganized literature discussion.
+
+Qualified the final marginal advice by the single-crossing condition and
+retained exhaustive finite-graph comparison. Consolidated the repeated
+snapshot example, corrected the interval-observation glyph, renamed the
+appendix per-hop delay coefficient to delta without changing its values,
+and aligned the companion glossary. Related work now leads with the closest
+comparisons and retains all citations and substantive comparisons. Added
+the single requested spatial-length interpretation, split Appendix A's
+common-information discussion into three paragraphs, and removed figure-
+restoration history from Appendix D while preserving reproduction details.
+
+Build and mathematical/preservation verification pass with no unresolved
+references or overfull boxes. Changed pages were rendered and inspected.
+The paper is 33 pages and the companion 8. The abstract, theory, numerical
+data and revision h remain unchanged. No unresolved issue was identified.

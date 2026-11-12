@@ -3,9 +3,10 @@
   "baseline_files_unchanged": 129,
   "bibliography_original_entries_preserved_with_two_authorized_additions": true,
   "all_references_resolve_in_submission_and_companion": true,
-  "numerical_section_verbatim": true,
-  "related_work_matches_rev2_requested_replacements": true,
-  "four_original_numerical_figure_environments_verbatim": true,
+  "numerical_section_preserved_except_terminology_and_final_float_placement": true,
+  "related_work_preserved_with_authorized_reordering_and_consolidation": true,
+  "abstract_and_all_numbered_result_statements_unchanged_from_pre_audit": true,
+  "four_numerical_figures_preserved_except_caption_terminology_and_final_float_placement": true,
   "two_explanatory_figures_added": true,
   "non_gaussian_all_policy_checks": [
     {
@@ -167,9 +168,9 @@
     }
   },
   "source_sha256": {
-    "main-alt.tex": "d25ef3c38b85877027b2c3fc02297224e67626dbd7f0f13f533d008e6abdd84b",
-    "technical-appendices-alt.tex": "e9c724d438a9475b9b43caf68f00ea569b1fb540451660fb47bed7e3ba01d277",
-    "appendices-alt.tex": "d1513250d61a0fe30f6a14a1ab3e93da1993b07dd9588e3f4be4ee2c2b46be0d",
+    "main-alt.tex": "3128c03c0bbaf5454811b02122999da69ca54bcfd7e6775ec1f79e88e1bf4a4a",
+    "technical-appendices-alt.tex": "4383b2cce5799021cfa0fe097e0ff94790a7d297643e4435701c6fe53a81ab09",
+    "appendices-alt.tex": "418e43239861621d0ed288ca4b82e7d5eb143168d9b16cac6cd26b7365ec9e38",
     "companion-alt.tex": "cbfac0948298846a7d95f0d1fec80ab711566e1bdad651b4839ed44d36e3bec9"
   }
 }

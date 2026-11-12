@@ -123,3 +123,18 @@ inspected the abstract and new paragraph in the rendered PDF. Both builds
 remain 30/8 pages with resolved references. The alternative source, PDFs,
 specification and supporting verification files are now prepared for the
 author-requested commit and push to main; v2-h files remain unchanged.
+
+Explanatory figure update
+-------------------------
+Added the supplied propagation-cone and field-and-cost PDFs at manuscript
+width, with the author's captions and reference sentences. They are Figures
+1 and 2 on pages 3 and 5, immediately following the pages containing their
+first references. Numerical figures now number 3-6 automatically. No
+results-overview graphic was added to the paper. The four original numerical
+figure environments remain verbatim; verify-alt.py now explicitly checks
+the two new figures separately and preserves that integrity check.
+Both PDFs rebuilt without unresolved references or overfull boxes, and
+verify-alt.py passed. Rendered figure pages were inspected for legibility.
+The paper is now 32 pages; the companion remains 8. The supplied figure
+assets were used without alteration. The author authorized committing and
+pushing this update to main.

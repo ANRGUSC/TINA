@@ -45,7 +45,11 @@ assert r'\label{lem:radner_projection}' in appendix
 assert r'\label{lem:innovation_split}' not in main + appendix
 for env in ('figure',):
     pattern = r'\\begin\{' + env + r'\}.*?\\end\{' + env + r'\}'
-    assert re.findall(pattern, old, re.S) == re.findall(pattern, main, re.S)
+    figures = re.findall(pattern, main, re.S)
+    assert len(figures) == 6
+    assert r'\label{fig:snapshot-architectures}' in figures[0]
+    assert r'\label{fig:field-and-cost}' in figures[1]
+    assert re.findall(pattern, old, re.S) == figures[2:]
 def section(text, title):
     return text.split(r'\section{' + title + '}')[1].split(r'\section{')[0]
 assert section(old, 'Numerical Illustrations') == section(main, 'Numerical Illustrations')
@@ -176,7 +180,8 @@ report = {'baseline_commit': manifest['commit'],
           'baseline_files_unchanged': len(manifest['tracked_baseline_sha256']),
           'all_references_resolve_in_submission_and_companion': True,
           'numerical_section_and_related_work_verbatim': True,
-          'all_four_figure_environments_verbatim': True,
+          'four_original_numerical_figure_environments_verbatim': True,
+          'two_explanatory_figures_added': True,
           'non_gaussian_all_policy_checks': composition_checks,
           'nonlinear_local_policy_affine_fit_residual': affine_residual,
           'innovation_conditional_energy_range': float(np.ptp(conditional_energy)),

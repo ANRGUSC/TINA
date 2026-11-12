@@ -138,3 +138,23 @@ verify-alt.py passed. Rendered figure pages were inspected for legibility.
 The paper is now 32 pages; the companion remains 8. The supplied figure
 assets were used without alteration. The author authorized committing and
 pushing this update to main.
+
+rev2.md attribution and radius revision
+---------------------------------------
+Applied all six supplied LaTeX passages and the abstract attribution change:
+radius-first contributions; explicit Marschak-Radner delayed-information,
+marginal-condition and group-information attribution; the pointwise Gaussian
+field derivation between Eq. (35) and Lemma 1; precise radius assumptions;
+and spatial age-of-information comparisons. Added the two supplied conference
+entries to references.bib without changing any existing entry. No separate
+tina-v2-alt(1).pdf was present locally; the current alternative source was used.
+The referenced arXiv records confirm the new papers' titles, authors and
+subject matter. Book equation locators follow the author's supplied revision.
+Build and verify-alt.py pass. Citation locators and both bibliography entries
+were checked in the compiled output; changed technical pages were visually
+inspected. Paper/companion lengths remain 32/8 pages. Existing numerical
+sections, figures, and data remain unchanged. The verification script now
+allows exactly the requested related-work replacements and additive
+bibliography change while retaining the original preservation checks.
+Revision h source and PDF were not rebuilt or changed; its shared bibliography
+now includes the two additional, unused entries. Commit and push authorized.

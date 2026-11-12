@@ -44,7 +44,7 @@ Bhaskar Krishnamachari\\
 \maketitle
 
 \begin{abstract}
-A broader view of a network can help agents coordinate, but collecting that view takes time. When is a fresh local observation more useful than an older view of the whole network, and when should an agent look only partway across it? We study agents that repeatedly choose actions to minimize a shared quadratic cost in an environment that evolves independently of their actions. All readings in a neighborhood snapshot come from the same instant, so looking farther across the network means using older readings even for nearby nodes. We assume that the full-information action is affine in the state and that the conditional mean of the current state equals the old state scaled by a common exponential decay factor. Under these conditions, the cost reduction from a delayed snapshot, relative to acting without observations, equals the cost reduction from a fresh snapshot of the same neighborhood multiplied by the square of the decay factor. This rule allows non-Gaussian states and nonlinear decision rules and gives the delay at which fresh local information overtakes a stale global view. In a Gaussian spatial model on a line, the optimal observation radius depends on how far state correlations extend, how far away observations matter to the decision, and how far information travels in one coherence time. Looking beyond the local node pays only if information travels more than twice the correlation length in one coherence time. On a fixed 64-node ring, increasing only the reach of the decision weights from 0.7 to 6 hops shifts the optimal observation radius from one to five hops.
+A broader view of a network can help agents coordinate, but collecting that view takes time. When is a fresh local observation more useful than an older view of the whole network, and when should an agent look only partway across it? We study agents that repeatedly choose actions to minimize a shared quadratic cost in an environment that evolves independently of their actions. All readings in a neighborhood snapshot come from the same instant, so looking farther across the network means using older readings even for nearby nodes. We assume that the full-information action is affine in the state and that the conditional mean of the current state equals the old state scaled by a common exponential decay factor. Under these conditions, the Marschak--Radner decomposition implies that the cost reduction from a delayed snapshot, relative to acting without observations, equals the cost reduction from a fresh snapshot of the same neighborhood multiplied by the square of the decay factor. This rule allows non-Gaussian states and nonlinear decision rules and gives the delay at which fresh local information overtakes a stale global view. In a Gaussian spatial model on a line, the optimal observation radius depends on how far state correlations extend, how far away observations matter to the decision, and how far information travels in one coherence time. Looking beyond the local node pays only if information travels more than twice the correlation length in one coherence time. On a fixed 64-node ring, increasing only the reach of the decision weights from 0.7 to 6 hops shifts the optimal observation radius from one to five hops.
 \end{abstract}
 
 \section{Introduction}
@@ -151,18 +151,18 @@ are correlated.
 
 The contributions are:
 \begin{enumerate}
-\item For affine desired actions under a common scalar conditional-mean
-prediction rule, we prove a spatial--temporal composition law for all
-admissible rules and coupled quadratic costs. Its
-endpoint consequences give the fresh-local versus stale-global crossover.
-\item We characterize interior radius optima by marginal balance and give
-a global solution for exponential spatial omission. A derived omission
-curve in a Gaussian spatial model connects this solution to three physical
-lengths: spatial correlation, decision relevance, and temporal propagation.
-\item We illustrate how decision-relevant predictability governs architecture
-choice on fixed and noncanonical finite graphs. The coupling calculation
-and canonical spatial derivation supply information beyond the composition
-law itself.
+\item We derive the optimal synchronized observation radius when spatial
+omission decays exponentially with radius and delay grows linearly with
+distance. For a Gaussian field on a line, we calculate the omission curve
+and express the optimal radius in terms of the spatial
+correlation length, the reach of the decision weights, and the distance
+information travels in one coherence time.
+\item We apply the Marschak--Radner decomposition to synchronized
+neighborhoods under a common conditional-mean prediction rule. This gives
+the delay at which a fresh local reading overtakes a delayed global view.
+On a fixed ring, we show how changing the decision weights alone moves
+the optimal radius, and we evaluate the same radius criterion on other
+finite graphs.
 \end{enumerate}
 
 Section~\ref{sec:model} defines observations, regret, and the temporal
@@ -349,9 +349,14 @@ coefficient $c^k$ at integer lag $k$.
 \label{sec:spatiotemporal_predictability}
 \label{sec:fresh_local_global}
 
-The temporal prediction rule separates the loss from new disturbances from
-the loss due to incomplete spatial information. This separation applies to
-the joint team optimization even when actions are coupled.
+Marschak and Radner derived the loss from delayed information in a
+quadratic team with scalar autoregression
+\cite[Ch.~7, Sec.~4, Eqs.~(4.21)--(4.22)]{marschak1972economic}.
+Their $w^d$ is the prediction factor $a$ below, their $\widehat V(0)$
+corresponds to $R_\infty$, and their $L(0)$ is the regret with the same
+information at zero delay. We use this decomposition for synchronized
+neighborhoods in continuous time, assuming that the conditional mean of
+the current centered state is $a$ times the old centered state.
 
 \begin{theorem}[Spatio-temporal composition]
 \label{thm:spatiotemporal_composition}
@@ -775,9 +780,8 @@ derives it from state statistics and the desired action.
 \subsection{The canonical three-length result}
 \label{subsec:canonical_line_model}
 
-We now specialize to a Gaussian spatial field on a dense one-dimensional
-network, represented by locations
-$z\in\mathbb R$. Let $\ell_s>0$ be the spatial correlation length, the
+We now specialize to a jointly Gaussian space--time field on the infinite line,
+with spatial coordinate $z\in\mathbb R$. Let $\ell_s>0$ be the spatial correlation length, the
 distance over which field values remain correlated, and let $T>0$ be the
 temporal coherence time. The zero-mean field has covariance
 \begin{equation}
@@ -817,6 +821,24 @@ Information propagates at speed $v>0$, giving
 \end{equation}
 The propagation length $vT$ is the distance information travels in one
 coherence time.
+
+Fix a location $z$, a radius $r$, and a delay $\tau$, and write
+$a=e^{-\tau/T}$. By the separable covariance in
+\eqref{eq:canonical_space_time_covariance}, the innovation
+$\theta(y,t)-a\theta(y,t-\tau)$ is uncorrelated with
+$\theta(y',t-\tau)$ for every $y,y'$. Joint Gaussianity therefore makes
+the innovation field independent of the entire field at time $t-\tau$.
+Integrating against the decision kernel in \eqref{eq:canonical_target}
+and conditioning on the observed interval gives
+\[
+\mathbb E[x^\star(z,t)\mid O_r(z,t-\tau)]
+= a\,\mathbb E[x^\star(z,t-\tau)\mid O_r(z,t-\tau)].
+\]
+Under the pointwise squared loss, the gain over acting without observations
+is $q/2$ times the variance of the conditional mean. By stationarity,
+the conditional mean at time $t-\tau$ has the same variance as its
+fresh-snapshot counterpart at time $t$. The delayed interval therefore
+retains $a^2$ times the gain from a fresh interval of the same radius.
 
 \begin{lemma}[Exponential omission by self-similarity]
 \label{prop:canonical_eta_S}
@@ -1066,7 +1088,16 @@ literal restatement of Radner's theorem. Krainak, Speyer, and Marcus subsequentl
 
 Classical team theory also treated information itself as an organizational design object. Marschak and Radner analyzed the value of information, delayed information and the tradeoff between timeliness and completeness, and formulated team organization in terms of optimal networks \cite{marschak1972economic}. More recently, Summers, Li, and Kamgarpour formulated information-structure design as the selection of additional measurements or communication links jointly with the corresponding team decision strategies \cite{summers2017information}. Afshari and Mahajan characterized quadratic Gaussian static teams whose observations decompose into information common to all agents and agent-specific local information \cite{afshari2017static}. They subsequently applied this decomposition to team-optimal decentralized filtering over communication graphs with delayed information sharing, where sufficiently old measurements constitute common information while more recent measurements remain local \cite{afshari2018team}. Rusmevichientong and Van Roy studied large teams in which each agent observes the local cost structure only within a graph radius, using centralized performance as a benchmark \cite{rusmevichientong2003decentralized}. Gamarnik, Goldberg, and Weber studied decentralized decisions based on local information in random decision networks and related their near-optimality to a correlation-decay, or long-range-independence, property \cite{gamarnik2014correlation}.
 
-Relative to these works, the distinctive object studied here is a structured family of information architectures in which spatial scope and temporal freshness are coupled through the scope--latency relation $\tau(r)$. Each spatial scope induces an acquisition delay, and the resulting architecture is valued through its prediction error for the full-information decision. 
+Marschak and Radner also optimize the extent of information when more
+information takes longer to obtain. Their marginal condition
+\cite[Ch.~7, Eq.~(6.5)]{marschak1972economic} gives the balance in
+Proposition~\ref{thm:marginal_balance}. For their identical-interaction
+example, the group-size-one case of their Eq.~(6.6) gives the local
+information share $1-\eta_S(0)$ in
+Proposition~\ref{prop:aggregate_local}. Here the design variable is the
+radius of a synchronized neighborhood. Computing how much that
+neighborhood reveals about the desired action gives the radius formula
+on the line and the comparison of decision weights on finite graphs.
 
 \subsection{Distributed Optimization, Communication Constraints, and Scope}
 \label{subsec:related_distributed_control}
@@ -1124,7 +1155,15 @@ through prediction of an exogenously varying full-information decision.
 
 Age of Information (AoI) formalizes the timeliness of status information through the age of the freshest received update, $\Delta(t)=t-u(t)$. Seminal work showed that minimizing AoI is distinct from maximizing throughput or minimizing packet delay and initiated a large literature on update generation, queueing, and scheduling \cite{kaul2012realtime,yates2021aoi}. Subsequent work generalized linear age to application-specific nonlinear age penalties \cite{sun2017update}. Connections to remote estimation make the distinction between age and task loss explicit: for a Gauss--Markov Ornstein--Uhlenbeck process, estimation error under signal-agnostic sampling is a nonlinear function of age, whereas signal-aware sampling can exploit the realized estimation error and outperform age-optimal policies \cite{ornee2021ou}.
 
-More recent work has pushed freshness metrics toward task-aware objectives. Shisher et al. showed that remote-inference loss can be nonmonotonic in age and designed communication policies around inference performance \cite{shisher2024timely}; subsequent work considers correlated sources for which inference penalties depend jointly on multiple sources' ages \cite{shisher2026correlated}. Li et al. go further toward decision-aware freshness by jointly optimizing sampling and remote decision making under stale observations \cite{li2026freshness}. Those works optimize when or which updates reach a fixed remote receiver; we instead choose the information architecture available to a decentralized team: what is observed, from what spatial scope, and at what age. Because broader scope itself incurs greater acquisition delay, spatial omission and temporal staleness are coupled by the architecture. 
+More recent work has pushed freshness metrics toward task-aware objectives. Shisher et al. showed that remote-inference loss can be nonmonotonic in age and designed communication policies around inference performance \cite{shisher2024timely}; subsequent work considers correlated sources for which inference penalties depend jointly on multiple sources' ages \cite{shisher2026correlated}. Li et al. go further toward decision-aware freshness by jointly optimizing sampling and remote decision making under stale observations \cite{li2026freshness}. Jiang and Zhou \cite{jiang2019status} study a one-dimensional
+Gauss--Markov field with exponential correlation in space and time.
+They choose the sampling density to minimize remote field-estimation
+error when the density also affects queueing delay.
+Munari et al.~\cite{munari2025spatiotemporal} study how spatial
+correlation and update freshness affect the choice of communication
+range for remote monitoring. Here the design variable is the radius
+of a synchronized snapshot. Its value depends on how strongly the
+states inside that radius predict the agent's desired action.
 
 \subsection{Centralization, Delegation, and Organizational Economics}
 
@@ -1169,11 +1208,16 @@ The projection identity assumes quadratic costs, a deterministic positive-
 definite Hessian, and unconstrained Euclidean actions. The explicit stale-global
 and composition laws additionally require affine full-information decisions
 and a stationary common-rate innovation structure with conditionally
-mean-zero innovations. Gaussianity is used to evaluate spatial prediction
-errors from covariances in the canonical model and the finite-graph examples in
-Sections~\ref{subsec:numerical-decision-relevance} and \ref{subsec:numerical-general-graphs};
-the canonical radius formula further uses a separable homogeneous field
-and linear propagation delay.
+mean-zero innovations. The composition law allows coupled actions through any fixed $Q\succ0$
+and applies to non-Gaussian states. The closed-form radius in
+Theorem~\ref{thm:canonical_optimal_radius} uses an infinite line, a jointly
+Gaussian field with the separable exponential covariance in
+\eqref{eq:canonical_space_time_covariance}, an exponential decision
+kernel, uncoupled squared loss, and propagation delay $\tau(r)=r/v$.
+The finite-graph examples in
+Sections~\ref{subsec:numerical-decision-relevance}
+and~\ref{subsec:numerical-general-graphs} use Gaussian states and $Q=I$,
+so each agent predicts its own weighted target.
 Nonquadratic or discrete decisions, state-dependent Hessians, and feasibility
 constraints such as nonnegativity, capacity, or simplex restrictions require
 different analytical tools. Outside the stated assumptions, one should work

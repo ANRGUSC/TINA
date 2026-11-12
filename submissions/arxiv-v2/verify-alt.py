@@ -9,6 +9,7 @@ import hashlib
 import json
 import re
 import sys
+import subprocess
 
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -23,6 +24,14 @@ def digest(path):
 
 manifest = json.loads((PAPER / 'alt-baseline.json').read_text())
 for path, expected in manifest['tracked_baseline_sha256'].items():
+    if path == 'submissions/arxiv-v2/references.bib':
+        baseline_bib = subprocess.check_output(
+            ['git', 'show', manifest['commit'] + ':' + path], cwd=ROOT).decode('utf-8')
+        current_bib = (ROOT/path).read_text(encoding='utf-8')
+        assert current_bib.startswith(baseline_bib.replace('\r\n', '\n').rstrip() + '\n')
+        for key in ('jiang2019status', 'munari2025spatiotemporal'):
+            assert len(re.findall(r'@inproceedings\{' + key + ',', current_bib)) == 1
+        continue
     assert digest(ROOT / path) == expected, ('baseline modified', path)
 assert digest(PAPER / 'major-revision.md') == manifest['untracked_revision_spec_sha256']
 
@@ -53,7 +62,17 @@ for env in ('figure',):
 def section(text, title):
     return text.split(r'\section{' + title + '}')[1].split(r'\section{')[0]
 assert section(old, 'Numerical Illustrations') == section(main, 'Numerical Illustrations')
-assert section(old, 'Related Work') == section(main, 'Related Work')
+revision = (PAPER/'rev2.md').read_text(encoding='utf-8')
+revision_blocks = re.findall(r'~~~latex\n(.*?)\n~~~', revision, re.S)
+expected_related = section(old, 'Related Work')
+for opening, replacement in [('Relative to these works,', revision_blocks[2]),
+                             ('Those works optimize', revision_blocks[5])]:
+    start = expected_related.index(opening)
+    end = expected_related.index('\n\n', start)
+    expected_related = expected_related[:start] + replacement + expected_related[end:]
+assert section(main, 'Related Work') == expected_related
+for block in revision_blocks:
+    assert block in main
 
 def all_policy_optimum(states, pi, q, k, observations, transition):
     """Complete indicator basis, one independent table per agent."""
@@ -177,9 +196,11 @@ for kind in config['graphs']:
     graphs[kind] = {'radius_count': len(radii), 'diameter': int(radii[-1]), 'rstar': rstar}
 
 report = {'baseline_commit': manifest['commit'],
-          'baseline_files_unchanged': len(manifest['tracked_baseline_sha256']),
+          'baseline_files_unchanged': len(manifest['tracked_baseline_sha256']) - 1,
+          'bibliography_original_entries_preserved_with_two_authorized_additions': True,
           'all_references_resolve_in_submission_and_companion': True,
-          'numerical_section_and_related_work_verbatim': True,
+          'numerical_section_verbatim': True,
+          'related_work_matches_rev2_requested_replacements': True,
           'four_original_numerical_figure_environments_verbatim': True,
           'two_explanatory_figures_added': True,
           'non_gaussian_all_policy_checks': composition_checks,

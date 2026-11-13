@@ -231,6 +231,42 @@ Still open:
    paper restates C7 as a known result, that arrives as edits in this ledger
    and the Lean proof follows.
 
+## Libraries
+
+Surveyed on 2026-11-13: Mathlib v4.33.1 (our pin), TauCeti at `62bbc05`
+(Mathlib master, Lean 4.36.0-rc2) and atlas-lean at `8e813e6` (Mathlib v4.35.0).
+Both alternatives are add-ons that `require mathlib`; neither replaces it.
+
+- **Tiers A, B, C need nothing beyond Mathlib v4.33.1.** Neither add-on has team
+  theory, the Q-weighted projection (C1) or the composition law (C7).
+- **Tier D: atlas-lean has the closest material.**
+  `MathlibExt/Probability/OrnsteinUhlenbeck.lean` defines the stationary scalar
+  OU process as a Gaussian process with covariance `(σ²/2θ) e^{-θ|t-s|}` and
+  proves existence, stationarity, `E[X t | F s] = e^{-θ(t-s)} X s` and the
+  transition law. That covers C4.c and C9 in scalar form. Its import closure
+  is 3 files, 1603 lines, with no `sorry` or axioms.
+- **Neither add-on covers C17 or C18**: no Gaussian field on line × time, no
+  spatial Markov property on a two-sided index, no integral of a field
+  against a weight. That is our own work under any choice.
+- **Trial compile against our pin**: atlas `BestPredictor.lean` and
+  `AR1Variance.lean` compile unchanged. `KolmogorovExtension.lean` and
+  `GaussianConditioning.lean` fail (renamed lemmas, API drift), so the OU file
+  does not build on v4.33.1 as it stands.
+
+Recommendation, not yet confirmed by Scott: Mathlib stays the only Lake
+dependency. For tier D, copy the three atlas OU files at a recorded commit
+into a separate vendored directory with their licence headers, and treat them
+as library code under the 1:1 rule. Any vendored definition that appears in a
+`Statement` is reviewed like our own `Defs/`.
+
+**TODO (when the connection allows): move to Lean and Mathlib v4.35.0** before
+tier D starts, so the atlas OU files build unchanged. Measured cost: Lean
+toolchain 543 MB, Mathlib cache 440 MB in full or about 160 MB for our import
+closure (`lake exe cache get` with the `Prelude.lean` module list), Mathlib git
+fetch about 30 MB. Roughly 1 GB, 35–50 minutes at 4 Mbps; about 0.75 GB with
+the partial cache. Not needed for phases 1–3. After the bump, rebuild and
+record any tier A–C proof that breaks as a Lean-only retry.
+
 ## Next step
 
 Phase 1: `Defs/` and Lean statements for the tier A and B claims, no proofs,

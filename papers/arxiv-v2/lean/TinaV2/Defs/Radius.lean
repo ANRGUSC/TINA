@@ -27,6 +27,16 @@ def gain {ρ : Type} (η τ : ρ → ℝ) (T : ℝ) (r : ρ) : ℝ :=
 def balanceGap (η τ : ℝ → ℝ) (T D : ℝ) (r : ℝ) : ℝ :=
   derivWithin (fun x => log (1 - η x)) (Icc 0 D) r - 2 * derivWithin τ (Icc 0 D) r / T
 
+/-- Hypotheses of Proposition (marginal_balance) on the curves: `τ` and `η`
+continuously differentiable on `[0, D]` with `τ' ≥ 0`, `η' ≤ 0`, `0 ≤ η < 1`. -/
+structure SmoothCurves (η τ : ℝ → ℝ) (D : ℝ) : Prop where
+  D_pos : 0 < D
+  τ_contDiffOn : ContDiffOn ℝ 1 τ (Icc 0 D)
+  η_contDiffOn : ContDiffOn ℝ 1 η (Icc 0 D)
+  τ_deriv_nonneg : ∀ r ∈ Icc 0 D, 0 ≤ derivWithin τ (Icc 0 D) r
+  η_deriv_nonpos : ∀ r ∈ Icc 0 D, derivWithin η (Icc 0 D) r ≤ 0
+  η_range : ∀ r ∈ Icc 0 D, 0 ≤ η r ∧ η r < 1
+
 /-- Eq. (generic_exponential_rstar):
 `r⋆ = (ℓ_c/2) [log(η_0 (1 + vT/ℓ_c))]_+`. -/
 def expRadius (η0 ℓc v T : ℝ) : ℝ := ℓc / 2 * max (log (η0 * (1 + v * T / ℓc))) 0

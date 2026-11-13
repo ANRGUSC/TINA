@@ -31,12 +31,15 @@ TinaV2/Prelude.lean   the only Mathlib import (a narrow module list)
 TinaV2/Smoke.lean     toolchain smoke test, not part of the ledger
 TinaV2/Routine/       regularity lemmas the paper leaves implicit
 TinaV2/Defs/          shared definitions (model, architectures, regret)
-TinaV2/Statements/    one file per claim: `def Cxx.Statement : Prop`
+TinaV2/Statements/    one file per claim: `def Statement : Prop` in namespace
+                      `TinaV2.Cxx` (`C07b` is claim C7.b)
 TinaV2/Proofs/Cxx/    one file per attempt: one lemma per paper step + `main`
 TinaV2/Assembly.lean  generated: selected attempts composed end to end
 ```
 
-`Defs/`, `Statements/`, `Proofs/` and `Assembly.lean` are empty until phase 1.
+`Defs/` and `Statements/` hold the phase 1 drafts. `Proofs/` and
+`Assembly.lean` do not exist yet. Claims that are definitions or an assumption
+(C4, C6) have no statement file; their ledger row points into `Defs/`.
 
 ## The ledger
 
@@ -89,6 +92,7 @@ The unit of correspondence is the proof step.
 - every step of an in-paper proof is still found verbatim in the TeX;
 - every step has exactly one Lean lemma and every lemma in an attempt file has
   a step;
+- every Lean statement in the ledger is declared in the file the ledger names;
 - a proved attempt has no `sorry` and all its steps proved;
 - a proposed proof has an edit carrying its text, and every step that differs
   from the previous proof version is covered by a hunk;
@@ -269,39 +273,36 @@ record any tier A–C proof that breaks as a Lean-only retry.
 
 ## Next step
 
-Phase 1 is in progress (started 2026-11-13).
+Phase 1 drafts are written (2026-11-13): `Defs/` and a draft statement for each
+of the 28 tier A and B claims. `lake build` passes and `ledger.py check` is
+clean. Nothing is frozen.
 
-Done: `TinaV2/Defs/` builds (`lake build TinaV2.Defs`).
+**Scott's review of the statements against the paper** is the next step. For
+each claim, `python3 tools/ledger.py show C7` prints the paper location, the
+Lean file and a fidelity note that says where the Lean statement differs from
+the paper's wording. Approving a statement is
+`ledger.py set formalizations C7/f1 status=frozen`; proofs (phase 2) start
+from frozen statements, C7 first.
 
-- `Cost.lean`: `quad`, `quadCost`, `excessCost`.
-- `Architecture.lean`: `Rule`, `Admissible`, `regret` for arbitrary
-  observations; `SigmaAdmissible`, `sigmaRegret` (appendix form); `Model` with
-  `nbhd`, `Scope`, `obs`, `target`, `R`, `Rloc`, `Rglob`, `Rinf`, `etaS`;
-  `covMatrix`, `center`.
-- `Temporal.lean`: `StationaryState`, `PredictionRule`, `TemporalAssumption`.
-- `Radius.lean`: `rhoStar`, `gain`, `balanceGap`, `expRadius`, `canonRadius`.
-- `Aggregate.lean`: `aggQ`, `IsAggregateModel`, `AggregateState`, closed forms.
-- `Estimation.lean`: `bestMSE`.
-
-Design choices in `Defs/` that the review has to confirm:
+Read `Defs/` first (six files, about 300 lines). Its design choices carry
+into every statement:
 
 - Definitions take snapshots (random state vectors), not a process and a time.
   `R(A_{r,tau})` at epoch `t` is `M.R mu r (theta (t - tau)) (theta t)`.
 - The radius is `r : ℕ∞`, and `r = ⊤` is the complete view, so stale-global is
-  `M.R mu ⊤`. The paper presents stale-global as a case of `A_{r,tau}`, which
-  needs a radius that reaches every agent.
-- Rules are functions of the observation (main text). The appendix's
-  sigma-algebra form is defined separately for C1.c; the link between the two
-  (Doob-Dynkin) is needed where C6.c uses C1.c.
-- Stationarity is the equality of one-time laws, the form the paper says it
-  uses.
+  `M.R mu ⊤` (F5).
+- Rules are functions of the observation, as in the main text. The appendix's
+  sigma-algebra form is defined separately and used only by C1.c (F6).
+- Stationarity is equality of one-time laws (F7).
+- C15, C15.b, C15.c and C16 are statements about the gain function for given
+  real curves, not about the graph model (F8).
+- C19 is in algebraic form only until tier D definitions exist (F1).
 
-To do: `TinaV2/Statements/Cxx.lean` for the tier A and B claims, a
-`formalizations` row (status `draft`, with a fidelity note) for each, and a
-finding for each ambiguity above. Then Scott reviews the statements against
-the paper; approved ones are frozen.
+Before phase 2 the 16 claims without a paper proof, and C5, need English
+proofs through tracked edits.
 
 ## Findings so far
 
-Four, all from reading the proofs for step extraction (none yet from Lean):
+Nine. F1-F4 came from reading the proofs for step extraction; F5-F9 from
+writing the Lean statements:
 `python3 tools/ledger.py sql "SELECT id, claim_id, severity, title FROM findings"`.

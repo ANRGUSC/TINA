@@ -183,7 +183,8 @@ def cmd_show(db, args):
             rows = q(sql, ident)
             if rows:
                 print(f"\n== {title}")
-                table_out(rows, {"summary": 70, "strategy": 70, "reason": 70, "note": 70})
+                table_out(rows, {"summary": 70, "strategy": 70, "reason": 70, "note": 70,
+                                 "fidelity": 2000})
     elif t == "proofs":
         print("\n== steps")
         for s in q("SELECT * FROM steps WHERE proof_id = ? ORDER BY ordinal", ident):
@@ -331,6 +332,16 @@ def cmd_check(db, args):
             for m in maps.values():
                 if m["status"] != "proved":
                     errs.append(f"{a['id']}: marked proved but step {m['step_id']} is {m['status']}")
+
+    # 4b. Every live Lean statement exists where the ledger says it does.
+    for f in q("SELECT * FROM formalizations WHERE status != 'superseded'"):
+        path = ROOT / f["lean_file"]
+        name = f["lean_decl"].split(".")[-1]
+        if not path.exists():
+            errs.append(f"{f['id']}: missing Lean file {f['lean_file']}")
+        elif not re.search(rf"^\s*(?:def|structure|abbrev)\s+{re.escape(name)}\b",
+                           path.read_text(), re.M):
+            errs.append(f"{f['id']}: {name} is not declared in {f['lean_file']}")
 
     # 5. Edits: hunk text is where the status says it should be.
     for h in q("SELECT h.*, e.status FROM hunks h JOIN edits e ON e.id = h.edit_id"):

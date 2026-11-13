@@ -269,8 +269,37 @@ record any tier A–C proof that breaks as a Lean-only retry.
 
 ## Next step
 
-Phase 1: `Defs/` and Lean statements for the tier A and B claims, no proofs,
-for review against the paper before anything is frozen. Not started.
+Phase 1 is in progress (started 2026-11-13).
+
+Done: `TinaV2/Defs/` builds (`lake build TinaV2.Defs`).
+
+- `Cost.lean`: `quad`, `quadCost`, `excessCost`.
+- `Architecture.lean`: `Rule`, `Admissible`, `regret` for arbitrary
+  observations; `SigmaAdmissible`, `sigmaRegret` (appendix form); `Model` with
+  `nbhd`, `Scope`, `obs`, `target`, `R`, `Rloc`, `Rglob`, `Rinf`, `etaS`;
+  `covMatrix`, `center`.
+- `Temporal.lean`: `StationaryState`, `PredictionRule`, `TemporalAssumption`.
+- `Radius.lean`: `rhoStar`, `gain`, `balanceGap`, `expRadius`, `canonRadius`.
+- `Aggregate.lean`: `aggQ`, `IsAggregateModel`, `AggregateState`, closed forms.
+- `Estimation.lean`: `bestMSE`.
+
+Design choices in `Defs/` that the review has to confirm:
+
+- Definitions take snapshots (random state vectors), not a process and a time.
+  `R(A_{r,tau})` at epoch `t` is `M.R mu r (theta (t - tau)) (theta t)`.
+- The radius is `r : ℕ∞`, and `r = ⊤` is the complete view, so stale-global is
+  `M.R mu ⊤`. The paper presents stale-global as a case of `A_{r,tau}`, which
+  needs a radius that reaches every agent.
+- Rules are functions of the observation (main text). The appendix's
+  sigma-algebra form is defined separately for C1.c; the link between the two
+  (Doob-Dynkin) is needed where C6.c uses C1.c.
+- Stationarity is the equality of one-time laws, the form the paper says it
+  uses.
+
+To do: `TinaV2/Statements/Cxx.lean` for the tier A and B claims, a
+`formalizations` row (status `draft`, with a fidelity note) for each, and a
+finding for each ambiguity above. Then Scott reviews the statements against
+the paper; approved ones are frozen.
 
 ## Findings so far
 

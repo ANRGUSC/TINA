@@ -115,6 +115,6 @@ for folder in ("papers/full", "papers/arxiv-v2", "submissions/arxiv-v2"):
 report["original_figure_sha256"] = digest(figure)
 report["figure_policy"] = "Reuse original PDF bytes; regenerated numerical tables agree within floating-point tolerance."
 report["reproduced_environment"] = json.loads((OUT / "results/metadata/exp06.json").read_text())["packages"]
-target = ROOT / "submissions/arxiv-v2/graph-restoration-verification.json"
+target = ROOT / "docs/graph-restoration-verification.json"
 target.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print(json.dumps(report, indent=2))

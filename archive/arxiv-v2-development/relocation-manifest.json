@@ -1,0 +1,117 @@
+[
+  {
+    "from": "submissions/arxiv-v2/alt-baseline.json",
+    "to": "archive/arxiv-v2-development/alt-baseline.json",
+    "sha256": "8d2239aadf97eb418b20349643717ed3b610514a1ad3bdf2d2459579ab6718f8"
+  },
+  {
+    "from": "submissions/arxiv-v2/ALT-REVISION-REPORT.txt",
+    "to": "archive/arxiv-v2-development/ALT-REVISION-REPORT.txt",
+    "sha256": "85ea685e3bf63408c0c9f95aecd6b5cd20a2594d769ce7dd4279014241a3f86f"
+  },
+  {
+    "from": "submissions/arxiv-v2/alt-verification.json",
+    "to": "archive/arxiv-v2-development/alt-verification.json",
+    "sha256": "5876b36838a1fb09494220f90f69f6fcc08ff51d6d92ddb57abd3e2ab3415380"
+  },
+  {
+    "from": "submissions/arxiv-v2/appendices-alt.tex",
+    "to": "submissions/arxiv-v2-companion/appendices-alt.tex",
+    "sha256": "418e43239861621d0ed288ca4b82e7d5eb143168d9b16cac6cd26b7365ec9e38"
+  },
+  {
+    "from": "submissions/arxiv-v2/appendices.tex",
+    "to": "archive/arxiv-v2-development/appendices.tex",
+    "sha256": "97ee024a70d47e61dbf05f1e32cfa64caed2c95055040ff8adafd0d303be863f"
+  },
+  {
+    "from": "submissions/arxiv-v2/build-alt.py",
+    "to": "archive/arxiv-v2-development/build-alt.py",
+    "sha256": "570704248f65f58571173e080cefca317c72536ff5f3b817e8988f1bce37abb8"
+  },
+  {
+    "from": "submissions/arxiv-v2/build.py",
+    "to": "archive/arxiv-v2-development/build.py",
+    "sha256": "d6d0ce7fc4ae51929b1c7f0b9652abc8c650078ecceb6b6ce544e5604446a952"
+  },
+  {
+    "from": "submissions/arxiv-v2/companion-alt.tex",
+    "to": "submissions/arxiv-v2-companion/companion-alt.tex",
+    "sha256": "cbfac0948298846a7d95f0d1fec80ab711566e1bdad651b4839ed44d36e3bec9"
+  },
+  {
+    "from": "submissions/arxiv-v2/companion.tex",
+    "to": "archive/arxiv-v2-development/companion.tex",
+    "sha256": "c276662994632939dadd536bbdc1c3af53d61adca920f396c2f570360b2fe5e8"
+  },
+  {
+    "from": "submissions/arxiv-v2/graph-restoration-verification.json",
+    "to": "archive/arxiv-v2-development/graph-restoration-verification.json",
+    "sha256": "e8eca019c30aa916ab9a7a0bb1085f78a220e774fb46796b28f1b8ac435c8f54"
+  },
+  {
+    "from": "submissions/arxiv-v2/main.tex",
+    "to": "archive/arxiv-v2-development/main.tex",
+    "sha256": "b87cdfc0df086aa8e5fa4225a20436015809d698cf6d6a664a0762b6cb6de4de"
+  },
+  {
+    "from": "submissions/arxiv-v2/major-revision.md",
+    "to": "archive/arxiv-v2-development/major-revision.md",
+    "sha256": "6f5651c39bb0accdd512a683c0e47c167b84f3a6665ef6614e8a80c62d847e64"
+  },
+  {
+    "from": "submissions/arxiv-v2/rev2.md",
+    "to": "archive/arxiv-v2-development/rev2.md",
+    "sha256": "14559fd15d4352f4e3eb8cac226b7c754243f97d6a1ce4e8c35580b1aace494d"
+  },
+  {
+    "from": "submissions/arxiv-v2/technical-appendices.tex",
+    "to": "archive/arxiv-v2-development/technical-appendices.tex",
+    "sha256": "c3f1e29db70371f47c038f67a64e4b25f25483bd8317517d7e2f99d84f5d4e71"
+  },
+  {
+    "from": "submissions/arxiv-v2/tina-v2-alt-companion.pdf",
+    "to": "submissions/arxiv-v2-companion/tina-v2-alt-companion.pdf",
+    "sha256": "8055a934e550eeec4bf948bbe1cd3727bf1d152c9ab379d96423f8e7ff3b8e8a"
+  },
+  {
+    "from": "submissions/arxiv-v2/tina-v2-h-companion.pdf",
+    "to": "archive/arxiv-v2-development/tina-v2-h-companion.pdf",
+    "sha256": "5ded4cc642b3a7b6f901f7d7718eebbc498178d6a5e9c556fd764c211c9d9824"
+  },
+  {
+    "from": "submissions/arxiv-v2/tina-v2-h.pdf",
+    "to": "archive/arxiv-v2-development/tina-v2-h.pdf",
+    "sha256": "70ec8955c3f2e726a29b7d887d7ebed0a616051c4e1896880044ba2e1b4c152f"
+  },
+  {
+    "from": "submissions/arxiv-v2/verify-alt.py",
+    "to": "archive/arxiv-v2-development/verify-alt.py",
+    "sha256": "461d3cb41259c0e37dfeb4bce117670b44f7aa0ac99444b2f815cf7b58ca6877"
+  },
+  {
+    "from": "submissions/arxiv-v2/writing-revision-brief.md",
+    "to": "archive/arxiv-v2-development/writing-revision-brief.md",
+    "sha256": "2539b8b3477170f12bc5dca9e6f1dcbda615caefd70fa7b0aef06a208ea13792"
+  },
+  {
+    "from": "submissions/arxiv-v2/figures/marginal_balance.pdf",
+    "to": "submissions/arxiv-v2-companion/figures/marginal_balance.pdf",
+    "sha256": "b031875bd58195c72645cc666b79ac6a704255b7e07fda6af24a64b3a69c8181"
+  },
+  {
+    "from": "submissions/arxiv-v2/figures/snapshot_timing.pdf",
+    "to": "submissions/arxiv-v2-companion/figures/snapshot_timing.pdf",
+    "sha256": "290931ee9ba38dbcad630719b8359a5eb906892c856ef78dda9d3fcfc8267191"
+  },
+  {
+    "from": "submissions/arxiv-v2/figures/tina-field-and-cost.png",
+    "to": "archive/arxiv-v2-development/figures/tina-field-and-cost.png",
+    "sha256": "efe5c2ef17a2f9f2a0d929df4ce051197eabcc33816d78d3b34e6da18e84f152"
+  },
+  {
+    "from": "submissions/arxiv-v2/figures/tina-propagation-cone.png",
+    "to": "archive/arxiv-v2-development/figures/tina-propagation-cone.png",
+    "sha256": "e0510058c49d50a415e70e2d415eb102a00c89c2dee9297d393c18538ba7329f"
+  }
+]

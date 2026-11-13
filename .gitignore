@@ -1,6 +1,7 @@
 # LaTeX intermediates
 *.aux
 *.bbl
+!submissions/arxiv-v2/main-v2.bbl
 *.blg
 *.fdb_latexmk
 *.fls

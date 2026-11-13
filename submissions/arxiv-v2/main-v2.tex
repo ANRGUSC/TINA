@@ -44,7 +44,7 @@ Bhaskar Krishnamachari\\
 \maketitle
 
 \begin{abstract}
-Fresh local information can support better networked decisions than a complete but delayed view of the network. We characterize when this happens and how far an agent should look when a wider view takes longer to obtain. We study agents that repeatedly minimize a shared quadratic cost in an environment that evolves independently of their actions. Each agent uses a synchronized neighborhood snapshot, so extending its scope also ages the nearby readings used in the decision. For affine full-information actions under a common exponential conditional-mean prediction rule, we obtain an explicit delay threshold at which fresh local information overtakes a stale global view. The calculation uses the classical Marschak--Radner decomposition: a delayed snapshot retains the fresh snapshot's decision benefit multiplied by the square of the temporal prediction factor. The result allows non-Gaussian states and nonlinear decision rules. In a Gaussian spatial model on a line, we derive the optimal observation radius and show that looking beyond the local node pays only when information travels more than twice the spatial correlation length in one coherence time. The preferred scope also depends on the decision itself. On a fixed 64-node ring, changing only the decision weights moves the optimal radius from one to five hops. These results quantify when timely local knowledge outweighs broader but older information, and how the desired action determines the value of looking farther.
+A broader view of a network can help agents coordinate, but collecting that view takes time. When is a fresh local observation more useful than an older view of the whole network, and when should an agent look only partway across it? We study agents that repeatedly minimize a shared quadratic cost in an environment that evolves independently of their actions. Each agent uses a synchronized neighborhood snapshot, so extending its scope also ages the nearby readings used in the decision. For affine full-information actions, when the conditional mean of the current state equals the old state scaled by a common exponential decay factor, we obtain an explicit delay threshold at which fresh local information overtakes a stale global view. The calculation uses the classical Marschak--Radner decomposition: a delayed snapshot retains the fresh snapshot's decision benefit multiplied by the square of the temporal prediction factor. The result allows non-Gaussian states and nonlinear decision rules. In a Gaussian spatial model on a line, we derive the optimal observation radius and show that looking beyond the local node pays only when information travels more than twice the spatial correlation length in one coherence time. The preferred scope also depends on the decision itself. On a fixed 64-node ring, increasing only the reach of the decision weights from 0.7 to 6 hops shifts the optimal observation radius from one to five hops. These results quantify when timely local knowledge outweighs broader but older information, and how the desired action determines the value of looking farther.
 \end{abstract}
 
 \section{Introduction}
@@ -87,9 +87,31 @@ $\operatorname{Var}(Z_t)=\sigma^2/2$, the fresh reading wins when
 Thus, one current reading predicts the two-sensor average better than both
 readings once the pair is more than about $0.35T$ old. The older snapshot
 contains the entire spatial state, but its additional scope no longer
-compensates for its age. Theorem~\ref{thm:local_global_crossover} gives the
-corresponding crossover when several agents choose actions that interact
-through a shared cost.
+compensates for its age. A similar crossover arises when agents' actions
+affect one another's costs: fresh local information can outperform a
+delayed global view even when the agents must coordinate.
+
+For the main results, each agent acts on a synchronized snapshot: widening
+scope can replace a fresh local reading by an older one. Architectures that
+retain fresh local data while adding remote data have different information
+and fall outside this comparison.
+Figure~\ref{fig:snapshot-architectures} shows why a wider synchronized
+snapshot is older: readings from farther away need more time to reach
+the deciding agent.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\linewidth]{figures/tina-propagation-cone.pdf}
+\caption{Information propagation in a planar network. The tip of the cone marks
+the deciding agent (diamond) at decision time $t$. Each horizontal slice
+shows a separate synchronized snapshot. For propagation speed $v$, a
+snapshot of age $\tau$ can include readings from agents within distance
+$v\tau$. At the tip, only the current local reading is available. At age
+$D/v$, readings from the entire deployment can arrive, where $D$ is the
+distance from the deciding agent to the farthest agent. Every reading in
+that global snapshot, including the deciding agent's own, is $D/v$ old.}
+\label{fig:snapshot-architectures}
+\end{figure}
 
 The example raises two design questions. How much delay can a global view
 tolerate before fresh local information becomes preferable? And when
@@ -105,28 +127,6 @@ old they are. We compare a fresh local reading, a delayed global view, and
 synchronized neighborhood snapshots by how well they support the current
 full-information decision. Current actions affect neither future state nor
 any agent's later information; this is a repeated static-team problem.
-
-For the main results, each agent acts on a synchronized snapshot: widening
-scope can replace a fresh local reading by an older one. Architectures that
-retain fresh local data while adding remote data have different information
-and fall outside this comparison.
-Figure~\ref{fig:snapshot-architectures} shows why a wider synchronized
-snapshot is older: readings from farther away need more time to reach
-the deciding agent.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/tina-propagation-cone.pdf}
-\caption{Information propagation in a planar network. The tip of the cone marks
-the deciding agent (diamond) at decision time $t$. Each horizontal slice
-shows a separate synchronized snapshot. For propagation speed $v$, a
-snapshot of age $\tau$ can include readings from agents within distance
-$v\tau$. At the tip, only the current local reading is available. At age
-$D/v$, readings from the entire deployment can arrive, where $D$ is the
-distance from the deciding agent to the farthest agent. Every reading in
-that global snapshot, including the deciding agent's own, is $D/v$ old.}
-\label{fig:snapshot-architectures}
-\end{figure}
 
 Within this snapshot family, a wider view is worthwhile only while its
 additional decision information compensates for its greater age. We
@@ -236,7 +236,7 @@ cost of missing that target.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/tina-field-and-cost.pdf}
+\includegraphics[width=0.70\linewidth]{figures/tina-field-and-cost.pdf}
 \caption{From spatial state to decision cost. Left: two snapshots of the same
 field, shown on a common color scale. Right: as the field changes, the
 full-information action $x_t^\star=K\theta_t$ moves from the hollow star
@@ -1034,7 +1034,7 @@ correlation alone therefore cannot determine the preferred radius.
 This ring example illustrates the exact one-hop comparison in
 Eq.~\eqref{eq:discrete_radius_improvement}.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.94\linewidth]{figures/fig7_5_decision_relevance.pdf}
 \caption{Changing the decision on a fixed 64-node ring. Left: decision-weighted
@@ -1076,7 +1076,7 @@ no closed-form radius is available. They use synchronized snapshots and
 common-rate Gaussian dynamics; they neither extend the canonical radius
 formula to these geometries nor establish a new theorem.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/fig7_6_general_graphs.pdf}
 \caption{Composition-law evaluation on four 64-node graphs. Top: spatial
@@ -1302,9 +1302,8 @@ TINA repository at \url{https://github.com/ANRGUSC/TINA}
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
-\clearpage
 \appendix
 \numberwithin{equation}{section}
-\input{technical-appendices-alt.tex}
+\input{technical-appendices-v2.tex}
 
 \end{document}

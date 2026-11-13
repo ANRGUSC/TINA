@@ -69,6 +69,11 @@ errors in `numerics/results/metadata`.
 
 ## Build the paper
 
+For the current arXiv v2 alternative manuscript, see
+[submission instructions](submissions/ARXIV-V2.md). Build its clean source
+package with `python scripts/build_arxiv_v2.py`. The instructions below
+describe the earlier full-paper source tree.
+
 A TeX installation containing `pdflatex`, `bibtex`, the standard packages used
 by `papers/full/main.tex`, and `IEEEtran.bst` is required.
 

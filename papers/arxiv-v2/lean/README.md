@@ -291,6 +291,25 @@ Made on 2026-11-13:
 - **Toolchain**: Lean 4.33.1 and Mathlib v4.33.1, the versions already on this
   machine. Tier D may need a newer Mathlib for Gaussian processes; decide then.
 
+Made on 2026-11-14 (Scott, on Claude's recommendation; each is also a
+`decision` note in the ledger, `ledger.py show C3/p1/s2`, `show C2/p1/s3`,
+`show C11`):
+
+- **C2 step 3 and C3 step 2 do not use C5.** The expansion
+  `E[f(u+h) − f(u)] = E[hᵀ(Qu − b)] + ½E[hᵀQh]` in the justification of the
+  normal equations is algebra on the quadratic cost, not completing the
+  square. "The error expansion" in the common-information paragraph is read as
+  that display. C5 is removed from `step_deps` of both steps, and C3 depends
+  on C5 only as setup, so C3 is unconditional. The paper still needs the F16
+  wording fix, preferably an equation label on that display.
+- **F13 item 2: the two-sensor example keeps its routine lemma.** "The
+  conditional mean is the best mean-squared-error estimate" is treated as a
+  standard fact; C11 is not rewired to use C3 and the example gets no pointer
+  to the appendix. Using C3 in Lean without a citation in the paper would add
+  a dependency the text does not have. If C3 is to be cited anywhere, the
+  optimal stale-global action (C8.b) is the natural place; that route is
+  unchecked in Lean and needs the F6 link.
+
 Still open:
 
 1. **F10: citing the continuum bridge.** The paper now argues that the
@@ -403,16 +422,13 @@ What "proved" does and does not mean here:
    for Bhaskar's reply to `paper-findings-2026-11-14.md`. C6.c is in the same
    position for its range clause `0 ≤ η_S ≤ 1`, and its monotonicity step
    uses C1.c through F6.
-3. **Decisions the tier C proofs raised**, for Scott:
-   - F15, F16: steps C2/p1/s3 and C3/p1/s2 are listed in `step_deps` as using
-     C5, and the Lean lemmas do not use it (`ledger.py audit -v`). Drop the
-     dependency, or keep the reading that goes through completing the square.
-   - F13: C3 now has a statement, so `bestMSE_eq_of_condExp` in
-     `Routine/Estimation.lean` can become a use of C3 in C11. That adds C3 to
-     the dependencies of C11's steps, which the paper's example does not cite.
-   - C1.b has a draft statement and no attempt: the paper gives no proof.
-4. Send Bhaskar sections 7 and 8 of `paper-findings-2026-11-14.md`, the two
-   addenda with the machine-checked results and findings F11–F17.
+3. **Bhaskar's reply** to sections 1–7 of `paper-findings-2026-11-14.md` has
+   arrived (2026-11-14) and is the next piece of work: realign the ledger to
+   his edits, then proofs for the claims he has now argued.
+4. Send Bhaskar section 8 of the memo, the second addendum with the tier C
+   results and findings F15–F17. The decisions the tier C proofs raised are
+   settled (see "Decisions"); C1.b has a draft statement and no attempt,
+   because the paper gives no proof.
 
 Read `Defs/` first (seven files, about 415 lines). Its design choices carry
 into every statement:

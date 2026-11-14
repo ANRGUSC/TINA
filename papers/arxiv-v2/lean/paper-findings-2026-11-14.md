@@ -330,7 +330,7 @@ Two observations, no edit needed. The justification does not use completing the 
 2. The preceding sentence gives $\mathbb E[h^\top Q(x^\star-m)]=0$; the linear term of that display is $\mathbb E[h^\top(Qm-b)]$. They agree up to sign because $Qx^\star=b$, which the paragraph does not say.
 3. That $m$ is itself admissible ($\sigma(Z)$-measurable with finite second moment) is used and not stated.
 
-**Suggested edit.** "The expansion in the justification of Corollary `cor:conditional_normal_equations`, with $Qx^\star=b$, then proves that $m$ is the unique optimum …".
+**Suggested edit.** "The expansion in the justification of Corollary `cor:conditional_normal_equations`, with $Qx^\star=b$, then proves that $m$ is the unique optimum …". Better still, give that display an equation label, so that the two steps of the corollary's justification that use it and this paragraph can all cite it. On our side the second reading is now the recorded one.
 
 ### F17 (minor): projection lemma
 

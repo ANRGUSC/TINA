@@ -3,6 +3,7 @@
 - **Date:** 14 November 2026 (second version, rewritten against the renamed manuscript)
 - **For:** Bhaskar, for edits to the manuscript
 - **Manuscript:** `submissions/arxiv-v2/main-v2.tex` and `technical-appendices-v2.tex` at commit `6454c74`, which is `origin/main` on 14 November. Every line number and quotation below was rechecked against those two files at that commit.
+- **Addendum:** section 7, at the end, was added later on 14 November. It reports which results are now machine-checked and adds findings F11–F14, which came from writing the proofs. Sections 1–6 are unchanged.
 - **Source:** the proof ledger in `papers/arxiv-v2/lean/` (findings F1–F10). K-numbers refer to the 12 November co-author review (`submissions/arxiv-v2/alt-review/index.html`).
 
 ## Changes since the 4a9b87e version
@@ -189,8 +190,96 @@ Each of these is stated as fact with no proof. Most need one sentence, in place 
 
 The formalization has not checked the three new Marschak–Radner attributions (Eqs. 4.21–4.22, 6.5, 6.6) against the book.
 
+## 7. Addendum: machine-checked results and findings F11–F14
+
+Added later on 14 November, against the same manuscript commit `6454c74`. Line numbers below were rechecked against that commit.
+
+### What is now machine-checked
+
+The "Bottom line" above says no proof had been machine-checked. Twelve now are, each as one formal lemma per sentence of your proof, in the order you wrote them:
+
+| Result | Label |
+|---|---|
+| Spatio-temporal composition | `thm:spatiotemporal_composition` (the unnormalized law) |
+| Exact stale-global regret | `thm:OU_stale_regret` |
+| Fresh-local versus stale-global crossover | `thm:local_global_crossover` |
+| Two-sensor example | main 66–86 |
+| Local explainability under aggregate coupling | `prop:aggregate_local` |
+| Radius objective, one-more-hop criterion, loss decomposition | `eq:snapshot_gain`, `eq:discrete_radius_improvement`, `eq:R_decomposition` |
+| Continuous marginal balance | `thm:marginal_balance` |
+| Optimal radius for exponential omission | `prop:generic_exponential_radius` |
+| Canonical optimal radius and its four comparative statics | `thm:canonical_optimal_radius` |
+| Degenerate normalization; centering the affine model | app 287–292; app 87–95 |
+
+Nothing found says a stated result is false. Three limits on what "checked" means:
+
+- The formal statements are drafts that Scott has not yet reviewed against the paper. A result counts as verified only after that review.
+- The aggregate-coupling proposition is checked on the assumption that completing the square (`eq:complete_square`) holds, because the paper does not prove it (first row of the table in section 3).
+- The canonical radius theorem is checked as algebra: given the omission curve $\eta_0e^{-2r/\ell_c}$ with $\eta_0=\ell_c/(\ell_c+2\ell_s)$, the radius, the threshold and the comparative statics follow. That this curve is the regret of the field model (the lemma at 857–880 and the derivation at 839–855) is not checked yet.
+
+The composition theorem's proof went through exactly as written: seven sentences, seven lemmas, no added step.
+
+### What is asked of you
+
+| # | Item | Where | Kind of edit |
+|---|---|---|---|
+| F14 | Aggregate-coupling proof: "subtracting" uses completing the square without citing it; "therefore" hides three steps | main 607–612 | Cite `eq:complete_square`; one sentence |
+| F13 | Two-sensor example does not say where independence of the processes is used | main 72–79 | One sentence |
+| F12 | Exponential-omission proof: the crossing's existence and the link to $[\cdot]_+$ are unsaid | main 781–785 | Half a sentence |
+| F11 | Decrease in $\ell_s$: which pairs of points the statement compares | main 899–906, 913–915 | Confirm only; no edit needed |
+
+### F14 (minor): aggregate-coupling proof
+
+**Where.** Proof of `prop:aggregate_local`, main 591–613.
+
+**Problem.**
+1. "Subtracting this cost from the local and constant costs gives [the regrets]" (610–612). Regret is defined as $\tfrac12\mathbb E[(u-x^\star)^\top Q(u-x^\star)]$; turning a difference of expected costs into that needs $f(u,\theta)-f(x^\star,\theta)=\tfrac12(u-x^\star)^\top Q(u-x^\star)$, which is `eq:complete_square`. The sentence does not cite it.
+2. "The full-information expected cost is therefore …" (607–609). Between the eigenvalues and that number sit three facts: $f(x^\star,\theta)=-\tfrac12x^{\star\top}Qx^\star$; $x^\star=Q^{-1}\theta$ explicitly (`eq:shared_resource_xstar`, stated at 547–557 without derivation); and $\mathbb E[(\sum_i\theta_i)^2]=n\sigma^2$, which uses independence, zero means and equal variance.
+3. In the first display, the cross terms between the means $\mu_i$ and the centered parts vanish because $\mathbb E[\widetilde u_i]=0$, not because of "independence across agents and zero state means" (594–595). Those two reasons are what kill $\mathbb E[\widetilde u_i\widetilde u_j]$ and $\mathbb E[\theta_i\widetilde u_j]$ for $i\ne j$.
+
+**Suggested edit.** At 610: "Subtracting this cost from the local and constant costs, by Eq. `eq:complete_square`, gives …". At 607–609: "Since $f(x^\star,\theta)=-\tfrac12\theta^\top Q^{-1}\theta$ and the $\theta_i$ are uncorrelated with variance $\sigma^2$, the full-information expected cost is $-(\sigma^2/2)\operatorname{tr}Q^{-1}=\dots$". The formal proof gets the same number by splitting $\theta$ along the two eigenspaces; if you write the trace form it will follow that instead.
+
+### F13 (minor): two-sensor example
+
+**Where.** main 72–79.
+
+**Problem.** The hypotheses are all there (independent, mean-zero, stationary processes; the scalar prediction rule). What is missing is where they are used.
+1. Line 75–77 gives $\mathbb E[X_t\mid X_{t-\tau}]$, and the next sentence concludes about the best estimate from *both* old readings. That needs $\mathbb E[X_t\mid X_{t-\tau},Y_{t-\tau}]=\mathbb E[X_t\mid X_{t-\tau}]$, which is where independence of the two processes enters. Independence of $X_s$ and $Y_s$ at each single time would not be enough; the text's "the two signal processes are independent" is the right hypothesis.
+2. "Our best estimate is …" (72, 77) uses, both times, that the conditional mean has the smallest mean squared error. The appendix proves this (common information, app 271–275); the example does not point there.
+3. The error $\operatorname{Var}(Z_t)(1-e^{-2\tau/T})$ (78–79) is asserted. It follows from orthogonality of the prediction error, stationarity and zero means.
+
+**Suggested edit.** After the prediction rule: "Because the processes are independent, the old reading of one does not help predict the other, so the conditional mean of $Z_t$ given both old readings is $e^{-\tau/T}Z_{t-\tau}$." This is an introductory example, so you may judge items 2 and 3 fine as they are.
+
+### F12 (minor): exponential-omission proof
+
+**Where.** Proof of `prop:generic_exponential_radius`, main 774–786; the sentence "It is positive exactly when $\eta_0(1+vT/\ell_c)>1$" at 770–771.
+
+**Problem.**
+1. "Otherwise $G$ increases up to its unique crossing" (783–784): that the bracket has a zero is not argued. It does (positive at zero, continuous, negative limit), and the formal proof says so.
+2. The proof splits on the sign of the bracket at zero; the boxed formula uses $[\cdot]_+$, and the statement's positivity criterion is in terms of $\eta_0(1+vT/\ell_c)$. The link is $vT\cdot\text{bracket}(0)=\eta_0(1+vT/\ell_c)-1$, which the proof does not write.
+
+**Suggested edit.** At 781: "The bracket decreases strictly to a negative limit, and at zero it has the sign of $\eta_0(1+vT/\ell_c)-1$."
+
+An observation, no edit needed: the hypothesis $\eta_0<1$ is never used. The result holds for every $\eta_0>0$.
+
+### F11 (minor): decrease in $\ell_s$
+
+**Where.** Items at main 899–906; proof at 913–915.
+
+**Question.** "Within the interior regime, $r^\star$ decreases with the spatial correlation length $\ell_s$", proved by $\partial r^\star/\partial\ell_s<0$ in the positive-radius regime. The formal statement as first drafted compared a point in the regime with *every* larger $\ell_s$, including values with $2\ell_s\ge vT$, where $r^\star=0$. The inequality is still true there, but the derivative does not show it. The plan is to restrict the formal statement to pairs that are both in the regime, which is how the sentence reads. Say if you meant the wider claim; it would need "once $2\ell_s\ge vT$ the radius is zero" in the proof.
+
+### Hypotheses the proofs never used (no edit required)
+
+- Composition theorem: beyond $a=e^{-\tau/T}>0$, neither $\tau\ge0$ nor $T>0$ is used.
+- Marginal balance: $\tau'\ge0$, $\eta_S'\le0$ and $\eta_S\ge0$ are not used; only continuous differentiability and $\eta_S<1$ are.
+- Two-sensor example: $\tau\ge0$ is not used.
+
+### F4, update
+
+The crossover theorem's formal proof needed exactly the sentence proposed under F4 for the case $\eta_S(0)=1$. It is currently the one line of that proof with no counterpart in the paper.
+
 ## Working notes
 
 - Line numbers will shift as you edit; that is fine. The ledger stores the proof text and is re-aligned afterwards, as it was for this version.
-- Please note which IDs you addressed (F2–F10, or the claim name for section 3) and which you chose to leave, so the ledger can be closed out item by item.
+- Please note which IDs you addressed (F2–F14, or the claim name for section 3) and which you chose to leave, so the ledger can be closed out item by item.
 - Where you prefer a different argument from the one suggested, use yours: the formal proof follows whatever the paper says.

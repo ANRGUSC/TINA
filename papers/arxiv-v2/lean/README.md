@@ -387,7 +387,8 @@ What "proved" does and does not mean here:
    It does not depend on the reply and is the next piece that can move.
    When C3 is stated, `bestMSE_eq_of_condExp` in `Routine/Estimation.lean`
    should become a use of C3 (F13).
-4. Send Bhaskar the new findings F11–F14 (the memo covers F1–F10).
+4. Send Bhaskar section 7 of `paper-findings-2026-11-14.md`, the addendum with
+   the machine-checked results and findings F11–F14.
 
 Read `Defs/` first (six files, about 300 lines). Its design choices carry
 into every statement:

@@ -23,12 +23,18 @@ Mutating commands rewrite data.sql, so every change is a readable git diff.
     ledger.py edit-diff E1           show an edit as a unified diff
     ledger.py edit-apply E1          apply an approved edit to the TeX
     ledger.py db [PATH]              write a .db file for use with sqlite3
+    ledger.py serve [PORT]           open the progress explorer (progress/) locally
+    ledger.py site OUTDIR            write the static progress site for GitHub Pages
 """
 import datetime
 import difflib
 import hashlib
+import json
+import os
 import re
+import shutil
 import sqlite3
+import subprocess
 import sys
 from pathlib import Path
 
@@ -267,16 +273,20 @@ def norm(text):
 def source_text(db, sid, cache={}):
     if sid not in cache:
         path = db.execute("SELECT path FROM sources WHERE id = ?", (sid,)).fetchone()["path"]
-        cache[sid] = (REPO / path).read_text()
+        cache[sid] = (REPO / path).read_text() if (REPO / path).exists() else ""
     return cache[sid]
 
 
-def cmd_check(db, args):
+def run_check(db):
+    """Return (errors, warnings) for the ledger <-> paper <-> Lean invariants."""
     errs, warns = [], []
     q = lambda sql, *p: db.execute(sql, p).fetchall()
 
     for s in q("SELECT * FROM sources"):
-        if hashlib.sha256((REPO / s["path"]).read_bytes()).hexdigest() != s["sha256"]:
+        if not (REPO / s["path"]).exists():
+            errs.append(f"{s['id']}: {s['path']} does not exist (renamed or removed since "
+                        f"the ledger was aligned at {(s['git_commit'] or '?')[:7]})")
+        elif hashlib.sha256((REPO / s["path"]).read_bytes()).hexdigest() != s["sha256"]:
             warns.append(f"{s['id']}: {s['path']} changed since the ledger was aligned "
                          f"(excerpt checks below decide whether that matters)")
 
@@ -366,6 +376,11 @@ def cmd_check(db, args):
         if norm(s["tex"]) not in old:
             errs.append(f"{s['id']}: step differs from the previous proof version but no hunk records the change")
 
+    return errs, warns
+
+
+def cmd_check(db, args):
+    errs, warns = run_check(db)
     for w in warns:
         print(f"warn  {w}")
     for e in errs:
@@ -446,7 +461,94 @@ def cmd_db(db, args):
     print(f"wrote {path} (a copy; changes made there are not saved to data.sql)")
 
 
-COMMANDS = {"status": cmd_status, "show": cmd_show, "frontier": cmd_frontier,
+# ------------------------------------------------------- progress explorer
+# progress/ is a static page that loads ledger/*.sql into SQLite in the
+# browser. It needs ../ledger and ../TinaV2 next to it, so the site mirrors
+# this directory's layout. build-info.json is the only generated file.
+def build_info(db):
+    def git(*a):
+        try:
+            return subprocess.run(["git", "-C", str(REPO), *a], capture_output=True,
+                                  text=True, check=True).stdout.strip()
+        except (OSError, subprocess.CalledProcessError):
+            return None
+    errs, warns = run_check(db)
+    return {"repo": os.environ.get("GITHUB_REPOSITORY", "ANRGUSC/TINA"),
+            "lean_dir": str(ROOT.relative_to(REPO)),
+            "commit": os.environ.get("GITHUB_SHA") or git("rev-parse", "HEAD"),
+            "generated": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "check": {"errors": errs, "warnings": warns}}
+
+
+def cmd_site(db, args):
+    if not args:
+        sys.exit("usage: ledger.py site OUTDIR")
+    out = Path(args[0]).resolve()
+    if out == ROOT or ROOT in out.parents:
+        sys.exit("OUTDIR must be outside the lean/ directory")
+    for sub in ("progress", "ledger", "TinaV2"):
+        if (out / sub).exists():
+            shutil.rmtree(out / sub)
+    shutil.copytree(ROOT / "progress", out / "progress")
+    (out / "ledger").mkdir(parents=True)
+    for f in (SCHEMA, DATA):
+        shutil.copy(f, out / "ledger" / f.name)
+    n = 0
+    for f in sorted((ROOT / "TinaV2").rglob("*.lean")):
+        dest = out / f.relative_to(ROOT)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(f, dest)
+        n += 1
+    for r in db.execute("SELECT id, lean_file FROM formalizations WHERE status != 'superseded'"):
+        if not (out / r["lean_file"]).is_file():
+            sys.exit(f"{r['id']}: {r['lean_file']} is in the ledger but not in the site")
+    info = build_info(db)
+    (out / "progress" / "build-info.json").write_text(json.dumps(info, indent=1))
+    (out / "index.html").write_text(
+        '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=progress/">'
+        '<title>arXiv v2 Lean proof progress</title><a href="progress/">Lean proof progress</a>\n')
+    c = info["check"]
+    print(f"wrote {out}/progress/ ({n} Lean files; ledger check: "
+          f"{len(c['errors'])} errors, {len(c['warnings'])} warnings)")
+
+
+def cmd_serve(db, args):
+    import functools
+    import http.server
+    port = int(args[0]) if args else 8642
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def do_GET(self):
+            if self.path.split("?")[0] == "/progress/build-info.json":
+                body = json.dumps(build_info(connect())).encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            else:
+                super().do_GET()
+
+        def end_headers(self):
+            self.send_header("Cache-Control", "no-store")
+            super().end_headers()
+
+        def log_message(self, *a):
+            pass
+
+    Handler.extensions_map = {**Handler.extensions_map, ".wasm": "application/wasm",
+                              ".sql": "text/plain; charset=utf-8", ".lean": "text/plain; charset=utf-8"}
+    srv = http.server.ThreadingHTTPServer(
+        ("127.0.0.1", port), functools.partial(Handler, directory=str(ROOT)))
+    print(f"progress explorer: http://127.0.0.1:{port}/progress/   (Ctrl-C to stop; "
+          f"reload the page after a ledger change)")
+    try:
+        srv.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
+
+COMMANDS = {"serve": cmd_serve, "site": cmd_site, "status": cmd_status, "show": cmd_show, "frontier": cmd_frontier,
             "sql": cmd_sql, "add": cmd_add, "set": cmd_set, "note": cmd_note,
             "check": cmd_check, "graph": cmd_graph, "edit-diff": cmd_edit_diff,
             "edit-apply": cmd_edit_apply, "db": cmd_db}

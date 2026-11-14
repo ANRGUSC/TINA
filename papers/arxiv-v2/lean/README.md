@@ -25,7 +25,9 @@ This work starts from the paper text only. It does not read or reuse
 ledger/schema.sql     tables and views
 ledger/data.sql       one INSERT per row; the committed source of truth
 tools/ledger.py       CLI: status, show, frontier, sql, add, set, note, check,
-                      graph, edit-diff, edit-apply, db
+                      graph, edit-diff, edit-apply, db, serve, site
+progress/             the progress explorer: a static page that loads the
+                      ledger into SQLite in the browser (see below)
 lakefile.toml, lean-toolchain     Lean 4.33.1 + Mathlib v4.33.1
 TinaV2/Prelude.lean   the only Mathlib import (a narrow module list)
 TinaV2/Smoke.lean     toolchain smoke test, not part of the ledger
@@ -67,6 +69,34 @@ python3 tools/ledger.py frontier          # claims ready to prove
 python3 tools/ledger.py check             # invariants below; non-zero exit on failure
 python3 tools/ledger.py sql "SELECT target, body FROM notes WHERE kind = 'failure'"
 ```
+
+### Progress explorer
+
+`progress/` is a web page over the same ledger: status overview, the claim
+dependency graph, one page per claim with the paper's proof steps next to
+their Lean lemmas, findings, paper edits, and a SQL console. It reads
+`ledger/schema.sql` and `ledger/data.sql` directly (SQLite compiled to
+WebAssembly, vendored in `progress/vendor/`), so there is no generated data
+file to keep in step with the ledger.
+
+```
+python3 tools/ledger.py serve             # http://127.0.0.1:8642/progress/
+python3 tools/ledger.py site OUTDIR       # static copy for GitHub Pages
+```
+
+The Pages workflow (`.github/workflows/publish-reading-guide.yml`) runs `site`
+on every push to `main` that touches this directory and publishes the result at
+<https://anrgusc.github.io/TINA/arxiv-v2/lean/progress/>. The site build also
+records the result of `ledger.py check`, and the page shows a warning when the
+ledger and the paper source in that commit disagree.
+
+Colours on the page: green is `verified`; blue is in progress (statement
+drafted, statement approved, proof under way, proved and awaiting audit), darker
+as it advances; yellow is not started; red needs a paper or Lean change (no
+proof in the paper to mirror, a paper edit pending, a failed attempt with no
+successor, or an open finding of medium severity or higher); grey is numeric or
+prose. Minor findings show as a badge and do not turn a claim red. The rules
+are in `classify()` in `progress/app.js`.
 
 Claim states: `todo` → `stated` → `proving` → `proved_unaudited` → `verified`,
 with `needs_paper_edit` when the Lean proof mirrors a proof that is still only

@@ -1,0 +1,31 @@
+import sympy as sp, numpy as np, itertools
+q,g,s=sp.symbols('q gamma sigma',positive=True)
+n=sp.symbols('n',positive=True)
+# symbolic for general n via closed forms
+Rinf=s**2/2*((n-1)/q+1/(q+g*n))
+Rinf_paper=n*s**2*(q+g*(n-1))/(2*q*(q+g*n))
+print('Rinf',sp.simplify(Rinf-Rinf_paper))
+Rloc=Rinf-n*s**2/(2*(q+g))
+Rloc_paper=n*s**2*g**2*(n-1)/(2*q*(q+g)*(q+g*n))
+print('Rloc',sp.simplify(Rloc-Rloc_paper))
+eta=g**2*(n-1)/((q+g)*(q+g*(n-1)))
+print('eta',sp.simplify(Rloc/Rinf-eta))
+rho=sp.Rational(1,2)*sp.log((q+g)*(q+g*(n-1))/(q*(q+g*n)))
+print('rho arg',sp.simplify(1/(1-eta)-(q+g)*(q+g*(n-1))/(q*(q+g*n))))
+print('limit',sp.limit(rho,n,sp.oo), sp.limit(1-eta,n,sp.oo))
+print('deta/dg',sp.factor(sp.diff(eta,g)))
+print('deta/dn',sp.factor(sp.diff(eta,n)))
+# explicit matrices for small n
+for N in [2,3,5,8]:
+    Q=q*sp.eye(N)+g*sp.ones(N,N)
+    Qi=Q.inv()
+    xs=sp.simplify(Qi[0,0]-(1/q-g/(q*(q+g*N)))), sp.simplify(Qi[0,1]+g/(q*(q+g*N)))
+    Ri=s**2/2*sp.trace(Qi)
+    # best LINEAR diagonal local rule u_i=c_i theta_i : minimize 1/2 E (u-x*)^T Q (u-x*)
+    c=sp.symbols('c0:%d'%N)
+    C=sp.diag(*c)
+    M=(C-Qi)
+    J=s**2/2*sp.trace(M.T*Q*M)
+    sol=sp.solve([sp.diff(J,ci) for ci in c],c,dict=True)[0]
+    Rl=sp.simplify(J.subs(sol))
+    print(N,xs,sp.simplify(Ri-Rinf_paper.subs(n,N)),[sp.simplify(sol[ci]-1/(q+g)) for ci in c][:2],sp.simplify(Rl-Rloc_paper.subs(n,N)))

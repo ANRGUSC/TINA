@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>arXiv v2 Lean proof progress · TINA</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<link rel="stylesheet" href="style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script defer src="vendor/sql-wasm.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="scope" role="note">
+      <strong>Work in progress, arXiv v2 only.</strong>
+      This page tracks new Lean proof work for the arXiv v2 revision of the TINA paper
+      (working draft <code>tina-v2-alt</code>). It is separate from the L-CSS letter and its
+      reading guide and says nothing about that manuscript. Statuses and findings are working
+      notes on a draft and change as the work proceeds.
+    </div>
+    <div class="titlebar">
+      <div>
+        <h1>Lean proof progress <span class="sub">arXiv v2 manuscript</span></h1>
+        <p class="meta" id="buildmeta">Loading the ledger…</p>
+      </div>
+      <nav id="nav" aria-label="Views">
+        <a href="#/overview" data-view="overview">Overview</a>
+        <a href="#/graph" data-view="graph">Dependency graph</a>
+        <a href="#/claims" data-view="claims">Claims</a>
+        <a href="#/findings" data-view="findings">Findings</a>
+        <a href="#/edits" data-view="edits">Paper edits</a>
+        <a href="#/sql" data-view="sql">SQL</a>
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="main" tabindex="-1">
+  <p class="loading">Loading the proof ledger into SQLite…</p>
+</main>
+<footer class="wrap foot">
+  <p>
+    Data: <code>ledger/schema.sql</code> and <code>ledger/data.sql</code>, loaded into SQLite in your
+    browser (sql.js). Nothing is written back. The ledger is edited only through
+    <code>tools/ledger.py</code>.
+    <a href="https://github.com/ANRGUSC/TINA/tree/main/papers/arxiv-v2/lean">Source on GitHub</a>
+  </p>
+</footer>
+<div id="tip" class="tip" hidden></div>
+</body>
+</html>

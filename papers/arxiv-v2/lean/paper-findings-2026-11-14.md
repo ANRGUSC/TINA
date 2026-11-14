@@ -4,6 +4,7 @@
 - **For:** Bhaskar, for edits to the manuscript
 - **Manuscript:** `submissions/arxiv-v2/main-v2.tex` and `technical-appendices-v2.tex` at commit `6454c74`, which is `origin/main` on 14 November. Every line number and quotation below was rechecked against those two files at that commit.
 - **Addenda:** sections 7 and 8, at the end, were added later on 14 November. Section 7 reports which results are machine-checked and adds findings F11–F14, which came from writing the proofs. Section 8 does the same for the appendix projection results and adds F15–F17. Sections 1–6 are unchanged.
+- **Reply:** received on 14 November (a ChatGPT review that Bhaskar relayed). What was decided about each item is in `paper-findings-dispositions.md`, generated from the ledger. This memo is kept as it was sent; section 8 was not sent as a request and goes as information only.
 - **Source:** the proof ledger in `papers/arxiv-v2/lean/` (findings F1–F10). K-numbers refer to the 12 November co-author review (`submissions/arxiv-v2/alt-review/index.html`).
 
 ## Changes since the 4a9b87e version

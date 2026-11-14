@@ -23,6 +23,7 @@ const idKey = id => {
   const m = /^([A-Z])(\d+)(?:\.([a-z]))?/.exec(id) || [];
   return [m[1] || '', +(m[2] || 0), m[3] || ''];
 };
+const dispCmp = (a, b) => a.localeCompare(b, undefined, { numeric: true });
 const idCmp = (a, b) => {
   const x = idKey(a), y = idKey(b);
   return x[0].localeCompare(y[0]) || x[1] - y[1] || x[2].localeCompare(y[2]) || a.localeCompare(b);
@@ -38,13 +39,17 @@ function q(sql, params) {
 }
 
 /* --------------------------------------------------------- status scheme */
-// Eight keys in five colour groups. Every use pairs the colour with an icon
+// Ten keys in five colour groups. Every use pairs the colour with an icon
 // and a text label, so status never depends on colour alone.
 const KEYS = {
-  verified: { group: 'verified', label: 'Verified in Lean', glyph: '✓', c: '--st-verified',
-    help: 'The Lean proof is complete, the statement is frozen, and the proof mirrors the proof in the paper step for step.' },
+  verified: { group: 'verified', label: 'Verified, follows the paper', glyph: '✓', c: '--st-verified',
+    help: 'The Lean proof is complete, the statement is frozen, every step is a step of the proof in the paper, nothing is assumed, and only the standard axioms are used.' },
+  vsup: { group: 'verified', label: 'Verified, Lean supplies steps', glyph: '+', c: '--st-vsup',
+    help: 'Lean proves the statement in the paper, statement frozen, nothing assumed. Some or all of the argument is not in the paper: it is written in the ledger and marked as supplied.' },
+  cond: { group: 'progress', label: 'Proved, still assumes a claim', glyph: '◐', c: '--st-p4',
+    help: 'The Lean proof is complete and the statement frozen, but the assembled theorem takes a claim that is not proved yet as a hypothesis.' },
   p4: { group: 'progress', label: 'Proved, audit pending', glyph: '▸', c: '--st-p4',
-    help: 'A Lean proof exists but the statement is not frozen or the step audit is not done.' },
+    help: 'A Lean proof exists but the statement is not frozen or the axioms are not recorded yet.' },
   p3: { group: 'progress', label: 'Proof under way', glyph: '▸', c: '--st-p3',
     help: 'A Lean proof attempt is planned or active.' },
   p2: { group: 'progress', label: 'Statement approved', glyph: '▸', c: '--st-p2',
@@ -53,12 +58,23 @@ const KEYS = {
     help: 'A draft Lean statement exists and awaits review against the paper.' },
   todo: { group: 'todo', label: 'Not started', glyph: '', c: '--st-todo',
     help: 'Nothing in Lean yet.' },
-  blocked: { group: 'blocked', label: 'Needs paper or Lean change', glyph: '!', c: '--st-blocked',
-    help: 'Cannot be verified as things stand: the paper has no proof to mirror, a paper edit is pending, a Lean attempt failed, or a finding of medium or higher severity is open.' },
+  blocked: { group: 'blocked', label: 'Waiting on a decision or a paper edit', glyph: '!', c: '--st-blocked',
+    help: 'A point on this claim has no decision yet, a paper edit has been agreed and is not in the paper yet, or the last Lean attempt failed.' },
   out: { group: 'out', label: 'Outside Lean scope', glyph: '–', c: '--st-out',
     help: 'Numeric or prose claim. Tracked in the ledger, not proved in Lean.' },
 };
-const KEY_ORDER = ['verified', 'p4', 'p3', 'p2', 'p1', 'todo', 'blocked', 'out'];
+const KEY_ORDER = ['verified', 'vsup', 'cond', 'p4', 'p3', 'p2', 'p1', 'todo', 'blocked', 'out'];
+const DECISIONS = {
+  undecided: { label: 'Waiting for a decision', c: '--st-blocked' },
+  paper_edit: { label: 'The paper changes', c: '--sev-medium' },
+  lean_supplies: { label: 'The paper stays; Lean supplies the argument', c: '--st-vsup' },
+  reading: { label: 'The paper stays; the Lean statement fixes a reading', c: '--st-p2' },
+  leave: { label: 'The paper stays; nothing changes in Lean', c: '--st-out' },
+};
+const DELTA = {
+  extra_hypothesis: 'extra hypothesis', restricted: 'states less', stronger: 'states more',
+  reading: 'reading', form: 'form',
+};
 const SEV = { minor: 1, medium: 2, major: 3, critical: 4 };
 const SEV_COLOR = { minor: '--sev-minor', medium: '--sev-medium', major: '--sev-major', critical: '--sev-major' };
 const TIERS = {
@@ -69,9 +85,12 @@ const TIERS = {
 };
 
 function classify(c) {
-  const open = M.findings.filter(f => f.claim_id === c.id && f.status === 'open');
+  // A finding is settled once every point in it has been carried out.
+  const settled = f => { const d = M.disp.filter(x => x.finding_id === f.id); return d.length > 0 && d.every(x => x.status === 'done'); };
+  const open = M.findings.filter(f => f.claim_id === c.id && f.status === 'open' && !settled(f));
   c.open = open;
   c.minor = open.filter(f => SEV[f.severity] < 2);
+  c.disp = M.disp.filter(d => d.claim_id === c.id);
   c.reasons = [];
   if (c.scope !== 'lean') {
     c.key = 'out';
@@ -83,20 +102,23 @@ function classify(c) {
   if (c.state === 'needs_paper_edit') {
     c.reasons.push({ short: 'paper edit pending',
       text: 'The Lean proof is complete but mirrors a proposed proof. The paper edit has to be approved and applied.' });
-  } else if (needsProof && !c.paper_proof) {
-    c.reasons.push(M.proposed.has(c.id)
-      ? { short: 'paper edit pending', text: 'A proof is proposed, but the edit that puts it in the paper has not been applied.' }
-      : { short: 'no proof in paper', text: 'The paper asserts this without a proof. An English proof has to be added through a tracked paper edit before Lean can mirror it.' });
   }
-  for (const f of open) {
-    if (SEV[f.severity] >= 2) c.reasons.push({ short: `${f.severity} finding ${f.id}`, text: `Open ${f.severity} finding ${f.id}: ${f.title}` });
+  for (const d of c.disp) {
+    if (d.decision === 'undecided') c.reasons.push({ short: `decision pending on ${d.id}`, text: `No decision yet on ${d.id}: ${d.point}` });
+    else if (d.decision === 'paper_edit' && d.status === 'open') c.reasons.push({ short: `paper edit agreed (${d.id})`, text: `Paper edit agreed and not yet in the paper (${d.id}): ${d.point}` });
+  }
+  if (needsProof && !c.paper_proof && !c.disp.some(d => d.whole_proof)) {
+    c.reasons.push({ short: 'no proof, no decision', text: 'The paper gives no proof of this claim and no decision says whether the paper or Lean supplies one.' });
   }
   if (attempts.some(a => a.status === 'failed') && !attempts.some(a => ['planned', 'active', 'proved'].includes(a.status))) {
     c.reasons.push({ short: 'Lean attempt failed', text: 'The last Lean attempt failed and no new attempt is open.' });
   }
   if (c.reasons.length) { c.key = 'blocked'; c.detail = c.reasons[0].short; return; }
+  const assumes = c.assumes ? `assumes ${c.assumes}` : '';
   if (c.state === 'verified') c.key = 'verified';
-  else if (c.state === 'proved_unaudited') { c.key = 'p4'; if (c.stmt_status !== 'frozen') c.detail = `statement ${c.stmt_status}`; }
+  else if (c.state === 'verified_supplied') { c.key = 'vsup'; c.detail = c.proof_status === 'supplement' ? 'proof not in the paper' : `${c.n_supplied} of ${c.n_steps} steps supplied`; }
+  else if (c.state === 'conditional') { c.key = 'cond'; c.detail = assumes; }
+  else if (c.state === 'proved_unaudited') { c.key = 'p4'; c.detail = [c.stmt_status !== 'frozen' ? `statement ${c.stmt_status}` : '', assumes].filter(Boolean).join(', '); }
   else if (c.state === 'proving') { c.key = 'p3'; if (c.n_steps) c.detail = `${c.n_steps_proved}/${c.n_steps} steps`; }
   else if (c.state === 'stated') { c.key = c.stmt_status === 'draft' ? 'p1' : 'p2'; if (c.key === 'p2') c.detail = c.stmt_status; }
   else c.key = 'todo';
@@ -107,6 +129,8 @@ function buildModel() {
   M.meta = Object.fromEntries(q('SELECT key, value FROM meta').map(r => [r.key, r.value]));
   M.sources = Object.fromEntries(q('SELECT * FROM sources').map(r => [r.id, r]));
   M.findings = q('SELECT * FROM findings');
+  M.disp = q('SELECT * FROM dispositions').sort((a, b) => dispCmp(a.id, b.id));
+  M.deltas = q('SELECT * FROM statement_deltas ORDER BY formalization_id, ordinal');
   M.edits = q('SELECT * FROM edits');
   M.attempts = q('SELECT a.*, f.claim_id FROM attempts a JOIN formalizations f ON f.id = a.formalization_id');
   M.proposed = new Set(q("SELECT DISTINCT claim_id FROM proofs WHERE status = 'proposed'").map(r => r.claim_id));
@@ -116,6 +140,7 @@ function buildModel() {
   M.byId = new Map(M.claims.map(c => [c.id, c]));
   M.claims.forEach(classify);
   M.findingIds = new Set(M.findings.map(f => f.id));
+  M.dispIds = new Set(M.disp.map(d => d.id));
   M.editIds = new Set(M.edits.map(e => e.id));
   M.lean = M.claims.filter(c => c.scope === 'lean');
 }
@@ -125,6 +150,7 @@ const icon = key => `<span class="ico ${key}" style="--c:var(${KEYS[key].c})" ar
 function statusChip(c, long) {
   const k = KEYS[c.key];
   const extra = c.detail && long !== false ? ` · ${esc(c.detail)}` : '';
+  if (long === false && c.key === 'blocked') return `<span class="chip" data-tip="${esc(k.help)}">${icon(c.key)}Waiting</span>`;
   return `<span class="chip" data-tip="${esc(k.help)}">${icon(c.key)}${esc(k.label)}${extra}</span>`;
 }
 function minorBadge(c) {
@@ -140,9 +166,9 @@ const claimLink = (id, withTitle) => {
 };
 // Turn ledger ids inside already-escaped text into links.
 function linkIds(html) {
-  return html.replace(/\b(C\d+(?:\.[a-z])?)((?:\/[pfa]\d+(?:\/s\w+)?)?)|\b([FE]\d+)\b/g, (m, cid, rest, other) => {
+  return html.replace(/\b(C\d+(?:\.[a-z])?)((?:\/[pfad]\d+(?:\/[sd]\w+)?)?)|\b([FE]\d+)(\.\d+)?\b/g, (m, cid, rest, other, item) => {
     if (cid) return M.byId.has(cid) ? `<a class="idlink" href="#/claim/${encodeURIComponent(cid)}">${m}</a>` : m;
-    if (M.findingIds.has(other)) return `<a class="idlink" href="#/findings/${other}">${other}</a>`;
+    if (M.findingIds.has(other)) return `<a class="idlink" href="#/findings/${other}${item && M.dispIds.has(m) ? item : ''}">${m}</a>`;
     if (M.editIds.has(other)) return `<a class="idlink" href="#/edits/${other}">${other}</a>`;
     return m;
   });
@@ -170,6 +196,22 @@ const countKeys = list => list.reduce((o, c) => (o[c.key] = (o[c.key] || 0) + 1,
 function notesList(rows) {
   return `<ul class="notes">${rows.map(n =>
     `<li><time>${esc(n.ts.replace('T', ' ').slice(0, 16))}</time><span class="tag">${esc(n.kind)}</span> ${linkIds(esc(n.target))}<br>${prose(n.body)}</li>`).join('')}</ul>`;
+}
+
+const decisionTag = d => `<span class="badge" data-tip="${esc(DECISIONS[d.decision].label)}"><span class="dot" style="--c:var(${DECISIONS[d.decision].c})"></span>${esc(d.decision.replace('_', ' '))}</span>`;
+function dispRows(rows, withClaim, anchor) {
+  return `<div class="tbl-wrap"><table class="disp"><thead><tr><th>Point</th>${withClaim ? '<th>Claim</th>' : ''}<th>What it is</th><th>Decision</th><th>Carried out</th><th>Decided by</th><th>Reason</th></tr></thead>
+    <tbody>${rows.map(d => `<tr${anchor ? ` id="${esc(d.id)}"` : ''}><td class="idlink nowrap">${esc(d.id)}</td>${withClaim ? `<td class="nowrap">${claimLink(d.claim_id)}</td>` : ''}
+      <td>${prose(d.point)} <span class="tag">${esc(d.level)}</span></td><td class="nowrap">${decisionTag(d)}</td>
+      <td class="nowrap">${d.decision === 'undecided' ? '<span class="muted">–</span>' : d.status === 'done' ? `done${d.resolved_commit ? ` in <code>${esc(d.resolved_commit.slice(0, 7))}</code>` : ''}` : 'not yet'}</td>
+      <td>${esc(d.decided_by || '')}${d.decided_on ? `<br><span class="small muted">${esc(d.decided_on)}</span>` : ''}</td>
+      <td>${prose(d.rationale || '')}${d.lean_ref ? `<br><span class="small muted">Lean: <code>${esc(d.lean_ref.replace('::', ' · '))}</code></span>` : ''}${d.step_id ? `<br><span class="small muted">Supplied step ${esc(d.step_id)}</span>` : ''}${d.proof_id ? `<br><span class="small muted">Supplement proof ${esc(d.proof_id)}</span>` : ''}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function deltaList(formId) {
+  const rows = M.deltas.filter(d => d.formalization_id === formId);
+  if (!rows.length) return '';
+  return `<p style="margin:8px 0 2px"><b>Where it differs from the paper's statement.</b></p>
+    <ul class="deltas">${rows.map(d => `<li><span class="tag ${d.kind}">${esc(DELTA[d.kind])}</span> ${prose(d.text)}${d.disposition_id ? ` <span class="small muted">(${linkIds(esc(d.disposition_id))})</span>` : ''}</li>`).join('')}</ul>`;
 }
 
 /* ------------------------------------------------------------- TeX + Lean */
@@ -250,16 +292,16 @@ function viewOverview() {
   const stmt = q(`SELECT status, COUNT(*) n FROM v_formalization GROUP BY status`);
   const stmtN = s => (stmt.find(r => r.status === s) || { n: 0 }).n;
   const stmtTotal = stmt.reduce((s, r) => s + r.n, 0);
-  const steps = q(`SELECT COUNT(*) n FROM steps s JOIN proofs p ON p.id = s.proof_id
-                   WHERE p.status IN ('in_paper','proposed') AND p.is_primary = 1`)[0].n;
+  const live = `p.status IN ('in_paper','supplement','proposed') AND p.is_primary = 1`;
+  const steps = q(`SELECT COUNT(*) n, SUM(s.origin = 'supplied') sup FROM steps s JOIN proofs p ON p.id = s.proof_id WHERE ${live}`)[0];
   const stepsProved = q(`SELECT COUNT(DISTINCT m.step_id) n FROM step_map m JOIN attempts a ON a.id = m.attempt_id
                          WHERE m.status = 'proved' AND a.status NOT IN ('superseded','abandoned','failed')`)[0].n;
-  const nProofs = q(`SELECT COUNT(*) n FROM proofs WHERE status IN ('in_paper','proposed') AND is_primary = 1`)[0].n;
-  const open = M.findings.filter(f => f.status === 'open');
-  const sevCount = Object.entries(open.reduce((o, f) => (o[f.severity] = (o[f.severity] || 0) + 1, o), {}))
-    .sort((a, b) => SEV[b[0]] - SEV[a[0]]).map(([s, c]) => `${c} ${s}`).join(', ');
+  const nProofs = q(`SELECT COUNT(*) n FROM proofs p WHERE ${live}`)[0].n;
   const blocked = lean.filter(c => c.key === 'blocked');
-  const noProof = blocked.filter(c => c.reasons.some(r => r.short === 'no proof in paper')).length;
+  const dn = (dec, st) => M.disp.filter(d => d.decision === dec && (!st || d.status === st)).length;
+  const undecided = dn('undecided'), editsOpen = dn('paper_edit', 'open');
+  const toSupply = lean.filter(c => !c.paper_proof && !c.supplement_proof && c.disp.some(d => d.whole_proof && d.decision === 'lean_supplies'));
+  const conditional = lean.filter(c => c.assumes);
   const pendingEdits = M.edits.filter(e => ['proposed', 'approved'].includes(e.status)).length;
   const frontier = q('SELECT id, title FROM v_frontier ORDER BY tier, id').sort((a, b) => idCmp(a.id, b.id));
   const todos = q("SELECT * FROM notes WHERE kind = 'todo' ORDER BY id DESC");
@@ -267,36 +309,42 @@ function viewOverview() {
 
   const tile = (k, v, d) => `<div class="card tile"><div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
   const counts = countKeys(M.claims);
-  const legend = KEY_ORDER.filter(k => counts[k] || k === 'verified').map(k =>
+  const legend = KEY_ORDER.filter(k => counts[k] || k === 'verified' || k === 'vsup').map(k =>
     `<button class="item" data-filter="${k}" data-tip="${esc(KEYS[k].help)}">${icon(k)}<span>${esc(KEYS[k].label)}</span> <b>${counts[k] || 0}</b></button>`).join('');
 
   const next = [];
-  if (stmtN('draft')) next.push(`Review ${plural(stmtN('draft'), 'draft Lean statement')} against the paper and freeze the ones that are right. Proofs start from frozen statements. <a href="#/claims?key=p1">Show them</a>`);
-  if (noProof) next.push(`Write English proofs for ${plural(noProof, 'claim')} the paper asserts without proof, as tracked paper edits. <a href="#/claims?key=blocked">Show them</a>`);
+  if (undecided) next.push(`${plural(undecided, 'point')} still ${undecided === 1 ? 'needs' : 'need'} a decision. <a href="#/findings">Show ${undecided === 1 ? 'it' : 'them'}</a>`);
+  if (stmtN('draft')) next.push(`Review ${plural(stmtN('draft'), 'draft Lean statement')} against the paper and freeze the ones that are right. The differences from the paper are listed with each statement; the advertised results are on the <a href="#/results">Results</a> page.`);
+  if (conditional.length) next.push(`${conditional.map(c => claimLink(c.id)).join(', ')} still assume ${[...new Set(conditional.flatMap(c => c.assumes.split(', ')))].map(x => claimLink(x)).join(', ')}, which ${conditional.length ? 'is' : 'are'} not proved yet.`);
+  if (toSupply.length) next.push(`Write and prove the supplied arguments for ${plural(toSupply.length, 'claim')} the paper states without proof: ${toSupply.map(c => claimLink(c.id)).join(', ')}.`);
+  if (editsOpen) next.push(`${plural(editsOpen, 'paper edit')} agreed with the co-author and not yet in the paper. The ledger is realigned when they land. <a href="#/edits">Show them</a>`);
   if (frontier.length) next.push(`Ready to prove now (own statement and all dependencies frozen): ${frontier.map(f => claimLink(f.id)).join(', ')}.`);
-  else next.push('No claim is ready to prove yet: a claim enters the frontier when its own Lean statement and the statements of everything it depends on are frozen.');
-  if (pendingEdits) next.push(`${plural(pendingEdits, 'paper edit')} awaiting approval or application. <a href="#/edits">Show them</a>`);
-  if (open.length) next.push(`Resolve ${plural(open.length, 'open finding')} (${sevCount}). <a href="#/findings">Show them</a>`);
+  if (pendingEdits) next.push(`${plural(pendingEdits, 'tracked paper edit')} awaiting approval or application. <a href="#/edits">Show them</a>`);
   todos.forEach(t => next.push(`${linkIds(esc(t.target))}: ${prose(t.body)}`));
 
   const tiers = Object.keys(TIERS).map(t => {
     const list = lean.filter(c => c.tier === t);
     return `<tr><td><b>${t}</b></td><td>${esc(TIERS[t])}</td><td style="min-width:180px">${stackBar(countKeys(list), 'thin')}</td>
-      <td class="num">${list.filter(c => c.key === 'verified').length} / ${list.length}</td>
+      <td class="num">${list.filter(c => c.key === 'verified' || c.key === 'vsup').length} / ${list.length}</td>
       <td>${list.map(c => `<a class="idlink" href="#/claim/${encodeURIComponent(c.id)}" data-tip-title="${esc(c.id)}: ${esc(c.title)}" data-tip="${esc(KEYS[c.key].label)}${c.detail ? ' · ' + esc(c.detail) : ''}">${icon(c.key)}</a>`).join(' ')}</td></tr>`;
   }).join('');
+  const decided = Object.keys(DECISIONS).filter(k => dn(k)).map(k =>
+    `<span class="item" data-tip="${esc(DECISIONS[k].label)}"><span class="badge"><span class="dot" style="--c:var(${DECISIONS[k].c})"></span>${esc(k.replace('_', ' '))}</span> <b>${dn(k)}</b>${k !== 'undecided' && k !== 'leave' ? ` <span class="small muted">(${dn(k, 'done')} carried out)</span>` : ''}</span>`).join('');
 
   main.innerHTML = `
     ${checkAlert()}
     <div class="tiles">
-      ${tile('Verified in Lean', `${n('verified')} <small>/ ${lean.length}</small>`, 'Lean-scope claims whose Lean proof mirrors the proof in the paper step for step')}
+      ${tile('Verified in Lean', `${n('verified') + n('vsup')} <small>/ ${lean.length}</small>`, `${n('verified')} follow the paper step for step, ${n('vsup')} with steps Lean supplies`)}
       ${tile('Lean statements written', `${stmtTotal} <small>/ ${lean.length}</small>`, `${stmtN('frozen')} frozen, ${stmtN('reviewed')} reviewed, ${stmtN('draft')} draft`)}
-      ${tile('Proof steps proved in Lean', `${stepsProved} <small>/ ${steps}</small>`, `${steps} steps across ${plural(nProofs, 'English proof')}; one Lean lemma per step`)}
-      ${tile('Need a paper or Lean change', `${blocked.length}`, `${noProof} lack a proof in the paper${pendingEdits ? `, ${plural(pendingEdits, 'edit')} pending` : ''}`)}
-      ${tile('Open findings', `${open.length}`, sevCount || 'none')}
+      ${tile('Proof steps proved in Lean', `${stepsProved} <small>/ ${steps.n}</small>`, `${steps.n} steps across ${plural(nProofs, 'written proof')}, ${steps.sup || 0} of them supplied; one Lean lemma per step`)}
+      ${tile('Waiting on a decision or edit', `${blocked.length}`, `${plural(undecided, 'point')} undecided, ${plural(editsOpen, 'paper edit')} agreed and not yet in the paper`)}
+      ${tile('Points decided', `${M.disp.length - undecided} <small>/ ${M.disp.length}</small>`, `${dn('paper_edit')} paper edits, ${dn('lean_supplies')} supplied by Lean, ${dn('reading') + dn('leave')} left as written`)}
     </div>
     <h2>All ${M.claims.length} claims by status</h2>
     <div class="card">${stackBar(counts)}<div class="legend">${legend}</div></div>
+    <h2>What was decided about each point</h2>
+    <div class="card"><div class="legend" style="margin-top:0">${decided}</div>
+      <p class="small muted" style="margin:8px 0 0">Every finding item, and every claim the paper states without proof, has a recorded decision. <a href="#/findings">All decisions</a></p></div>
     <h2>By tier</h2>
     <div class="tbl-wrap"><table>
       <thead><tr><th>Tier</th><th>Needs</th><th>Status</th><th class="num">Verified</th><th>Claims</th></tr></thead>
@@ -307,14 +355,49 @@ function viewOverview() {
     </div>
     <h2>How to read this page</h2>
     <div class="card">
-      <p><b>The rule being tracked.</b> Each step of each proof in the paper corresponds to exactly one Lean lemma, in the same
-      order, with the same dependencies. If Lean cannot follow the paper, the paper's proof is revised through a tracked edit and
-      Lean mirrors the revision. A claim counts as verified only when the proof Lean mirrors is the one in the paper.</p>
+      <p><b>The rule being tracked.</b> Every Lean lemma mirrors one written step of an English proof, in the same order, with the
+      same dependencies. Where the paper proves a claim, the steps are the paper's own sentences. Where the paper states something
+      without proof, or skips an argument, the step is written in the ledger and marked as supplied: it is not in the paper and is
+      never reported as if it were. The paper itself is asked to change only where a statement, a hypothesis or a definition is at
+      issue.</p>
+      <p><b>What verified means.</b> The Lean statement has been compared with the paper and frozen, the proof is complete, the
+      end-to-end assembly assumes no unproved claim, and Lean reports only the three standard axioms. The two greens say where the
+      argument comes from: the paper, or the paper plus supplied steps.</p>
       <p><b>Colours.</b> ${KEY_ORDER.map(k => `${icon(k)} ${esc(KEYS[k].label)}`).join(' &nbsp; ')}.
-      Blue darkens as a claim moves from a drafted statement to a finished proof. A small yellow square marks a minor open
-      finding, which does not turn a claim red.</p>
+      Blue darkens as a claim moves from a drafted statement to a finished proof. A small yellow square marks a minor finding
+      with a point still open.</p>
       <p class="muted small">Paper: <code>${esc(M.meta.paper || '')}</code>. Toolchain: ${esc(M.meta.toolchain || '')}</p>
     </div>`;
+}
+
+/* ---------------------------------------------------------------- results */
+function viewResults() {
+  const rows = q('SELECT * FROM v_headline').sort((a, b) => idCmp(a.id, b.id));
+  const std = ['Classical.choice', 'Quot.sound', 'propext'];
+  main.innerHTML = `<h2>Advertised results</h2>
+    <p class="muted">One row per theorem, proposition, lemma and corollary of the paper: where it is in the paper, the Lean theorem
+      that states it, how that statement differs from the paper's, where the proof comes from, what the Lean proof still assumes,
+      and the axioms Lean reports. This is the record to check a result against; a successful build alone would not show a step
+      that was supplied as a hypothesis.</p>
+    <div class="tbl-wrap"><table class="results">
+      <thead><tr><th>Result</th><th>Lean theorem</th><th>Lean statement</th><th>Proof</th><th>Still assumes</th><th>Axioms</th><th>Status</th></tr></thead>
+      <tbody>${rows.map(r => {
+        const c = M.byId.get(r.id);
+        const ax = r.axioms ? r.axioms.split(', ') : null;
+        const extra = ax ? ax.filter(a => !std.includes(a)) : [];
+        const deltas = M.deltas.filter(d => d.formalization_id === c.formalization);
+        return `<tr><td>${claimLink(r.id)} ${esc(r.title)}${r.label ? `<br><code class="small">${esc(r.label)}</code>` : ''}</td>
+          <td>${r.lean_decl ? `<code>${esc(r.lean_decl)}</code>` : '<span class="muted">not stated yet</span>'}</td>
+          <td>${r.stmt_status ? `${esc(r.stmt_status)}${deltas.length ? `<details><summary class="small">${plural(deltas.length, 'difference')} from the paper${r.narrower ? `, ${r.narrower} where Lean states less` : ''}</summary>${deltaList(c.formalization)}</details>` : '<br><span class="small muted">no differences recorded</span>'}` : ''}</td>
+          <td class="nowrap">${!r.proof ? '<span class="muted">none yet</span>' : r.proof_home === 'paper'
+            ? `the paper's<br><span class="small muted">${plural(r.n_steps - r.n_supplied, 'paper step')}${r.n_supplied ? ` + ${r.n_supplied} supplied` : ''}</span>`
+            : `supplied<br><span class="small muted">${plural(r.n_steps, 'step')}, not in the paper</span>`}</td>
+          <td>${r.assumes ? r.assumes.split(', ').map(x => claimLink(x)).join(', ') : r.proof ? 'nothing' : ''}</td>
+          <td>${!ax ? (r.proof ? '<span class="muted">not recorded</span>' : '') : extra.length ? `<b>${esc(extra.join(', '))}</b> beyond the standard three` : `<span data-tip="${esc(r.axioms)}">standard three</span>`}</td>
+          <td>${statusChip(c, !c.reasons.length)}${c.reasons.length ? `<ul class="reasons small">${c.reasons.map(x => `<li>${prose(x.short)}</li>`).join('')}</ul>` : ''}</td></tr>`;
+      }).join('')}</tbody></table></div>
+    <p class="small muted" style="margin-top:10px">Same table on the command line: <code>python3 tools/ledger.py headline</code>.
+      The standard axioms are <code>propext</code>, <code>Classical.choice</code> and <code>Quot.sound</code>.</p>`;
 }
 
 function checkAlert() {
@@ -548,14 +631,14 @@ function viewClaims(params) {
     };
     rows.sort((a, b) => F.dir * sorters[F.sort](a, b) || idCmp(a.id, b.id));
     const th = (k, label, cls) => `<th class="sortable ${cls || ''}" data-sort="${k}" aria-sort="${F.sort === k ? (F.dir > 0 ? 'ascending' : 'descending') : 'none'}">${label}${F.sort === k ? (F.dir > 0 ? ' ▲' : ' ▼') : ''}</th>`;
-    document.getElementById('ctable').innerHTML = `<thead><tr>${th('id', 'Claim')}${th('title', 'Title')}${th('kind', 'Kind')}${th('tier', 'Tier')}${th('status', 'Status')}<th>Paper proof</th><th>Lean statement</th>${th('steps', 'Lean steps')}${th('findings', 'Findings')}</tr></thead>
+    document.getElementById('ctable').innerHTML = `<thead><tr>${th('id', 'Claim')}${th('title', 'Title')}${th('kind', 'Kind')}${th('tier', 'Tier')}${th('status', 'Status')}<th>Written proof</th><th>Lean statement</th>${th('steps', 'Lean steps')}${th('findings', 'Findings')}</tr></thead>
       <tbody>${rows.map(c => `<tr class="click" data-id="${esc(c.id)}">
         <td><a class="idlink" href="#/claim/${encodeURIComponent(c.id)}">${esc(c.id)}</a></td>
         <td>${esc(c.title)}</td><td>${esc(c.kind)}</td><td>${c.tier || ''}</td>
         <td>${statusChip(c)}</td>
-        <td class="nowrap">${c.scope !== 'lean' ? '' : c.paper_proof ? `<span class="idlink">${esc(c.paper_proof)}</span>` : ['definition', 'assumption'].includes(c.kind) ? '<span class="muted">not needed</span>' : 'none'}</td>
+        <td class="nowrap">${c.scope !== 'lean' ? '' : c.paper_proof ? `<span class="idlink">${esc(c.paper_proof)}</span> paper` : c.supplement_proof ? `<span class="idlink">${esc(c.supplement_proof)}</span> supplied` : ['definition', 'assumption'].includes(c.kind) && !c.disp.some(d => d.whole_proof) ? '<span class="muted">not needed</span>' : 'none yet'}</td>
         <td>${c.stmt_status ? esc(c.stmt_status) : ''}</td>
-        <td class="nowrap">${c.n_steps ? `<span class="meter"><i style="width:${100 * c.n_steps_proved / c.n_steps}%"></i></span>${c.n_steps_proved}/${c.n_steps}` : ''}</td>
+        <td class="nowrap">${c.n_steps ? `<span class="meter"><i style="width:${100 * c.n_steps_proved / c.n_steps}%"></i></span>${c.n_steps_proved}/${c.n_steps}${c.n_supplied ? ` <span class="small muted">(${c.n_supplied} supplied)</span>` : ''}` : ''}</td>
         <td class="nowrap">${c.open.map(f => `<span class="badge" data-tip="${esc(f.title)}"><span class="dot" style="--c:var(${SEV_COLOR[f.severity]})"></span>${esc(f.id)}</span>`).join(' ')}</td>
       </tr>`).join('') || `<tr><td colspan="9" class="muted">No claims match.</td></tr>`}</tbody>`;
   };
@@ -580,11 +663,16 @@ function viewClaims(params) {
 /* ----------------------------------------------------------- claim detail */
 const STEP_COLOR = { proved: '--st-verified', sorry: '--st-p2', todo: '--st-todo', failed: '--st-blocked' };
 function findingCard(f) {
-  return `<div class="card finding" id="${esc(f.id)}" style="--c:var(${f.status === 'open' ? SEV_COLOR[f.severity] : '--st-out'})">
-    <div class="row"><span class="idlink"><b>${esc(f.id)}</b></span>${sevBadge(f)}<span class="tag">${esc(f.status)}</span>
+  const items = M.disp.filter(d => d.finding_id === f.id);
+  const left = items.filter(d => d.status === 'open').length;
+  const state = f.status !== 'open' ? f.status : !items.length ? 'no decision' : left ? `${left} of ${plural(items.length, 'point')} open` : 'all points settled';
+  const live = f.status === 'open' && (!items.length || left);
+  return `<div class="card finding" id="${esc(f.id)}" style="--c:var(${live ? SEV_COLOR[f.severity] : '--st-out'})">
+    <div class="row"><span class="idlink"><b>${esc(f.id)}</b></span>${sevBadge(f)}<span class="tag">${esc(state)}</span>
       <span class="small muted">on ${claimLink(f.claim_id, true)}${f.step_id ? `, step <span class="idlink">${esc(f.step_id)}</span>` : ''} · ${esc((f.created || '').slice(0, 10))}</span></div>
     <h3>${esc(f.title)}</h3><p>${prose(f.body)}</p>
-    ${f.resolution ? `<p><b>Resolution:</b> ${prose(f.resolution)}</p>` : ''}</div>`;
+    ${f.resolution ? `<p><b>Resolution:</b> ${prose(f.resolution)}</p>` : ''}
+    ${items.length ? dispRows(items, items.some(d => d.claim_id !== f.claim_id)) : ''}</div>`;
 }
 function editCard(e) {
   const hunks = q('SELECT h.*, s.path FROM hunks h JOIN sources s ON s.id = h.source WHERE edit_id = ? ORDER BY ordinal', [e.id]);
@@ -604,7 +692,9 @@ function viewClaim(id) {
   const k = KEYS[c.key];
   const lean = c.scope === 'lean';
   const needsProof = !['definition', 'assumption'].includes(c.kind);
-  const proofs = q(`SELECT * FROM proofs WHERE claim_id = ? ORDER BY (status = 'in_paper') DESC, is_primary DESC, version DESC`, [id]);
+  const proofs = q(`SELECT * FROM proofs WHERE claim_id = ? ORDER BY (status = 'in_paper') DESC, (status = 'supplement') DESC, is_primary DESC, version DESC`, [id]);
+  const whole = c.disp.find(d => d.whole_proof);
+  const ownPoints = c.disp.filter(d => !d.finding_id);
   const forms = q('SELECT * FROM formalizations WHERE claim_id = ? ORDER BY version DESC', [id]);
   const attempts = M.attempts.filter(a => a.claim_id === id);
   const edits = M.edits.filter(e => e.claim_id === id);
@@ -619,21 +709,30 @@ function viewClaim(id) {
     <div class="v"><span class="ico" style="--c:var(${color})">${glyph}</span>${v}</div><div class="d">${d}</div></div>`;
   const live = forms.find(f => f.status !== 'superseded');
   const sel = attempts.find(a => a.selected) || attempts.find(a => ['active', 'planned'].includes(a.status)) || attempts[attempts.length - 1];
+  const nSteps = pid => plural(q('SELECT COUNT(*) n FROM steps WHERE proof_id = ?', [pid])[0].n, 'step');
+  const stage1 = !needsProof && !whole && !c.supplement_proof ? stage('1 · Written proof', 'Not needed', `A ${esc(c.kind)} has nothing to prove`, '--st-out', '–')
+    : c.paper_proof ? stage('1 · Written proof', 'In the paper', `${esc(c.paper_proof)}, ${nSteps(c.paper_proof)}${c.n_supplied ? `, ${c.n_supplied} supplied` : ''}`, '--st-verified', '✓')
+    : M.proposed.has(id) ? stage('1 · Written proof', 'Proposed for the paper', 'Edit not applied to the paper yet', '--st-blocked', '!')
+    : c.supplement_proof ? stage('1 · Written proof', 'Supplied', `${esc(c.supplement_proof)}, ${nSteps(c.supplement_proof)}; not in the paper`, '--st-vsup', '+')
+    : whole && whole.decision === 'lean_supplies' ? stage('1 · Written proof', 'To be supplied', 'The paper states this without proof; Lean will supply one', '--st-todo', '')
+    : whole && whole.decision === 'paper_edit' ? stage('1 · Written proof', 'Paper edit agreed', 'A proof is to be added to the paper', '--st-blocked', '!')
+    : stage('1 · Written proof', 'Missing', 'The paper states this without proof; no decision yet', '--st-blocked', '!');
+  const done = ['verified', 'verified_supplied'].includes(c.state);
+  const stage4 = c.state === 'verified' ? stage('4 · Verified', 'Follows the paper', 'Every step is a step of the paper\'s proof', '--st-verified', '✓')
+    : c.state === 'verified_supplied' ? stage('4 · Verified', 'With supplied steps', 'Lean proves the paper\'s statement; part of the argument is not in the paper', '--st-vsup', '+')
+    : c.state === 'conditional' ? stage('4 · Verified', 'Conditional', `Still assumes ${esc(c.assumes)}`, '--st-p4', '◐')
+    : c.state === 'needs_paper_edit' ? stage('4 · Verified', 'Paper edit pending', 'Lean mirrors a proposed proof', '--st-blocked', '!')
+    : stage('4 · Verified', 'Not yet', c.assumes ? `The proof still assumes ${esc(c.assumes)}` : '', '--st-todo', '');
   const pipeline = !lean ? '' : `<div class="pipeline">
-    ${!needsProof ? stage('1 · Paper proof', 'Not needed', `A ${esc(c.kind)} has nothing to prove`, '--st-out', '–')
-      : c.paper_proof ? stage('1 · Paper proof', 'In the paper', `${esc(c.paper_proof)}, ${plural(q('SELECT COUNT(*) n FROM steps WHERE proof_id = ?', [c.paper_proof])[0].n, 'step')}`, '--st-verified', '✓')
-      : M.proposed.has(id) ? stage('1 · Paper proof', 'Proposed', 'Edit not applied to the paper yet', '--st-blocked', '!')
-      : stage('1 · Paper proof', 'Missing', 'Asserted without proof; needs a paper edit', '--st-blocked', '!')}
+    ${stage1}
     ${!live ? stage('2 · Lean statement', 'Not written', '', '--st-todo', '')
       : live.status === 'frozen' ? stage('2 · Lean statement', 'Frozen', esc(live.id), '--st-verified', '✓')
       : stage('2 · Lean statement', live.status === 'draft' ? 'Draft' : 'Reviewed', `${esc(live.id)}, ${live.status === 'draft' ? 'awaiting review against the paper' : 'not frozen yet'}`, live.status === 'draft' ? '--st-p1' : '--st-p2', '▸')}
-    ${!sel ? stage('3 · Lean proof', 'No attempt', live && live.status !== 'frozen' ? 'Starts once the statement is frozen' : '', '--st-todo', '')
-      : sel.status === 'proved' ? stage('3 · Lean proof', 'Proved', `${esc(sel.id)}${c.n_steps ? `, ${c.n_steps_proved}/${c.n_steps} steps` : ''}`, '--st-verified', '✓')
+    ${!sel ? stage('3 · Lean proof', 'No attempt', '', '--st-todo', '')
+      : sel.status === 'proved' ? stage('3 · Lean proof', 'Proved', `${esc(sel.id)}${c.n_steps ? `, ${c.n_steps_proved}/${c.n_steps} steps` : ''}${c.axioms ? (c.axioms_standard ? ', standard axioms' : ', non-standard axioms') : ''}`, '--st-verified', '✓')
       : sel.status === 'failed' ? stage('3 · Lean proof', 'Attempt failed', esc(sel.id), '--st-blocked', '!')
       : stage('3 · Lean proof', sel.status === 'active' ? 'Under way' : esc(sel.status), esc(sel.id), '--st-p3', '▸')}
-    ${c.state === 'verified' ? stage('4 · Verified 1:1', 'Verified', 'Lean mirrors the proof in the paper', '--st-verified', '✓')
-      : c.state === 'needs_paper_edit' ? stage('4 · Verified 1:1', 'Paper edit pending', 'Lean mirrors a proposed proof', '--st-blocked', '!')
-      : stage('4 · Verified 1:1', 'Not yet', '', '--st-todo', '')}
+    ${stage4}
   </div>`;
 
   const depChips = (rows, key) => rows.length ? `<div class="deps">${rows.sort((a, b) => idCmp(a[key], b[key])).map(d => {
@@ -644,18 +743,21 @@ function viewClaim(id) {
   const proofHtml = proofs.map(p => {
     const steps = q('SELECT * FROM steps WHERE proof_id = ? ORDER BY ordinal', [p.id]);
     const mirrored = attempts.filter(a => a.proof_id === p.id);
-    return `<h3><span class="idlink">${esc(p.id)}</span> <span class="tag">${esc(p.status.replace('_', ' '))}</span>
+    const supp = p.status === 'supplement';
+    return `<h3><span class="idlink">${esc(p.id)}</span> <span class="tag ${supp ? 'supplied' : ''}">${supp ? 'supplied · not in the paper' : esc(p.status.replace('_', ' '))}</span>
         ${p.is_primary ? '' : '<span class="tag">secondary derivation</span>'}${p.parent ? ` <span class="small muted">revises ${esc(p.parent)}</span>` : ''}</h3>
       <p>${prose(p.summary)}</p>
-      <div class="steps-head"><span>Paper, step by step</span><span>Lean lemma for the step</span></div>
+      <div class="steps-head"><span>${supp ? 'Supplied argument' : 'Paper'}, step by step</span><span>Lean lemma for the step</span></div>
       <div class="steps">${steps.map(s => {
         const deps = q('SELECT dep_kind, dep_id FROM step_deps WHERE step_id = ?', [s.id]);
         const maps = q(`SELECT m.* FROM step_map m JOIN attempts a ON a.id = m.attempt_id WHERE m.step_id = ? ORDER BY a.selected DESC, a.created DESC`, [s.id]);
         const top = maps[0];
-        return `<div class="step"><div>
-            <h4><span class="idlink">s${s.ordinal}</span>${esc(s.title)}</h4>
+        const sup = s.origin === 'supplied';
+        const why = sup && M.disp.find(d => d.step_id === s.id);
+        return `<div class="step ${sup ? 'supplied' : ''}"><div>
+            <h4><span class="idlink">s${s.ordinal}</span>${esc(s.title)}${sup && !supp ? ' <span class="tag supplied">supplied · not in the paper</span>' : ''}</h4>
             ${texHtml(s.tex)}
-            <p class="small muted" style="margin:6px 0 0">${paperLink(s.source, s.line_start, s.line_end)}${deps.length ? ` · uses ${deps.map(d => d.dep_kind === 'claim' ? claimLink(d.dep_id) : `<span class="idlink">${esc(d.dep_id.split('/').pop())}</span>`).join(', ')}` : ''}</p>
+            <p class="small muted" style="margin:6px 0 0">${sup ? `Written for the formalization${why ? ` (${linkIds(esc(why.id))})` : ''}` : paperLink(s.source, s.line_start, s.line_end)}${deps.length ? ` · uses ${deps.map(d => d.dep_kind === 'claim' ? claimLink(d.dep_id) : `<span class="idlink">${esc(d.dep_id.split('/').pop())}</span>`).join(', ')}` : ''}</p>
           </div><div class="lean" style="--c:var(${top ? STEP_COLOR[top.status] : '--line-strong'})">
             ${maps.length ? maps.map(m => `<p><code>${esc(m.lean_decl)}</code><br><span class="tag">${esc(m.status)}</span> <span class="small muted">in ${esc(m.attempt_id)}</span></p>`).join('')
               : `<p class="muted small">No Lean lemma yet.${mirrored.length ? '' : ' No attempt mirrors this proof.'}</p>`}
@@ -682,14 +784,21 @@ function viewClaim(id) {
         <dt>Rests on</dt><dd>${depChips(dependsOn, 'depends_on')}</dd>
         <dt>Used by</dt><dd>${depChips(usedBy, 'claim_id')}</dd>
         ${c.notes ? `<dt>Note</dt><dd>${prose(c.notes)}</dd>` : ''}</dl></div>
+    ${ownPoints.length ? `<h2>Decisions on this claim</h2>${dispRows(ownPoints)}` : ''}
     ${findings.length ? `<h2>Findings</h2><div class="grid">${findings.map(findingCard).join('')}</div>` : ''}
     ${lean ? `<h2>Lean statement</h2>${forms.length ? forms.map(f => `<div class="card" style="margin-bottom:12px">
         <div class="claim-head"><b class="idlink">${esc(f.id)}</b><span class="tag">${esc(f.status)}</span><code>${esc(f.lean_decl)}</code><span class="small">${leanLink(f.lean_file)}</span></div>
+        ${deltaList(f.id)}
         ${f.fidelity ? `<p style="margin-top:8px"><b>How it maps to the paper's wording.</b> ${prose(f.fidelity)}</p>` : ''}
         <details ${f === live ? 'open' : ''} data-lean="${esc(f.lean_file)}"><summary class="small">Lean source</summary><div class="src muted small">Loading…</div></details>
       </div>`).join('') : '<p class="muted">No Lean statement yet.</p>'}` : ''}
-    <h2>English proof${proofs.length > 1 ? 's' : ''}</h2>
-    ${proofs.length ? proofHtml : `<p class="muted">${lean && needsProof ? 'The paper gives no proof of this claim. One has to be added through a tracked paper edit.' : 'None recorded.'}</p>`}
+    <h2>Written proof${proofs.length > 1 ? 's' : ''}</h2>
+    ${proofs.length ? proofHtml : `<p class="muted">${!lean || !(needsProof || whole) ? 'None recorded.'
+      : !whole ? 'The paper gives no proof of this claim, and no decision has been recorded.'
+      : whole.decision === 'lean_supplies' ? 'The paper gives no proof of this claim. The decision is that the paper stays as written and Lean supplies the argument; it has not been written yet.'
+      : whole.decision === 'paper_edit' ? 'The paper gives no proof of this claim. A proof is to be added to the paper; the ledger is realigned when it lands.'
+      : 'The paper gives no proof of this claim. No decision yet.'}</p>`}
+    ${c.assumes != null && sel && sel.status === 'proved' ? `<p class="small muted">End-to-end assembly: ${c.assumes ? `still assumes ${c.assumes.split(', ').map(x => claimLink(x)).join(', ')}` : 'assumes no unproved claim'}; axioms ${c.axioms ? `<code>${esc(c.axioms)}</code>` : 'not recorded yet'}.</p>` : ''}
     ${attempts.length ? `<h2>Lean proof attempts</h2><div class="tbl-wrap"><table><thead><tr><th>Attempt</th><th>Status</th><th>Mirrors</th><th>Branches from</th><th>Strategy</th><th class="num">Lines</th><th class="num">Build s</th><th>File</th></tr></thead>
       <tbody>${attempts.map(a => `<tr><td class="idlink">${esc(a.id)}${a.selected ? ' ★' : ''}</td><td>${esc(a.status)}</td><td class="idlink">${esc(a.proof_id)}</td><td class="idlink">${esc(a.parent || '')}</td><td>${prose(a.strategy)}</td><td class="num">${a.lean_lines ?? ''}</td><td class="num">${a.build_seconds ?? ''}</td><td>${leanLink(a.lean_file)}</td></tr>`).join('')}</tbody></table></div>
       <p class="small muted">★ is the attempt used in the end-to-end assembly.</p>` : ''}
@@ -712,18 +821,30 @@ function viewClaim(id) {
 /* ------------------------------------------------------ findings and edits */
 function viewFindings(focus) {
   const rows = M.findings.slice().sort((a, b) => (a.status !== 'open') - (b.status !== 'open') || SEV[b.severity] - SEV[a.severity] || idCmp(a.id, b.id));
-  const open = rows.filter(f => f.status === 'open').length;
-  main.innerHTML = `<h2>Findings</h2>
-    <p class="muted">Problems the formalization exposes in the paper: a gap, a missing hypothesis, an unproved assertion, a mismatch
-      between statement and proof. ${open} open, ${rows.length - open} closed. Medium and above turn the claim red; minor ones show as a badge.</p>
+  const groups = Object.keys(DECISIONS).map(k => [k, M.disp.filter(d => d.decision === k)]).filter(g => g[1].length);
+  main.innerHTML = `<h2>Findings and decisions</h2>
+    <p class="muted">A finding is a place where the formalization could not follow the paper as written: a gap, a missing hypothesis,
+      an assertion without proof, a mismatch between statement and proof. Each numbered point of a finding, and each claim the
+      paper states without proof, has a decision: the paper changes, Lean supplies the argument, the Lean statement fixes a
+      reading, or nothing changes. ${M.disp.length} points, ${M.disp.filter(d => d.decision === 'undecided').length} undecided.</p>
+    ${groups.map(([k, list]) => `<details class="group" ${k === 'undecided' || k === 'paper_edit' ? 'open' : ''}><summary><span class="badge"><span class="dot" style="--c:var(${DECISIONS[k].c})"></span></span> ${esc(DECISIONS[k].label)} <b>${list.length}</b>${k !== 'undecided' && k !== 'leave' ? ` <span class="small muted">${list.filter(d => d.status === 'done').length} carried out</span>` : ''}</summary>${dispRows(list, true, true)}</details>`).join('')}
+    <h2>Findings</h2>
     <div class="grid">${rows.map(findingCard).join('') || '<p class="empty">No findings recorded.</p>'}</div>`;
+  const el = focus && document.getElementById(focus);
+  if (el && el.closest('details')) el.closest('details').open = true;
   scrollToId(focus);
 }
 function viewEdits(focus) {
+  const agreed = M.disp.filter(d => d.decision === 'paper_edit');
   main.innerHTML = `<h2>Paper edits</h2>
-    <p class="muted">Changes to the paper's text that the formalization forced or suggested. Each edit takes a claim from one proof
-      version to the next and is stored as diff hunks against the TeX source.</p>
-    <div class="grid">${M.edits.map(editCard).join('') || '<p class="empty">No paper edits have been proposed yet.</p>'}</div>`;
+    <h3>Agreed with the co-author</h3>
+    <p class="muted">Edits the co-author makes in the manuscript. When one lands upstream the ledger is realigned to the new text
+      and the point is marked carried out. ${agreed.filter(d => d.status === 'open').length} not yet in the paper.</p>
+    ${agreed.length ? dispRows(agreed, true) : '<p class="empty">None.</p>'}
+    <h3 style="margin-top:22px">Tracked as diffs in the ledger</h3>
+    <p class="muted">Changes to the paper's text written on the formalization side, stored as diff hunks against the TeX source.
+      Each takes a claim from one proof version to the next.</p>
+    <div class="grid">${M.edits.map(editCard).join('') || '<p class="empty">No tracked edits.</p>'}</div>`;
   scrollToId(focus);
 }
 function scrollToId(id) {
@@ -734,7 +855,11 @@ function scrollToId(id) {
 /* -------------------------------------------------------------------- SQL */
 const EXAMPLES = [
   ['Status of every claim', `SELECT id, kind, tier, state, paper_proof, stmt_status, open_findings, title\nFROM v_claim_status\nORDER BY CAST(substr(id, 2) AS REAL), id;`],
-  ['Claims with no proof in the paper', `SELECT id, kind, tier, title\nFROM v_claim_status\nWHERE scope = 'lean' AND paper_proof IS NULL\n  AND kind NOT IN ('definition', 'assumption');`],
+  ['Advertised results', `SELECT id, label, state, proof_home, n_steps, n_supplied, assumes, axioms, deltas, narrower\nFROM v_headline;`],
+  ['Decisions on every point', `SELECT id, claim_id, level, decision, status, decided_by, point\nFROM dispositions ORDER BY decision, id;`],
+  ['Claims the paper states without proof', `SELECT s.id, s.tier, s.state, s.supplement_proof, d.decision, d.status\nFROM v_claim_status s LEFT JOIN dispositions d ON d.claim_id = s.id AND d.whole_proof = 1\nWHERE s.scope = 'lean' AND s.paper_proof IS NULL\n  AND s.kind NOT IN ('definition', 'assumption');`],
+  ['Where Lean statements differ from the paper', `SELECT formalization_id, kind, text, disposition_id\nFROM statement_deltas ORDER BY formalization_id, ordinal;`],
+  ['Steps that are not in the paper', `SELECT s.id, p.status AS proof, s.title\nFROM steps s JOIN proofs p ON p.id = s.proof_id WHERE s.origin = 'supplied';`],
   ['Ready to prove (frontier)', `SELECT id, tier, state, title FROM v_frontier ORDER BY tier, id;`],
   ['Steps of the C7 proof', `SELECT s.id, s.title, group_concat(d.dep_id, ', ') AS uses\nFROM steps s LEFT JOIN step_deps d ON d.step_id = s.id\nWHERE s.proof_id = 'C7/p1'\nGROUP BY s.id ORDER BY s.ordinal;`],
   ['Open findings', `SELECT id, claim_id, severity, title FROM findings WHERE status = 'open';`],
@@ -789,7 +914,7 @@ function route() {
   const nav = view === 'claim' ? 'claims' : view;
   document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.view === nav));
   tip.hidden = true;
-  ({ overview: viewOverview, graph: () => viewGraph(arg), claims: () => viewClaims(params), claim: () => viewClaim(arg),
+  ({ overview: viewOverview, results: viewResults, graph: () => viewGraph(arg), claims: () => viewClaims(params), claim: () => viewClaim(arg),
      findings: () => viewFindings(arg), edits: () => viewEdits(arg), sql: viewSql }[view] || viewOverview)();
   if (!arg || view === 'claim' || view === 'graph') window.scrollTo(0, 0);
 }
@@ -800,8 +925,9 @@ function header() {
   if (src && src.git_commit) parts.push(`aligned to the paper at commit <a href="https://github.com/${repo()}/commit/${src.git_commit}">${src.git_commit.slice(0, 7)}</a>`);
   if (info && info.commit) parts.push(`site built from <a href="https://github.com/${repo()}/commit/${info.commit}">${info.commit.slice(0, 7)}</a>${info.generated ? ' on ' + esc(info.generated.slice(0, 10)) : ''}`);
   document.getElementById('buildmeta').innerHTML = parts.join(' · ');
-  const openF = M.findings.filter(f => f.status === 'open').length;
-  const pend = M.edits.filter(e => ['proposed', 'approved'].includes(e.status)).length;
+  const openF = M.disp.filter(d => d.decision === 'undecided').length;
+  const pend = M.edits.filter(e => ['proposed', 'approved'].includes(e.status)).length
+    + M.disp.filter(d => d.decision === 'paper_edit' && d.status === 'open').length;
   const badge = (view, n) => { if (n) document.querySelector(`#nav a[data-view=${view}]`).insertAdjacentHTML('beforeend', `<span class="n">${n}</span>`); };
   badge('findings', openF); badge('edits', pend);
 }

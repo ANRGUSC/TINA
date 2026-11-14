@@ -11,8 +11,15 @@ Mutating commands rewrite data.sql, so every change is a readable git diff.
 
     ledger.py status                 one line per claim
     ledger.py show C7                a claim with its proofs, steps, attempts,
-                                     edits, findings and notes (also C7/p1,
-                                     C7/p1/s2, C7/a1, E1, F1)
+                                     edits, findings, decisions and notes (also
+                                     C7/p1, C7/p1/s2, C7/a1, C7/f1, E1, F1, F10.2)
+    ledger.py headline               the advertised results: Lean theorem, proof
+                                     home, what is still assumed, axioms
+    ledger.py dispositions [--open] [--md]
+                                     what was decided about each point raised
+    ledger.py supplement [C5]        the proofs and steps that are not in the paper
+    ledger.py docs                   rewrite paper-findings-dispositions.md and
+                                     supplement.md from the ledger
     ledger.py frontier               claims ready to prove
     ledger.py sql "SELECT ..."       ad-hoc query
     ledger.py add TABLE k=v ...      insert a row (v may be @path to read a file)
@@ -20,7 +27,9 @@ Mutating commands rewrite data.sql, so every change is a readable git diff.
     ledger.py note TARGET KIND TEXT  append to the log
     ledger.py check                  verify ledger <-> paper <-> Lean invariants
     ledger.py assembly               write TinaV2/Assembly.lean from the selected attempts
-    ledger.py audit [-v]             compare what each Lean step lemma uses with step_deps
+                                     and record what each assembled theorem assumes
+    ledger.py audit [-v]             compare what each Lean step lemma uses with
+                                     step_deps, and record the axioms
     ledger.py graph                  claim dependency graph (Mermaid)
     ledger.py edit-diff E1           show an edit as a unified diff
     ledger.py edit-apply E1          apply an approved edit to the TeX
@@ -47,8 +56,11 @@ DATA = ROOT / "ledger" / "data.sql"
 
 # Dump order respects foreign keys.
 TABLES = ["meta", "sources", "claims", "claim_deps", "proofs", "steps",
-          "step_deps", "formalizations", "attempts", "step_map", "edits",
-          "edit_deps", "hunks", "hunk_steps", "findings", "notes"]
+          "step_deps", "formalizations", "attempts", "assembled", "step_map",
+          "edits", "edit_deps", "hunks", "hunk_steps", "findings", "dispositions",
+          "statement_deltas", "notes"]
+
+STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
 
 def now():
@@ -119,13 +131,23 @@ def parse_kv(args):
 def cmd_status(db, args):
     where = "WHERE scope = 'lean'" if "--lean" in args else ""
     table_out(db.execute(
-        f"""SELECT id, kind, tier, state, paper_proof AS proof,
+        f"""SELECT id, kind, tier, state,
+                   COALESCE(paper_proof, supplement_proof) AS proof,
+                   CASE WHEN paper_proof IS NOT NULL THEN 'paper'
+                        WHEN supplement_proof IS NOT NULL THEN 'suppl'
+                        ELSE '' END AS home,
                    stmt_status AS stmt, attempt_id AS attempt,
                    CASE WHEN n_steps IS NULL THEN ''
+                        WHEN n_supplied > 0 THEN n_steps_proved || '/' || n_steps
+                             || ' (' || n_supplied || ' suppl)'
                         ELSE n_steps_proved || '/' || n_steps END AS steps,
-                   open_findings AS finds, title
+                   COALESCE(assumes, '') AS assumes,
+                   open_findings AS finds,
+                   CASE WHEN undecided > 0 THEN undecided || ' undecided'
+                        WHEN edits_awaited > 0 THEN edits_awaited || ' edit'
+                        ELSE '' END AS waits, title
             FROM v_claim_status {where} ORDER BY
-              CAST(substr(id, 2) AS REAL), id"""), {"title": 58})
+              CAST(substr(id, 2) AS REAL), id"""), {"title": 44})
     print()
     table_out(db.execute(
         "SELECT state, COUNT(*) AS n FROM v_claim_status GROUP BY state ORDER BY n DESC"))
@@ -135,6 +157,8 @@ def kind_of(ident):
     if re.fullmatch(r"E\d+", ident): return "edits"
     if re.fullmatch(r"E\d+/h\d+", ident): return "hunks"
     if re.fullmatch(r"F\d+", ident): return "findings"
+    if re.fullmatch(r"F\d+\.\d+", ident) or re.search(r"/d\d+$", ident):
+        return "statement_deltas" if re.search(r"/f\d+/d\d+$", ident) else "dispositions"
     if re.search(r"/p\d+/s\w+$", ident): return "steps"
     if re.search(r"/p\d+$", ident): return "proofs"
     if re.search(r"/f\d+$", ident): return "formalizations"
@@ -183,22 +207,37 @@ def cmd_show(db, args):
             ("sub-claims", "SELECT id, kind, title FROM claims WHERE parent = ?"),
             ("english proofs", "SELECT id, status, is_primary AS prim, parent, summary FROM proofs WHERE claim_id = ?"),
             ("lean statements", "SELECT id, status, lean_decl, fidelity FROM formalizations WHERE claim_id = ?"),
+            ("differences from the paper's statement",
+             "SELECT d.id, d.kind, d.disposition_id AS disp, d.text FROM statement_deltas d "
+             "JOIN formalizations f ON f.id = d.formalization_id WHERE f.claim_id = ? "
+             "ORDER BY d.formalization_id, d.ordinal"),
             ("lean attempts", "SELECT a.id, a.status, a.selected AS sel, a.proof_id, a.parent, a.strategy "
                               "FROM attempts a JOIN formalizations f ON f.id = a.formalization_id WHERE f.claim_id = ?"),
             ("paper edits", "SELECT id, target, status, from_proof, to_proof, reason FROM edits WHERE claim_id = ?"),
             ("findings", "SELECT id, severity, status, title FROM findings WHERE claim_id = ?"),
+            ("decisions", "SELECT id, level, decision, status, decided_by AS by, point FROM dispositions "
+                          "WHERE claim_id = ? ORDER BY id"),
+            ("assembly", "SELECT attempt_id, assumes, axioms, checked FROM assembled WHERE claim_id = ?"),
         ]:
             rows = q(sql, ident)
             if rows:
                 print(f"\n== {title}")
                 table_out(rows, {"summary": 70, "strategy": 70, "reason": 70, "note": 70,
-                                 "fidelity": 2000})
+                                 "fidelity": 2000, "text": 2000, "point": 90, "by": 22})
+    elif t == "findings":
+        rows = q("SELECT id, level, decision, status, decided_by AS by, point, rationale "
+                 "FROM dispositions WHERE finding_id = ? ORDER BY id", ident)
+        if rows:
+            print("\n== decisions")
+            table_out(rows, {"point": 90, "rationale": 2000, "by": 22})
     elif t == "proofs":
         print("\n== steps")
         for s in q("SELECT * FROM steps WHERE proof_id = ? ORDER BY ordinal", ident):
             deps = [d["dep_id"] for d in q("SELECT dep_id FROM step_deps WHERE step_id = ?", s["id"])]
             maps = q("SELECT attempt_id, lean_decl, status FROM step_map WHERE step_id = ?", s["id"])
-            print(f"{s['id']}  [{s['source']}:{s['line_start']}-{s['line_end']}]  {s['title']}")
+            where = ("supplied, not in the paper" if s["origin"] == "supplied"
+                     else f"{s['source']}:{s['line_start']}-{s['line_end']}")
+            print(f"{s['id']}  [{where}]  {s['title']}")
             if deps:
                 print(f"    uses: {', '.join(deps)}")
             for m in maps:
@@ -294,9 +333,10 @@ def run_check(db):
             warns.append(f"{s['id']}: {s['path']} changed since the ledger was aligned "
                          f"(excerpt checks below decide whether that matters)")
 
-    # 1. Every step of a proof that is in the paper is verbatim in the paper.
+    # 1. Every paper step of a proof that is in the paper is verbatim in the
+    # paper. Supplied steps are not paper text and are checked in 6 below.
     for s in q("SELECT s.* FROM steps s JOIN proofs p ON p.id = s.proof_id "
-               "WHERE p.status = 'in_paper'"):
+               "WHERE p.status = 'in_paper' AND s.origin = 'paper'"):
         if s["source"] in missing:
             continue
         if norm(s["tex"]) not in norm(source_text(db, s["source"])):
@@ -331,7 +371,7 @@ def run_check(db):
         steps = {s["id"] for s in q("SELECT id FROM steps WHERE proof_id = ?", a["proof_id"])}
         maps = {m["step_id"]: m for m in q("SELECT * FROM step_map WHERE attempt_id = ?", a["id"])}
         for sid in sorted(steps - maps.keys()):
-            errs.append(f"{a['id']}: paper step {sid} has no Lean lemma")
+            errs.append(f"{a['id']}: step {sid} has no Lean lemma")
         for sid in sorted(maps.keys() - steps):
             errs.append(f"{a['id']}: Lean lemma {maps[sid]['lean_decl']} maps to {sid}, "
                         f"which is not a step of {a['proof_id']}")
@@ -340,8 +380,8 @@ def run_check(db):
             errs.append(f"{a['id']}: {name} is in the step map but not in {a['lean_file']}")
         extra = sorted(decls - mapped - {"main"})
         if extra:
-            errs.append(f"{a['id']}: Lean lemmas with no paper step: {', '.join(extra)} "
-                        f"(move to Routine/ or add a paper step through an edit)")
+            errs.append(f"{a['id']}: Lean lemmas with no step: {', '.join(extra)} "
+                        f"(move to Routine/, or record a supplied step with a disposition)")
         if a["status"] == "proved":
             if re.search(r"\b(sorry|admit)\b", src):
                 errs.append(f"{a['id']}: marked proved but {a['lean_file']} contains sorry")
@@ -368,12 +408,25 @@ def run_check(db):
             errs.append(f"TinaV2/Routine/{f.name} imports {', '.join(bad)}; routine files may "
                         f"not import statements or proofs")
 
-    # 4a. The assembly file is the one the selected attempts generate.
+    # 4a. The assembly file is the one the selected attempts generate, and the
+    # `assembled` rows say what it says.
     if q("SELECT 1 FROM attempts WHERE selected = 1 AND status = 'proved'"):
+        text, plan = assembly_plan(db)
         if not ASSEMBLY.exists():
             errs.append("TinaV2/Assembly.lean is missing: run `ledger.py assembly`")
-        elif ASSEMBLY.read_text() != assembly_text(db):
+        elif ASSEMBLY.read_text() != text:
             errs.append("TinaV2/Assembly.lean is out of date: run `ledger.py assembly`")
+        rows = {r["claim_id"]: r for r in q("SELECT * FROM assembled")}
+        for claim, (attempt, assumes) in sorted(plan.items()):
+            r = rows.pop(claim, None)
+            if not r or r["attempt_id"] != attempt or r["assumes"] != assumes:
+                errs.append(f"{claim}: the assembled record is missing or stale: run `ledger.py assembly`")
+            elif r["axioms"] is None:
+                warns.append(f"{claim}: axioms not recorded for {attempt}: run `lake build` then `ledger.py audit`")
+            elif not r["standard"]:
+                errs.append(f"{claim}: {attempt} depends on axioms outside the standard three: {r['axioms']}")
+        for claim in sorted(rows):
+            errs.append(f"{claim}: assembled record without a selected proved attempt: run `ledger.py assembly`")
 
     # 4b. Every live Lean statement exists where the ledger says it does.
     for f in q("SELECT * FROM formalizations WHERE status != 'superseded'"):
@@ -410,6 +463,84 @@ def run_check(db):
         if norm(s["tex"]) not in old:
             errs.append(f"{s['id']}: step differs from the previous proof version but no hunk records the change")
 
+    # 6. Proof homes and dispositions.
+    for s in q("SELECT s.id, s.origin, s.source FROM steps s JOIN proofs p ON p.id = s.proof_id "
+               "WHERE p.status = 'supplement'"):
+        if s["origin"] != "supplied":
+            errs.append(f"{s['id']}: a step of a supplement proof must have origin 'supplied'")
+    for s in q("SELECT s.id FROM steps s JOIN proofs p ON p.id = s.proof_id "
+               "WHERE p.status IN ('in_paper','proposed') AND s.origin = 'supplied' "
+               "AND NOT EXISTS (SELECT 1 FROM dispositions d WHERE d.step_id = s.id "
+               "                AND d.decision = 'lean_supplies')"):
+        errs.append(f"{s['id']}: supplied step in a paper proof has no 'lean_supplies' disposition pointing at it")
+    for p in q("SELECT id, claim_id FROM proofs WHERE status = 'supplement'"):
+        if not q("SELECT 1 FROM dispositions WHERE claim_id = ? AND decision = 'lean_supplies' "
+                 "AND (whole_proof = 1 OR proof_id = ?)", p["claim_id"], p["id"]):
+            errs.append(f"{p['id']}: supplement proof without a 'lean_supplies' disposition on {p['claim_id']}")
+    for r in q("SELECT claim_id, COUNT(*) n FROM proofs WHERE status = 'supplement' "
+               "AND is_primary = 1 GROUP BY claim_id HAVING n > 1"):
+        errs.append(f"{r['claim_id']}: {r['n']} primary supplement proofs")
+    # Every point gets a disposition: each open finding, and each claim the
+    # paper asserts without proof.
+    for f in q("SELECT id FROM findings f WHERE status = 'open' AND NOT EXISTS "
+               "(SELECT 1 FROM dispositions d WHERE d.finding_id = f.id)"):
+        errs.append(f"{f['id']}: open finding with no disposition")
+    for c in q("SELECT id FROM v_claim_status WHERE scope = 'lean' AND paper_proof IS NULL "
+               "AND kind NOT IN ('definition','assumption')"):
+        if not q("SELECT 1 FROM dispositions WHERE claim_id = ? AND whole_proof = 1", c["id"]):
+            errs.append(f"{c['id']}: the paper gives no proof and no disposition (whole_proof = 1) says what to do")
+    proved = lambda proof_id: q(
+        "SELECT 1 FROM attempts a WHERE a.proof_id = ? AND a.selected = 1 AND a.status = 'proved'", proof_id)
+    for d in q("SELECT * FROM dispositions"):
+        if d["decision"] == "lean_supplies" and d["status"] == "done":
+            if d["step_id"]:
+                if not q("SELECT 1 FROM step_map m JOIN attempts a ON a.id = m.attempt_id "
+                         "WHERE m.step_id = ? AND m.status = 'proved' AND a.selected = 1 "
+                         "AND a.status = 'proved'", d["step_id"]):
+                    errs.append(f"{d['id']}: done, but step {d['step_id']} is not proved in a selected attempt")
+            elif d["proof_id"]:
+                if not proved(d["proof_id"]):
+                    errs.append(f"{d['id']}: done, but no selected proved attempt mirrors {d['proof_id']}")
+            elif d["lean_ref"]:
+                ref = d["lean_ref"].split("::")[0]
+                if not (ROOT / ref).exists():
+                    errs.append(f"{d['id']}: lean_ref {ref} does not exist")
+                elif "::" in d["lean_ref"] and not re.search(
+                        rf"\b{re.escape(d['lean_ref'].split('::')[1])}\b", (ROOT / ref).read_text()):
+                    errs.append(f"{d['id']}: {d['lean_ref'].split('::')[1]} not found in {ref}")
+            else:
+                errs.append(f"{d['id']}: 'lean_supplies' marked done with no step_id, proof_id or lean_ref")
+        if d["decision"] == "lean_supplies" and d["status"] == "open" and d["whole_proof"]:
+            sp = q("SELECT id FROM proofs WHERE claim_id = ? AND status = 'supplement' "
+                   "AND is_primary = 1", d["claim_id"])
+            if sp and proved(sp[0]["id"]):
+                warns.append(f"{d['id']}: {sp[0]['id']} is proved; mark the disposition done "
+                             f"(set status=done proof_id={sp[0]['id']})")
+        if d["decision"] == "paper_edit" and d["status"] == "done":
+            applied = d["edit_id"] and q("SELECT 1 FROM edits WHERE id = ? AND status = 'applied'", d["edit_id"])
+            if not d["resolved_commit"] and not applied:
+                errs.append(f"{d['id']}: paper edit marked done with no resolved_commit or applied edit")
+    settled = []
+    for f in q("SELECT f.id, f.status, "
+               "(SELECT COUNT(*) FROM dispositions d WHERE d.finding_id = f.id) n, "
+               "(SELECT COUNT(*) FROM dispositions d WHERE d.finding_id = f.id AND d.status = 'open') n_open "
+               "FROM findings f"):
+        if f["status"] != "open" and f["n_open"]:
+            errs.append(f"{f['id']}: finding is {f['status']} but {f['n_open']} of its dispositions are open")
+        elif f["status"] == "open" and f["n"] and not f["n_open"]:
+            settled.append(f["id"])
+    if settled:
+        warns.append(f"{len(settled)} open findings have every point carried out and can be closed "
+                     f"(`ledger.py set findings F7 status=resolved resolution=...`): {', '.join(settled)}")
+    for name in DOCS:
+        f = ROOT / name
+        if not f.exists() or f.read_text() != doc_text(db, name):
+            errs.append(f"{name} is missing or out of date: run `ledger.py docs`")
+    # A frozen statement of an advertised result has its differences listed.
+    for h in q("SELECT h.id FROM v_headline h WHERE h.stmt_status = 'frozen' AND h.deltas = 0"):
+        warns.append(f"{h['id']}: frozen headline statement with no statement_deltas row "
+                     f"(record the differences from the paper, or a 'form' row saying there are none)")
+
     return errs, warns
 
 
@@ -425,7 +556,8 @@ def cmd_check(db, args):
 
 def cmd_graph(db, args):
     print("graph BT")
-    style = {"verified": ":::ok", "needs_paper_edit": ":::edit", "proving": ":::wip"}
+    style = {"verified": ":::ok", "verified_supplied": ":::ok", "conditional": ":::edit",
+             "needs_paper_edit": ":::edit", "proving": ":::wip"}
     for c in db.execute("SELECT id, title, state FROM v_claim_status WHERE scope = 'lean' "
                         "ORDER BY id"):
         nid = c["id"].replace(".", "_")
@@ -490,7 +622,12 @@ ASSEMBLY = ROOT / "TinaV2" / "Assembly.lean"
 
 
 def assembly_text(db):
-    """Lean source that composes the selected proved attempts end to end.
+    return assembly_plan(db)[0]
+
+
+def assembly_plan(db):
+    """Lean source that composes the selected proved attempts end to end, and
+    {claim id: (attempt id, claims still assumed)} for the `assembled` table.
 
     Each attempt's `main` takes the claims it uses as hypotheses
     `(hC7 : C07.Statement)`. Here each is given the assembled theorem for that
@@ -558,12 +695,30 @@ def assembly_text(db):
                 f"theorem {c}{binders} : TinaV2.{c}.Statement := {i['ns']}.main{args}", ""]
     out += [f"#print axioms {c}" for c in order]
     out += ["", "end TinaV2.Assembly", ""]
-    return "\n".join(out)
+    claim_of = lambda short: info[short]["claim"] if short in info else (
+        db.execute("SELECT claim_id FROM formalizations WHERE lean_decl = ?",
+                   (f"TinaV2.{short}.Statement",)).fetchone() or [short])[0]
+    plan = {info[c]["claim"]: (info[c]["attempt"], ", ".join(claim_of(x) for x in unproved[c]))
+            for c in order}
+    return "\n".join(out), plan
 
 
 def cmd_assembly(db, args):
-    ASSEMBLY.write_text(assembly_text(db))
-    print(f"wrote {ASSEMBLY.relative_to(ROOT)}")
+    text, plan = assembly_plan(db)
+    ASSEMBLY.write_text(text)
+    old = {r["claim_id"]: r for r in db.execute("SELECT * FROM assembled")}
+    db.execute("DELETE FROM assembled")
+    for claim, (attempt, assumes) in plan.items():
+        o = old.get(claim)
+        keep = o is not None and o["attempt_id"] == attempt     # axioms belong to the attempt
+        db.execute("INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) "
+                   "VALUES (?, ?, ?, ?, ?, ?)",
+                   (claim, attempt, assumes, o["axioms"] if keep else None,
+                    o["standard"] if keep else None, o["checked"] if keep else None))
+    save(db)
+    cond = {c: a for c, (_, a) in plan.items() if a}
+    print(f"wrote {ASSEMBLY.relative_to(ROOT)}; {len(plan)} assembled theorems"
+          + (f", conditional: {', '.join(f'{c} (on {a})' for c, a in sorted(cond.items()))}" if cond else ""))
 
 
 AUDIT_LEAN = """import TinaV2.Assembly
@@ -598,6 +753,12 @@ run_cmd do
       let uses := (auditUses env top ns n).toList.filter fun c =>
         c != n && (top.contains c || c.components.getLast? == some `Statement)
       logInfo m!"AUDIT {n} := {uses}"
+
+run_cmd do
+  let thms : List Name := [%THEOREMS%]
+  for n in thms do
+    let ax ← Lean.collectAxioms n
+    logInfo m!"AXIOMS {n} := {ax.toList}"
 """
 
 
@@ -625,7 +786,9 @@ def cmd_audit(db, args):
     if not lemmas:
         print("no selected proved attempts")
         return
-    lean = AUDIT_LEAN.replace("%LEMMAS%", ", ".join(f"(`{ns}, `{n})" for ns, n in lemmas))
+    shorts = {a["claim_id"]: a["lean_decl"].split(".")[-2] for a in attempts}
+    lean = (AUDIT_LEAN.replace("%LEMMAS%", ", ".join(f"(`{ns}, `{n})" for ns, n in lemmas))
+            .replace("%THEOREMS%", ", ".join(f"`TinaV2.Assembly.{s}" for s in shorts.values())))
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "Audit.lean"
         f.write_text(lean)
@@ -671,10 +834,148 @@ def cmd_audit(db, args):
             unused = sorted((allowed_steps - used_steps) | (allowed_claims - used_claims))
             print(f"{step}: uses {sorted(used_steps | used_claims) or '-'}"
                   + (f"; listed but not used: {unused}" if unused else ""))
+    # Axioms of each assembled theorem, recorded in `assembled`.
+    axioms = {m.group(1): sorted(x.strip() for x in m.group(2).replace("\n", " ").split(",") if x.strip())
+              for m in re.finditer(r"AXIOMS TinaV2\.Assembly\.(\S+) := \[(.*?)\]", out, re.S)}
+    recorded = 0
+    for claim, short in shorts.items():
+        if short not in axioms:
+            errs.append(f"{claim}: Lean did not report the axioms of Assembly.{short}")
+            continue
+        ax = axioms[short]
+        ok = set(ax) <= STANDARD_AXIOMS
+        if not ok:
+            errs.append(f"{claim}: Assembly.{short} depends on {sorted(set(ax) - STANDARD_AXIOMS)}")
+        n = db.execute("UPDATE assembled SET axioms = ?, standard = ?, checked = ? WHERE claim_id = ? "
+                       "AND attempt_id = (SELECT a.id FROM attempts a JOIN formalizations f "
+                       "ON f.id = a.formalization_id WHERE f.claim_id = ? AND a.selected = 1)",
+                       (", ".join(ax), int(ok), now(), claim, claim)).rowcount
+        if n != 1:
+            errs.append(f"{claim}: no assembled record to store the axioms in: run `ledger.py assembly`")
+        recorded += n
+    save(db)
     for e in errs:
         print("ERROR  ", e)
-    print(f"{seen} lemmas audited in {len(attempts)} attempts, {len(errs)} errors")
+    print(f"{seen} lemmas audited in {len(attempts)} attempts, axioms recorded for {recorded} "
+          f"assembled theorems, {len(errs)} errors")
     sys.exit(1 if errs else 0)
+
+
+def cmd_headline(db, args):
+    """The completion record for each advertised result."""
+    table_out(db.execute(
+        """SELECT id, label, state, stmt_status AS stmt, COALESCE(proof_home, '') AS home,
+                  CASE WHEN n_steps IS NULL THEN ''
+                       ELSE (n_steps - n_supplied) || ' paper + ' || n_supplied || ' supplied' END AS steps,
+                  COALESCE(assumes, '') AS assumes,
+                  CASE WHEN axioms IS NULL THEN '' ELSE axioms END AS axioms,
+                  deltas || CASE WHEN narrower > 0 THEN ' (' || narrower || ' narrower)' ELSE '' END AS deltas,
+                  CASE WHEN undecided > 0 THEN undecided || ' undecided ' ELSE '' END ||
+                  CASE WHEN edits_awaited > 0 THEN edits_awaited || ' paper edit' ELSE '' END AS waits,
+                  lean_decl
+           FROM v_headline ORDER BY CAST(substr(id, 2) AS REAL), id"""), {"axioms": 44})
+    print("\nstate: verified = follows the paper; verified_supplied = Lean supplies steps the paper "
+          "omits;\nconditional = still assumes the claims under `assumes`. `deltas` counts recorded "
+          "differences\nbetween the Lean statement and the paper's (`ledger.py show C7`).")
+
+
+DECISIONS = [("undecided", "Waiting for a decision"),
+             ("paper_edit", "The paper changes"),
+             ("lean_supplies", "The paper stays; Lean supplies the argument"),
+             ("reading", "The paper stays; the Lean statement fixes a reading"),
+             ("leave", "The paper stays; nothing changes in Lean")]
+
+
+def cmd_dispositions(db, args):
+    """What was decided about each point: a table, or Markdown with --md."""
+    where = "WHERE d.status = 'open'" if "--open" in args else ""
+    rows = db.execute(
+        f"""SELECT d.*, c.title AS claim_title FROM dispositions d JOIN claims c ON c.id = d.claim_id
+            {where}""").fetchall()
+    key = lambda r: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", r["id"])]
+    rows.sort(key=key)
+    if "--md" not in args:
+        table_out([{k: r[k] for k in ("id", "claim_id", "level", "decision", "status", "decided_by", "point")}
+                   for r in rows], {"point": 80, "decided_by": 24})
+        print()
+        table_out(db.execute("SELECT decision, status, COUNT(*) n FROM dispositions "
+                             "GROUP BY decision, status ORDER BY decision, status"))
+        return
+    src = db.execute("SELECT git_commit FROM sources LIMIT 1").fetchone()
+    print("# Dispositions: what was decided about each point the formalization raised\n")
+    print("Generated by `python3 tools/ledger.py dispositions --md`; do not edit by hand. "
+          f"Manuscript commit `{(src['git_commit'] or '?')[:7]}`. "
+          "`F10.2` is item 2 of finding F10 in `paper-findings-2026-11-14.md`; "
+          "`C8.c/d1` is a point on claim C8.c that has no finding, usually that the paper gives no proof.\n")
+    cell = lambda v: (v or "").replace("|", "\\|").replace("\n", " ")
+    for dec, title in DECISIONS:
+        part = [r for r in rows if r["decision"] == dec]
+        if not part:
+            continue
+        print(f"## {title} ({len(part)})\n")
+        print("| Id | Claim | Point | Level | Status | Decided by | Reason |")
+        print("|---|---|---|---|---|---|---|")
+        for r in part:
+            done = r["status"] + (f" ({r['resolved_commit'][:7]})" if r["resolved_commit"] else "")
+            print(f"| {r['id']} | {r['claim_id']} {cell(r['claim_title'])} | {cell(r['point'])} | {r['level']} "
+                  f"| {done} | {cell(r['decided_by'])} | {cell(r['rationale'])} |")
+        print()
+
+
+def cmd_supplement(db, args):
+    """The written arguments that are not in the paper, as Markdown."""
+    q = lambda sql, *p: db.execute(sql, p).fetchall()
+    only = args[0] if args else None
+    key = lambda r: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", r["claim_id"])]
+    proofs = sorted(q("SELECT p.*, c.title FROM proofs p JOIN claims c ON c.id = p.claim_id "
+                      "WHERE p.status = 'supplement' OR (p.status IN ('in_paper','proposed') AND EXISTS "
+                      "(SELECT 1 FROM steps s WHERE s.proof_id = p.id AND s.origin = 'supplied'))"), key=key)
+    proofs = [p for p in proofs if not only or p["claim_id"] == only]
+    print("# Supplement: arguments the formalization supplies\n")
+    print("Generated by `python3 tools/ledger.py supplement`. These proofs and steps are not in the "
+          "paper. Each Lean lemma named below mirrors one step.\n")
+    if not proofs:
+        print("(none recorded)")
+    for p in proofs:
+        whole = p["status"] == "supplement"
+        print(f"## {p['claim_id']} {p['title']} ({p['id']})\n")
+        print(("The paper gives no proof. " if whole else "The paper's proof, with the supplied steps marked. ")
+              + p["summary"] + "\n")
+        for s in q("SELECT * FROM steps WHERE proof_id = ? ORDER BY ordinal", p["id"]):
+            m = q("SELECT m.lean_decl, m.status FROM step_map m JOIN attempts a ON a.id = m.attempt_id "
+                  "WHERE m.step_id = ? ORDER BY a.selected DESC", s["id"])
+            lean = f"`{m[0]['lean_decl']}` ({m[0]['status']})" if m else "no Lean lemma yet"
+            tag = "supplied" if s["origin"] == "supplied" else f"paper, {s['source']}:{s['line_start']}"
+            deps = [d["dep_id"] for d in q("SELECT dep_id FROM step_deps WHERE step_id = ?", s["id"])]
+            print(f"**Step {s['ordinal']} ({tag}). {s['title']}.** {s['tex'].strip()}\n")
+            print(f"- Lean: {lean}" + (f"; uses {', '.join(deps)}" if deps else "") + "\n")
+    routine = q("SELECT id, claim_id, point, lean_ref FROM dispositions "
+                "WHERE decision = 'lean_supplies' AND lean_ref IS NOT NULL")
+    routine = [r for r in routine if not only or r["claim_id"] == only]
+    if routine:
+        print("## Supplied through a routine lemma or inside an existing step lemma\n")
+        for r in sorted(routine, key=key):
+            print(f"- {r['id']} ({r['claim_id']}): {r['point']} Lean: `{r['lean_ref']}`")
+
+
+DOCS = {"paper-findings-dispositions.md": lambda db: cmd_dispositions(db, ["--md"]),
+        "supplement.md": lambda db: cmd_supplement(db, [])}
+
+
+def doc_text(db, name):
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        DOCS[name](db)
+    return buf.getvalue()
+
+
+def cmd_docs(db, args):
+    """Write the two documents that are generated from the ledger."""
+    for name in DOCS:
+        (ROOT / name).write_text(doc_text(db, name))
+        print(f"wrote {name}")
 
 
 def cmd_db(db, args):
@@ -776,6 +1077,8 @@ def cmd_serve(db, args):
 COMMANDS = {"assembly": cmd_assembly, "audit": cmd_audit, "serve": cmd_serve, "site": cmd_site, "status": cmd_status, "show": cmd_show, "frontier": cmd_frontier,
             "sql": cmd_sql, "add": cmd_add, "set": cmd_set, "note": cmd_note,
             "check": cmd_check, "graph": cmd_graph, "edit-diff": cmd_edit_diff,
+            "headline": cmd_headline, "dispositions": cmd_dispositions,
+            "supplement": cmd_supplement, "docs": cmd_docs,
             "edit-apply": cmd_edit_apply, "db": cmd_db}
 
 if __name__ == "__main__":

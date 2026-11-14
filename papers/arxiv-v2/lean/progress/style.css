@@ -12,6 +12,7 @@
   --focus: #2a78d6;
   /* status: always paired with an icon and a label */
   --st-verified: #0ca30c;
+  --st-vsup: #12998a;
   --st-todo: #fab219;
   --st-blocked: #d03b3b;
   --st-out: #a3a19a;
@@ -271,3 +272,18 @@ textarea.sql { width: 100%; min-height: 150px; background: var(--surface); borde
 .tip { position: fixed; z-index: 10; max-width: 320px; pointer-events: none; background: var(--ink); color: var(--surface);
   padding: 7px 10px; border-radius: 6px; font-size: 12.5px; line-height: 1.4; box-shadow: 0 4px 14px rgb(0 0 0 / 0.25); }
 .tip b { display: block; }
+
+/* supplied steps, decisions, statement differences */
+.tag.supplied { border-color: var(--st-vsup); color: var(--st-vsup); }
+.step.supplied > div:first-child { border-left: 4px solid var(--st-vsup); background: color-mix(in srgb, var(--st-vsup) 6%, var(--surface)); }
+table.disp td, table.results td { vertical-align: top; }
+table.disp td:nth-child(1) { font-weight: 600; }
+table.results details { margin-top: 2px; }
+.deltas { margin: 2px 0 0; padding-left: 0; list-style: none; font-size: 13.5px; }
+.deltas li { margin: 3px 0; }
+.tag.extra_hypothesis, .tag.restricted { border-color: var(--sev-medium); color: var(--sev-medium); }
+details.group { margin: 10px 0; }
+details.group > summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+details.group > summary b { font-variant-numeric: tabular-nums; margin-left: 4px; }
+.finding .tbl-wrap { margin-top: 8px; }
+.ico.vsup, .ico.cond { color: #fff; }

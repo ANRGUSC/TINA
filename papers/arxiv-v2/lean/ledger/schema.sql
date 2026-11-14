@@ -35,7 +35,10 @@ CREATE TABLE claims (
   line_end   INTEGER,
   scope      TEXT NOT NULL CHECK (scope IN ('lean','numeric','prose')),
   tier       TEXT CHECK (tier IN ('A','B','C','D')),  -- see README
-  notes      TEXT
+  notes      TEXT,
+  headline   INTEGER NOT NULL DEFAULT 0  -- 1 = a result the paper advertises
+                                         -- (theorem, proposition, lemma, corollary);
+                                         -- listed in v_headline
 );
 
 -- claim_id needs depends_on. kind: uses = logical dependency in the paper's
@@ -50,24 +53,31 @@ CREATE TABLE claim_deps (
 );
 
 -- --------------------------------------------------------- English proofs
--- A versioned English proof of a claim. Exactly one proof per claim may be
--- 'in_paper' and marked primary: that is the text the Lean proof must match.
+-- A versioned English proof of a claim. Every Lean proof mirrors one of
+-- these, step for step. A proof has one of two homes:
+--   in_paper    the paper's own proof (at most one primary per claim)
+--   supplement  written for the formalization where the paper gives no proof;
+--               kept here, not in the paper, and shown as such everywhere
+-- 'proposed' is a proof on its way into the paper through an edit.
 CREATE TABLE proofs (
   id         TEXT PRIMARY KEY,          -- C7/p1
   claim_id   TEXT NOT NULL REFERENCES claims(id),
   version    INTEGER NOT NULL,
   parent     TEXT REFERENCES proofs(id),  -- proof this one revises
   status     TEXT NOT NULL CHECK (status IN
-               ('in_paper','proposed','superseded','rejected')),
+               ('in_paper','supplement','proposed','superseded','rejected')),
   is_primary INTEGER NOT NULL DEFAULT 1,  -- 0 = secondary derivation/sketch
   summary    TEXT NOT NULL,
   created    TEXT NOT NULL,
   UNIQUE (claim_id, version)
 );
 
--- One step of an English proof. `tex` is the verbatim paper text for the
--- step; `ledger check` requires it to be findable in the source file (for
--- in_paper proofs), so the paper cannot drift without the ledger noticing.
+-- One step of an English proof. For origin = 'paper', `tex` is the verbatim
+-- paper text; `ledger check` requires it to be findable in the source file, so
+-- the paper cannot drift without the ledger noticing. origin = 'supplied'
+-- marks a step the paper does not contain: every step of a supplement proof,
+-- or a step added to an in-paper proof where the paper skips an argument.
+-- A supplied step in an in-paper proof needs a disposition that points at it.
 CREATE TABLE steps (
   id         TEXT PRIMARY KEY,          -- C7/p1/s3
   proof_id   TEXT NOT NULL REFERENCES proofs(id),
@@ -77,6 +87,7 @@ CREATE TABLE steps (
   source     TEXT REFERENCES sources(id),
   line_start INTEGER,
   line_end   INTEGER,
+  origin     TEXT NOT NULL DEFAULT 'paper' CHECK (origin IN ('paper','supplied')),
   UNIQUE (proof_id, ordinal)
 );
 
@@ -123,6 +134,22 @@ CREATE TABLE attempts (
   lean_lines       INTEGER,
   created          TEXT NOT NULL,
   updated          TEXT NOT NULL
+);
+
+-- What the end-to-end assembly says about a claim's selected attempt.
+-- `assumes` is written by `ledger.py assembly`: the claims (comma-separated)
+-- that remain hypotheses of the assembled theorem because they are used,
+-- directly or through other claims, and not yet proved. `axioms` is written
+-- by `ledger.py audit`: what Lean reports the assembled theorem depends on;
+-- `standard` = 1 when that is within propext, Classical.choice, Quot.sound.
+-- A claim is verified only with assumes = '' and standard = 1.
+CREATE TABLE assembled (
+  claim_id   TEXT PRIMARY KEY REFERENCES claims(id),
+  attempt_id TEXT NOT NULL REFERENCES attempts(id),
+  assumes    TEXT NOT NULL DEFAULT '',
+  axioms     TEXT,
+  standard   INTEGER,
+  checked    TEXT
 );
 
 -- The 1:1 map: each step of the mirrored English proof <-> one Lean lemma.
@@ -195,6 +222,63 @@ CREATE TABLE findings (
   created    TEXT NOT NULL
 );
 
+-- ------------------------------------------------------------- dispositions
+-- What was decided about each point the formalization raised. A point is one
+-- numbered item of a finding (id F10.2) or, with no finding, a point on a
+-- claim (id C8.c/d1), usually that the paper gives no proof (whole_proof = 1).
+--   level     statement: what is claimed, its hypotheses or definitions
+--             proof:     a step of an argument
+--             wording:   presentation only
+--   decision  undecided      waiting for a decision; blocks the claim
+--             paper_edit     the paper will change (agreed with the co-author)
+--             lean_supplies  the paper stays; Lean proves the step or the claim
+--                            from a supplied step, a supplement proof or a
+--                            routine lemma (step_id / proof_id / lean_ref)
+--             reading        the paper stays; the Lean statement fixes one
+--                            reading of the paper's words (see statement_deltas)
+--             leave          the paper stays and nothing changes in Lean
+--   status    done once carried out: the edit is upstream (resolved_commit),
+--             the supplied proof is checked, or the reading is recorded.
+CREATE TABLE dispositions (
+  id              TEXT PRIMARY KEY,
+  claim_id        TEXT NOT NULL REFERENCES claims(id),
+  finding_id      TEXT REFERENCES findings(id),
+  whole_proof     INTEGER NOT NULL DEFAULT 0,
+  point           TEXT NOT NULL,
+  level           TEXT NOT NULL CHECK (level IN ('statement','proof','wording')),
+  decision        TEXT NOT NULL CHECK (decision IN
+                    ('undecided','paper_edit','lean_supplies','reading','leave')),
+  decided_by      TEXT,
+  decided_on      TEXT,
+  rationale       TEXT,
+  status          TEXT NOT NULL CHECK (status IN ('open','done')),
+  step_id         TEXT REFERENCES steps(id),
+  proof_id        TEXT REFERENCES proofs(id),
+  lean_ref        TEXT,                 -- Lean file or declaration that supplies it
+  edit_id         TEXT REFERENCES edits(id),
+  resolved_commit TEXT,
+  CHECK (decision != 'undecided' OR status = 'open'),
+  CHECK (decision = 'undecided' OR decided_by IS NOT NULL)
+);
+
+-- Where a Lean statement differs from the paper's statement, one row per
+-- difference. This is what a co-author checks before a statement is frozen.
+--   extra_hypothesis  Lean assumes something the paper's statement does not say
+--   restricted        Lean states only part of what the paper claims
+--   stronger          Lean proves more (a hypothesis dropped, a wider claim)
+--   reading           the paper's words allow more than one meaning; Lean fixes one
+--   form              same content in another form
+CREATE TABLE statement_deltas (
+  id               TEXT PRIMARY KEY,    -- C8/f1/d1
+  formalization_id TEXT NOT NULL REFERENCES formalizations(id),
+  ordinal          INTEGER NOT NULL,
+  kind             TEXT NOT NULL CHECK (kind IN
+                     ('extra_hypothesis','restricted','stronger','reading','form')),
+  text             TEXT NOT NULL,
+  disposition_id   TEXT REFERENCES dispositions(id),
+  UNIQUE (formalization_id, ordinal)
+);
+
 -- --------------------------------------------------------------------- notes
 -- Append-only log against any ledger id. Search here before retrying.
 CREATE TABLE notes (
@@ -202,7 +286,7 @@ CREATE TABLE notes (
   ts     TEXT NOT NULL,
   target TEXT NOT NULL,                 -- claim / proof / step / attempt / edit id
   kind   TEXT NOT NULL CHECK (kind IN
-           ('success','failure','insight','decision','todo','build')),
+           ('success','failure','insight','decision','todo','done','build')),  -- done = a todo that was carried out
   body   TEXT NOT NULL
 );
 
@@ -215,10 +299,13 @@ WHERE f.status != 'superseded'
                    WHERE g.claim_id = f.claim_id AND g.status != 'superseded');
 
 -- Selected attempt per claim, with step coverage of the mirrored proof.
+-- n_supplied counts the steps of that proof that are not in the paper.
 CREATE VIEW v_selected AS
 SELECT f.claim_id, a.id AS attempt_id, a.status AS attempt_status,
        a.proof_id, p.status AS proof_status,
        (SELECT COUNT(*) FROM steps s WHERE s.proof_id = a.proof_id) AS n_steps,
+       (SELECT COUNT(*) FROM steps s WHERE s.proof_id = a.proof_id
+           AND s.origin = 'supplied') AS n_supplied,
        (SELECT COUNT(*) FROM step_map m JOIN steps s ON s.id = m.step_id
          WHERE m.attempt_id = a.id AND s.proof_id = a.proof_id
            AND m.status = 'proved') AS n_steps_proved
@@ -228,27 +315,53 @@ JOIN proofs p ON p.id = a.proof_id
 WHERE a.selected = 1;
 
 -- One row per claim with its overall state.
---   verified          Lean proof done, mirrors the proof now in the paper, 1:1
---   needs_paper_edit  Lean proof done but mirrors a proposed (unapplied) proof
---   proving           an attempt is active/planned
---   stated            Lean statement exists, no attempt yet
---   no_paper_proof    lean-scope claim the paper asserts without proof
---   todo              nothing yet
+--   verified           Lean proof done, statement frozen, every step is a step
+--                      of the paper's proof, nothing assumed, standard axioms
+--   verified_supplied  the same, except that the proof is a supplement or has
+--                      supplied steps: Lean proves the paper's statement by an
+--                      argument that is not (all) in the paper
+--   conditional        the same, except that the assembled theorem still
+--                      assumes a claim that is not proved (column `assumes`)
+--   needs_paper_edit   Lean proof done but mirrors a proposed (unapplied) proof
+--   proved_unaudited   Lean proof done; statement not frozen, or the axioms
+--                      are not recorded yet (`ledger.py audit`)
+--   proving            an attempt is active/planned
+--   stated             Lean statement exists, no attempt yet
+--   no_written_proof   no proof in the paper and no supplement yet
+--   todo               nothing yet
+-- `written_proof` is the proof a new attempt would mirror: the paper's primary
+-- proof if there is one, otherwise the supplement.
 CREATE VIEW v_claim_status AS
-SELECT c.id, c.kind, c.scope, c.tier, c.title,
+SELECT c.id, c.kind, c.scope, c.tier, c.title, c.headline,
        (SELECT id FROM proofs p WHERE p.claim_id = c.id
           AND p.status = 'in_paper' AND p.is_primary = 1) AS paper_proof,
+       (SELECT id FROM proofs p WHERE p.claim_id = c.id
+          AND p.status = 'supplement' AND p.is_primary = 1) AS supplement_proof,
        vf.id AS formalization, vf.status AS stmt_status,
-       vs.attempt_id, vs.n_steps, vs.n_steps_proved,
+       vs.attempt_id, vs.proof_id AS mirrored_proof, vs.proof_status,
+       vs.n_steps, vs.n_steps_proved, vs.n_supplied,
+       asm.assumes, asm.axioms, asm.standard AS axioms_standard,
        (SELECT COUNT(*) FROM findings fi
          WHERE fi.claim_id = c.id AND fi.status = 'open') AS open_findings,
+       (SELECT COUNT(*) FROM dispositions d
+         WHERE d.claim_id = c.id AND d.decision = 'undecided') AS undecided,
+       (SELECT COUNT(*) FROM dispositions d
+         WHERE d.claim_id = c.id AND d.decision = 'paper_edit'
+           AND d.status = 'open') AS edits_awaited,
        CASE
          WHEN c.scope != 'lean' THEN c.scope
-         WHEN vs.attempt_status = 'proved' AND vs.proof_status = 'in_paper'
-              AND vs.n_steps > 0 AND vs.n_steps = vs.n_steps_proved
-              AND vf.status = 'frozen' THEN 'verified'
          WHEN vs.attempt_status = 'proved' AND vs.proof_status = 'proposed'
               THEN 'needs_paper_edit'
+         WHEN vs.attempt_status = 'proved'
+              AND vs.proof_status IN ('in_paper','supplement')
+              AND vs.n_steps > 0 AND vs.n_steps = vs.n_steps_proved
+              AND vf.status = 'frozen' AND asm.standard = 1
+              THEN CASE
+                     WHEN asm.assumes != '' THEN 'conditional'
+                     WHEN vs.proof_status = 'in_paper' AND vs.n_supplied = 0
+                          THEN 'verified'
+                     ELSE 'verified_supplied'
+                   END
          WHEN vs.attempt_status = 'proved' THEN 'proved_unaudited'
          WHEN EXISTS (SELECT 1 FROM attempts a JOIN formalizations f
                         ON f.id = a.formalization_id
@@ -256,20 +369,21 @@ SELECT c.id, c.kind, c.scope, c.tier, c.title,
                         AND a.status IN ('planned','active')) THEN 'proving'
          WHEN vf.id IS NOT NULL THEN 'stated'
          WHEN NOT EXISTS (SELECT 1 FROM proofs p WHERE p.claim_id = c.id
-                            AND p.status IN ('in_paper','proposed'))
-              AND c.kind NOT IN ('definition','assumption') THEN 'no_paper_proof'
+                            AND p.status IN ('in_paper','supplement','proposed'))
+              AND c.kind NOT IN ('definition','assumption') THEN 'no_written_proof'
          ELSE 'todo'
        END AS state
 FROM claims c
 LEFT JOIN v_formalization vf ON vf.claim_id = c.id
-LEFT JOIN v_selected vs ON vs.claim_id = c.id;
+LEFT JOIN v_selected vs ON vs.claim_id = c.id
+LEFT JOIN assembled asm ON asm.claim_id = c.id AND asm.attempt_id = vs.attempt_id;
 
 -- Claims ready to be proved: own statement and every lean-scope dependency's
 -- statement are frozen (proofs are conditional on statements, so upstream
 -- proofs need not be finished).
 CREATE VIEW v_frontier AS
 SELECT s.* FROM v_claim_status s
-WHERE s.scope = 'lean' AND s.state IN ('stated','proving','todo','no_paper_proof')
+WHERE s.scope = 'lean' AND s.state IN ('stated','proving','todo','no_written_proof')
   AND s.stmt_status = 'frozen'
   AND NOT EXISTS (
     SELECT 1 FROM claim_deps d
@@ -277,3 +391,26 @@ WHERE s.scope = 'lean' AND s.state IN ('stated','proving','todo','no_paper_proof
     LEFT JOIN v_formalization df ON df.claim_id = d.depends_on
     WHERE d.claim_id = s.id AND d.kind IN ('uses','setup','instantiates')
       AND (df.status IS NULL OR df.status != 'frozen'));
+
+-- The completion record for each advertised result: where it is in the paper,
+-- the Lean theorem, how the Lean statement differs from the paper's, where the
+-- proof comes from, what is still assumed, and the axioms.
+--   deltas   differences recorded between the Lean and the paper statement
+--   narrower those of kind extra_hypothesis or restricted (Lean proves less)
+CREATE VIEW v_headline AS
+SELECT s.id, s.kind, c.label, s.title, vf.lean_decl, s.stmt_status, s.state,
+       s.mirrored_proof AS proof,
+       CASE s.proof_status WHEN 'in_paper' THEN 'paper'
+                           WHEN 'supplement' THEN 'supplement'
+                           ELSE s.proof_status END AS proof_home,
+       s.n_steps, s.n_supplied, s.assumes, s.axioms,
+       (SELECT COUNT(*) FROM statement_deltas d
+         WHERE d.formalization_id = s.formalization) AS deltas,
+       (SELECT COUNT(*) FROM statement_deltas d
+         WHERE d.formalization_id = s.formalization
+           AND d.kind IN ('extra_hypothesis','restricted')) AS narrower,
+       s.undecided, s.edits_awaited
+FROM v_claim_status s
+JOIN claims c ON c.id = s.id
+LEFT JOIN v_formalization vf ON vf.claim_id = s.id
+WHERE c.headline = 1;

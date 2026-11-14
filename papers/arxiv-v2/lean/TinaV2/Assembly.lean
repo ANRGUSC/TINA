@@ -1,3 +1,4 @@
+import TinaV2.Proofs.C05.A1
 import TinaV2.Proofs.C01.A1
 import TinaV2.Proofs.C02.A1
 import TinaV2.Proofs.C03.A1
@@ -25,11 +26,14 @@ list only `propext`, `Classical.choice` and `Quot.sound`. -/
 
 namespace TinaV2.Assembly
 
+/-- C5, attempt C5/a1. -/
+theorem C05 : TinaV2.C05.Statement := TinaV2.C05.A1.main
+
 /-- C1, attempt C1/a1. -/
-theorem C01 (hC05 : TinaV2.C05.Statement) : TinaV2.C01.Statement := TinaV2.C01.A1.main hC05
+theorem C01 : TinaV2.C01.Statement := TinaV2.C01.A1.main C05
 
 /-- C2, attempt C2/a1. -/
-theorem C02 (hC05 : TinaV2.C05.Statement) : TinaV2.C02.Statement := TinaV2.C02.A1.main (C01 hC05)
+theorem C02 : TinaV2.C02.Statement := TinaV2.C02.A1.main C01
 
 /-- C3, attempt C3/a1. -/
 theorem C03 : TinaV2.C03.Statement := TinaV2.C03.A1.main
@@ -53,7 +57,7 @@ theorem C10 : TinaV2.C10.Statement := TinaV2.C10.A1.main C08
 theorem C11 : TinaV2.C11.Statement := TinaV2.C11.A1.main
 
 /-- C12, attempt C12/a1. -/
-theorem C12 (hC05 : TinaV2.C05.Statement) : TinaV2.C12.Statement := TinaV2.C12.A1.main hC05
+theorem C12 : TinaV2.C12.Statement := TinaV2.C12.A1.main C05
 
 /-- C14, attempt C14/a1. -/
 theorem C14 : TinaV2.C14.Statement := TinaV2.C14.A1.main C07
@@ -70,6 +74,7 @@ theorem C19 : TinaV2.C19.Statement := TinaV2.C19.A1.main C16
 /-- C19.b, attempt C19.b/a1. -/
 theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 
+#print axioms C05
 #print axioms C01
 #print axioms C02
 #print axioms C03

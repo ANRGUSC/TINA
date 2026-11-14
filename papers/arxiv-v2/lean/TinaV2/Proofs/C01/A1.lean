@@ -15,8 +15,10 @@ square-integrable functions `Ω → α → ℝ`, identified when almost surely e
 `‖u‖_Q² = qNormSq μ Q u`. "`p = Π_S x⋆`" is `IsQProjection μ Q S x⋆ p`: `p ∈ S`
 and `x⋆ − p` is `Q`-orthogonal to `S`.
 
-Completing the square, claim C5, is not proved yet. It enters step 3 as the
-hypothesis `hC5 : C05.Statement` and is passed through step 4 to step 3. -/
+Completing the square, claim C5, enters step 3 as the hypothesis
+`hC5 : C05.Statement` and is passed through step 4 to step 3. The paper gives
+no argument for it; the assembly supplies it from the supplement proof
+(`Proofs/C05/A1.lean`). -/
 
 namespace TinaV2.C01.A1
 

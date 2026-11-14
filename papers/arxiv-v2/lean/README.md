@@ -415,19 +415,17 @@ Still open:
 1. **F9: the AR(1) innovations hypothesis.** Undecided; ask Bhaskar whether
    the wording changes. Lean reads it as each innovation independent of every
    earlier state in either case.
-2. **Closing findings.** F2, F7 and F12–F17 have every point carried out and
-   are still `open` in the ledger; `check` lists them.
-3. **C4.c: the Ornstein–Uhlenbeck example** is written as a stochastic
+2. **C4.c: the Ornstein–Uhlenbeck example** is written as a stochastic
    differential equation, which Mathlib cannot express. Settled in principle
    (disposition C4.c/d1): Lean proves the prediction rule for a jointly
    Gaussian process with the stated covariance, the paper keeps the equation,
    and the gap between the two is recorded as a difference on the Lean
    statement when it is written.
-4. **Rules as functions or as measurable maps.** The main text writes
+3. **Rules as functions or as measurable maps.** The main text writes
    `u_i = g_i(Z_i)`; the appendix uses sigma-algebras. The paper stays
    (disposition F6.1); the link between the two is a supplied step where an
    appendix fact is applied to main-text rules.
-5. **Review finding K1** (the composition law is in Marschak–Radner). Settled
+4. **Review finding K1** (the composition law is in Marschak–Radner). Settled
    upstream in `284a0e0`: the text before C7 now attributes the decomposition
    to Marschak and Radner. The theorem statement and proof did not change, so
    the Lean statement and the proof steps are unaffected.
@@ -566,8 +564,10 @@ Eighteen. F1-F4 came from reading the proofs for step extraction; F5-F9 from
 writing the Lean statements; F10 from realigning the ledger to the manuscript
 at `6454c74`; F11-F14 from writing the tier A and B proofs; F15-F17 from the
 tier C proofs; F18 from the co-author's review. F1 is resolved (upstream
-`284a0e0`). The other seventeen are open in the ledger; eight of them have
-every point carried out. What matters now is the dispositions:
+`284a0e0`). F2, F7 and F12–F17 were closed on 2026-11-14 with every point
+carried out and the paper left as written. Nine are open: F3, F4, F5, F8, F10
+and F18 wait for agreed paper edits, F6 and F11 for Lean work, and F9 for a
+decision. The detail is in the dispositions:
 
 ```
 python3 tools/ledger.py dispositions --open     # what is still to do

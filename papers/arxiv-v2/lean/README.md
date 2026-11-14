@@ -58,8 +58,14 @@ infimum runs over, linearity of conditional expectation), `Degenerate.lean`
 (centering and translation of rules), `ExpRadius.lean` and
 `RadiusCalculus.lean` (sign of a derivative to monotonicity, unfolding the
 closed-form radii), `Estimation.lean` (the conditional mean as best estimate,
-conditioning on an independent extra observation) and `Aggregate.lean` (the
-aggregate-coupling cost in coordinates, moments of independent states).
+conditioning on an independent extra observation), `Aggregate.lean` (the
+aggregate-coupling cost in coordinates, moments of independent states),
+`Projection.lean` (expected cost and its expansion, algebra of `⟨u,v⟩_Q`,
+linear combinations in the policy space; shared by C1, C2, C3), `QHilbert.lean`
+(`L²` with the `Q` inner product as a Mathlib Hilbert space, and Mathlib's
+projection theorem read back on functions), `NormalEq.lean` (one-coordinate
+perturbations, linearity of conditional expectation for the block form) and
+`CommonInfo.lean` (coordinates of a vector conditional expectation).
 
 ## The ledger
 
@@ -245,7 +251,9 @@ critical path. C19 also needs C18 and the bridge C17.b (tier D).
 2. **Tier A and B proofs**, C7 first, each mirroring the paper's steps, with
    the step-dependency audit. *Under way: the 12 claims whose proof is complete
    in the paper are proved against the draft statements (see "Next step").*
-3. **Tier C**: projection lemma and normal equations.
+3. **Tier C**: projection lemma and normal equations. *Statements drafted
+   and C1, C2, C3 proved against them on 2026-11-14; C1.b is stated and waits
+   for a proof in the paper.*
 4. **Tier D**: the bridge (F1) was added to the paper upstream in `284a0e0`
    and is claim C17.b with proof `C17.b/p1`. Tier D starts by settling F10
    (the theorem's proof should cite it) and by checking what this Mathlib
@@ -339,12 +347,13 @@ record any tier A–C proof that breaks as a Lean-only retry.
 
 ## Next step
 
-**State on 2026-11-14.** Twelve claims are proved in Lean, one lemma per paper
-step: C3.b, C5.b, C7, C8, C10, C11, C12, C14, C15, C16, C19 (algebraic form)
-and C19.b. These are all the claims that have both a Lean statement and a
-complete proof in the paper. `lake build` passes, `Assembly.lean` composes them
-end to end with only the three standard axioms, and `ledger.py check` and
-`ledger.py audit` are clean (53 lemmas).
+**State on 2026-11-14 (evening).** Fifteen claims are proved in Lean, one lemma
+per paper step: C1, C2, C3 (tier C, added last), C3.b, C5.b, C7, C8, C10, C11,
+C12, C14, C15, C16, C19 (algebraic form) and C19.b. These are all the claims
+that have both a Lean statement and a complete proof in the paper. `lake build`
+passes, `Assembly.lean` composes them end to end with only the three standard
+axioms, and `ledger.py check` and `ledger.py audit` are clean (66 lemmas in 15
+attempts).
 
 What "proved" does and does not mean here:
 
@@ -354,12 +363,23 @@ What "proved" does and does not mean here:
   claim above is therefore `proved_unaudited`, not `verified`. If the review
   changes a statement, that is a new formalization version and the attempt
   against the old one has to be redone or re-pointed.
-- **C12 is conditional on C5** (completing the square), which the paper asserts
-  without proof: `Assembly.C12` takes `C05.Statement` as a hypothesis.
+- **C1, C2 and C12 are conditional on C5** (completing the square), which the
+  paper asserts without proof: `Assembly.C01`, `Assembly.C02` and
+  `Assembly.C12` take `C05.Statement` as a hypothesis. For C1 that is the
+  paper's own step 3; C2 inherits it through C1. C3 is unconditional.
+- **The projection theorem is cited, not re-proved.** C1's step 4 gets the
+  existence of the projection from Mathlib's Hilbert projection theorem, in
+  Mathlib's `L²` space over `ℝ^d` with the inner product `vᵀQw`
+  (`Routine/QHilbert.lean`).
 - **C19 is the algebraic form.** The link to the field model (C17.b, C18) is
   tier D.
 - **Where Lean needed something the paper's step does not say**, it is a
-  finding (F4, F11–F14), not a silent addition. The larger ones: C10's
+  finding (F4, F11–F17), not a silent addition. From tier C: the block form
+  of the normal equations has no step in the paper's justification and comes
+  from a routine lemma in C2's `main` (F15); "the error expansion" in the
+  common-information paragraph has no stated referent (F16); the projection
+  step uses the norm-equivalence remark without citing it (F17). The larger
+  earlier ones: C10's
   `η_S(0) = 1` clause is one line in `main` (F4); C19.b's third item goes
   outside the regime the derivative covers (F11); C16's crossing, positivity
   criterion and positive part (F12); C11's use of the conditional mean as the
@@ -383,14 +403,18 @@ What "proved" does and does not mean here:
    for Bhaskar's reply to `paper-findings-2026-11-14.md`. C6.c is in the same
    position for its range clause `0 ≤ η_S ≤ 1`, and its monotonicity step
    uses C1.c through F6.
-3. **Tier C (C1, C2, C3)** has proofs in the paper and no Lean statements yet.
-   It does not depend on the reply and is the next piece that can move.
-   When C3 is stated, `bestMSE_eq_of_condExp` in `Routine/Estimation.lean`
-   should become a use of C3 (F13).
-4. Send Bhaskar section 7 of `paper-findings-2026-11-14.md`, the addendum with
-   the machine-checked results and findings F11–F14.
+3. **Decisions the tier C proofs raised**, for Scott:
+   - F15, F16: steps C2/p1/s3 and C3/p1/s2 are listed in `step_deps` as using
+     C5, and the Lean lemmas do not use it (`ledger.py audit -v`). Drop the
+     dependency, or keep the reading that goes through completing the square.
+   - F13: C3 now has a statement, so `bestMSE_eq_of_condExp` in
+     `Routine/Estimation.lean` can become a use of C3 in C11. That adds C3 to
+     the dependencies of C11's steps, which the paper's example does not cite.
+   - C1.b has a draft statement and no attempt: the paper gives no proof.
+4. Send Bhaskar sections 7 and 8 of `paper-findings-2026-11-14.md`, the two
+   addenda with the machine-checked results and findings F11–F17.
 
-Read `Defs/` first (six files, about 300 lines). Its design choices carry
+Read `Defs/` first (seven files, about 415 lines). Its design choices carry
 into every statement:
 
 - Definitions take snapshots (random state vectors), not a process and a time.
@@ -403,11 +427,19 @@ into every statement:
 - C15, C15.b, C15.c and C16 are statements about the gain function for given
   real curves, not about the graph model (F8).
 - C19 is in algebraic form only until tier D definitions exist (F10).
+- Tier C (C1, C1.b, C2, C3) is in the appendix's sigma-algebra form and is
+  stated for the quadratic cost: `b(θ_t)` and `c(θ_t)` are random variables,
+  `x⋆ = Q⁻¹b`, and "optimal" means lowest expected cost over the policy space.
+- Elements of `ℋ` are functions, identified when almost surely equal. "Closed"
+  is closed for the ordinary `L²` norm.
+- The projection `Π_S x⋆` is any member of `S` whose error is `Q`-orthogonal to
+  `S`. C1 asserts that one exists and states optimality, uniqueness and the
+  regret value for every such member.
 
 ## Findings so far
 
-Fourteen. F1-F4 came from reading the proofs for step extraction; F5-F9 from
+Seventeen. F1-F4 came from reading the proofs for step extraction; F5-F9 from
 writing the Lean statements; F10 from realigning the ledger to the manuscript
-at `6454c74`; F11-F14 from writing the proofs. F1 is resolved (upstream
-`284a0e0`); the other thirteen are open:
+at `6454c74`; F11-F14 from writing the tier A and B proofs; F15-F17 from the
+tier C proofs. F1 is resolved (upstream `284a0e0`); the other sixteen are open:
 `python3 tools/ledger.py sql "SELECT id, claim_id, severity, title FROM findings"`.

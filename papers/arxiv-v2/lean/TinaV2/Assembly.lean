@@ -1,3 +1,6 @@
+import TinaV2.Proofs.C01.A1
+import TinaV2.Proofs.C02.A1
+import TinaV2.Proofs.C03.A1
 import TinaV2.Proofs.C03b.A1
 import TinaV2.Proofs.C05b.A1
 import TinaV2.Proofs.C07.A1
@@ -21,6 +24,15 @@ is a claim that is used but not yet proved. The `#print axioms` lines must
 list only `propext`, `Classical.choice` and `Quot.sound`. -/
 
 namespace TinaV2.Assembly
+
+/-- C1, attempt C1/a1. -/
+theorem C01 (hC05 : TinaV2.C05.Statement) : TinaV2.C01.Statement := TinaV2.C01.A1.main hC05
+
+/-- C2, attempt C2/a1. -/
+theorem C02 (hC05 : TinaV2.C05.Statement) : TinaV2.C02.Statement := TinaV2.C02.A1.main (C01 hC05)
+
+/-- C3, attempt C3/a1. -/
+theorem C03 : TinaV2.C03.Statement := TinaV2.C03.A1.main
 
 /-- C3.b, attempt C3.b/a1. -/
 theorem C03b : TinaV2.C03b.Statement := TinaV2.C03b.A1.main
@@ -58,6 +70,9 @@ theorem C19 : TinaV2.C19.Statement := TinaV2.C19.A1.main C16
 /-- C19.b, attempt C19.b/a1. -/
 theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 
+#print axioms C01
+#print axioms C02
+#print axioms C03
 #print axioms C03b
 #print axioms C05b
 #print axioms C07

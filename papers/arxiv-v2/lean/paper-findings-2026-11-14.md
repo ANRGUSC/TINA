@@ -3,7 +3,7 @@
 - **Date:** 14 November 2026 (second version, rewritten against the renamed manuscript)
 - **For:** Bhaskar, for edits to the manuscript
 - **Manuscript:** `submissions/arxiv-v2/main-v2.tex` and `technical-appendices-v2.tex` at commit `6454c74`, which is `origin/main` on 14 November. Every line number and quotation below was rechecked against those two files at that commit.
-- **Addendum:** section 7, at the end, was added later on 14 November. It reports which results are now machine-checked and adds findings F11–F14, which came from writing the proofs. Sections 1–6 are unchanged.
+- **Addenda:** sections 7 and 8, at the end, were added later on 14 November. Section 7 reports which results are machine-checked and adds findings F11–F14, which came from writing the proofs. Section 8 does the same for the appendix projection results and adds F15–F17. Sections 1–6 are unchanged.
 - **Source:** the proof ledger in `papers/arxiv-v2/lean/` (findings F1–F10). K-numbers refer to the 12 November co-author review (`submissions/arxiv-v2/alt-review/index.html`).
 
 ## Changes since the 4a9b87e version
@@ -278,8 +278,77 @@ An observation, no edit needed: the hypothesis $\eta_0<1$ is never used. The res
 
 The crossover theorem's formal proof needed exactly the sentence proposed under F4 for the case $\eta_S(0)=1$. It is currently the one line of that proof with no counterpart in the paper.
 
+## 8. Second addendum: the appendix projection results and findings F15–F17
+
+Added in the evening of 14 November, against the same manuscript commit `6454c74`.
+
+### What is now machine-checked
+
+Three more results, all in the first section of the technical appendix, again as one formal lemma per sentence of your argument:
+
+| Result | Label |
+|---|---|
+| Fixed-architecture quadratic projection | `lem:radner_projection` |
+| Coupled conditional normal equations | `cor:conditional_normal_equations` |
+| Common-information optimality | app 271–276 |
+
+That makes fifteen. The same limits apply as in section 7, and two more:
+
+- The projection lemma and the normal equations are checked on the assumption that completing the square (`eq:complete_square`) holds, because the lemma's proof cites it and the paper does not prove it. The common-information paragraph does not need it.
+- "The standard Hilbert-space projection problem" is not re-proved. The formal proof builds $L^2(\Omega;\mathbb R^d)$ with the inner product $\mathbb E[u^\top Qv]$ and applies the library's projection theorem there.
+
+The sentence after the lemma's proof ("The projection error is $Q$-orthogonal …, $2R(\mathcal A)=\|x^\star\|_Q^2-\|u^\star_{\mathcal A}\|_Q^2$") now has a formal statement but no proof, because the paper gives none. It is already in the table of section 3.
+
+### What is asked of you
+
+| # | Item | Where | Kind of edit |
+|---|---|---|---|
+| F15 | The block form of the normal equations is called equivalent with no argument; two steps of the justification do not say which property of conditional expectation they use | app 235–244, 259–266 | Two half-sentences |
+| F16 | "The error expansion" does not say which expansion | app 274–275 | A few words |
+| F17 | The projection step uses the norm equivalence stated before the lemma without citing it | app 145, 211–213 | Half a sentence |
+
+### F15 (minor): conditional normal equations
+
+**Where.** Corollary `cor:conditional_normal_equations` and its justification, app 220–269.
+
+**Problem.**
+1. "With $Q$ partitioned into action blocks, this is equivalently [`eq:block_conditional_normal_equations`]" (235–244). The justification has no sentence for this. It holds because conditional expectation is linear and $\mathbb E[u_i\mid\mathcal G_i]=u_i$, and the second fact uses that $u_i$ is $\mathcal G_i$-measurable. For a $u$ outside $\mathcal S(\mathcal A)$ the two forms are not equivalent, so the formal statement asserts the equivalence for admissible $u$.
+2. "Conversely, these conditional equations make the linear term vanish" (262). The reason is $\mathbb E[h_i^\top g_i]=\mathbb E[h_i^\top\mathbb E[g_i\mid\mathcal G_i]]$ with $g=Qu^\star-b$: the tower property with the $\mathcal G_i$-measurable $h_i$ taken out. In this direction $u^\star$ stands for any admissible solution of the equations, which is not yet known to be the optimum.
+3. "Differentiating expected quadratic cost at the optimum" (257–258) uses the expansion that is displayed only two sentences later, and that the projection of the lemma is the optimum.
+4. "Conditional expectation then gives" (261): the content is that $\mathbb E[\mathbf 1_Ag]=0$ for every $A\in\mathcal G_i$ means $\mathbb E[g\mid\mathcal G_i]=0$. The formal proof uses indicator perturbations on one coordinate, a special case of your "arbitrary square-integrable function".
+
+**Suggested edit.** After `eq:block_conditional_normal_equations`: "because $u_i^\star$ is $\mathcal G_i$-measurable and conditional expectation is linear". At 262: "Conversely, by the tower property and $\mathcal G_i$-measurability of $h_i$, these conditional equations make the linear term vanish in …". Items 3 and 4 may be fine as they are.
+
+Two observations, no edit needed. The justification does not use completing the square: the displayed expansion is plain algebra. And "one generally does not have $u_i^\star=\mathbb E[x_i^\star\mid\mathcal G_i]$" (249–250) is not part of the formal statement; the aggregate-coupling model is an example of it, if you want to point to one.
+
+### F16 (minor): common-information paragraph
+
+**Where.** app 271–276.
+
+**Problem.**
+1. "The error expansion then proves that $m$ is the unique optimum" (274–275). No expansion has that name. Two readings work: `eq:complete_square` followed by expanding $\|u-x^\star\|_Q^2$ around $m$, or the display in the justification of the corollary, $\mathbb E[f(m+h)-f(m)]=\mathbb E[h^\top(Qm-b)]+\tfrac12\mathbb E[h^\top Qh]$. The formal proof uses the second, which is why this paragraph does not depend on completing the square.
+2. The preceding sentence gives $\mathbb E[h^\top Q(x^\star-m)]=0$; the linear term of that display is $\mathbb E[h^\top(Qm-b)]$. They agree up to sign because $Qx^\star=b$, which the paragraph does not say.
+3. That $m$ is itself admissible ($\sigma(Z)$-measurable with finite second moment) is used and not stated.
+
+**Suggested edit.** "The expansion in the justification of Corollary `cor:conditional_normal_equations`, with $Qx^\star=b$, then proves that $m$ is the unique optimum …".
+
+### F17 (minor): projection lemma
+
+**Where.** Proof of `lem:radner_projection`, app 181–214, and the sentence at app 145.
+
+**Problem.**
+1. "Closedness follows because an $L^2$ limit of $\mathcal G_i$-measurable random variables admits a $\mathcal G_i$-measurable version" (185–187) is closedness for the ordinary $L^2$ norm. The projection in the next paragraph is taken for $\langle\cdot,\cdot\rangle_Q$ and needs closedness for the $Q$-norm. The bridge is "Since $Q\succ0$, the induced norm is equivalent to the ordinary $L^2$ norm" (145), which the proof does not cite. The formal proof uses one direction of it, $\|v\|^2\le C\,v^\top Qv$.
+2. The lemma says "the unique optimal policy … is $\Pi_{\mathcal S(\mathcal A)}x^\star_t$". That an optimal policy exists is part of what the projection theorem gives; the formal statement lists existence as its own item.
+
+**Suggested edit.** At 211: "By the norm equivalence above, $\mathcal S(\mathcal A)$ is also closed for $\|\cdot\|_Q$, so minimizing this expression over it is the standard Hilbert-space projection problem, …".
+
+### Hypotheses the proofs never used (no edit required)
+
+- Projection lemma: that $\mathbb P$ is a probability measure is not used; the argument works for any measure.
+- Common-information paragraph: the orthogonality $\mathbb E[h^\top Q(x^\star-m)]=0$ holds for any matrix $Q$ and any square-integrable target; positive definiteness enters only for optimality and uniqueness.
+
 ## Working notes
 
 - Line numbers will shift as you edit; that is fine. The ledger stores the proof text and is re-aligned afterwards, as it was for this version.
-- Please note which IDs you addressed (F2–F14, or the claim name for section 3) and which you chose to leave, so the ledger can be closed out item by item.
+- Please note which IDs you addressed (F2–F17, or the claim name for section 3) and which you chose to leave, so the ledger can be closed out item by item.
 - Where you prefer a different argument from the one suggested, use yours: the formal proof follows whatever the paper says.

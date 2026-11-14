@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C5.b: Centering the affine model is without loss
 
-Paper: technical-appendices-alt.tex, paragraph "Centering the affine model". -/
+Paper: technical-appendices-v2.tex, paragraph "Centering the affine model". -/
 
 namespace TinaV2.C05b
 

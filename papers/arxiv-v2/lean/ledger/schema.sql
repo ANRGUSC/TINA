@@ -1,4 +1,4 @@
--- Proof ledger for the tina-v2-alt Lean formalization.
+-- Proof ledger for the Lean formalization of the arXiv v2 manuscript (tina-v2).
 -- Loaded together with data.sql into SQLite by tools/ledger.py.
 -- data.sql is the committed source of truth; this file is the schema only.
 

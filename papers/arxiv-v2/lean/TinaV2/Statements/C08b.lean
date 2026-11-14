@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C8.b: Optimal stale-global action
 
-Paper: main-alt.tex, sentence after Corollary (OU_stale_regret). -/
+Paper: main-v2.tex, sentence after Corollary (OU_stale_regret). -/
 
 namespace TinaV2.C08b
 

@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C8.c: Small-delay expansion and large-delay limit
 
-Paper: main-alt.tex, sentences after Corollary (OU_stale_regret). -/
+Paper: main-v2.tex, sentences after Corollary (OU_stale_regret). -/
 
 namespace TinaV2.C08c
 

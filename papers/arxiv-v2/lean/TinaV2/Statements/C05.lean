@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C5: Quadratic cost and completing the square
 
-Paper: technical-appendices-alt.tex Eqs. (quadratic_cost), (clairvoyant), (complete_square). -/
+Paper: technical-appendices-v2.tex Eqs. (quadratic_cost), (clairvoyant), (complete_square). -/
 
 namespace TinaV2.C05
 

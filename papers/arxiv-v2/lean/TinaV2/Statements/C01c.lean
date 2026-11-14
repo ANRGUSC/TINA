@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C1.c: Information inclusion
 
-Paper: technical-appendices-alt.tex Eq. (info_inclusion). -/
+Paper: technical-appendices-v2.tex Eq. (info_inclusion). -/
 
 namespace TinaV2.C01c
 

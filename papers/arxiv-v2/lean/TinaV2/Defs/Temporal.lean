@@ -2,7 +2,7 @@ import TinaV2.Defs.Architecture
 
 /-! # The common temporal prediction rule (claim C4, an assumption)
 
-Paper: `main-alt.tex` Section "A common temporal prediction rule",
+Paper: `main-v2.tex` Section "A common temporal prediction rule",
 Eq. (state_innovation_decomposition). -/
 
 noncomputable section

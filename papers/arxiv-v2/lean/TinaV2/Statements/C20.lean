@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C20: Large decision-range limit
 
-Paper: main-alt.tex, paragraph before Section "Numerical Illustrations". -/
+Paper: main-v2.tex, paragraph before Section "Numerical Illustrations". -/
 
 namespace TinaV2.C20
 

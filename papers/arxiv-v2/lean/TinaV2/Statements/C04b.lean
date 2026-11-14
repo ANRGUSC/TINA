@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C4.b: Stationary AR(1) satisfies the prediction rule
 
-Paper: main-alt.tex Section "A common temporal prediction rule" (last sentence); technical-appendices-alt.tex Section "Temporal special cases". -/
+Paper: main-v2.tex Section "A common temporal prediction rule" (last sentence); technical-appendices-v2.tex Section "Temporal special cases". -/
 
 namespace TinaV2.C04b
 

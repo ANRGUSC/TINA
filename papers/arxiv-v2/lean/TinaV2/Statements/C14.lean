@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C14: Radius objective and one-more-hop criterion
 
-Paper: main-alt.tex Eqs. (snapshot_gain), (discrete_radius_improvement), (R_decomposition). -/
+Paper: main-v2.tex Eqs. (snapshot_gain), (discrete_radius_improvement), (R_decomposition). -/
 
 namespace TinaV2.C14
 

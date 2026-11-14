@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C13: Explicit aggregate-coupling threshold
 
-Paper: main-alt.tex Eqs. (aggregate_rho_star), (aggregate_crossover). -/
+Paper: main-v2.tex Eqs. (aggregate_rho_star), (aggregate_crossover). -/
 
 namespace TinaV2.C13
 

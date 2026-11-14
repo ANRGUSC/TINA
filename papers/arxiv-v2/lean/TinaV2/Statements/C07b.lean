@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C7.b: Normalized composition law
 
-Paper: main-alt.tex Eq. (regret_composition_normalized). -/
+Paper: main-v2.tex Eq. (regret_composition_normalized). -/
 
 namespace TinaV2.C07b
 

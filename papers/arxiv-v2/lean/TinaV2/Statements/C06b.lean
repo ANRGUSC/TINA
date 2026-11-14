@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C6.b: No-information loss formula
 
-Paper: main-alt.tex Eq. (Rinf_general). -/
+Paper: main-v2.tex Eq. (Rinf_general). -/
 
 namespace TinaV2.C06b
 

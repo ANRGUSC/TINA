@@ -2,7 +2,7 @@ import TinaV2.Prelude
 
 /-! # Mean squared error of the best estimate (claim C11, two-sensor example)
 
-Paper: `main-alt.tex`, paragraph "A two-sensor example". -/
+Paper: `main-v2.tex`, paragraph "A two-sensor example". -/
 
 noncomputable section
 

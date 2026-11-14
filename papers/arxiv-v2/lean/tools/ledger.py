@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Proof ledger CLI for the tina-v2-alt Lean formalization.
+"""Proof ledger CLI for the Lean formalization of the arXiv v2 manuscript (tina-v2).
 
 The ledger is a SQLite database rebuilt in memory on every call from two text
 files that are committed to git:

@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C19.b: Comparative statics of the canonical radius
 
-Paper: main-alt.tex Theorem (canonical_optimal_radius), items 1-4. -/
+Paper: main-v2.tex Theorem (canonical_optimal_radius), items 1-4. -/
 
 namespace TinaV2.C19b
 

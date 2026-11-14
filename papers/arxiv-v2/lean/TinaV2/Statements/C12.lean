@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C12: Local explainability under aggregate coupling
 
-Paper: main-alt.tex Proposition (aggregate_local), Eqs. (optimal_local_shared), (aggregate_eta); technical-appendices-alt.tex Eqs. (aggregate_Rinf), (aggregate_Rloc). -/
+Paper: main-v2.tex Proposition (aggregate_local), Eqs. (optimal_local_shared), (aggregate_eta); technical-appendices-v2.tex Eqs. (aggregate_Rinf), (aggregate_Rloc). -/
 
 namespace TinaV2.C12
 

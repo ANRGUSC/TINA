@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C19: Optimal synchronized-snapshot radius in the canonical model (algebraic form)
 
-Paper: main-alt.tex Theorem (canonical_optimal_radius), Eqs. (canonical_optimal_radius), (positive_radius_condition). -/
+Paper: main-v2.tex Theorem (canonical_optimal_radius), Eqs. (canonical_optimal_radius), (positive_radius_condition). -/
 
 namespace TinaV2.C19
 

@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C10: Fresh-local versus stale-global crossover
 
-Paper: main-alt.tex Theorem (local_global_crossover), Eq. (OU_crossover). -/
+Paper: main-v2.tex Theorem (local_global_crossover), Eq. (OU_crossover). -/
 
 namespace TinaV2.C10
 

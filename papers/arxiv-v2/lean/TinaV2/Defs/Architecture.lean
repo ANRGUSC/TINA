@@ -2,9 +2,9 @@ import TinaV2.Defs.Cost
 
 /-! # Architectures, admissible rules and regret (claim C6)
 
-Paper: `main-alt.tex` Section "Model and observations", Eqs. (r_neighborhood),
+Paper: `main-v2.tex` Section "Model and observations", Eqs. (r_neighborhood),
 (radius_arch), (architecture_regret), (Rinf_general), (eta_S_definition); and
-`technical-appendices-alt.tex` Eq. (policy_subspace) for the sigma-algebra form.
+`technical-appendices-v2.tex` Eq. (policy_subspace) for the sigma-algebra form.
 
 Conventions.
 * `ι` agents, `κ` state coordinates, `α` action coordinates, all finite.

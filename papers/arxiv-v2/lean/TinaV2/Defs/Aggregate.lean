@@ -2,9 +2,9 @@ import TinaV2.Defs.Architecture
 
 /-! # The aggregate-coupling example (claims C12, C13)
 
-Paper: `main-alt.tex` Section "Role of Decision Coupling", Eqs.
+Paper: `main-v2.tex` Section "Role of Decision Coupling", Eqs.
 (shared_resource_Q), (aggregate_eta), (aggregate_rho_star);
-`technical-appendices-alt.tex` Eqs. (aggregate_Rinf), (aggregate_Rloc). -/
+`technical-appendices-v2.tex` Eqs. (aggregate_Rinf), (aggregate_Rloc). -/
 
 noncomputable section
 

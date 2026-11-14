@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C13.c: Threshold behaviour in the coupling strength
 
-Paper: main-alt.tex, last paragraph of Section "Role of Decision Coupling". -/
+Paper: main-v2.tex, last paragraph of Section "Role of Decision Coupling". -/
 
 namespace TinaV2.C13c
 

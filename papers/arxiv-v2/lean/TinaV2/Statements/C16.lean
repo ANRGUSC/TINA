@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C16: Optimal radius for exponential omission
 
-Paper: main-alt.tex Proposition (generic_exponential_radius), Eq. (generic_exponential_rstar). -/
+Paper: main-v2.tex Proposition (generic_exponential_radius), Eq. (generic_exponential_rstar). -/
 
 namespace TinaV2.C16
 

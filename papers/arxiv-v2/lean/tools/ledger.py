@@ -282,8 +282,10 @@ def run_check(db):
     errs, warns = [], []
     q = lambda sql, *p: db.execute(sql, p).fetchall()
 
+    missing = set()   # sources that are gone: report once, skip their excerpt checks
     for s in q("SELECT * FROM sources"):
         if not (REPO / s["path"]).exists():
+            missing.add(s["id"])
             errs.append(f"{s['id']}: {s['path']} does not exist (renamed or removed since "
                         f"the ledger was aligned at {(s['git_commit'] or '?')[:7]})")
         elif hashlib.sha256((REPO / s["path"]).read_bytes()).hexdigest() != s["sha256"]:
@@ -293,6 +295,8 @@ def run_check(db):
     # 1. Every step of a proof that is in the paper is verbatim in the paper.
     for s in q("SELECT s.* FROM steps s JOIN proofs p ON p.id = s.proof_id "
                "WHERE p.status = 'in_paper'"):
+        if s["source"] in missing:
+            continue
         if norm(s["tex"]) not in norm(source_text(db, s["source"])):
             errs.append(f"{s['id']}: step text no longer found in {s['source']}")
 
@@ -355,6 +359,8 @@ def run_check(db):
 
     # 5. Edits: hunk text is where the status says it should be.
     for h in q("SELECT h.*, e.status FROM hunks h JOIN edits e ON e.id = h.edit_id"):
+        if h["source"] in missing:
+            continue
         text = norm(source_text(db, h["source"]))
         if h["status"] in ("proposed", "approved"):
             want = h["old_tex"] or h["anchor"] or ""

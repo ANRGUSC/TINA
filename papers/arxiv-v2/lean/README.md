@@ -1,7 +1,14 @@
-# Lean formalization of tina-v2-alt
+# Lean formalization of the arXiv v2 manuscript (tina-v2)
 
-Machine-checked proofs of the claims in `submissions/arxiv-v2/main-alt.tex` and
-`technical-appendices-alt.tex`, built claim by claim on branch `scott-arxiv2-lean`.
+Machine-checked proofs of the claims in `submissions/arxiv-v2/main-v2.tex` and
+`technical-appendices-v2.tex`, built claim by claim on branch `scott-arxiv2-lean`.
+Until upstream commit `2821560` the same files were the working draft
+`tina-v2-alt` (`main-alt.tex`, `technical-appendices-alt.tex`).
+
+The ledger is aligned to the manuscript at commit `6454c74`
+(`python3 tools/ledger.py sql "SELECT * FROM sources"`). When the paper changes
+upstream, `ledger.py check` reports which step texts are no longer found; the
+steps, line ranges and `sources` rows are then updated through the CLI.
 
 This work starts from the paper text only. It does not read or reuse
 `papers/lcss/lean/`.
@@ -188,8 +195,8 @@ files with the same target.
 ## The claim graph
 
 45 claims: 37 in Lean scope, 4 numeric (figures), 4 prose (abstract, related
-work, discussion, appendix remarks). 19 English proofs split into 68 steps.
-21 Lean-scope claims have a proof or are definitions; 16 are asserted without
+work, discussion, appendix remarks). 20 English proofs split into 74 steps.
+22 Lean-scope claims have a proof or are definitions; 15 are asserted without
 proof.
 
 | Tier | Needs | Claims |
@@ -217,8 +224,10 @@ critical path. C19 also needs C18 and the bridge C17.b (tier D).
 2. **Tier A and B proofs**, C7 first, each mirroring the paper's steps. Add the
    step-dependency audit.
 3. **Tier C**: projection lemma and normal equations.
-4. **Tier D**: starts by resolving F1 (the bridge) through a paper edit, and by
-   checking what this Mathlib version provides for Gaussian processes.
+4. **Tier D**: the bridge (F1) was added to the paper upstream in `284a0e0`
+   and is claim C17.b with proof `C17.b/p1`. Tier D starts by settling F10
+   (the theorem's proof should cite it) and by checking what this Mathlib
+   version provides for Gaussian processes.
 5. **Assembly and audits**: axioms, step dependencies, non-vacuity instances,
    the side-by-side review page for co-authors, and applying approved edits.
    Numeric claims are linked to the existing verification scripts, not proved
@@ -243,8 +252,9 @@ Made on 2026-11-13:
 
 - **Claims the paper asserts without proof** (state `no_paper_proof`: C1.b,
   C1.c, C4.b, C4.c, C6.b, C7.b, C8.b, C8.c, C9, C13, C13.b, C13.c, C15.b,
-  C15.c, C20, and the implicit C17.b) get short proofs in an appendix through
-  tracked edits, and those proofs are formalized.
+  C15.c, C20) get short proofs in an appendix through tracked edits, and those
+  proofs are formalized. C17.b was on this list as an implicit claim; the
+  paper now argues it (upstream `284a0e0`), so it has an in-paper proof.
 - **F2: C12 has two derivations** of the optimal local rule. The main-text one
   (`C12/p1`) is the proof Lean mirrors. When C12 is formalized, a tracked edit
   cuts the appendix down to the arithmetic, so C12 needs no tier C material.
@@ -253,17 +263,21 @@ Made on 2026-11-13:
 
 Still open:
 
-1. **F1: the continuum bridge.** C19 cannot be proved in Lean until the paper
-   states why the composition law applies to the canonical field model.
+1. **F10: citing the continuum bridge.** The paper now argues that the
+   composition law holds in the canonical field model (C17.b, upstream
+   `284a0e0`; F1 is resolved). The argument is an unlabelled paragraph and the
+   proof of C19 does not cite it, so the step of C19 that uses it has nothing
+   in the paper to point at.
 2. **C4.c: the Ornstein–Uhlenbeck example** is written as a stochastic
    differential equation, which Mathlib cannot express. A covariance-based
    Gaussian statement would be provable but is a statement edit.
 3. **Rules as functions or as measurable maps.** The main text writes
    `u_i = g_i(Z_i)`; the appendix uses sigma-algebras. Lean will follow the main
    text, and the link between the two becomes an explicit step where C1 is used.
-4. **Review finding K1** (the composition law is in Marschak–Radner). If the
-   paper restates C7 as a known result, that arrives as edits in this ledger
-   and the Lean proof follows.
+4. **Review finding K1** (the composition law is in Marschak–Radner). Settled
+   upstream in `284a0e0`: the text before C7 now attributes the decomposition
+   to Marschak and Radner. The theorem statement and proof did not change, so
+   the Lean statement and the proof steps are unaffected.
 
 ## Libraries
 
@@ -326,13 +340,14 @@ into every statement:
 - Stationarity is equality of one-time laws (F7).
 - C15, C15.b, C15.c and C16 are statements about the gain function for given
   real curves, not about the graph model (F8).
-- C19 is in algebraic form only until tier D definitions exist (F1).
+- C19 is in algebraic form only until tier D definitions exist (F10).
 
-Before phase 2 the 16 claims without a paper proof, and C5, need English
+Before phase 2 the 15 claims without a paper proof, and C5, need English
 proofs through tracked edits.
 
 ## Findings so far
 
-Nine. F1-F4 came from reading the proofs for step extraction; F5-F9 from
-writing the Lean statements:
+Ten. F1-F4 came from reading the proofs for step extraction; F5-F9 from
+writing the Lean statements; F10 from realigning the ledger to the manuscript
+at `6454c74`. F1 is resolved (upstream `284a0e0`); the other nine are open:
 `python3 tools/ledger.py sql "SELECT id, claim_id, severity, title FROM findings"`.

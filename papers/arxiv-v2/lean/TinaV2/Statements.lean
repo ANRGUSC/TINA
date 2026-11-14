@@ -1,4 +1,8 @@
+import TinaV2.Statements.C01
+import TinaV2.Statements.C01b
 import TinaV2.Statements.C01c
+import TinaV2.Statements.C02
+import TinaV2.Statements.C03
 import TinaV2.Statements.C03b
 import TinaV2.Statements.C04b
 import TinaV2.Statements.C05

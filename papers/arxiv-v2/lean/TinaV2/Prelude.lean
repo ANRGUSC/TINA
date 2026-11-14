@@ -1,4 +1,13 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.MeasureTheory.Function.ConditionalExpectation.PullOut
+import Mathlib.MeasureTheory.SpecificCodomains.Pi
+import Mathlib.Probability.ConditionalExpectation
+import Mathlib.Probability.Independence.Integration
+import Mathlib.Probability.Moments.Variance
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Combinatorics.SimpleGraph.Diam

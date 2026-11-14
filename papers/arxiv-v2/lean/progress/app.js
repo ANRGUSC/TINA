@@ -96,7 +96,7 @@ function classify(c) {
   }
   if (c.reasons.length) { c.key = 'blocked'; c.detail = c.reasons[0].short; return; }
   if (c.state === 'verified') c.key = 'verified';
-  else if (c.state === 'proved_unaudited') c.key = 'p4';
+  else if (c.state === 'proved_unaudited') { c.key = 'p4'; if (c.stmt_status !== 'frozen') c.detail = `statement ${c.stmt_status}`; }
   else if (c.state === 'proving') { c.key = 'p3'; if (c.n_steps) c.detail = `${c.n_steps_proved}/${c.n_steps} steps`; }
   else if (c.state === 'stated') { c.key = c.stmt_status === 'draft' ? 'p1' : 'p2'; if (c.key === 'p2') c.detail = c.stmt_status; }
   else c.key = 'todo';

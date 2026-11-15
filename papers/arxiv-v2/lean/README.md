@@ -542,13 +542,19 @@ frozen with its hash.
 - `Defs/` is frozen: eight files, with the definition claims C4, C6 and C17.
 - Nineteen statements are frozen: C1, C1.b, C1.c, C2, C3, C3.b, C5, C5.b,
   C6.b, C6.c, C7, C7.b, C8.c, C12, C13, C13.b, C13.c, C17.b, C20.
-- Twelve claims are verified. Eight follow the paper step for step: C1, C2,
-  C3, C3.b, C5.b, C7, C12, C17.b. Four are proved from a supplement proof,
-  because the paper gives no argument: C5, C7.b, C13.b, C13.c (the last three
-  on 2026-11-15, after their statements were frozen; `ledger.py supplement`).
-- Seven frozen statements have no proof yet. Four are on `ledger.py frontier`:
-  C1.b, C1.c, C6.b, C6.c. Three depend on a claim that is not verified yet:
-  C8.c (on C8), C13 (on C10), C20 (on C19).
+- Sixteen claims are verified. Eight follow the paper step for step: C1, C2,
+  C3, C3.b, C5.b, C7, C12, C17.b. Seven are proved from a supplement proof,
+  because the paper gives no argument: C5, and since 2026-11-15, after their
+  statements were frozen, C1.b, C1.c, C6.b, C7.b, C13.b, C13.c. One follows
+  the paper's proof with two supplied steps: C6.c (the range of eta_S, and
+  the Doob-Dynkin link between the main text's rules and the appendix's
+  sigma-algebra policies, which carries out F6.1). `ledger.py supplement`
+  prints all of these arguments.
+- Three frozen statements have no proof yet, and `ledger.py frontier` is
+  empty: each depends on a claim that is not verified yet, C8.c (on C8), C13
+  (on C10), C20 (on C19).
+- Finding F6 is closed (Scott, 2026-11-15): the link is the supplied step
+  `C6.c/p1/s0b`.
 - Thirteen statements wait for a paper edit or a decision and are not
   reviewed until it is settled: C4.b, C8, C8.b, C10, C11, C14, C15, C15.b,
   C15.c, C16, C18, C19, C19.b. Nine of them are proved (`proved_unaudited`).
@@ -562,8 +568,9 @@ One Lean file changed during the review: `Statements/C13c.lean` gained the
 clause `aggRhoStar n q 0 = 0`, for the sentence "any positive global delay
 makes the fresh-local architecture preferable" (`C13.c/f1/d2`). No attempt
 existed for C13.c at that point. The full build and `ledger.py audit` were
-rerun after the three supplement proofs were added and pass (21 assembled
-theorems, 101 step lemmas).
+rerun after the supplement proofs were added and pass (25 assembled
+theorems, 117 step lemmas). Two routine files were added with them:
+`Routine/NoInfo.lean` (C6.b) and `Routine/RadiusInfo.lean` (C6.c).
 
 **State on 2026-11-14 (late night).** Eighteen claims are proved in Lean, one
 lemma per written step: C1, C2, C3, C3.b, C5, C5.b, C7, C8, C10, C11, C12, C14,
@@ -660,10 +667,10 @@ What "proved" does and does not mean here:
    new formalization version). For tier D read `Defs/Canonical.lean`, then
    `Statements/C17b.lean`, `C18.lean`, `C19.lean`.
 4. *Under way since 2026-11-15, when the review of the unblocked statements
-   was finished. Done: C7.b, C13.b, C13.c.*
-   **Supplement proofs for the claims the paper states without proof**: C1.b,
-   C1.c, C4.b, C4.c, C6.b, C8.c, C13, C15.b, C15.c, C20,
-   and the range clause of C6.c as a supplied step. The memo's section 3 has a
+   was finished. Done: C1.b, C1.c, C6.b, C6.c (range clause and the F6.1
+   link), C7.b, C13.b, C13.c.*
+   **Supplement proofs for the claims the paper states without proof**:
+   C4.b, C4.c, C8.c, C13, C15.b, C15.c, C20. The memo's section 3 has a
    hand-worked argument for each. Write the steps, then the Lean attempt, then
    mark the disposition done. The reply asks for care on two: weak versus
    strict monotonicity at the edges in C13.c, and keeping the positive-radius

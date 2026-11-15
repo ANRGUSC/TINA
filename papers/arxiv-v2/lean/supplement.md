@@ -64,22 +64,18 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 ## C6.c Omission share is in [0,1], nonincreasing, zero at the diameter (C6.c/p1)
 
-The paper's proof, with the supplied steps marked. The paper's argument (extra observations can be ignored; complete view at the diameter) with two supplied steps: the range of eta_S (C6.c/d1) and the link between rules of the observation and sigma(Z_i)-measurable policies (F6.1).
+The paper's proof, with the supplied steps marked. The paper's argument (extra observations can be ignored; complete view at the diameter) with one supplied step: the range of eta_S (C6.c/d1).
 
 **Step 1 (supplied). The range of eta_S.** Regret is nonnegative because $Q\succ0$. It is at most $R_\infty$ because the zero rule is admissible at every radius and its expected excess cost is $\tfrac12\mathbb E[x^{\star\top}Qx^\star]=R_\infty$. Dividing by $R_\infty>0$ gives $0\le\eta_S(r)\le1$.
 
 - Lean: `TinaV2.C06c.A1.s0a_range` (proved)
 
-**Step 2 (supplied). Rules of the observation and sigma(Z_i)-measurable policies give the same regret.** The observation $Z_i$ of Eq. \eqref{eq:radius_arch} takes values in a finite-dimensional space, so a random variable is $\sigma(Z_i)$-measurable exactly when it is a measurable function of $Z_i$ (Doob--Dynkin). Hence the regret of Eq. \eqref{eq:architecture_regret}, over rules $u_i=g_i(Z_i)$, equals the regret of the appendix's architecture $\mathcal G_i=\sigma(Z_i)$, over the policy space of Eq. \eqref{eq:policy_subspace}.
-
-- Lean: `TinaV2.C06c.A1.s0b_link` (proved)
-
-**Step 3 (paper, MAIN:323). Larger fresh neighborhoods cannot increase eta_S.** Larger fresh neighborhoods cannot increase it, since their
+**Step 2 (paper, MAIN:323). Larger fresh neighborhoods cannot increase eta_S.** Larger fresh neighborhoods cannot increase it, since their
 extra observations can be ignored.
 
-- Lean: `TinaV2.C06c.A1.s1_monotone` (proved); uses C1.c, C6.c/p1/s0b
+- Lean: `TinaV2.C06c.A1.s1_monotone` (proved)
 
-**Step 4 (paper, MAIN:325). At the diameter the fresh view is complete and omission is zero.** at the diameter of a finite connected
+**Step 3 (paper, MAIN:325). At the diameter the fresh view is complete and omission is zero.** at the diameter of a finite connected
 graph the fresh view is complete and omission is zero.
 
 - Lean: `TinaV2.C06c.A1.s2_diameter` (proved); uses C6
@@ -235,6 +231,7 @@ I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]
 ## Supplied through a routine lemma or inside an existing step lemma
 
 - F17.1 (C1): The projection step needs closedness for the Q-norm; the proof shows it for the ordinary L2 norm and does not cite the norm-equivalence remark. Lean: `TinaV2/Routine/QHilbert.lean::isClosed_qSubmodule`
+- F6.1 (C1.c): Rules are functions of the observation in the main text and sigma-algebra-measurable random variables in the appendix; the two are never linked. Lean: `TinaV2/Routine/RadiusInfo.lean::R_eq_sigmaRegret`
 - F15.1 (C2): The block form of the normal equations is called equivalent with no argument. Lean: `TinaV2/Routine/NormalEq.lean::normalEquations_iff_block`
 - F15.2 (C2): 'Conversely, these conditional equations make the linear term vanish' does not say it is the tower property with the G_i-measurable h_i taken out. Lean: `TinaV2/Proofs/C02/A1.lean::s3_linear_term_vanishes`
 - F15.4 (C2): 'Conditional expectation then gives' leaves out that vanishing against every indicator of G_i means the conditional expectation is zero. Lean: `TinaV2/Proofs/C02/A1.lean::s2_conditional_equations`

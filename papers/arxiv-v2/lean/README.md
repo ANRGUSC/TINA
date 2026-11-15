@@ -546,15 +546,18 @@ frozen with its hash.
   C3, C3.b, C5.b, C7, C12, C17.b. Seven are proved from a supplement proof,
   because the paper gives no argument: C5, and since 2026-11-15, after their
   statements were frozen, C1.b, C1.c, C6.b, C7.b, C13.b, C13.c. One follows
-  the paper's proof with two supplied steps: C6.c (the range of eta_S, and
-  the Doob-Dynkin link between the main text's rules and the appendix's
-  sigma-algebra policies, which carries out F6.1). `ledger.py supplement`
-  prints all of these arguments.
+  the paper's proof with one supplied step: C6.c (the range of eta_S). Its
+  monotonicity step is the paper's sentence taken literally, a rule of the
+  smaller view is a rule of the larger view that ignores the extra
+  observations; it does not use C1.c (Scott, 2026-11-15). `ledger.py
+  supplement` prints all of these arguments.
 - Three frozen statements have no proof yet, and `ledger.py frontier` is
   empty: each depends on a claim that is not verified yet, C8.c (on C8), C13
   (on C10), C20 (on C19).
-- Finding F6 is closed (Scott, 2026-11-15): the link is the supplied step
-  `C6.c/p1/s0b`.
+- Finding F6 is closed (Scott, 2026-11-15): the link between the main text's
+  rules and the appendix's sigma-algebra policies is proved as
+  `Model.R_eq_sigmaRegret` in `Routine/RadiusInfo.lean` (Doob-Dynkin). No
+  proof uses it.
 - Thirteen statements wait for a paper edit or a decision and are not
   reviewed until it is settled: C4.b, C8, C8.b, C10, C11, C14, C15, C15.b,
   C15.c, C16, C18, C19, C19.b. Nine of them are proved (`proved_unaudited`).
@@ -569,7 +572,7 @@ clause `aggRhoStar n q 0 = 0`, for the sentence "any positive global delay
 makes the fresh-local architecture preferable" (`C13.c/f1/d2`). No attempt
 existed for C13.c at that point. The full build and `ledger.py audit` were
 rerun after the supplement proofs were added and pass (25 assembled
-theorems, 117 step lemmas). Two routine files were added with them:
+theorems, 116 step lemmas). Two routine files were added with them:
 `Routine/NoInfo.lean` (C6.b) and `Routine/RadiusInfo.lean` (C6.c).
 
 **State on 2026-11-14 (late night).** Eighteen claims are proved in Lean, one
@@ -667,8 +670,8 @@ What "proved" does and does not mean here:
    new formalization version). For tier D read `Defs/Canonical.lean`, then
    `Statements/C17b.lean`, `C18.lean`, `C19.lean`.
 4. *Under way since 2026-11-15, when the review of the unblocked statements
-   was finished. Done: C1.b, C1.c, C6.b, C6.c (range clause and the F6.1
-   link), C7.b, C13.b, C13.c.*
+   was finished. Done: C1.b, C1.c, C6.b, C6.c (range clause), C7.b, C13.b,
+   C13.c.*
    **Supplement proofs for the claims the paper states without proof**:
    C4.b, C4.c, C8.c, C13, C15.b, C15.c, C20. The memo's section 3 has a
    hand-worked argument for each. Write the steps, then the Lean attempt, then

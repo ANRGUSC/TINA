@@ -63,7 +63,7 @@ theorem C05b : TinaV2.C05b.Statement := TinaV2.C05b.A1.main
 theorem C06b : TinaV2.C06b.Statement := TinaV2.C06b.A1.main
 
 /-- C6.c, attempt C6.c/a1. -/
-theorem C06c : TinaV2.C06c.Statement := TinaV2.C06c.A1.main C01c
+theorem C06c : TinaV2.C06c.Statement := TinaV2.C06c.A1.main
 
 /-- C7, attempt C7/a1. -/
 theorem C07 : TinaV2.C07.Statement := TinaV2.C07.A1.main

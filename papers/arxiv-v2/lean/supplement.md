@@ -18,6 +18,58 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C05.A1.s3_unique_minimizer` (proved); uses C5/p1/s2
 
+## C7.b Normalized composition law (C7.b/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C7.b/d1): divide the composition law by R_inf and substitute the definition of eta_S, then subtract from one. The paper says only 'equivalently' and 'normalization is valid when R_inf > 0'.
+
+**Step 1 (supplied). Divide the law by R_inf.** Divide Eq. \eqref{eq:regret_composition_unnormalized} by $R_\infty>0$: $R(\mathcal A_{r,\tau})/R_\infty=(1-a^2)+a^2R(\mathcal A_{r,0})/R_\infty$, and $R(\mathcal A_{r,0})/R_\infty=\eta_S(r)$ by Eq. \eqref{eq:eta_S_definition}.
+
+- Lean: `TinaV2.C07b.A1.s1_divide` (proved); uses C7
+
+**Step 2 (supplied). Subtract from one.** Subtract from one: $1-R(\mathcal A_{r,\tau})/R_\infty=a^2[1-\eta_S(r)]$, and $a^2=e^{-2\tau/T}$.
+
+- Lean: `TinaV2.C07b.A1.s2_subtract` (proved); uses C7.b/p1/s1
+
+## C13.b Large-n limit of the threshold (C13.b/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C13.b/d1): the ratio (q+gamma(n-1))/(q+gamma n) tends to 1, so the argument of the logarithm tends to 1+gamma/q and its reciprocal, the local share, to q/(q+gamma). The paper states both limits without argument.
+
+**Step 1 (supplied). The ratio tends to one.** For fixed $q>0$ and $\gamma\ge0$, $\dfrac{q+\gamma(n-1)}{q+\gamma n}=1-\dfrac{\gamma}{q+\gamma n}\to1$ as $n\to\infty$.
+
+- Lean: `TinaV2.C13b.A1.s1_ratio` (proved)
+
+**Step 2 (supplied). Limit of the threshold.** Hence the argument of the logarithm in Eq. \eqref{eq:aggregate_rho_star}, $\dfrac{q+\gamma}{q}\cdot\dfrac{q+\gamma(n-1)}{q+\gamma n}$, tends to $(q+\gamma)/q=1+\gamma/q>0$, and continuity of the logarithm there gives Eq. \eqref{eq:large_n_threshold}.
+
+- Lean: `TinaV2.C13b.A1.s2_threshold` (proved); uses C13.b/p1/s1
+
+**Step 3 (supplied). Limit of the local share.** By Eq. \eqref{eq:aggregate_eta}, $1-\eta_S(0)=\dfrac{q}{q+\gamma}\cdot\dfrac{q+\gamma n}{q+\gamma(n-1)}$ for $n\ge1$, the reciprocal of that argument, so by step 1 it tends to $q/(q+\gamma)$.
+
+- Lean: `TinaV2.C13b.A1.s3_local_share` (proved); uses C13.b/p1/s1
+
+## C13.c Threshold behaviour in the coupling strength (C13.c/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C13.c/d1): the values at gamma = 0; the argument A of the logarithm equals 1 + ((n-1)/q) gamma^2/(q+gamma n) and 1 - eta_S(0) = 1/A; gamma^2/(q+gamma n) is strictly increasing; hence A, the threshold and eta_S(0) are strictly increasing for n >= 2. The paper states the behaviour without argument.
+
+**Step 1 (supplied). Values at gamma = 0.** At $\gamma=0$ the numerator of Eq. \eqref{eq:aggregate_eta} is zero, so $\eta_S(0)=0$; and the argument of the logarithm in Eq. \eqref{eq:aggregate_rho_star} is $q\cdot q/(q\cdot q)=1$, so $\rho^\star(0,n)=0$.
+
+- Lean: `TinaV2.C13c.A1.s1_at_zero` (proved)
+
+**Step 2 (supplied). The argument of the logarithm.** Write $A(\gamma)=\dfrac{(q+\gamma)(q+\gamma(n-1))}{q(q+\gamma n)}$ for the argument of the logarithm in Eq. \eqref{eq:aggregate_rho_star}. Since $(q+\gamma)(q+\gamma(n-1))=q(q+\gamma n)+\gamma^2(n-1)$, $A(\gamma)=1+\dfrac{n-1}{q}\cdot\dfrac{\gamma^2}{q+\gamma n}$; and by Eq. \eqref{eq:aggregate_eta}, $1-\eta_S(0)=1/A(\gamma)$.
+
+- Lean: `TinaV2.C13c.A1.s2_argument` (proved)
+
+**Step 3 (supplied). gamma^2/(q+gamma n) is strictly increasing.** The function $\gamma\mapsto\gamma^2/(q+\gamma n)$ is strictly increasing on $\gamma\ge0$: for $0\le\gamma_1<\gamma_2$, $\gamma_2^2(q+\gamma_1n)-\gamma_1^2(q+\gamma_2n)=(\gamma_2-\gamma_1)[q(\gamma_1+\gamma_2)+n\gamma_1\gamma_2]>0$.
+
+- Lean: `TinaV2.C13c.A1.s3_strictMono` (proved)
+
+**Step 4 (supplied). A is strictly increasing and at least one.** Since $n\ge2$, the coefficient $(n-1)/q$ is positive, so by steps 2 and 3 $A$ is strictly increasing on $\gamma\ge0$, and $A(\gamma)\ge1$.
+
+- Lean: `TinaV2.C13c.A1.s4_argument_strictMono` (proved); uses C13.c/p1/s2, C13.c/p1/s3
+
+**Step 5 (supplied). The threshold and eta_S(0) are strictly increasing.** Consequently $\rho^\star(\gamma,n)=\tfrac12\log A(\gamma)$ is strictly increasing on $\gamma\ge0$, because the logarithm is strictly increasing on positive numbers; and $\eta_S(0)=1-1/A(\gamma)$ (step 2) is strictly increasing, because $A$ is positive and strictly increasing.
+
+- Lean: `TinaV2.C13c.A1.s5_strictMono` (proved); uses C13.c/p1/s2, C13.c/p1/s4
+
 ## C18 Exponential omission by self-similarity (C18/p1)
 
 The paper's proof, with the supplied steps marked. Appendix: variance ratio, tail split, spatial Markov property, shift invariance, covariance integrals.

@@ -5,3 +5,4 @@ import TinaV2.Defs.Radius
 import TinaV2.Defs.Aggregate
 import TinaV2.Defs.Estimation
 import TinaV2.Defs.Projection
+import TinaV2.Defs.Canonical

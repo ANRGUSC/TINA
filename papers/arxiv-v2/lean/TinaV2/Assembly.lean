@@ -12,7 +12,9 @@ import TinaV2.Proofs.C12.A1
 import TinaV2.Proofs.C14.A1
 import TinaV2.Proofs.C15.A1
 import TinaV2.Proofs.C16.A1
-import TinaV2.Proofs.C19.A1
+import TinaV2.Proofs.C17b.A1
+import TinaV2.Proofs.C18.A1
+import TinaV2.Proofs.C19.A2
 import TinaV2.Proofs.C19b.A1
 
 /-! # Assembly: the selected proof attempts composed end to end
@@ -68,8 +70,14 @@ theorem C15 : TinaV2.C15.Statement := TinaV2.C15.A1.main
 /-- C16, attempt C16/a1. -/
 theorem C16 : TinaV2.C16.Statement := TinaV2.C16.A1.main
 
-/-- C19, attempt C19/a1. -/
-theorem C19 : TinaV2.C19.Statement := TinaV2.C19.A1.main C16
+/-- C17.b, attempt C17.b/a1. -/
+theorem C17b : TinaV2.C17b.Statement := TinaV2.C17b.A1.main
+
+/-- C18, attempt C18/a1. -/
+theorem C18 : TinaV2.C18.Statement := TinaV2.C18.A1.main
+
+/-- C19, attempt C19/a2. -/
+theorem C19 : TinaV2.C19.Statement := TinaV2.C19.A2.main C16 C17b C18
 
 /-- C19.b, attempt C19.b/a1. -/
 theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
@@ -88,6 +96,8 @@ theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 #print axioms C14
 #print axioms C15
 #print axioms C16
+#print axioms C17b
+#print axioms C18
 #print axioms C19
 #print axioms C19b
 

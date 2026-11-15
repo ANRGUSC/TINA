@@ -25,6 +25,8 @@ import TinaV2.Statements.C15
 import TinaV2.Statements.C15b
 import TinaV2.Statements.C15c
 import TinaV2.Statements.C16
+import TinaV2.Statements.C17b
+import TinaV2.Statements.C18
 import TinaV2.Statements.C19
 import TinaV2.Statements.C19b
 import TinaV2.Statements.C20

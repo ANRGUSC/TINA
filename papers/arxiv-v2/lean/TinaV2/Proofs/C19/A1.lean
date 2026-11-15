@@ -3,7 +3,8 @@ import TinaV2.Statements
 /-! # C19, attempt A1: mirrors paper proof C19/p1
 
 Theorem (canonical_optimal_radius), main-v2.tex 883-920, in the algebraic form
-of `C19.Statement`: the radius formula, its uniqueness and the threshold. The
+of `C19.AlgebraicStatement` (formalization C19/f1, superseded by the field
+form proved in attempt A2): the radius formula, its uniqueness and the threshold. The
 comparative statics in the rest of the paper's proof are claim C19.b. -/
 
 namespace TinaV2.C19.A1
@@ -51,7 +52,7 @@ theorem s2_substitute (hC16 : C16.Statement)
 
 /-- Theorem (canonical_optimal_radius), algebraic form: step 2 is the
 statement. -/
-theorem main (hC16 : C16.Statement) : C19.Statement := by
+theorem main (hC16 : C16.Statement) : C19.AlgebraicStatement := by
   intro ℓc ℓs v T hℓc hℓs hv hT
   exact s2_substitute ℓc ℓs v T hC16 hℓc hℓs hv hT
 

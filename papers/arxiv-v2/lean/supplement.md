@@ -18,6 +18,102 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C05.A1.s3_unique_minimizer` (proved); uses C5/p1/s2
 
+## C18 Exponential omission by self-similarity (C18/p1)
+
+The paper's proof, with the supplied steps marked. Appendix: variance ratio, tail split, spatial Markov property, shift invariance, covariance integrals.
+
+**Step 1 (paper, APP:413). Step 0: omission is a conditional-variance ratio.** By spatial stationarity, take $z=0$ and suppress the time argument. Write $\beta_c\triangleq1/\ell_c$ and $\beta_s\triangleq1/\ell_s$ for the inverse lengths, so $w(u)=\tfrac{\beta_c}{2}e^{-\beta_c|u|}$ and $\operatorname{Cov}(\theta(u),\theta(u'))=\sigma^2e^{-\beta_s|u-u'|}$.
+
+\textbf{Step 0 (omission is a variance ratio).} With $Q=qI$ the optimal policy given $\mathcal O_r$ is $\mathbb E[x^\star(0)\mid\mathcal O_r]$. Its expected loss is $\tfrac q2\,\mathbb E\big[\operatorname{Var}(x^\star(0)\mid\mathcal O_r)\big]$. For a Gaussian field the conditional variance is a deterministic number: it does not depend on the observed values (the Gaussian conditional covariance is independent of the observed values). Since $R_\infty=\tfrac q2\operatorname{Var}(x^\star(0))$,
+
+\[
+\eta_S(r)=\frac{\operatorname{Var}(x^\star(0)\mid\mathcal O_r)}{\operatorname{Var}(x^\star(0))}.
+\]
+
+- Lean: `TinaV2.C18.A1.s1_variance_ratio` (proved); uses C17
+
+**Step 2 (paper, APP:421). Step 1: split target into observed middle and two tails.** \textbf{Step 1 (split into observed middle and two tails).} Write $x^\star(0)=M_r+T_r^++T_r^-$, where
+
+\[
+M_r=\int_{-r}^{r}w(u)\theta(u)\,du,\qquad T_r^+=\int_r^\infty w(u)\theta(u)\,du,\qquad T_r^-=\int_{-\infty}^{-r}w(u)\theta(u)\,du .
+\]
+
+The middle $M_r$ is computed from observed values, so it contributes no conditional variance.
+
+- Lean: `TinaV2.C18.A1.s2_split` (proved); uses C17
+
+**Step 3 (paper, APP:429). Step 2: rewrite the right tail with weight exp(-beta_c r).** \textbf{Step 2 (rewrite the right tail).} Substituting $u=r+s$,
+
+\[
+T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{-\beta_c s}\,\theta(r+s)\,ds .
+\]
+
+- Lean: `TinaV2.C18.A1.s3_right_tail` (proved); uses C18/p1/s2
+
+**Step 4 (supplied). Residual fields: the proof of the spatial Markov property.** For $s\ge0$ write $\theta(r+s)=e^{-\beta_s s}\theta(r)+\varepsilon^+(s)$ and $\theta(-r-s)=e^{-\beta_s s}\theta(-r)+\varepsilon^-(s)$. By the exponential covariance, each $\varepsilon^+(s)$ is uncorrelated with every $\theta(u)$, $u\le r$, and each $\varepsilon^-(s)$ with every $\theta(u)$, $u\ge -r$. The families $(\theta(u))_{|u|\le r}$, $(\varepsilon^+(s))_{s\ge0}$ and $(\varepsilon^-(s))_{s\ge0}$ are jointly Gaussian and pairwise uncorrelated, hence independent. Integrating against $e^{-\beta_c s}$ gives $Y_r=\theta(r)/(\beta_c+\beta_s)+E^+$ and, for the left tail, $Y^-_r=\theta(-r)/(\beta_c+\beta_s)+E^-$, where $E^\pm=\int_0^\infty e^{-\beta_c s}\varepsilon^\pm(s)\,ds$ have mean zero, $E^+$ and $E^-$ are independent, and the pair is independent of the observation $\mathcal O_r$.
+
+- Lean: `TinaV2.C18.A1.s3b_residual_fields` (proved); uses C17
+
+**Step 5 (paper, APP:435). Step 3: spatial Markov property.** \textbf{Step 3 (spatial Markov property).} By the exponential-covariance model in Section~\ref{subsec:canonical_line_model}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
+
+\[
+\operatorname{Var}(T_r^+\mid\mathcal O_r)=\operatorname{Var}(T_r^+\mid\theta(r)),\qquad \operatorname{Var}(T_r^-\mid\mathcal O_r)=\operatorname{Var}(T_r^-\mid\theta(-r)),\qquad \operatorname{Cov}(T_r^+,T_r^-\mid\mathcal O_r)=0 .
+\]
+
+- Lean: `TinaV2.C18.A1.s4_markov` (proved); uses C17, C18/p1/s3, C18/p1/s3b
+
+**Step 6 (paper, APP:441). Step 4: tail variance does not depend on r; eta_S(r) = eta_S(0) exp(-2r/l_c).** \textbf{Step 4 (the tail variance does not depend on $r$).} Define $C\triangleq\operatorname{Var}(Y_0\mid\theta(0))$. Shifting the field by $r$ does not change its law, so $\operatorname{Var}(Y_r\mid\theta(r))=C$ for every $r$. By reflection symmetry (the covariance depends only on $|u-u'|$), the left tail gives the same value. Hence
+
+\[
+\operatorname{Var}(x^\star(0)\mid\mathcal O_r)=2\Big(\frac{\beta_c}{2}\Big)^2e^{-2\beta_c r}\,C=\frac{\beta_c^2}{2}e^{-2\beta_c r}\,C .
+\]
+
+At $r=0$ the same argument applies with $\mathcal O_0=\sigma(\theta(0))$ and $M_0=0$, giving $\operatorname{Var}(x^\star(0)\mid\theta(0))=\tfrac{\beta_c^2}{2}C$. Dividing, $\eta_S(r)=\eta_S(0)\,e^{-2\beta_c r}=\eta_S(0)\,e^{-2r/\ell_c}$. The unknown constant $C$ cancels, so it never has to be computed.
+
+- Lean: `TinaV2.C18.A1.s5_self_similarity` (proved); uses C18/p1/s1, C18/p1/s2, C18/p1/s3, C18/p1/s3b, C18/p1/s4
+
+**Step 7 (paper, APP:449). Step 5a: eta_S(0) = 1 - Corr^2.** \textbf{Step 5 (the constant $\eta_S(0)$).} Conditioning on the single Gaussian variable $\theta(0)$ gives $\operatorname{Var}(x^\star(0)\mid\theta(0))=\operatorname{Var}(x^\star(0))\big(1-\operatorname{Corr}(x^\star(0),\theta(0))^2\big)$ (the Gaussian conditional covariance is independent of the observed values), so $\eta_S(0)=1-\operatorname{Corr}^2$. Two moments are needed.
+
+- Lean: `TinaV2.C18.A1.s6_eta_zero` (proved); uses C18/p1/s1, C18/p1/s2, C18/p1/s3, C18/p1/s3b
+
+**Step 8 (paper, APP:451). Step 5b: covariance of the target with the local value.** \emph{Covariance with the local value:}
+
+\[
+\operatorname{Cov}(x^\star(0),\theta(0))=\int_{\mathbb R}w(u)\,\sigma^2e^{-\beta_s|u|}\,du=\frac{\sigma^2\beta_c}{2}\int_{\mathbb R}e^{-(\beta_c+\beta_s)|u|}\,du=\frac{\sigma^2\beta_c}{\beta_c+\beta_s}.
+\]
+
+- Lean: `TinaV2.C18.A1.s7_covariance` (proved); uses C17
+
+**Step 9 (paper, APP:457). Step 5c: variance of the target.** \emph{Variance of the target:} $\operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c^2}{4}\,I$, where $I\triangleq\iint e^{-\beta_c(|u|+|v|)-\beta_s|u-v|}\,du\,dv$.
+
+To evaluate $I$, define the inner integral $h(u)\triangleq\int_{\mathbb R}e^{-\beta_c|v|}e^{-\beta_s|u-v|}\,dv$. Then $h$ is even, so $I=2\int_0^\infty e^{-\beta_c u}h(u)\,du$. For $u\ge0$, split the $v$-integral at $0$ and $u$:
+
+\[
+h(u)=\underbrace{\frac{e^{-\beta_s u}}{\beta_c+\beta_s}}_{v<0}+\underbrace{\frac{e^{-\beta_c u}-e^{-\beta_s u}}{\beta_s-\beta_c}}_{0\le v\le u}+\underbrace{\frac{e^{-\beta_c u}}{\beta_c+\beta_s}}_{v>u}.
+\]
+
+(The middle term is read as $u\,e^{-\beta_c u}$ when $\beta_s=\beta_c$.) Multiply by $e^{-\beta_c u}$ and integrate over $u\ge0$ term by term:
+
+\[
+\frac{1}{(\beta_c+\beta_s)^2},\qquad \frac{1}{\beta_s-\beta_c}\Big(\frac{1}{2\beta_c}-\frac{1}{\beta_c+\beta_s}\Big)=\frac{1}{2\beta_c(\beta_c+\beta_s)},\qquad \frac{1}{2\beta_c(\beta_c+\beta_s)} .
+\]
+
+Summing and doubling,
+
+\begin{equation}
+I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]=\frac{2(2\beta_c+\beta_s)}{\beta_c(\beta_c+\beta_s)^2},\qquad \operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c(2\beta_c+\beta_s)}{2(\beta_c+\beta_s)^2}.
+\end{equation}
+
+- Lean: `TinaV2.C18.A1.s8_variance` (proved); uses C17
+
+**Step 10 (paper, APP:477). Step 5d: combine to eta_S(0) = l_c/(l_c + 2 l_s).** \emph{Combine.} With $\operatorname{Var}(\theta(0))=\sigma^2$,
+
+\[
+\operatorname{Corr}^2=\frac{\big(\sigma^2\beta_c/(\beta_c+\beta_s)\big)^2}{\sigma^2\cdot\sigma^2\beta_c(2\beta_c+\beta_s)/\big(2(\beta_c+\beta_s)^2\big)}=\frac{2\beta_c}{2\beta_c+\beta_s},\qquad \eta_S(0)=\frac{\beta_s}{2\beta_c+\beta_s}=\frac{\ell_c}{\ell_c+2\ell_s}.
+\]
+
+- Lean: `TinaV2.C18.A1.s9_combine` (proved); uses C18/p1/s5, C18/p1/s6, C18/p1/s7, C18/p1/s8
+
 ## Supplied through a routine lemma or inside an existing step lemma
 
 - F17.1 (C1): The projection step needs closedness for the Q-norm; the proof shows it for the ordinary L2 norm and does not cite the norm-equivalence remark. Lean: `TinaV2/Routine/QHilbert.lean::isClosed_qSubmodule`
@@ -34,3 +130,9 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 - F14.3 (C12): The reason given for the vanishing cross terms between the means and the centered parts is not the one that applies. Lean: `TinaV2/Proofs/C12/A1.lean::s2_centered_cost`
 - F12.1 (C16): That the bracket has a zero ('its unique crossing') is not argued. Lean: `TinaV2/Proofs/C16/A1.lean::s4_positive_at_zero`
 - F12.2 (C16): The link between the sign of the bracket at zero, the positive part in the boxed formula and the positivity criterion is not written. Lean: `TinaV2/Routine/ExpRadius.lean::expRadius_pos_iff`
+- F20.1 (C17.b): Step 3: that the integrated innovation is independent of the observed interval and has mean zero is not argued. Lean: `TinaV2/Routine/CanonicalTime.lean::CanonicalField.stronglyMeasurable_innovation_integral`
+- F20.2 (C17.b): Step 5: 'By stationarity' needs equal laws of the spatial field at the two times and a transfer to the joint law of the target and the observation. Lean: `TinaV2/Routine/ProcessLaw.lean::identDistrib_integral_prodMk`
+- F21.1 (C18): Step 3: the spatial Markov property is taken from the covariance model without an argument. Lean: `TinaV2/Proofs/C18/A1.lean::s3b_residual_fields`
+- F21.2 (C18): Step 0: 'the conditional variance is a deterministic number' is cited for a conditioning on a continuum of field values. Lean: `TinaV2/Proofs/C18/A1.lean::s1_variance_ratio`
+- F21.3 (C18): Step 4: 'shifting the field by r does not change its law, so Var(Y_r | theta(r)) = C' is not argued. Lean: `TinaV2/Routine/CanonicalSpace.lean::CanonicalField.integral_sq_lineE`
+- F21.4 (C18): Step 5: the two-variable Gaussian conditioning formula is applied to x*(0) and theta(0) without saying why they are jointly Gaussian. Lean: `TinaV2/Proofs/C18/A1.lean::s6_eta_zero`

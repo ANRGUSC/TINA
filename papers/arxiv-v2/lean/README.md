@@ -534,25 +534,33 @@ a Lean-only retry.
 
 ## Next step
 
-**State on 2026-11-15: the statement review is under way.** Scott compares
-each Lean definition and statement with the paper and approves it; an approved
-file is frozen with its hash.
+**State on 2026-11-15 (evening): every statement that is not waiting for a
+paper edit or a decision is reviewed and frozen.** Scott compares each Lean
+definition and statement with the paper and approves it; an approved file is
+frozen with its hash.
 
 - `Defs/` is frozen: eight files, with the definition claims C4, C6 and C17.
-- Twelve statements are frozen: C1, C1.b, C1.c, C2, C3, C3.b, C5, C5.b, C6.b,
-  C7, C12, C17.b.
+- Nineteen statements are frozen: C1, C1.b, C1.c, C2, C3, C3.b, C5, C5.b,
+  C6.b, C6.c, C7, C7.b, C8.c, C12, C13, C13.b, C13.c, C17.b, C20.
 - Nine claims are verified. Eight follow the paper step for step: C1, C2, C3,
   C3.b, C5.b, C7, C12, C17.b. One uses supplied steps: C5.
-- Three frozen statements have no proof yet (C1.b, C1.c, C6.b); they are on
-  `ledger.py frontier`.
+- Ten frozen statements have no proof yet. Seven are on `ledger.py frontier`:
+  C1.b, C1.c, C6.b, C6.c, C7.b, C13.b, C13.c. Three depend on a claim that is
+  not verified yet: C8.c (on C8), C13 (on C10), C20 (on C19).
 - Thirteen statements wait for a paper edit or a decision and are not
   reviewed until it is settled: C4.b, C8, C8.b, C10, C11, C14, C15, C15.b,
   C15.c, C16, C18, C19, C19.b. Nine of them are proved (`proved_unaudited`).
-- Seven statements are still to review: C6.c, C7.b, C8.c, C13, C13.b, C13.c,
-  C20. None is proved yet.
+- C8.c, C13 and C20 were frozen although the claim each one uses waits for an
+  edit (F5.1, F4.1, and F10.2, F10.3, F18.1): the edits do not touch their
+  sentences and their Lean statements mention only frozen definitions. The
+  difference rows `C8.c/f1/d2`, `C13/f1/d1` and `C20/f1/d1` say so. If
+  realignment rewords one of these sentences, that is a note on the claim.
 
-No Lean file changed during the review, so the build and the audit of
-2026-11-14 stand.
+One Lean file changed during the review: `Statements/C13c.lean` gained the
+clause `aggRhoStar n q 0 = 0`, for the sentence "any positive global delay
+makes the fresh-local architecture preferable" (`C13.c/f1/d2`). No attempt
+existed for C13.c. The full build and `ledger.py audit` were rerun afterwards
+and pass.
 
 **State on 2026-11-14 (late night).** Eighteen claims are proved in Lean, one
 lemma per written step: C1, C2, C3, C3.b, C5, C5.b, C7, C8, C10, C11, C12, C14,
@@ -643,9 +651,8 @@ What "proved" does and does not mean here:
    C7 are frozen (C5 `verified_supplied`, C7 `verified`). Thirteen statements
    wait for paper edits or decisions and are not reviewed now (see
    "Decisions", 2026-11-15, and `ledger.py sql "SELECT * FROM
-   v_freeze_blockers"`). Twelve are frozen so far (see the state above). Seven
-   are left to review, shown two or three at a time: C6.c, C7.b and C8.c;
-   then C13, C13.b, C13.c and C20.*
+   v_freeze_blockers"`). Nineteen are frozen (see the state above); the review
+   resumes with those thirteen after realignment.*
    Restrict item 3 of C19.b to the interior regime first (disposition F11.1, a
    new formalization version). For tier D read `Defs/Canonical.lean`, then
    `Statements/C17b.lean`, `C18.lean`, `C19.lean`.

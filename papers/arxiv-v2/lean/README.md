@@ -349,7 +349,8 @@ path is proved.
 1. **Definitions and statements.** `Defs/` and a `Statement` for every tier A
    and B claim, no proofs. Each ambiguity in a paper statement becomes a
    finding. Scott reviews the statements against the paper, using the listed
-   differences (`statement_deltas`); approved ones are frozen.
+   differences (`statement_deltas`); approved ones are frozen. *Under way
+   since 2026-11-14: `Defs/` and twelve statements are frozen.*
 2. **Tier A and B proofs**, C7 first, each mirroring the paper's steps, with
    the step-dependency audit. *Under way: the 12 claims whose proof is complete
    in the paper are proved against the draft statements, and C5 from a
@@ -533,6 +534,26 @@ a Lean-only retry.
 
 ## Next step
 
+**State on 2026-11-15: the statement review is under way.** Scott compares
+each Lean definition and statement with the paper and approves it; an approved
+file is frozen with its hash.
+
+- `Defs/` is frozen: eight files, with the definition claims C4, C6 and C17.
+- Twelve statements are frozen: C1, C1.b, C1.c, C2, C3, C3.b, C5, C5.b, C6.b,
+  C7, C12, C17.b.
+- Nine claims are verified. Eight follow the paper step for step: C1, C2, C3,
+  C3.b, C5.b, C7, C12, C17.b. One uses supplied steps: C5.
+- Three frozen statements have no proof yet (C1.b, C1.c, C6.b); they are on
+  `ledger.py frontier`.
+- Thirteen statements wait for a paper edit or a decision and are not
+  reviewed until it is settled: C4.b, C8, C8.b, C10, C11, C14, C15, C15.b,
+  C15.c, C16, C18, C19, C19.b. Nine of them are proved (`proved_unaudited`).
+- Seven statements are still to review: C6.c, C7.b, C8.c, C13, C13.b, C13.c,
+  C20. None is proved yet.
+
+No Lean file changed during the review, so the build and the audit of
+2026-11-14 stand.
+
 **State on 2026-11-14 (late night).** Eighteen claims are proved in Lean, one
 lemma per written step: C1, C2, C3, C3.b, C5, C5.b, C7, C8, C10, C11, C12, C14,
 C15, C16, C17.b, C18, C19 and C19.b. Sixteen mirror the paper's proof step for
@@ -564,18 +585,19 @@ field and not only about the curve:
 - The C18 formula and both covariance integrals were checked numerically on a
   discretized field before the proof.
 
-The ledger is at schema version 2: proofs have a home, steps an origin, every
+The ledger is at schema version 3: proofs have a home, steps an origin, every
 point a disposition (57), the Lean statements a list of differences from the
-paper (38 rows), and each assembled theorem a record of what it assumes and its
-axioms.
+paper (48 rows), each assembled theorem a record of what it assumes and its
+axioms, and each approved Lean file its hash (20 files).
 
 What "proved" does and does not mean here:
 
-- **The statements are still drafts.** The proofs were written before the
-  statement review, so every claim above is `proved_unaudited`, not verified.
-  If the review changes a statement, that is a new formalization version and
-  the attempt against the old one has to be redone or re-pointed. This now
-  includes `Defs/Canonical.lean`, written on 2026-11-14 and not reviewed.
+- **Twenty statements are still drafts.** The proofs were written before the
+  statement review, so a proved claim is `proved_unaudited` until its
+  statement is frozen. If the review changes a statement, that is a new
+  formalization version and the attempt against the old one has to be redone
+  or re-pointed. The definitions, including `Defs/Canonical.lean`, were
+  reviewed and frozen on 2026-11-14 and 2026-11-15.
 - **The projection theorem is cited, not re-proved.** C1's step 4 gets the
   existence of the projection from Mathlib's Hilbert projection theorem, in
   Mathlib's `L²` space over `ℝ^d` with the inner product `vᵀQw`
@@ -621,8 +643,9 @@ What "proved" does and does not mean here:
    C7 are frozen (C5 `verified_supplied`, C7 `verified`). Thirteen statements
    wait for paper edits or decisions and are not reviewed now (see
    "Decisions", 2026-11-15, and `ledger.py sql "SELECT * FROM
-   v_freeze_blockers"`). Seventeen are reviewable: C1, C1.b, C1.c, C2, C3,
-   C3.b, C5.b, C6.b, C6.c, C7.b, C8.c, C12, C13, C13.b, C13.c, C17.b, C20.*
+   v_freeze_blockers"`). Twelve are frozen so far (see the state above). Seven
+   are left to review, shown two or three at a time: C6.c, C7.b and C8.c;
+   then C13, C13.b, C13.c and C20.*
    Restrict item 3 of C19.b to the interior regime first (disposition F11.1, a
    new formalization version). For tier D read `Defs/Canonical.lean`, then
    `Statements/C17b.lean`, `C18.lean`, `C19.lean`.

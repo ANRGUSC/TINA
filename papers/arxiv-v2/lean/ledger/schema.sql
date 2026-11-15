@@ -423,6 +423,7 @@ LEFT JOIN assembled asm ON asm.claim_id = c.id AND asm.attempt_id = vs.attempt_i
 CREATE VIEW v_frontier AS
 SELECT s.* FROM v_claim_status s
 WHERE s.scope = 'lean' AND s.state IN ('stated','proving','todo','no_written_proof')
+  AND s.kind NOT IN ('definition','assumption')   -- nothing to prove
   AND s.stmt_status = 'frozen'
   AND NOT EXISTS (
     SELECT 1 FROM claim_deps d

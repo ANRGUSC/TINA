@@ -25,6 +25,12 @@ Mutating commands rewrite data.sql, so every change is a readable git diff.
     ledger.py add TABLE k=v ...      insert a row (v may be @path to read a file)
     ledger.py set TABLE ID k=v ...   update a row
     ledger.py note TARGET KIND TEXT  append to the log
+    ledger.py freeze PATH|C7/f1 [by=Scott] [note=...] [--refreeze]
+                                     record a Lean file as approved against the
+                                     paper, with its hash; freezes the statements
+                                     declared in it
+    ledger.py unfreeze PATH|C7/f1 REASON
+                                     withdraw an approval; statements go back to draft
     ledger.py check                  verify ledger <-> paper <-> Lean invariants
     ledger.py assembly               write TinaV2/Assembly.lean from the selected attempts
                                      and record what each assembled theorem assumes
@@ -58,7 +64,7 @@ DATA = ROOT / "ledger" / "data.sql"
 TABLES = ["meta", "sources", "claims", "claim_deps", "proofs", "steps",
           "step_deps", "formalizations", "attempts", "assembled", "step_map",
           "edits", "edit_deps", "hunks", "hunk_steps", "findings", "dispositions",
-          "statement_deltas", "notes"]
+          "disposition_scope", "statement_deltas", "frozen_files", "notes"]
 
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
@@ -307,6 +313,83 @@ def cmd_note(db, args):
     save(db)
 
 
+def lean_sha(path):
+    return hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+
+
+def defs_imports(path):
+    """TinaV2/Defs files a Lean file imports directly (`TinaV2.Defs` is all of them)."""
+    out = set()
+    for m in re.findall(r"^import\s+(TinaV2\.Defs(?:\.\w+)?)\s*$", (ROOT / path).read_text(), re.M):
+        if m == "TinaV2.Defs":
+            out |= {str(f.relative_to(ROOT)) for f in (ROOT / "TinaV2" / "Defs").glob("*.lean")}
+        else:
+            out.add(m.replace(".", "/") + ".lean")
+    return sorted(out)
+
+
+def cmd_freeze(db, args):
+    flags = {a for a in args if a.startswith("--")}
+    args = [a for a in args if not a.startswith("--")]
+    if not args:
+        sys.exit("usage: ledger.py freeze PATH|FORMALIZATION [by=NAME] [note=TEXT] [--refreeze]")
+    target, kv = args[0], parse_kv(args[1:])
+    row = db.execute("SELECT lean_file FROM formalizations WHERE id = ?", (target,)).fetchone()
+    path = row["lean_file"] if row else target
+    if not (ROOT / path).is_file():
+        sys.exit(f"{path}: no such file under {ROOT}")
+    frozen = {r["path"] for r in db.execute("SELECT path FROM frozen_files")}
+    need = [d for d in defs_imports(path) if d not in frozen]
+    if need:
+        sys.exit(f"{path} imports definitions that are not frozen yet: {', '.join(need)}")
+    blocked = db.execute(
+        "SELECT f.id, b.disposition_id, b.decision FROM formalizations f "
+        "JOIN v_freeze_blockers b ON b.claim_id = f.claim_id "
+        "WHERE f.lean_file = ? AND f.status IN ('draft','reviewed','frozen')", (path,)).fetchall()
+    if blocked:
+        sys.exit(f"{path} waits for: " + ", ".join(
+            f"{b['disposition_id']} ({b['decision']}, on {b['id']})" for b in blocked)
+            + ". A statement is frozen after the paper edit is upstream or the point is decided.")
+    sha = lean_sha(path)
+    old = db.execute("SELECT sha256 FROM frozen_files WHERE path = ?", (path,)).fetchone()
+    if old and old["sha256"] != sha and "--refreeze" not in flags:
+        sys.exit(f"{path} is frozen with another hash ({old['sha256'][:12]}); the file changed. "
+                 f"Revert it, or review the change and pass --refreeze.")
+    db.execute("INSERT OR REPLACE INTO frozen_files (path, sha256, frozen_by, frozen_on, note) "
+               "VALUES (?, ?, ?, ?, ?)",
+               (path, sha, kv.get("by", "Scott"), datetime.date.today().isoformat(), kv.get("note")))
+    fs = [r["id"] for r in db.execute(
+        "SELECT id FROM formalizations WHERE lean_file = ? AND status IN ('draft','reviewed')", (path,))]
+    db.execute("UPDATE formalizations SET status = 'frozen' WHERE lean_file = ? "
+               "AND status IN ('draft','reviewed')", (path,))
+    save(db)
+    print(f"frozen {path}  sha256 {sha[:12]}" + (f"  statements: {', '.join(fs)}" if fs else ""))
+
+
+def cmd_unfreeze(db, args):
+    """Withdraw an approval: the file's hash is dropped and its statements go back to draft."""
+    if len(args) < 2:
+        sys.exit("usage: ledger.py unfreeze PATH|FORMALIZATION REASON")
+    target, reason = args[0], " ".join(args[1:])
+    row = db.execute("SELECT lean_file FROM formalizations WHERE id = ?", (target,)).fetchone()
+    path = row["lean_file"] if row else target
+    if not db.execute("SELECT 1 FROM frozen_files WHERE path = ?", (path,)).fetchone():
+        sys.exit(f"{path} is not frozen")
+    users = [r["path"] for r in db.execute("SELECT path FROM frozen_files WHERE path != ?", (path,))
+             if path in defs_imports(r["path"])]
+    if users:
+        sys.exit(f"{path} is imported by frozen files: {', '.join(users)}; unfreeze those first")
+    fs = [r["id"] for r in db.execute(
+        "SELECT id FROM formalizations WHERE lean_file = ? AND status = 'frozen'", (path,))]
+    db.execute("DELETE FROM frozen_files WHERE path = ?", (path,))
+    db.execute("UPDATE formalizations SET status = 'draft' WHERE lean_file = ? AND status = 'frozen'", (path,))
+    for f in fs:
+        db.execute("INSERT INTO notes (ts, target, kind, body) VALUES (?, ?, 'decision', ?)",
+                   (now(), f, f"Approval withdrawn, statement back to draft: {reason}"))
+    save(db)
+    print(f"unfrozen {path}" + (f"  statements back to draft: {', '.join(fs)}" if fs else ""))
+
+
 def norm(text):
     return re.sub(r"\s+", " ", text).strip()
 
@@ -536,6 +619,28 @@ def run_check(db):
         f = ROOT / name
         if not f.exists() or f.read_text() != doc_text(db, name):
             errs.append(f"{name} is missing or out of date: run `ledger.py docs`")
+    # Frozen files are unchanged, rest on frozen definitions, and every frozen
+    # statement is in one.
+    frozen = {r["path"]: r for r in q("SELECT * FROM frozen_files")}
+    for path, r in frozen.items():
+        if not (ROOT / path).is_file():
+            errs.append(f"{path}: frozen file does not exist")
+            continue
+        if lean_sha(path) != r["sha256"]:
+            errs.append(f"{path}: changed since it was frozen on {r['frozen_on']} by {r['frozen_by']} "
+                        f"(revert, or review the change and `ledger.py freeze {path} --refreeze`; "
+                        f"a changed statement is a new formalization version)")
+        for d in defs_imports(path):
+            if d not in frozen:
+                errs.append(f"{path}: frozen, but it imports {d}, which is not")
+    for b in q("SELECT f.id, b.disposition_id, b.decision FROM formalizations f "
+               "JOIN v_freeze_blockers b ON b.claim_id = f.claim_id WHERE f.status = 'frozen'"):
+        errs.append(f"{b['id']}: frozen, but {b['disposition_id']} ({b['decision']}) is still open "
+                    f"(`ledger.py unfreeze {b['id']} REASON`; freeze again when it is settled)")
+    for f in q("SELECT id, lean_file FROM formalizations WHERE status = 'frozen'"):
+        if f["lean_file"] not in frozen:
+            errs.append(f"{f['id']}: frozen, but {f['lean_file']} has no recorded hash "
+                        f"(`ledger.py freeze {f['id']}`)")
     # A frozen statement of an advertised result has its differences listed.
     for h in q("SELECT h.id FROM v_headline h WHERE h.stmt_status = 'frozen' AND h.deltas = 0"):
         warns.append(f"{h['id']}: frozen headline statement with no statement_deltas row "
@@ -1079,7 +1184,7 @@ COMMANDS = {"assembly": cmd_assembly, "audit": cmd_audit, "serve": cmd_serve, "s
             "check": cmd_check, "graph": cmd_graph, "edit-diff": cmd_edit_diff,
             "headline": cmd_headline, "dispositions": cmd_dispositions,
             "supplement": cmd_supplement, "docs": cmd_docs,
-            "edit-apply": cmd_edit_apply, "db": cmd_db}
+            "edit-apply": cmd_edit_apply, "db": cmd_db, "freeze": cmd_freeze, "unfreeze": cmd_unfreeze}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] not in COMMANDS:

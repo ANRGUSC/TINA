@@ -279,6 +279,45 @@ CREATE TABLE statement_deltas (
   UNIQUE (formalization_id, ordinal)
 );
 
+-- Further claims whose statement the same decision touches. A disposition
+-- names one claim; an agreed paper edit can reword several (F8.1 rewrites the
+-- sentence that introduces C15, C15.b, C15.c and C16). A statement is not
+-- frozen while a paper edit or an undecided point in its scope is open.
+CREATE TABLE disposition_scope (
+  disposition_id TEXT NOT NULL REFERENCES dispositions(id),
+  claim_id       TEXT NOT NULL REFERENCES claims(id),
+  note           TEXT,
+  PRIMARY KEY (disposition_id, claim_id)
+);
+
+-- Open points that keep a claim's statement from being frozen: an agreed
+-- paper edit that is not upstream, a point with no decision, or a reading
+-- that the Lean statement does not carry yet.
+CREATE VIEW v_freeze_blockers AS
+SELECT d.claim_id, d.id AS disposition_id, d.decision FROM dispositions d
+WHERE d.status = 'open' AND d.level = 'statement'
+  AND d.decision IN ('paper_edit','undecided','reading')
+UNION
+SELECT d.claim_id, d.id, d.decision FROM dispositions d
+WHERE d.status = 'open' AND d.decision = 'paper_edit'
+UNION
+SELECT s.claim_id, d.id, d.decision FROM disposition_scope s
+JOIN dispositions d ON d.id = s.disposition_id
+WHERE d.status = 'open' AND d.decision IN ('paper_edit','undecided','reading');
+
+-- -------------------------------------------------------------- frozen files
+-- A Lean file whose text was approved against the paper (`ledger.py freeze`).
+-- `check` fails when the file no longer has this hash, when a file it imports
+-- from TinaV2/Defs is not frozen, or when a frozen formalization's file is
+-- not listed here. So a frozen statement pins the definitions it is written in.
+CREATE TABLE frozen_files (
+  path       TEXT PRIMARY KEY,          -- TinaV2/Defs/Cost.lean
+  sha256     TEXT NOT NULL,
+  frozen_by  TEXT NOT NULL,
+  frozen_on  TEXT NOT NULL,
+  note       TEXT
+);
+
 -- --------------------------------------------------------------------- notes
 -- Append-only log against any ledger id. Search here before retrying.
 CREATE TABLE notes (

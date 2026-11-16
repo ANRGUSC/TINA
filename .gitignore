@@ -30,3 +30,9 @@ main_older_*.tex
 main_older_*.pdf
 main_restructured.pdf
 Theory_of_Information_Architecture_for_Networked_Decisions*.pdf
+
+# macOS Finder metadata
+.DS_Store
+
+# LaTeX build directories
+submissions/arxiv-v2/build/

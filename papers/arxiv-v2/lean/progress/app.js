@@ -1,4 +1,4 @@
-/* Proof-progress explorer for the arXiv v2 Lean formalization.
+/* Proof-progress explorer for the Lean formalization of the arXiv manuscript (v3 since 2026-11-18).
  *
  * Loads ../ledger/schema.sql and ../ledger/data.sql into SQLite (sql.js) and
  * renders every view from SQL queries. There is no generated data file: the
@@ -757,7 +757,9 @@ function viewClaim(id) {
         return `<div class="step ${sup ? 'supplied' : ''}"><div>
             <h4><span class="idlink">s${s.ordinal}</span>${esc(s.title)}${sup && !supp ? ' <span class="tag supplied">supplied · not in the paper</span>' : ''}</h4>
             ${texHtml(s.tex)}
-            <p class="small muted" style="margin:6px 0 0">${sup ? `Written for the formalization${why ? ` (${linkIds(esc(why.id))})` : ''}` : paperLink(s.source, s.line_start, s.line_end)}${deps.length ? ` · uses ${deps.map(d => d.dep_kind === 'claim' ? claimLink(d.dep_id) : `<span class="idlink">${esc(d.dep_id.split('/').pop())}</span>`).join(', ')}` : ''}</p>
+            <p class="small muted" style="margin:6px 0 0">${sup ? `Written for the formalization${why ? ` (${linkIds(esc(why.id))})` : ''}` : paperLink(s.source, s.line_start, s.line_end)}${deps.length ? ` · uses ${deps.map(d => d.dep_kind === 'claim' ? claimLink(d.dep_id)
+              : d.dep_id.startsWith(p.id + '/') ? `<span class="idlink">${esc(d.dep_id.split('/').pop())}</span>`
+              : `<span data-tip="A step of another claim's proof: the paper's sentence cites an equation inside that proof.">step ${linkIds(esc(d.dep_id))}</span>`).join(', ')}` : ''}</p>
           </div><div class="lean" style="--c:var(${top ? STEP_COLOR[top.status] : '--line-strong'})">
             ${maps.length ? maps.map(m => `<p><code>${esc(m.lean_decl)}</code><br><span class="tag">${esc(m.status)}</span> <span class="small muted">in ${esc(m.attempt_id)}</span></p>`).join('')
               : `<p class="muted small">No Lean lemma yet.${mirrored.length ? '' : ' No attempt mirrors this proof.'}</p>`}
@@ -842,8 +844,8 @@ function viewEdits(focus) {
       and the point is marked carried out. ${agreed.filter(d => d.status === 'open').length} not yet in the paper.</p>
     ${agreed.length ? dispRows(agreed, true) : '<p class="empty">None.</p>'}
     <h3 style="margin-top:22px">Tracked as diffs in the ledger</h3>
-    <p class="muted">Changes to the paper's text written on the formalization side, stored as diff hunks against the TeX source.
-      Each takes a claim from one proof version to the next.</p>
+    <p class="muted">Changes to the paper's text stored as diff hunks against the TeX source: written on the formalization
+      side, or made upstream and recorded here because they replace a proof. Each takes a claim from one proof version to the next.</p>
     <div class="grid">${M.edits.map(editCard).join('') || '<p class="empty">No tracked edits.</p>'}</div>`;
   scrollToId(focus);
 }

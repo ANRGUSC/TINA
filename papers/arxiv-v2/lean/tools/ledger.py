@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Proof ledger CLI for the Lean formalization of the arXiv v2 manuscript (tina-v2).
+"""Proof ledger CLI for the Lean formalization of the arXiv manuscript.
+
+The ledger tracks arXiv v3 (submissions/arxiv-v3) since 2026-11-18 and tracked
+arXiv v2 before; the `sources` table names the files and the commit. The Lean
+package keeps the name TinaV2.
 
 The ledger is a SQLite database rebuilt in memory on every call from two text
 files that are committed to git:
@@ -430,15 +434,28 @@ def run_check(db):
                "AND is_primary = 1 GROUP BY claim_id HAVING n > 1"):
         errs.append(f"{r['claim_id']}: {r['n']} primary in-paper proofs")
 
-    # 3. Step dependencies resolve, and point backwards within a proof.
-    for d in q("SELECT d.*, s.proof_id, s.ordinal FROM step_deps d JOIN steps s ON s.id = d.step_id"):
+    # 3. Step dependencies resolve, and point backwards within a proof. One
+    # exception (README, "The 1:1 rule"): where the paper's step cites an
+    # equation inside another claim's proof, the dependency may name that step,
+    # if it is a step of the primary in-paper proof of a claim this one uses.
+    for d in q("SELECT d.*, s.proof_id, s.ordinal, p.claim_id FROM step_deps d "
+               "JOIN steps s ON s.id = d.step_id JOIN proofs p ON p.id = s.proof_id"):
         if d["dep_kind"] == "claim":
             if not q("SELECT 1 FROM claims WHERE id = ?", d["dep_id"]):
                 errs.append(f"{d['step_id']}: unknown claim dependency {d['dep_id']}")
-        else:
-            o = q("SELECT proof_id, ordinal FROM steps WHERE id = ?", d["dep_id"])
-            if not o or o[0]["proof_id"] != d["proof_id"] or o[0]["ordinal"] >= d["ordinal"]:
+            continue
+        o = q("SELECT s.proof_id, s.ordinal, p.claim_id, p.status, p.is_primary FROM steps s "
+              "JOIN proofs p ON p.id = s.proof_id WHERE s.id = ?", d["dep_id"])
+        if not o:
+            errs.append(f"{d['step_id']}: unknown step dependency {d['dep_id']}")
+        elif o[0]["proof_id"] == d["proof_id"]:
+            if o[0]["ordinal"] >= d["ordinal"]:
                 errs.append(f"{d['step_id']}: step dependency {d['dep_id']} is not an earlier step of the same proof")
+        elif not (o[0]["status"] == "in_paper" and o[0]["is_primary"] and q(
+                "SELECT 1 FROM claim_deps WHERE claim_id = ? AND depends_on = ? AND kind = 'uses'",
+                d["claim_id"], o[0]["claim_id"])):
+            errs.append(f"{d['step_id']}: step dependency {d['dep_id']} is in another proof; that is allowed "
+                        f"only for a step of the primary in-paper proof of a claim {d['claim_id']} uses")
 
     # 4. Attempts: the Lean file and the mirrored English proof agree 1:1.
     for r in q("SELECT claim_id, COUNT(*) n FROM v_selected GROUP BY claim_id HAVING n > 1"):
@@ -473,17 +490,26 @@ def run_check(db):
                     errs.append(f"{a['id']}: marked proved but step {m['step_id']} is {m['status']}")
 
     # 4c. Separation of proof files: an attempt imports statements and routine
-    # lemmas only (never another claim's proof), and routine files never import
-    # statements or proofs.
+    # lemmas only, and routine files never import statements or proofs. The
+    # one other import an attempt may have is the selected attempt file of a
+    # proof that owns a step listed as a cross-proof dependency of the proof
+    # it mirrors (rule 3); `audit` then checks which lemmas of it are used.
     imp_re = re.compile(r"^import\s+(\S+)", re.M)
     for a in q("SELECT * FROM attempts WHERE status IN ('active','proved')"):
         f = ROOT / a["lean_file"]
         if f.exists():
+            cross = {r["lean_file"][:-len(".lean")].replace("/", ".") for r in q(
+                "SELECT DISTINCT b.lean_file FROM step_deps d JOIN steps s ON s.id = d.step_id "
+                "JOIN steps o ON o.id = d.dep_id JOIN attempts b ON b.proof_id = o.proof_id "
+                "WHERE d.dep_kind = 'step' AND s.proof_id = ? AND o.proof_id != s.proof_id "
+                "AND b.selected = 1 AND b.status = 'proved'", a["proof_id"])}
             bad = [i for i in imp_re.findall(f.read_text())
-                   if i != "TinaV2.Statements" and not i.startswith("TinaV2.Routine.")]
+                   if i != "TinaV2.Statements" and not i.startswith("TinaV2.Routine.")
+                   and i not in cross]
             if bad:
                 errs.append(f"{a['id']}: {a['lean_file']} imports {', '.join(bad)}; an attempt may "
-                            f"import only TinaV2.Statements and TinaV2.Routine.*")
+                            f"import only TinaV2.Statements, TinaV2.Routine.* and the selected attempt "
+                            f"of a proof whose steps its own steps list in step_deps")
     for f in sorted((ROOT / "TinaV2" / "Routine").glob("*.lean")):
         bad = [i for i in imp_re.findall(f.read_text())
                if i.startswith(("TinaV2.Statements", "TinaV2.Proofs", "TinaV2.Assembly"))]
@@ -872,7 +898,10 @@ def cmd_audit(db, args):
 
     For every selected proved attempt, Lean lists the step lemmas and the claim
     statements that each step lemma (and `main`) refers to. A step lemma may
-    refer only to the steps and claims in `step_deps` for its step.
+    refer only to the steps and claims in `step_deps` for its step. The steps
+    may belong to another claim's proof where `step_deps` says so (the paper's
+    step cites an equation inside that proof); the map from Lean lemma to step
+    covers every selected attempt, so such a use is compared like any other.
     """
     import tempfile
     q = lambda sql, *p: db.execute(sql, p).fetchall()
@@ -911,7 +940,17 @@ def cmd_audit(db, args):
         a, step = owner[name]
         used_steps = {owner[u][1] for u in used if u in owner and owner[u][1]}
         used_claims = {stmt_claim.get(u, u) for u in used if u.endswith(".Statement")}
+        # A proof file may be imported for a cross-proof step dependency. Its
+        # `main` is never a step: a claim is used through its statement.
+        for u in used:
+            if u in owner and owner[u][1] is None and u != name:
+                errs.append(f"{step or a['id'] + ' main'}: Lean lemma uses {u}, the finished proof of "
+                            f"another claim; take the claim's statement as a hypothesis")
         if step is None:            # main: its own statement plus the claims its steps may use
+            foreign = sorted(x for x in used_steps if not x.startswith(a["proof_id"] + "/"))
+            if foreign:
+                errs.append(f"{a['id']} main: uses steps {foreign} of another proof; only a step "
+                            f"lemma may, through step_deps")
             allowed_claims = {a["claim_id"]} | {d["dep_id"] for d in q(
                 "SELECT d.dep_id FROM step_deps d JOIN steps s ON s.id = d.step_id "
                 "WHERE s.proof_id = ? AND d.dep_kind = 'claim'", a["proof_id"])}
@@ -1137,7 +1176,7 @@ def cmd_site(db, args):
     (out / "progress" / "build-info.json").write_text(json.dumps(info, indent=1))
     (out / "index.html").write_text(
         '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=progress/">'
-        '<title>arXiv v2 Lean proof progress</title><a href="progress/">Lean proof progress</a>\n')
+        '<title>arXiv v3 Lean proof progress</title><a href="progress/">Lean proof progress</a>\n')
     c = info["check"]
     print(f"wrote {out}/progress/ ({n} Lean files; ledger check: "
           f"{len(c['errors'])} errors, {len(c['warnings'])} warnings)")

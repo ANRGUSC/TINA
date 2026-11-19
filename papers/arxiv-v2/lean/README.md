@@ -1,11 +1,22 @@
-# Lean formalization of the arXiv v2 manuscript (tina-v2)
+# Lean formalization of the arXiv v3 manuscript
 
-Machine-checked proofs of the claims in `submissions/arxiv-v2/main-v2.tex` and
-`technical-appendices-v2.tex`, built claim by claim on branch `scott-arxiv2-lean`.
-Until upstream commit `2821560` the same files were the working draft
-`tina-v2-alt` (`main-alt.tex`, `technical-appendices-alt.tex`).
+Machine-checked proofs of the claims in `submissions/arxiv-v3/main-v3.tex` and
+`technical-appendices-v3.tex`, built claim by claim on branch `scott-arxiv2-lean`.
 
-The ledger is aligned to the manuscript at commit `6454c74`
+The work began on arXiv v2 (`submissions/arxiv-v2/`, which stays in the
+repository; until upstream commit `2821560` it was the working draft
+`tina-v2-alt`). It moved to arXiv v3 on 2026-11-18, when the co-author's
+revision landed with every agreed edit (see "Decisions, 2026-11-18"). Two
+names still say v2:
+
+- The Lean package and namespace are `TinaV2`. Renaming them would change the
+  hash of every approved file.
+- The header comments of the frozen files under `TinaV2/Defs/` and
+  `TinaV2/Statements/` cite `main-v2.tex`, for the same reason. The ledger
+  (`sources`, `claims`, `steps`) holds the v3 files and line numbers, and the
+  proof files changed for v3 cite `main-v3.tex`.
+
+The ledger is aligned to the manuscript at commit `12a9b32`
 (`python3 tools/ledger.py sql "SELECT * FROM sources"`). When the paper changes
 upstream, `ledger.py check` reports which step texts are no longer found; the
 steps, line ranges and `sources` rows are then updated through the CLI.
@@ -73,7 +84,9 @@ drafts; they are frozen one at a time, next.
 `Proofs/` holds the first attempts (phase 2), written against the draft
 statements. `Proofs/C05/A1.lean` is the first attempt that mirrors a supplement
 proof, and `Proofs/C18/A1.lean` the first with a supplied step inside a paper
-proof. `Statements/C19.lean` holds two declarations: `Statement` (the field
+proof. `Proofs/C08/A2.lean` is the one attempt that imports another claim's
+proof file (see "The 1:1 rule"); `Proofs/C08/A1.lean` and `Proofs/C19/A1.lean`
+are superseded attempts, kept. `Statements/C19.lean` holds two declarations: `Statement` (the field
 form, C19/f2) and `AlgebraicStatement` (C19/f1, superseded). Claims that are definitions or an assumption (C4, C6) have no
 statement file; their ledger row points into `Defs/`.
 
@@ -197,6 +210,19 @@ The unit of correspondence is the proof step.
 - A step lemma states the intermediate fact the written step states. Its proof
   may use only the earlier steps and claims listed for that step in
   `step_deps`, Mathlib, and `TinaV2/Routine/`.
+- **A step may cite a step of another claim's proof, if the paper's sentence
+  does** (Scott, 2026-11-18). The proof of the stale-global corollary reads
+  "This makes the first term in Eq. (innovation_split) zero, its minimum, so
+  the regret is half the innovation energy in Eq. (innovation_energy)". Both
+  equations are inside the proof of the composition theorem: they are steps 3
+  and 4 of `C7/p1`, not the theorem's statement. So `C8/p2/s2` lists
+  `C7/p1/s3` and `C7/p1/s4` in `step_deps`, and `Proofs/C08/A2.lean` imports
+  `TinaV2.Proofs.C07.A1` and uses the two step lemmas. Such a dependency must
+  name a step of the primary in-paper proof of a claim the citing claim uses;
+  the import must be the selected attempt of that proof; and `audit` compares
+  the lemmas actually used with the steps listed, as for any other step. This
+  is the only case so far. The alternative, making the two equations
+  sub-claims of C7 with their own statements, was not taken.
 - A step is `paper` or `supplied`. A paper step is a sentence of the paper,
   verbatim. A supplied step is a sentence written for the formalization: every
   step of a supplement proof, or a step inserted into a paper proof where the
@@ -227,8 +253,11 @@ The unit of correspondence is the proof step.
 - proposed hunks still apply and applied hunks are present in the TeX;
 - at most one primary in-paper proof, one primary supplement and one selected
   attempt per claim;
-- an attempt file imports only `TinaV2.Statements` and `TinaV2.Routine.*`, and
-  no routine file imports statements or proofs;
+- a step dependency names an earlier step of the same proof, or a step of the
+  primary in-paper proof of a claim this one uses (the cross-proof case above);
+- an attempt file imports only `TinaV2.Statements` and `TinaV2.Routine.*`, plus
+  the selected attempt file of a proof that owns a step listed as a cross-proof
+  dependency; no routine file imports statements or proofs;
 - `TinaV2/Assembly.lean` is the file the selected attempts generate, the
   `assembled` rows match it, and no assembled theorem uses an axiom outside
   the standard three;
@@ -250,7 +279,11 @@ other step lemmas and the claim statements its proof term refers to, looking
 through compiler-generated auxiliaries. A step lemma may refer only to the
 steps listed for its paper step in `step_deps`, and to the claims those steps
 list. So a step cannot quietly use something the paper's step does not. With
-`-v` it also prints dependencies that are listed but not used.
+`-v` it also prints dependencies that are listed but not used. The map from
+Lean lemma to step covers every selected attempt, so a step lemma of another
+proof is recognized and must be listed (`C8/p2/s2: uses C7/p1/s3, C7/p1/s4,
+C8/p2/s1`). The finished proof of another claim (its `main`) is never allowed:
+a claim is used through its statement.
 
 One thing needs more than this and is planned (phase 5):
 
@@ -281,7 +314,9 @@ the ledger is realigned to the new text, sentences that are now in the paper
 become paper steps, and the disposition is marked done with the commit. Or an
 edit is written here as diff hunks (`edits`, `hunks`), with a `proposed` proof
 version; `ledger.py edit-apply E1` applies it on approval. The second path is
-unused so far.
+unused so far. The one row in `edits`, `E1`, records an upstream edit: arXiv v3
+replaced the proof of the stale-global corollary, and a new proof version
+(`C8/p2`, revising `C8/p1`) has to trace to the text that changed.
 
 A simpler proof found along the way is a new proof version. There are two
 kinds of branch, and the ledger keeps them apart:
@@ -297,14 +332,18 @@ Yes, with the structure below, and the end-to-end check is cheap enough to run
 on every commit instead of saving it for the end.
 
 - `Statements/Cxx.lean` defines `Cxx.Statement : Prop` from `Defs/` only.
-- A proof file imports `Prelude`, `Defs`, `Statements` and `Routine`. It never
-  imports another claim's proof. Where the paper's step uses claim X, the step
-  lemma takes `(hX : CX.Statement)` as a hypothesis.
+- A proof file imports `Prelude`, `Defs`, `Statements` and `Routine`. Where the
+  paper's step uses claim X, the step lemma takes `(hX : CX.Statement)` as a
+  hypothesis. It does not import another claim's proof, with one declared
+  exception: `Proofs/C08/A2.lean` imports `Proofs/C07/A1.lean`, because the
+  paper's proof of C8 cites two equations inside the proof of C7 (see "The 1:1
+  rule").
 - `Assembly.lean` is generated from the selected attempts. It supplies each
-  hypothesis with the proved theorem (`theorem C08 : C08.Statement :=
-  C08.A1.main C07`) and prints the axioms each result depends on.
+  hypothesis with the proved theorem (`theorem C10 : C10.Statement :=
+  C10.A1.main C08`) and prints the axioms each result depends on.
 
-Editing one proof therefore rebuilds one file. A stuck upstream proof does not
+Editing one proof therefore rebuilds one file, except that a new attempt for
+C7 would also mean a new attempt for C8. A stuck upstream proof does not
 block downstream work, and attempts for the same claim coexist as separate
 files with the same target.
 
@@ -315,26 +354,31 @@ files with the same target.
 | `sorry` or added axioms | `check` rejects `sorry`; `audit` records the axioms of each assembled theorem and `check` rejects any outside the three standard ones. |
 | The hardest step is supplied as a hypothesis | `assembly` records which unproved claims each assembled theorem still assumes; such a claim is `conditional`, never `verified`. |
 | Lean proves it by an argument that is nowhere written | Every lemma in an attempt maps to a written step; supplied steps are marked and listed in `supplement.md`. |
+| A proof reaches into another claim's proof file | `check` allows the import only for a cross-proof step dependency recorded in `step_deps`; `audit` allows only the listed step lemmas and never the other proof's `main`. |
 | Circular dependence between claims | Assembly order follows the claim graph; Lean rejects import cycles. |
 | A statement is vacuous (hypotheses cannot all hold) | Each model gets a concrete instance satisfying its hypotheses (phase 5). |
 | The Lean statement is not the paper's statement | `statement_deltas` lists the known differences; human review against them, then `frozen`. A later change is a new formalization version, and the ledger shows which attempts it invalidates. |
 
 ## The claim graph
 
-45 claims: 37 in Lean scope, 4 numeric (figures), 4 prose (abstract, related
-work, discussion, appendix remarks). 20 proofs from the paper and one
-supplement proof, 81 steps in all (77 from the paper, 4 supplied). 15 Lean-scope claims are stated in the paper
-without proof; for 13 the decision is that Lean supplies the argument and for
-two (C8.b, C9) the paper will.
+44 claims: 36 in Lean scope, 4 numeric (figures), 4 prose (abstract, related
+work, discussion, appendix remarks). C8.b was merged into C8 on 2026-11-18.
+22 proofs from the paper and 7 supplement proofs, 108 steps in all (85 from
+the paper, 23 supplied), not counting the superseded `C8/p1`. 12 Lean-scope
+claims are stated in the paper without proof; for all of them the decision is
+that Lean supplies the argument (six done: C1.b, C1.c, C6.b, C7.b, C13.b,
+C13.c; six to write: C4.c, C8.c, C13, C15.b, C15.c, C20). Since arXiv v3 the
+paper argues C4.b and C9 itself.
 
 | Tier | Needs | Claims |
 |---|---|---|
 | A | Real analysis and algebra | C5, C7.b, C8.c, C10, C13, C13.b, C13.c, C14, C15, C15.b, C15.c, C16, C19, C19.b, C20 |
-| B | Finite-dimensional probability: L², conditional expectation, independence | C1.c, C3.b, C4, C4.b, C5.b, C6, C6.b, C6.c, C7, C8, C8.b, C11, C12 |
+| B | Finite-dimensional probability: L², conditional expectation, independence | C1.c, C3.b, C4, C4.b, C5.b, C6, C6.b, C6.c, C7, C8, C11, C12 |
 | C | L² projection onto a closed subspace | C1, C1.b, C2, C3 |
 | D | Gaussian processes and the continuum model | C4.c, C9, C17, C17.b, C18 |
 
 Critical path: C4, C5, C6 → **C7** → C8 → C10, and C7 → C14 → C16 → C19.
+(C8 uses two steps of C7's proof since arXiv v3, not the theorem.)
 The paper's proof of C7 uses no projection theorem, so tier C is off the
 critical path. C19 also needs C18 and the bridge C17.b (tier D); all of that
 path is proved.
@@ -350,7 +394,8 @@ path is proved.
    and B claim, no proofs. Each ambiguity in a paper statement becomes a
    finding. Scott reviews the statements against the paper, using the listed
    differences (`statement_deltas`); approved ones are frozen. *Under way
-   since 2026-11-14: `Defs/` and twelve statements are frozen.*
+   since 2026-11-14: `Defs/` and nineteen statements are frozen; twelve
+   wait for review, which the v3 edits unblocked (see "Next step").*
 2. **Tier A and B proofs**, C7 first, each mirroring the paper's steps, with
    the step-dependency audit. *Under way: the 12 claims whose proof is complete
    in the paper are proved against the draft statements, and C5 from a
@@ -364,8 +409,8 @@ path is proved.
    C17.b and C18, on Mathlib v4.33.1: the canonical field is defined, the
    composition paragraph and the omission lemma are proved, and C19 is now a
    theorem about the regret of the field (C19/f2).* The paper edits under F10
-   and F18 (cite the derivation, "jointly Gaussian", σ² > 0) are agreed and
-   awaited. C4.c and C9 (Ornstein–Uhlenbeck) are the tier D claims left.
+   and F18 (cite the derivation, "jointly Gaussian", σ² > 0) are in arXiv v3.
+   C4.c and C9 (Ornstein–Uhlenbeck) are the tier D claims left.
 5. **Assembly and audits**: axioms, step dependencies, non-vacuity instances,
    the side-by-side review page for co-authors, and applying approved edits.
    Numeric claims are linked to the existing verification scripts, not proved
@@ -385,6 +430,51 @@ path is proved.
 - Run `ledger.py check` before every commit.
 
 ## Decisions
+
+### Decisions, 2026-11-18
+
+Made by Scott on realigning to arXiv v3 (`meta.decisions_2026_11_18`). Bhaskar
+pushed the v3 manuscript on 2026-11-18 (upstream `12a9b32`,
+`submissions/arxiv-v3/`). It carries out every agreed edit and settles the one
+open question:
+
+| Point | What arXiv v3 does | `main-v3.tex` |
+|---|---|---|
+| F18.2 (C11) | "variance σ² > 0" in the two-sensor example | 68 |
+| F9 (C4.b) | Innovations have "mean zero conditional on the past states"; the appendix defines `ℱ_{t−1} = σ(θ_s : s ≤ t−1)`, assumes each innovation has conditional mean zero given `ℱ_{t−1}`, and gives the argument | 359–361, appendix 313–320 |
+| F5, C8.b (C8) | Corollary "Under the tracking model and stationary transition", proved directly from Eq. (innovation_split) and Eq. (innovation_energy) with `u = aKθ_{t−τ}`; the separate sentence about the optimal global action is deleted | 453–467 |
+| F3 (C9) | `w_k` defined, modes "centered", a three-sentence derivation | 473–490 |
+| F4 (C10) | "let `R_∞ > 0`. If `0 ≤ η_S(0) < 1`, …"; the proof gains the endpoint sentence | 497–515 |
+| F8 (C14–C16) | "Assume `R_∞ > 0` throughout this section"; C15 and C16 open with "Suppose `R(r) = R_∞[1 − G(r)]` for real `r` …" | 698, 733–736, 773–778 |
+| F10.3, F18.1 (C17–C19) | "variance σ² > 0" in the model paragraph; "jointly Gaussian … σ² > 0" in the lemma and the theorem | 815, 874–875, 901–902 |
+| F10.2 (C19) | The proof opens by citing the field calculation | 927–929 |
+
+The optional sentence about a continuous version of the field (F19) was not
+added; F19 stays a reading.
+
+- **C8 cites C7's steps.** The new proof of the corollary uses two equations
+  inside the proof of the composition theorem. Lean follows it through a
+  declared cross-proof step dependency (`C8/p2/s2` on `C7/p1/s3` and
+  `C7/p1/s4`); `check` and `audit` allow exactly the listed steps. No
+  sub-claims. See "The 1:1 rule".
+- **C8.b is merged into C8.** The remark "The optimal global action is
+  `aKθ_{t−τ}`" is no longer a sentence of the paper; the action is the first
+  sentence of the corollary's proof. The claim row and its draft statement
+  (`Statements/C08b.lean`, never reviewed) are removed. The fact is stated and
+  proved by the two step lemmas of `Proofs/C08/A2.lean`. The decision row
+  `C8.b/d1` is kept and points at C8.
+- **The directory is renamed `papers/arxiv-v3/lean`** and the public page moves
+  with it. The Lean namespace stays `TinaV2`.
+- **Findings F3, F4, F5, F8, F9, F10 and F18 are closed**, each with the v3
+  text that settles it (`ledger.py show F5`).
+
+Carried out with the realignment, under earlier decisions: C19.b has a new
+statement version restricted to the interior regime (`C19.b/f2`, disposition
+F11.1 of 2026-11-14), and C4.b has one for the new hypothesis (`C4.b/f2`).
+Recorded for Scott's review, not decided: the model paragraph now says
+σ² > 0, and `Defs/Canonical.lean` (frozen) does not carry it (`C17/f1/d3`).
+
+### Earlier decisions
 
 Made on 2026-11-14 after the co-author's reply (Scott; `meta.decision_two_homes`
 and `meta.coauthor_reply_2026_11_14` in the ledger):
@@ -469,9 +559,9 @@ Made on 2026-11-14 (Scott, on Claude's recommendation; each is also a
 
 Still open:
 
-1. **F9: the AR(1) innovations hypothesis.** Undecided; ask Bhaskar whether
-   the wording changes. Lean reads it as each innovation independent of every
-   earlier state in either case.
+1. **F9: the AR(1) innovations hypothesis.** *Settled by arXiv v3
+   (2026-11-18): innovations with mean zero conditional on the past states.
+   The Lean statement `C4.b/f2` assumes exactly that.*
 2. **C4.c: the Ornstein–Uhlenbeck example** is written as a stochastic
    differential equation, which Mathlib cannot express. Settled in principle
    (disposition C4.c/d1): Lean proves the prediction rule for a jointly
@@ -533,6 +623,51 @@ the partial cache. After the bump, rebuild and record any proof that breaks as
 a Lean-only retry.
 
 ## Next step
+
+**State on 2026-11-18: realigned to arXiv v3. Nothing waits on the paper any
+more.** The ledger tracks `submissions/arxiv-v3/` at upstream `12a9b32`; every
+agreed edit is upstream and marked done; no point is undecided.
+
+- **Proved: 26 claims** (`ledger.py audit`: 122 lemmas in 26 attempts; `lake
+  build`, `audit` and `ledger.py check` pass, standard three axioms only). Sixteen are verified,
+  as before. Ten are proved against statements that are still drafts
+  (`proved_unaudited`): C4.b, C8, C10, C11, C14, C15, C16, C18, C19, C19.b.
+- **What changed in Lean for v3.**
+  - C8: new attempt `Proofs/C08/A2.lean` for the new proof (two steps; uses
+    C7's step lemmas for Eq. (innovation_split) and Eq. (innovation_energy)).
+    `Statements/C08.lean` is unchanged.
+  - C10: new lemma `s3_endpoint` for the new endpoint sentence; `main` no
+    longer contains an argument of its own.
+  - C19: new lemma `s0_field_regret` for the new first sentence of the proof.
+  - C4.b: statement rewritten for the new hypothesis (`C4.b/f2`) and proved
+    from the appendix's two sentences (`Proofs/C04b/A1.lean`, first attempt).
+  - C19.b: item 3 restricted to pairs inside the interior regime (`C19.b/f2`).
+  - C8.b: removed (merged into C8).
+  - No frozen file changed.
+- **Difference rows that v3 settled** were removed (σ ≠ 0 and "jointly
+  Gaussian" on C18 and C19, σ > 0 on C11) or reworded to what remains (C15,
+  C16: Lean speaks of a maximizer of `G`, the paper of the optimal radius for
+  `R = R_∞[1 − G]`).
+- **One open finding**, F11: every point is carried out and Scott can close it.
+
+**Next, in this order:**
+
+1. **The statement review resumes** with the twelve statements the edits
+   unblocked, one per turn: C4.b (f2), C8, C10, C11, C14, C15, C15.b, C15.c,
+   C16, C18, C19, C19.b (f2). With C18 and C19 comes one question about the
+   frozen definitions: v3 says σ² > 0 in the model paragraph; Lean keeps
+   `σ ≠ 0` as a hypothesis of C18 and C19 and leaves `CanonicalField` as it is
+   (`C17/f1/d3`). Recommended: keep it so; the alternative is a refreeze of
+   `Defs/Canonical.lean`.
+2. **Proofs that were waiting**: C8.c (on C8), C13 (on C10), C20 (on C19), all
+   frozen, each from a supplement proof; and supplement proofs for C4.c, C15.b
+   and C15.c once their statements are approved.
+3. **C9** needs a Lean statement design before anything is proved: how to
+   state "independent centered stationary Ornstein–Uhlenbeck modes". The paper
+   now has a three-sentence derivation (`C9/p1`).
+4. **A non-vacuity instance for the canonical field** (phase 5).
+
+The sections below are earlier states, kept as written.
 
 **State on 2026-11-15 (evening): every statement that is not waiting for a
 paper edit or a decision is reviewed and frozen.** Scott compares each Lean
@@ -640,7 +775,8 @@ What "proved" does and does not mean here:
   other statements the `fidelity` note is still the only record; the rows are
   added when each is reviewed.
 
-**Next, in this order:**
+**The plan as it stood on 2026-11-15** (items 2 and 5 are done since arXiv v3;
+the current list is at the top of this section):
 
 1. *Done on 2026-11-14.* **F19 is a reading** (Scott): the main text does not
    say which version of the field is integrated and observed on an interval;
@@ -727,15 +863,18 @@ at `6454c74`; F11-F14 from writing the tier A and B proofs; F15-F17 from the
 tier C proofs; F18 from the co-author's review; F19 from the tier D
 definitions; F20 and F21 from the proofs of C17.b and C18. F1 is resolved
 (upstream `284a0e0`). F2, F7, F12–F17 and F19–F21 were closed on 2026-11-14
-with every point carried out and the paper left as written. Nine are open: F3,
-F4, F5, F8, F10 and F18 wait for agreed paper edits, F6 and F11 for Lean work,
-and F9 for a decision. The detail is in the dispositions:
+with every point carried out and the paper left as written. F6 was closed on
+2026-11-15. F3, F4, F5, F8, F9, F10 and F18 were closed on 2026-11-18: arXiv
+v3 made every agreed edit and settled F9. One is open, F11: its one point is
+carried out (`C19.b/f2`) and it waits for Scott to close it. The detail is in
+the dispositions:
 
 ```
 python3 tools/ledger.py dispositions --open     # what is still to do
 python3 tools/ledger.py show F10                # a finding and the decision on each point
 ```
 
-Of 57 points: 10 are paper edits (1 upstream, 9 agreed and awaited), 36 are
-supplied by Lean (21 done), 7 are readings fixed in the Lean statement (6
-done), 3 are left as they are, and 1 is undecided (F9).
+Of 57 points: 12 are paper edits (all upstream), 35 are supplied by Lean (29
+done; the six left are the supplement proofs still to write), 7 are readings
+fixed in the Lean statement (all recorded), 3 are left as they are, and none
+is undecided.

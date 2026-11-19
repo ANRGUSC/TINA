@@ -5,12 +5,13 @@ import TinaV2.Proofs.C01c.A1
 import TinaV2.Proofs.C02.A1
 import TinaV2.Proofs.C03.A1
 import TinaV2.Proofs.C03b.A1
+import TinaV2.Proofs.C07.A1
+import TinaV2.Proofs.C04b.A1
 import TinaV2.Proofs.C05b.A1
 import TinaV2.Proofs.C06b.A1
 import TinaV2.Proofs.C06c.A1
-import TinaV2.Proofs.C07.A1
 import TinaV2.Proofs.C07b.A1
-import TinaV2.Proofs.C08.A1
+import TinaV2.Proofs.C08.A2
 import TinaV2.Proofs.C10.A1
 import TinaV2.Proofs.C11.A1
 import TinaV2.Proofs.C12.A1
@@ -56,6 +57,12 @@ theorem C03 : TinaV2.C03.Statement := TinaV2.C03.A1.main
 /-- C3.b, attempt C3.b/a1. -/
 theorem C03b : TinaV2.C03b.Statement := TinaV2.C03b.A1.main
 
+/-- C7, attempt C7/a1. -/
+theorem C07 : TinaV2.C07.Statement := TinaV2.C07.A1.main
+
+/-- C4.b, attempt C4.b/a1. -/
+theorem C04b : TinaV2.C04b.Statement := TinaV2.C04b.A1.main C07
+
 /-- C5.b, attempt C5.b/a1. -/
 theorem C05b : TinaV2.C05b.Statement := TinaV2.C05b.A1.main
 
@@ -65,14 +72,11 @@ theorem C06b : TinaV2.C06b.Statement := TinaV2.C06b.A1.main
 /-- C6.c, attempt C6.c/a1. -/
 theorem C06c : TinaV2.C06c.Statement := TinaV2.C06c.A1.main
 
-/-- C7, attempt C7/a1. -/
-theorem C07 : TinaV2.C07.Statement := TinaV2.C07.A1.main
-
 /-- C7.b, attempt C7.b/a1. -/
 theorem C07b : TinaV2.C07b.Statement := TinaV2.C07b.A1.main C07
 
-/-- C8, attempt C8/a1. -/
-theorem C08 : TinaV2.C08.Statement := TinaV2.C08.A1.main C07
+/-- C8, attempt C8/a2. -/
+theorem C08 : TinaV2.C08.Statement := TinaV2.C08.A2.main
 
 /-- C10, attempt C10/a1. -/
 theorem C10 : TinaV2.C10.Statement := TinaV2.C10.A1.main C08
@@ -117,10 +121,11 @@ theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 #print axioms C02
 #print axioms C03
 #print axioms C03b
+#print axioms C07
+#print axioms C04b
 #print axioms C05b
 #print axioms C06b
 #print axioms C06c
-#print axioms C07
 #print axioms C07b
 #print axioms C08
 #print axioms C10

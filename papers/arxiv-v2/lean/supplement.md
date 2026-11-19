@@ -136,7 +136,7 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 The paper's proof, with the supplied steps marked. Appendix: variance ratio, tail split, spatial Markov property, shift invariance, covariance integrals.
 
-**Step 1 (paper, APP:413). Step 0: omission is a conditional-variance ratio.** By spatial stationarity, take $z=0$ and suppress the time argument. Write $\beta_c\triangleq1/\ell_c$ and $\beta_s\triangleq1/\ell_s$ for the inverse lengths, so $w(u)=\tfrac{\beta_c}{2}e^{-\beta_c|u|}$ and $\operatorname{Cov}(\theta(u),\theta(u'))=\sigma^2e^{-\beta_s|u-u'|}$.
+**Step 1 (paper, APP:418). Step 0: omission is a conditional-variance ratio.** By spatial stationarity, take $z=0$ and suppress the time argument. Write $\beta_c\triangleq1/\ell_c$ and $\beta_s\triangleq1/\ell_s$ for the inverse lengths, so $w(u)=\tfrac{\beta_c}{2}e^{-\beta_c|u|}$ and $\operatorname{Cov}(\theta(u),\theta(u'))=\sigma^2e^{-\beta_s|u-u'|}$.
 
 \textbf{Step 0 (omission is a variance ratio).} With $Q=qI$ the optimal policy given $\mathcal O_r$ is $\mathbb E[x^\star(0)\mid\mathcal O_r]$. Its expected loss is $\tfrac q2\,\mathbb E\big[\operatorname{Var}(x^\star(0)\mid\mathcal O_r)\big]$. For a Gaussian field the conditional variance is a deterministic number: it does not depend on the observed values (the Gaussian conditional covariance is independent of the observed values). Since $R_\infty=\tfrac q2\operatorname{Var}(x^\star(0))$,
 
@@ -146,7 +146,7 @@ The paper's proof, with the supplied steps marked. Appendix: variance ratio, tai
 
 - Lean: `TinaV2.C18.A1.s1_variance_ratio` (proved); uses C17
 
-**Step 2 (paper, APP:421). Step 1: split target into observed middle and two tails.** \textbf{Step 1 (split into observed middle and two tails).} Write $x^\star(0)=M_r+T_r^++T_r^-$, where
+**Step 2 (paper, APP:426). Step 1: split target into observed middle and two tails.** \textbf{Step 1 (split into observed middle and two tails).} Write $x^\star(0)=M_r+T_r^++T_r^-$, where
 
 \[
 M_r=\int_{-r}^{r}w(u)\theta(u)\,du,\qquad T_r^+=\int_r^\infty w(u)\theta(u)\,du,\qquad T_r^-=\int_{-\infty}^{-r}w(u)\theta(u)\,du .
@@ -156,7 +156,7 @@ The middle $M_r$ is computed from observed values, so it contributes no conditio
 
 - Lean: `TinaV2.C18.A1.s2_split` (proved); uses C17
 
-**Step 3 (paper, APP:429). Step 2: rewrite the right tail with weight exp(-beta_c r).** \textbf{Step 2 (rewrite the right tail).} Substituting $u=r+s$,
+**Step 3 (paper, APP:434). Step 2: rewrite the right tail with weight exp(-beta_c r).** \textbf{Step 2 (rewrite the right tail).} Substituting $u=r+s$,
 
 \[
 T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{-\beta_c s}\,\theta(r+s)\,ds .
@@ -168,7 +168,7 @@ T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{
 
 - Lean: `TinaV2.C18.A1.s3b_residual_fields` (proved); uses C17
 
-**Step 5 (paper, APP:435). Step 3: spatial Markov property.** \textbf{Step 3 (spatial Markov property).} By the exponential-covariance model in Section~\ref{subsec:canonical_line_model}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
+**Step 5 (paper, APP:440). Step 3: spatial Markov property.** \textbf{Step 3 (spatial Markov property).} By the exponential-covariance model in Section~\ref{subsec:canonical_line_model}, the field is Markov in $z$. Given the observed segment $[-r,r]$, the right tail $\{\theta(u):u>r\}$ and the left tail $\{\theta(u):u<-r\}$ are conditionally independent, and each depends on the segment only through its adjacent endpoint $\theta(r)$ or $\theta(-r)$. Therefore
 
 \[
 \operatorname{Var}(T_r^+\mid\mathcal O_r)=\operatorname{Var}(T_r^+\mid\theta(r)),\qquad \operatorname{Var}(T_r^-\mid\mathcal O_r)=\operatorname{Var}(T_r^-\mid\theta(-r)),\qquad \operatorname{Cov}(T_r^+,T_r^-\mid\mathcal O_r)=0 .
@@ -176,7 +176,7 @@ T_r^+=\frac{\beta_c}{2}e^{-\beta_c r}\,Y_r,\qquad Y_r\triangleq\int_0^\infty e^{
 
 - Lean: `TinaV2.C18.A1.s4_markov` (proved); uses C17, C18/p1/s3, C18/p1/s3b
 
-**Step 6 (paper, APP:441). Step 4: tail variance does not depend on r; eta_S(r) = eta_S(0) exp(-2r/l_c).** \textbf{Step 4 (the tail variance does not depend on $r$).} Define $C\triangleq\operatorname{Var}(Y_0\mid\theta(0))$. Shifting the field by $r$ does not change its law, so $\operatorname{Var}(Y_r\mid\theta(r))=C$ for every $r$. By reflection symmetry (the covariance depends only on $|u-u'|$), the left tail gives the same value. Hence
+**Step 6 (paper, APP:446). Step 4: tail variance does not depend on r; eta_S(r) = eta_S(0) exp(-2r/l_c).** \textbf{Step 4 (the tail variance does not depend on $r$).} Define $C\triangleq\operatorname{Var}(Y_0\mid\theta(0))$. Shifting the field by $r$ does not change its law, so $\operatorname{Var}(Y_r\mid\theta(r))=C$ for every $r$. By reflection symmetry (the covariance depends only on $|u-u'|$), the left tail gives the same value. Hence
 
 \[
 \operatorname{Var}(x^\star(0)\mid\mathcal O_r)=2\Big(\frac{\beta_c}{2}\Big)^2e^{-2\beta_c r}\,C=\frac{\beta_c^2}{2}e^{-2\beta_c r}\,C .
@@ -186,11 +186,11 @@ At $r=0$ the same argument applies with $\mathcal O_0=\sigma(\theta(0))$ and $M_
 
 - Lean: `TinaV2.C18.A1.s5_self_similarity` (proved); uses C18/p1/s1, C18/p1/s2, C18/p1/s3, C18/p1/s3b, C18/p1/s4
 
-**Step 7 (paper, APP:449). Step 5a: eta_S(0) = 1 - Corr^2.** \textbf{Step 5 (the constant $\eta_S(0)$).} Conditioning on the single Gaussian variable $\theta(0)$ gives $\operatorname{Var}(x^\star(0)\mid\theta(0))=\operatorname{Var}(x^\star(0))\big(1-\operatorname{Corr}(x^\star(0),\theta(0))^2\big)$ (the Gaussian conditional covariance is independent of the observed values), so $\eta_S(0)=1-\operatorname{Corr}^2$. Two moments are needed.
+**Step 7 (paper, APP:454). Step 5a: eta_S(0) = 1 - Corr^2.** \textbf{Step 5 (the constant $\eta_S(0)$).} Conditioning on the single Gaussian variable $\theta(0)$ gives $\operatorname{Var}(x^\star(0)\mid\theta(0))=\operatorname{Var}(x^\star(0))\big(1-\operatorname{Corr}(x^\star(0),\theta(0))^2\big)$ (the Gaussian conditional covariance is independent of the observed values), so $\eta_S(0)=1-\operatorname{Corr}^2$. Two moments are needed.
 
 - Lean: `TinaV2.C18.A1.s6_eta_zero` (proved); uses C18/p1/s1, C18/p1/s2, C18/p1/s3, C18/p1/s3b
 
-**Step 8 (paper, APP:451). Step 5b: covariance of the target with the local value.** \emph{Covariance with the local value:}
+**Step 8 (paper, APP:456). Step 5b: covariance of the target with the local value.** \emph{Covariance with the local value:}
 
 \[
 \operatorname{Cov}(x^\star(0),\theta(0))=\int_{\mathbb R}w(u)\,\sigma^2e^{-\beta_s|u|}\,du=\frac{\sigma^2\beta_c}{2}\int_{\mathbb R}e^{-(\beta_c+\beta_s)|u|}\,du=\frac{\sigma^2\beta_c}{\beta_c+\beta_s}.
@@ -198,7 +198,7 @@ At $r=0$ the same argument applies with $\mathcal O_0=\sigma(\theta(0))$ and $M_
 
 - Lean: `TinaV2.C18.A1.s7_covariance` (proved); uses C17
 
-**Step 9 (paper, APP:457). Step 5c: variance of the target.** \emph{Variance of the target:} $\operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c^2}{4}\,I$, where $I\triangleq\iint e^{-\beta_c(|u|+|v|)-\beta_s|u-v|}\,du\,dv$.
+**Step 9 (paper, APP:462). Step 5c: variance of the target.** \emph{Variance of the target:} $\operatorname{Var}(x^\star(0))=\frac{\sigma^2\beta_c^2}{4}\,I$, where $I\triangleq\iint e^{-\beta_c(|u|+|v|)-\beta_s|u-v|}\,du\,dv$.
 
 To evaluate $I$, define the inner integral $h(u)\triangleq\int_{\mathbb R}e^{-\beta_c|v|}e^{-\beta_s|u-v|}\,dv$. Then $h$ is even, so $I=2\int_0^\infty e^{-\beta_c u}h(u)\,du$. For $u\ge0$, split the $v$-integral at $0$ and $u$:
 
@@ -220,7 +220,7 @@ I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]
 
 - Lean: `TinaV2.C18.A1.s8_variance` (proved); uses C17
 
-**Step 10 (paper, APP:477). Step 5d: combine to eta_S(0) = l_c/(l_c + 2 l_s).** \emph{Combine.} With $\operatorname{Var}(\theta(0))=\sigma^2$,
+**Step 10 (paper, APP:482). Step 5d: combine to eta_S(0) = l_c/(l_c + 2 l_s).** \emph{Combine.} With $\operatorname{Var}(\theta(0))=\sigma^2$,
 
 \[
 \operatorname{Corr}^2=\frac{\big(\sigma^2\beta_c/(\beta_c+\beta_s)\big)^2}{\sigma^2\cdot\sigma^2\beta_c(2\beta_c+\beta_s)/\big(2(\beta_c+\beta_s)^2\big)}=\frac{2\beta_c}{2\beta_c+\beta_s},\qquad \eta_S(0)=\frac{\beta_s}{2\beta_c+\beta_s}=\frac{\ell_c}{\ell_c+2\ell_s}.

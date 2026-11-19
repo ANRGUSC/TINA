@@ -1,4 +1,5 @@
--- Proof ledger for the Lean formalization of the arXiv v2 manuscript (tina-v2).
+-- Proof ledger for the Lean formalization of the arXiv manuscript: arXiv v3
+-- (submissions/arxiv-v3) since 2026-11-18, arXiv v2 before. See `sources`.
 -- Loaded together with data.sql into SQLite by tools/ledger.py.
 -- data.sql is the committed source of truth; this file is the schema only.
 
@@ -93,7 +94,10 @@ CREATE TABLE steps (
 
 -- What a step is allowed to use: earlier steps (dep_kind='step') or other
 -- claims (dep_kind='claim'). The Lean lemma for the step may use exactly
--- these plus the Routine library and Mathlib.
+-- these plus the Routine library and Mathlib. A step dependency may also name
+-- a step of another claim's primary in-paper proof, where the paper's sentence
+-- cites an equation inside that proof (C8/p2/s2 cites two equations of the
+-- proof of C7); the claim must be one this claim uses.
 CREATE TABLE step_deps (
   step_id  TEXT NOT NULL REFERENCES steps(id),
   dep_kind TEXT NOT NULL CHECK (dep_kind IN ('step','claim')),
@@ -165,7 +169,9 @@ CREATE TABLE step_map (
 -- -------------------------------------------------------------- paper edits
 -- A change to the paper's English text. An edit that revises a proof takes
 -- the paper from proof `from_proof` to `to_proof`; statement or definition
--- edits leave those NULL. Edits form a graph through edit_deps (an edit that
+-- edits leave those NULL. An edit is written here and applied with
+-- `ledger.py edit-apply`, or was made upstream and is recorded as 'applied'
+-- with its commit because it replaces a proof (E1). Edits form a graph through edit_deps (an edit that
 -- only makes sense after another) and through the proof versions they link.
 CREATE TABLE edits (
   id             TEXT PRIMARY KEY,      -- E1

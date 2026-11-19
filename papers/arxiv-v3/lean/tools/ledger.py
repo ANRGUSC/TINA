@@ -671,6 +671,25 @@ def run_check(db):
     for h in q("SELECT h.id FROM v_headline h WHERE h.stmt_status = 'frozen' AND h.deltas = 0"):
         warns.append(f"{h['id']}: frozen headline statement with no statement_deltas row "
                      f"(record the differences from the paper, or a 'form' row saying there are none)")
+    # A claim is reported verified from its own proof and its own statement. If
+    # a step of that proof cites a claim whose statement is not approved yet,
+    # the review of that statement can still change what the step rests on.
+    # Direct dependencies only: a claim is used through its statement, so a
+    # change further down does not reach past a frozen statement.
+    for r in q("SELECT cs.id, cs.state, dep.id AS dep, dep.formalization AS dep_f, "
+               "       dep.stmt_status AS dep_status, GROUP_CONCAT(DISTINCT s.id) AS steps "
+               "FROM v_claim_status cs "
+               "JOIN steps s ON s.proof_id = cs.mirrored_proof "
+               "JOIN step_deps sd ON sd.step_id = s.id "
+               "JOIN v_claim_status dep ON dep.id = CASE sd.dep_kind WHEN 'claim' THEN sd.dep_id "
+               "     ELSE (SELECT p.claim_id FROM steps s2 JOIN proofs p ON p.id = s2.proof_id "
+               "           WHERE s2.id = sd.dep_id) END "
+               "WHERE cs.state IN ('verified', 'verified_supplied') AND dep.id != cs.id "
+               "  AND dep.formalization IS NOT NULL AND dep.stmt_status != 'frozen' "
+               "GROUP BY cs.id, dep.id ORDER BY cs.id, dep.id"):
+        warns.append(f"{r['id']}: reported {r['state']}, but its proof cites {r['dep']} (in {r['steps']}), "
+                     f"whose statement {r['dep_f']} is {r['dep_status']}, not approved. If the review changes "
+                     f"that statement, those steps are re-pointed.")
 
     return errs, warns
 

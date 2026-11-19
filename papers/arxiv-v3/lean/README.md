@@ -274,7 +274,12 @@ The unit of correspondence is the proof step.
   point, or a reading its Lean statement does not carry yet
   (`v_freeze_blockers`, which also follows `disposition_scope`). `freeze`
   refuses such a statement and `ledger.py unfreeze C8/f1 REASON` withdraws an
-  approval.
+  approval;
+- a warning, not an error (added 2026-11-19): a claim reported as verified
+  whose proof cites a claim with a statement that is not frozen yet. A claim's
+  state comes from its own proof and its own statement, so C19 was reported
+  verified while C16, which its step 2 cites, was still a draft. Only direct
+  dependencies are looked at: a claim is used through its statement.
 
 `ledger.py audit` goes one level deeper and needs a built project
 (`lake build`). Lean lists, for every step lemma of every selected attempt, the
@@ -700,7 +705,8 @@ agreed edit is upstream and marked done; no point is undecided.
    same day, which puts C20 on the frontier; eight remain: C4.b (f2), C11,
    C14, C15, C15.b, C15.c, C16, C19.b (f2). C19's proof uses C16, whose
    statement is still a draft: if the review changes C16, step 2 of C19 is
-   re-pointed. Before the first approval the
+   re-pointed (`ledger.py check` warns about this). C14 was frozen next and
+   is verified; seven remain. Before the first approval the
    header comments of the ten draft statement files that still cited
    `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
    earlier keep the old citation.* The question about the frozen definitions is

@@ -771,32 +771,32 @@ INSERT INTO attempts (id, formalization_id, proof_id, parent, lean_file, strateg
 INSERT INTO attempts (id, formalization_id, proof_id, parent, lean_file, strategy, status, selected, build_seconds, lean_lines, created, updated) VALUES ('C8/a2', 'C8/f1', 'C8/p2', 'C8/a1', 'TinaV2/Proofs/C08/A2.lean', 's1: the rule u = a K theta_old on the complete (radius top) views is admissible. s2: by C7''s step lemmas s3_error_split and s4_disturbance_energy, every admissible rule costs half its first term plus (1 - a^2) R_inf; the first term is nonnegative and is zero for the rule of s1, so the infimum is (1 - a^2) R_inf and that rule attains it. Imports TinaV2.Proofs.C07.A1 for the two step lemmas (the declared cross-proof dependency); main takes no hypothesis.', 'proved', 1, NULL, 120, '2026-11-19T12:45:00', '2026-11-19T12:45:00');
 
 -- assembled
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C1', 'C1/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C1.b', 'C1.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C1.c', 'C1.c/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C10', 'C10/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C11', 'C11/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C12', 'C12/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C13.b', 'C13.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C13.c', 'C13.c/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C14', 'C14/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C15', 'C15/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C16', 'C16/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C17.b', 'C17.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C18', 'C18/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C19', 'C19/a2', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C19.b', 'C19.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C2', 'C2/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C3', 'C3/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C3.b', 'C3.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C4.b', 'C4.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C5', 'C5/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C5.b', 'C5.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C6.b', 'C6.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C6.c', 'C6.c/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C7', 'C7/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C7.b', 'C7.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
-INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C8', 'C8/a2', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:50:06');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C1', 'C1/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C1.b', 'C1.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C1.c', 'C1.c/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C10', 'C10/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C11', 'C11/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C12', 'C12/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C13.b', 'C13.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C13.c', 'C13.c/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C14', 'C14/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C15', 'C15/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C16', 'C16/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C17.b', 'C17.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C18', 'C18/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C19', 'C19/a2', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C19.b', 'C19.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C2', 'C2/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C3', 'C3/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C3.b', 'C3.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C4.b', 'C4.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C5', 'C5/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C5.b', 'C5.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C6.b', 'C6.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C6.c', 'C6.c/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C7', 'C7/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C7.b', 'C7.b/a1', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
+INSERT INTO assembled (claim_id, attempt_id, assumes, axioms, standard, checked) VALUES ('C8', 'C8/a2', '', 'Classical.choice, Quot.sound, propext', 1, '2026-11-19T12:51:02');
 
 -- step_map
 INSERT INTO step_map (attempt_id, step_id, lean_decl, status) VALUES ('C1.b/a1', 'C1.b/p1/s1', 'TinaV2.C01b.A1.s1_orthogonal', 'proved');

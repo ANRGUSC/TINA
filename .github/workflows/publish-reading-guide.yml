@@ -9,10 +9,10 @@ on:
       - 'papers/lcss/main.pdf'
       - 'submissions/lcss/lcss-paper.pdf'
       - 'proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.pdf'
-      - 'papers/arxiv-v2/lean/progress/**'
-      - 'papers/arxiv-v2/lean/ledger/**'
-      - 'papers/arxiv-v2/lean/tools/ledger.py'
-      - 'papers/arxiv-v2/lean/TinaV2/**'
+      - 'papers/arxiv-v3/lean/progress/**'
+      - 'papers/arxiv-v3/lean/ledger/**'
+      - 'papers/arxiv-v3/lean/tools/ledger.py'
+      - 'papers/arxiv-v3/lean/TinaV2/**'
       - '.github/workflows/publish-reading-guide.yml'
   workflow_dispatch:
 
@@ -32,9 +32,10 @@ jobs:
       - name: Build and verify the guide
         run: python3 explainers/lcss-letter/build_pages.py
       # Separate from the reading guide: work-in-progress Lean proof ledger for
-      # the arXiv v2 manuscript, published under /arxiv-v2/lean/progress/.
-      - name: Add the arXiv v2 Lean proof-progress explorer
-        run: python3 papers/arxiv-v2/lean/tools/ledger.py site _site/arxiv-v2/lean
+      # the arXiv v3 manuscript, published under /arxiv-v3/lean/progress/.
+      # (Until 2026-11-18 it tracked arXiv v2 and was under /arxiv-v2/lean/.)
+      - name: Add the arXiv v3 Lean proof-progress explorer
+        run: python3 papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

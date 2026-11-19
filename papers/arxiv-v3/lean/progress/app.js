@@ -10,7 +10,7 @@
 
 const LEAN_ROOT = '..';
 const DEFAULT_REPO = 'ANRGUSC/TINA';
-const DEFAULT_LEAN_DIR = 'papers/arxiv-v2/lean';
+const DEFAULT_LEAN_DIR = 'papers/arxiv-v3/lean';
 
 let SQL, db, consoleDb, info = null, M = null;
 const main = document.getElementById('main');

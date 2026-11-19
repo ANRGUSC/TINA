@@ -6,8 +6,10 @@ Machine-checked proofs of the claims in `submissions/arxiv-v3/main-v3.tex` and
 The work began on arXiv v2 (`submissions/arxiv-v2/`, which stays in the
 repository; until upstream commit `2821560` it was the working draft
 `tina-v2-alt`). It moved to arXiv v3 on 2026-11-18, when the co-author's
-revision landed with every agreed edit (see "Decisions, 2026-11-18"). Two
-names still say v2:
+revision landed with every agreed edit (see "Decisions, 2026-11-18"). This
+directory was `papers/arxiv-v2/lean` until then; links to that path, including
+the one to `paper-findings-dispositions.md` sent to the co-author, no longer
+resolve. Two names still say v2:
 
 - The Lean package and namespace are `TinaV2`. Renaming them would change the
   hash of every approved file.
@@ -172,7 +174,8 @@ python3 tools/ledger.py site OUTDIR       # static copy for GitHub Pages
 
 The Pages workflow (`.github/workflows/publish-reading-guide.yml`) runs `site`
 on every push to `main` that touches this directory and publishes the result at
-<https://anrgusc.github.io/TINA/arxiv-v2/lean/progress/>. The site build also
+<https://anrgusc.github.io/TINA/arxiv-v3/lean/progress/> (until 2026-11-18:
+`…/arxiv-v2/lean/progress/`, which is no longer built). The site build also
 records the result of `ledger.py check`, and the page shows a warning when the
 ledger and the paper source in that commit disagree.
 
@@ -463,8 +466,11 @@ added; F19 stays a reading.
   (`Statements/C08b.lean`, never reviewed) are removed. The fact is stated and
   proved by the two step lemmas of `Proofs/C08/A2.lean`. The decision row
   `C8.b/d1` is kept and points at C8.
-- **The directory is renamed `papers/arxiv-v3/lean`** and the public page moves
-  with it. The Lean namespace stays `TinaV2`.
+- **The directory is renamed `papers/arxiv-v3/lean`** (from
+  `papers/arxiv-v2/lean`) and the public page moves with it, to
+  `…/TINA/arxiv-v3/lean/progress/`. The Lean namespace stays `TinaV2`. Scott
+  chose this knowing that the old public URL stops being built and that
+  GitHub links into the old path break.
 - **Findings F3, F4, F5, F8, F9, F10 and F18 are closed**, each with the v3
   text that settles it (`ledger.py show F5`).
 

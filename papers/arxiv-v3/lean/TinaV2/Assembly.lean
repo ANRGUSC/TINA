@@ -12,10 +12,12 @@ import TinaV2.Proofs.C06b.A1
 import TinaV2.Proofs.C06c.A1
 import TinaV2.Proofs.C07b.A1
 import TinaV2.Proofs.C08.A2
+import TinaV2.Proofs.C08c.A1
 import TinaV2.Proofs.C10.A1
 import TinaV2.Proofs.C10b.A1
 import TinaV2.Proofs.C11.A1
 import TinaV2.Proofs.C12.A1
+import TinaV2.Proofs.C13.A1
 import TinaV2.Proofs.C13b.A1
 import TinaV2.Proofs.C13c.A1
 import TinaV2.Proofs.C14.A1
@@ -25,6 +27,7 @@ import TinaV2.Proofs.C17b.A1
 import TinaV2.Proofs.C18.A1
 import TinaV2.Proofs.C19.A2
 import TinaV2.Proofs.C19b.A1
+import TinaV2.Proofs.C20.A1
 
 /-! # Assembly: the selected proof attempts composed end to end
 
@@ -79,6 +82,9 @@ theorem C07b : TinaV2.C07b.Statement := TinaV2.C07b.A1.main C07
 /-- C8, attempt C8/a2. -/
 theorem C08 : TinaV2.C08.Statement := TinaV2.C08.A2.main
 
+/-- C8.c, attempt C8.c/a1. -/
+theorem C08c : TinaV2.C08c.Statement := TinaV2.C08c.A1.main C08
+
 /-- C10, attempt C10/a1. -/
 theorem C10 : TinaV2.C10.Statement := TinaV2.C10.A1.main C08
 
@@ -90,6 +96,9 @@ theorem C11 : TinaV2.C11.Statement := TinaV2.C11.A1.main
 
 /-- C12, attempt C12/a1. -/
 theorem C12 : TinaV2.C12.Statement := TinaV2.C12.A1.main C05
+
+/-- C13, attempt C13/a1. -/
+theorem C13 : TinaV2.C13.Statement := TinaV2.C13.A1.main C10 C12
 
 /-- C13.b, attempt C13.b/a1. -/
 theorem C13b : TinaV2.C13b.Statement := TinaV2.C13b.A1.main
@@ -118,6 +127,9 @@ theorem C19 : TinaV2.C19.Statement := TinaV2.C19.A2.main C16 C17b C18
 /-- C19.b, attempt C19.b/a1. -/
 theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 
+/-- C20, attempt C20/a1. -/
+theorem C20 : TinaV2.C20.Statement := TinaV2.C20.A1.main
+
 #print axioms C05
 #print axioms C01
 #print axioms C01b
@@ -132,10 +144,12 @@ theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 #print axioms C06c
 #print axioms C07b
 #print axioms C08
+#print axioms C08c
 #print axioms C10
 #print axioms C10b
 #print axioms C11
 #print axioms C12
+#print axioms C13
 #print axioms C13b
 #print axioms C13c
 #print axioms C14
@@ -145,5 +159,6 @@ theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 #print axioms C18
 #print axioms C19
 #print axioms C19b
+#print axioms C20
 
 end TinaV2.Assembly

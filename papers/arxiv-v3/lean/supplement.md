@@ -92,6 +92,22 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C07b.A1.s2_subtract` (proved); uses C7.b/p1/s1
 
+## C8.c Small-delay expansion and large-delay limit (C8.c/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C8.c/d1): by the stale-global corollary the regret is (1 - e^{-2 tau/T}) R_inf at every delay; the factor is zero at zero delay, equals 2 tau/T + o(tau/T) as tau decreases to 0 because the exponential has derivative 1 at 0, and tends to 1 as tau tends to infinity. The paper states the three facts without argument.
+
+**Step 1 (supplied). Closed form at every delay; zero at zero delay.** By Corollary~\ref{thm:OU_stale_regret}, $R_{\rm glob}(\tau)=(1-e^{-2\tau/T})R_\infty$ for every delay $\tau\ge0$. At $\tau=0$ the factor is $1-e^{0}=0$, so the regret is zero at zero delay.
+
+- Lean: `TinaV2.C08c.A1.s1_closed_form` (proved); uses C8
+
+**Step 2 (supplied). Small-delay expansion.** The exponential has derivative $1$ at $0$, so $e^{x}=1+x+o(x)$ as $x\to0$. With $x=-2\tau/T$, which tends to $0$ as $\tau\downarrow0$, this gives $1-e^{-2\tau/T}=2\tau/T+o(\tau/T)$. Multiplying by the constant $R_\infty$ and using step 1, $R_{\rm glob}(\tau)=2(\tau/T)R_\infty+o(\tau/T)$ as $\tau\downarrow0$.
+
+- Lean: `TinaV2.C08c.A1.s2_small_delay` (proved); uses C8.c/p1/s1
+
+**Step 3 (supplied). Large-delay limit.** Since $T>0$, $-2\tau/T\to-\infty$ as $\tau\to\infty$, so $e^{-2\tau/T}\to0$ and, by step 1, $R_{\rm glob}(\tau)\to(1-0)R_\infty=R_\infty$.
+
+- Lean: `TinaV2.C08c.A1.s3_large_delay` (proved); uses C8.c/p1/s1
+
 ## C10.b Zero threshold at eta_S(0) = 0 and a single crossing (C10.b/p1)
 
 The paper gives no proof. Supplement, written for the formalization (disposition C10.b/d1): at eta_S(0) = 0, R_loc = 0 and rho* = 0, so the crossover theorem gives a strict local advantage at every positive delay; for 0 < eta_S(0) < 1 the threshold is positive; and the theorem's two equivalences leave only 'stale-global strictly better' below the threshold. The paper states both sentences without argument.
@@ -107,6 +123,22 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 **Step 3 (supplied). Below, at and above the threshold.** Let $\eta_S(0)<1$. By Theorem~\ref{thm:local_global_crossover}, fresh-local information is strictly better exactly when $\tau/T>\rho^\star$, and the two regrets are equal exactly when $\tau/T=\rho^\star$. If $\tau/T<\rho^\star$, neither holds, so stale-global information is strictly better. Hence the two losses are equal at one delay only, $\tau=\rho^\star T$, with stale-global strictly better before it and fresh-local strictly better after it.
 
 - Lean: `TinaV2.C10b.A1.s3_single_crossing` (proved); uses C10
+
+## C13 Explicit aggregate-coupling threshold (C13/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C13/d1): the aggregate-coupling proposition gives eta_S(0) and R_inf > 0 in closed form; 1 - eta_S(0) = q(q+gamma n)/((q+gamma)(q+gamma(n-1))) > 0, so eta_S(0) < 1 and the threshold of the crossover theorem is the boxed formula; the first case of that theorem then gives the equivalence. The paper says only that combining the proposition with the theorem gives the threshold.
+
+**Step 1 (supplied). eta_S(0) and R_inf > 0 from the proposition.** By Proposition~\ref{prop:aggregate_local}, $\eta_S(0)$ is the right side of Eq.~\eqref{eq:aggregate_eta}, and $R_\infty=\dfrac{n\sigma^2(q+\gamma(n-1))}{2q(q+\gamma n)}$ (Eq.~\eqref{eq:aggregate_Rinf}), which is positive because $n\ge2$, $\sigma>0$, $q>0$ and $\gamma\ge0$.
+
+- Lean: `TinaV2.C13.A1.s1_closed_forms` (proved); uses C12
+
+**Step 2 (supplied). eta_S(0) < 1 and the threshold in closed form.** Write $\eta$ for the right side of Eq.~\eqref{eq:aggregate_eta}. Since $(q+\gamma)(q+\gamma(n-1))-\gamma^2(n-1)=q(q+\gamma n)$, $1-\eta=\dfrac{q(q+\gamma n)}{(q+\gamma)(q+\gamma(n-1))}$, which is positive. So $\eta<1$, and $\tfrac12\log\dfrac{1}{1-\eta}$ is the right side of Eq.~\eqref{eq:aggregate_rho_star}.
+
+- Lean: `TinaV2.C13.A1.s2_threshold` (proved)
+
+**Step 3 (supplied). The crossover theorem applies.** By steps 1 and 2, $R_\infty>0$, $\eta_S(0)<1$ and $\rho^\star=\tfrac12\log\frac{1}{1-\eta_S(0)}=\rho^\star(\gamma,n)$. So the first case of Theorem~\ref{thm:local_global_crossover} applies: $R_{\rm loc}<R_{\rm glob}(\tau)$ exactly when $\tau/T>\rho^\star=\rho^\star(\gamma,n)$, which is Eq.~\eqref{eq:aggregate_crossover}.
+
+- Lean: `TinaV2.C13.A1.s3_crossover` (proved); uses C10, C13/p1/s1, C13/p1/s2
 
 ## C13.b Large-n limit of the threshold (C13.b/p1)
 
@@ -243,6 +275,22 @@ I=2\left[\frac{1}{(\beta_c+\beta_s)^2}+\frac{1}{\beta_c(\beta_c+\beta_s)}\right]
 \]
 
 - Lean: `TinaV2.C18.A1.s9_combine` (proved); uses C18/p1/s5, C18/p1/s6, C18/p1/s7, C18/p1/s8
+
+## C20 Large decision-range limit (C20/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C20/d1): under the positive-radius condition vT > 2 l_s the positive part in the closed form is inactive for every l_c > 0, so r* = (l_c/2) log(1 + (vT - 2 l_s)/(l_c + 2 l_s)); and x log(1 + c/(x + d)) tends to c. The limit is about the closed form of Eq. (canonical_optimal_radius); no step uses the theorem C19. The paper states the limit without argument.
+
+**Step 1 (supplied). Under vT > 2 l_s the positive part is inactive for every l_c.** Let $vT>2\ell_s$, the positive-radius condition Eq.~\eqref{eq:positive_radius_condition}, which does not involve $\ell_c$. Then for every $\ell_c>0$, $\dfrac{\ell_c+vT}{\ell_c+2\ell_s}=1+\dfrac{vT-2\ell_s}{\ell_c+2\ell_s}>1$, so the logarithm in Eq.~\eqref{eq:canonical_optimal_radius} is positive, the positive part is inactive, and $r^\star=\dfrac{\ell_c}{2}\log\!\Big(1+\dfrac{vT-2\ell_s}{\ell_c+2\ell_s}\Big)$.
+
+- Lean: `TinaV2.C20.A1.s1_regime` (proved)
+
+**Step 2 (supplied). x log(1 + c/(x + d)) tends to c.** For constants $c$ and $d$: $y\log(1+c/y)\to c$ as $y\to\infty$, because $\log(1+u)/u\to1$ as $u\to0$; and $\log(1+c/y)\to0$. With $y=x+d$, $x\log\!\big(1+\tfrac{c}{x+d}\big)=y\log(1+c/y)-d\log(1+c/y)\to c$ as $x\to\infty$.
+
+- Lean: `TinaV2.C20.A1.s2_limit` (proved)
+
+**Step 3 (supplied). Limit of the radius.** By step 1, for every $\ell_c>0$, $r^\star=\tfrac12\,\ell_c\log\!\Big(1+\dfrac{vT-2\ell_s}{\ell_c+2\ell_s}\Big)$. By step 2 with $c=vT-2\ell_s$ and $d=2\ell_s$, $r^\star\to(vT-2\ell_s)/2$ as $\ell_c\to\infty$.
+
+- Lean: `TinaV2.C20.A1.s3_radius_limit` (proved); uses C20/p1/s1, C20/p1/s2
 
 ## Supplied through a routine lemma or inside an existing step lemma
 

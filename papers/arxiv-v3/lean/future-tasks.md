@@ -45,6 +45,7 @@ makes the Lean statement look less like the paper.
 | `C5.b/f1`, affine reduction | `Measurable snap`, `MemLp snap 2`, `Measurable now` | Note on `C5.b/a1`. |
 | `C17.b/f1`, composition in the field model | `0 ≤ r` | Not used by any step. Note on `C17.b/a1`. |
 | `C1/f1`, projection lemma | `IsProbabilityMeasure μ` | Not used by any step. Note on `C1/a1`. |
+| `C20/f1`, large decision-range limit | `0 < v`, `0 < T` | The limit needs `0 < ℓ_s` and `vT > 2ℓ_s` only. Note on `C20/a1`. |
 | `C16/f1`, exponential omission | (none found) | Listed so the table is not read as complete: no one has tested the other statements for unused hypotheses. |
 
 How to find the rest: delete one hypothesis from a statement in a scratch copy

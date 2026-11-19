@@ -459,6 +459,11 @@ Made by Scott when the statement review resumed.
   supplied steps, from C10's statement alone). The statement `C10.b/f1` is a
   draft and joins the review.
 
+- **σ² > 0 stays a hypothesis of C18 and C19.** arXiv v3 states it in the
+  model paragraph (`main-v3.tex` 815) and repeats it in the lemma and the
+  theorem. `CanonicalField` does not carry it, C17.b holds without it, and
+  `Defs/Canonical.lean` is not refrozen (`C17/f1/d3`).
+
 ### Decisions, 2026-11-18
 
 Made by Scott on realigning to arXiv v3 (`meta.decisions_2026_11_18`). Bhaskar
@@ -694,11 +699,10 @@ agreed edit is upstream and marked done; no point is undecided.
    Ten statements remain. Before the first approval the
    header comments of the ten draft statement files that still cited
    `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
-   earlier keep the old citation.* With C18 and C19 comes one question about the
-   frozen definitions: v3 says σ² > 0 in the model paragraph; Lean keeps
-   `σ ≠ 0` as a hypothesis of C18 and C19 and leaves `CanonicalField` as it is
-   (`C17/f1/d3`). Recommended: keep it so; the alternative is a refreeze of
-   `Defs/Canonical.lean`.
+   earlier keep the old citation.* The question about the frozen definitions is
+   settled (Scott, 2026-11-19): v3 says σ² > 0 in the model paragraph; Lean
+   keeps `σ ≠ 0` as a hypothesis of C18 and C19 and leaves `CanonicalField` as
+   it is (`C17/f1/d3`).
 2. **Proofs that were waiting**: C8.c (on C8), C13 (on C10), C20 (on C19), all
    frozen, each from a supplement proof; and supplement proofs for C4.c, C15.b
    and C15.c once their statements are approved.

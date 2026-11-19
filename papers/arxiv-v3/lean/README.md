@@ -783,13 +783,43 @@ C4.c and C9 ("Decisions, 2026-11-19", last block).
   lemmas in 34 attempts, standard three axioms only) and `ledger.py check`
   (0 errors, 0 warnings) pass.
 - **Next: the non-vacuity instances**, each a new statement that needs a
-  design put to Scott and his review. A lead for the Ornstein–Uhlenbeck
-  hypotheses of C4.c and C9: `X_t = e^{−t/T} B(e^{2t/T})` for a (pre-)Brownian
-  motion `B` is a Gaussian process on the whole line with covariance
-  `e^{−|t−s|/T}`. Mathlib v4.33.1 has the finite-dimensional laws of
-  Brownian motion (`BrownianMotion/GaussianProjectiveFamily.lean`); whether it
-  has their extension to a measure on paths, so that such a `B` exists, has to
-  be checked first. Parked: `future-tasks.md`.
+  design put to Scott and his review. Parked: `future-tasks.md`.
+- **Non-vacuity, what was checked on 2026-11-19 (scratch files only; nothing
+  is in the library and no statement exists until Scott chooses the design).**
+  - Mathlib v4.33.1 constructs neither Brownian motion nor any Gaussian
+    process from a covariance: it has the finite-dimensional laws
+    (`BrownianMotion/GaussianProjectiveFamily.lean`), infinite products and
+    Ionescu-Tulcea, but not the Kolmogorov extension theorem.
+  - Mathlib master has the theorem since `c6d1307` (2026-11-05, #44909,
+    `MeasureTheory/Constructions/KolmogorovExtension.lean`). What our pin
+    lacks is about 290 lines: that file (from `open Set` on),
+    `MeasureTheory/Measure/AddContent/CompactSystem.lean` (from
+    `open Filter Set` on), and two theorems added to
+    `Constructions/ClosedCompactCylinders.lean`
+    (`isClosed_of_mem_closedCompactCylinders`,
+    `isCompactSystem_closedCompactCylinders`). Copied into one scratch file
+    they compile on v4.33.1 after three one-line changes (`grw` replaced by
+    `Set.eq_empty_of_subset_empty (hs_iInter ▸ Set.iInter_mono ht_subset)`;
+    `eq_empty_of_subset` replaced by `Set.subset_empty_iff.mp` on the
+    composed inclusion; `sum_le_tsum` is `ENNReal.sum_le_tsum`), with the
+    standard three axioms.
+  - Proved on top of it in scratch, each with the standard three axioms: a
+    pre-Brownian motion exists (the coordinate process on `ℝ≥0 → ℝ`);
+    `X_t = e^{−t/T} B(e^{2t/T})` is a centered Gaussian process on the whole
+    line with measurable coordinates and `E[X_t X_s] = e^{−|t−s|/T}`; and, for
+    any index type, every kernel whose finite restrictions are positive
+    semidefinite is the covariance of a centered Gaussian process (Mathlib's
+    `measurePreserving_restrict₂_multivariateGaussian` does the work). The
+    Schur product theorem is in Mathlib v4.33.1 (`Matrix.PosSemidef.hadamard`).
+  - Continuous paths (`CanonicalField.continuous`) need a
+    Kolmogorov–Chentsov theorem. Mathlib has none at any version (master
+    `8022e4d` has only the definitions in `Probability/Process/Kolmogorov.lean`).
+    The Brownian motion project (RemyDegenne/brownian-motion, Lean
+    4.36.0-rc2) proves it in its `Continuity/` directory, about 190 KB of Lean
+    plus helper files.
+  - Not yet checked in Lean: that the kernels of the instances are positive
+    semidefinite, and the instance statements themselves. `SmoothCurves`
+    (C15, C15.b, C15.c) also has no instance: C16 does not go through it.
 
 The rest of this section is the state before the review finished, kept as
 written.

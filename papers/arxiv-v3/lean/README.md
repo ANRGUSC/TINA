@@ -665,6 +665,32 @@ a Lean-only retry.
 
 ## Next step
 
+**State on 2026-11-19: the statement review is complete.** Every Lean
+statement is approved by Scott and frozen: 35 statements, with all of `Defs/`.
+`lake build`, `ledger.py audit` (126 lemmas in 27 attempts, standard three
+axioms only) and `ledger.py check` (0 errors, 0 warnings) pass.
+
+- **Proved and verified: 27 claims.** Seventeen follow the paper step for
+  step: C1, C2, C3, C3.b, C4.b, C5.b, C7, C8, C10, C11, C12, C14, C15, C16,
+  C17.b, C19, C19.b. Ten use supplied steps or a supplement proof: C1.b, C1.c,
+  C5, C6.b, C6.c, C7.b, C10.b, C13.b, C13.c, C18.
+- **Frozen, not proved yet: five claims**, all on the frontier, each needing a
+  supplement proof because the paper gives no argument: C8.c, C13, C15.b,
+  C15.c, C20.
+- **No Lean statement yet: two claims.** C4.c (single-mode Ornstein–Uhlenbeck)
+  and C9 (unequal rates), which need a statement design first.
+- What changed at the review is in "Decisions, 2026-11-19": C10's equality
+  case became an equivalence, the remark C10.b was added, σ² > 0 stays a
+  hypothesis of C18 and C19, and difference rows were added wherever a
+  difference lived only in a note.
+
+**Next:** the five supplement proofs (C8.c and C13 first, then C20, C15.b,
+C15.c); then the statement design for C9 and C4.c; then the non-vacuity
+instances. Parked: `future-tasks.md`.
+
+The rest of this section is the state before the review finished, kept as
+written.
+
 **State on 2026-11-18: realigned to arXiv v3. Nothing waits on the paper any
 more.** The ledger tracks `submissions/arxiv-v3/` at upstream `12a9b32`; every
 agreed edit is upstream and marked done; no point is undecided.

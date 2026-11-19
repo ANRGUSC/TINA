@@ -661,7 +661,11 @@ agreed edit is upstream and marked done; no point is undecided.
 
 1. **The statement review resumes** with the twelve statements the edits
    unblocked, one per turn: C4.b (f2), C8, C10, C11, C14, C15, C15.b, C15.c,
-   C16, C18, C19, C19.b (f2). With C18 and C19 comes one question about the
+   C16, C18, C19, C19.b (f2). *Under way since 2026-11-19. Frozen so far: C8
+   (now verified; C8.c is on the frontier). Before the first approval the
+   header comments of the ten draft statement files that still cited
+   `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
+   earlier keep the old citation.* With C18 and C19 comes one question about the
    frozen definitions: v3 says σ² > 0 in the model paragraph; Lean keeps
    `σ ≠ 0` as a hypothesis of C18 and C19 and leaves `CanonicalField` as it is
    (`C17/f1/d3`). Recommended: keep it so; the alternative is a refreeze of

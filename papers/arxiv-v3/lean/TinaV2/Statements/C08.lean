@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C8: Exact stale-global regret
 
-Paper: main-v2.tex Corollary (OU_stale_regret), Eq. (OU_exact_regret). -/
+Paper: main-v3.tex Corollary (OU_stale_regret), Eq. (OU_exact_regret). -/
 
 namespace TinaV2.C08
 

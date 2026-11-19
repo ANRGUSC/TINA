@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C15.c: Comparative statics in T and latency scale
 
-Paper: main-v2.tex, paragraph after Proposition (marginal_balance). -/
+Paper: main-v3.tex, paragraph after Proposition (marginal_balance). -/
 
 namespace TinaV2.C15c
 

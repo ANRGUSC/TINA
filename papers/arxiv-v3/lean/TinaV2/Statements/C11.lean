@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C11: Two-sensor example
 
-Paper: main-v2.tex, paragraph "A two-sensor example". -/
+Paper: main-v3.tex, paragraph "A two-sensor example". -/
 
 namespace TinaV2.C11
 

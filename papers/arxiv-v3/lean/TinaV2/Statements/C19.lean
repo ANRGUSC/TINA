@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C19: Optimal synchronized-snapshot radius in the canonical model
 
-Paper: main-v2.tex Theorem (canonical_optimal_radius), Eqs. (canonical_optimal_radius), (positive_radius_condition).
+Paper: main-v3.tex Theorem (canonical_optimal_radius), Eqs. (canonical_optimal_radius), (positive_radius_condition).
 
 `Statement` is about the field model of claim C17. `AlgebraicStatement` is the
 earlier formalization (C19/f1), about the gain function only; it is kept

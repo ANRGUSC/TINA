@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C18: Exponential omission by self-similarity
 
-Paper: main-v2.tex Lemma (canonical_eta_S), Eq. (canonical_eta_S). -/
+Paper: main-v3.tex Lemma (canonical_eta_S), Eq. (canonical_eta_S). -/
 
 namespace TinaV2.C18
 

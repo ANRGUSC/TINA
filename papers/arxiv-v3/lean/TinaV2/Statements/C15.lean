@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C15: Continuous marginal-balance characterization
 
-Paper: main-v2.tex Proposition (marginal_balance), Eq. (marginal_balance_condition). -/
+Paper: main-v3.tex Proposition (marginal_balance), Eq. (marginal_balance_condition). -/
 
 namespace TinaV2.C15
 

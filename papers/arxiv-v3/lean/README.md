@@ -705,8 +705,9 @@ agreed edit is upstream and marked done; no point is undecided.
    same day, which puts C20 on the frontier; eight remain: C4.b (f2), C11,
    C14, C15, C15.b, C15.c, C16, C19.b (f2). C19's proof uses C16, whose
    statement is still a draft: if the review changes C16, step 2 of C19 is
-   re-pointed (`ledger.py check` warns about this). C14 was frozen next and
-   is verified; seven remain. Before the first approval the
+   re-pointed (`ledger.py check` warns about this). C14 and then C16 were frozen next and
+   are verified, which cleared that warning; six remain: C4.b (f2), C11,
+   C15, C15.b, C15.c, C19.b (f2). Before the first approval the
    header comments of the ten draft statement files that still cited
    `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
    earlier keep the old citation.* The question about the frozen definitions is

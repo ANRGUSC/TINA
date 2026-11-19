@@ -468,6 +468,38 @@ Made by Scott when the statement review resumed.
   theorem. `CanonicalField` does not carry it, C17.b holds without it, and
   `Defs/Canonical.lean` is not refrozen (`C17/f1/d3`).
 
+**The statement design for C4.c and C9** (Scott, 2026-11-19, later). Six
+questions were put to him with recommendations; he chose inline hypotheses and
+asked for a careful evaluation of the rest, then took the advice on all. The
+evaluation, its tests and the alternatives are in the notes on C9 and on the
+two statements.
+
+- **"Ornstein–Uhlenbeck" is read through its law**: a jointly Gaussian process
+  with the stated mean and covariance. Every conclusion of the two claims
+  depends only on the law, and a stationary solution of the appendix's
+  equation is such a process, so this is the weaker hypothesis. The
+  differential equation is not stated, and the appendix's sentence that it has
+  covariance `e^{−|t−s|/T} Σ_S` is a hypothesis (`C4.c/f1/d1`; the coefficient
+  was checked by hand only). Nothing is vendored: the atlas-lean file also
+  defines the process by its covariance.
+- **Mean zero** (`C4.c/f1/d2`): the main text centers known means throughout,
+  and the general case is the statement applied to `θ − θ̄`.
+- **C4.c concludes** that the innovation is Gaussian and independent of the
+  whole earlier history `(θ_s : s ≤ t − τ)`, and the temporal assumption at
+  every epoch and every delay `τ ≥ 0`.
+- **A mode of C9 is a part `P_k θ` of the state**, with matrices `P_k` that
+  sum to the identity and `x_k⋆ = K P_k θ`. This contains groups of state
+  coordinates and covers the two-server illustration with the two loads as
+  coordinates.
+- **"Independent OU modes"**: each mode satisfies the hypotheses of C4.c word
+  for word with its own `T_k`, and the mode processes are independent
+  (`iIndepFun`). The form without Gaussianity is parked in `future-tasks.md`.
+- **Hypotheses are inline**; there is no `Defs/OU.lean`.
+
+The two statements (`C4.c/f1`, `C9/f1`) are drafts. Choosing the design is not
+the review: each is frozen only when Scott approves it against the paper's
+text and its difference rows.
+
 ### Decisions, 2026-11-18
 
 Made by Scott on realigning to arXiv v3 (`meta.decisions_2026_11_18`). Bhaskar
@@ -695,16 +727,23 @@ empty.
     `r < D`. This is a different argument from the hand-worked one in
     `paper-findings-2026-11-14.md`, section 3: it uses C15.b only through its
     statement.
-- **No Lean statement yet: two claims.** C4.c (single-mode Ornstein–Uhlenbeck)
-  and C9 (unequal rates), which need a statement design first.
+- **Draft statements, not proved: two claims.** C4.c (single-mode
+  Ornstein–Uhlenbeck) and C9 (unequal rates). On 2026-11-19 these had no Lean
+  statement; see "Next" below.
 - What changed at the review is in "Decisions, 2026-11-19": C10's equality
   case became an equivalence, the remark C10.b was added, σ² > 0 stays a
   hypothesis of C18 and C19, and difference rows were added wherever a
   difference lived only in a note.
 
-**Next:** the statement design for C9 and C4.c, to be put to Scott before
-anything is proved; then the non-vacuity instances. Parked: `future-tasks.md`
-(it gained the hypotheses the five new proofs did not use).
+**Next (updated 2026-11-19, later):** Scott chose the statement design for
+C4.c and C9 ("Decisions, 2026-11-19", last block). Both statements exist as
+drafts with their difference rows (`ledger.py show C4.c`, `show C9`). In
+order: Scott's review of `C4.c/f1`, then of `C9/f1` (freeze only on his
+approval); the supplement proof of C4.c (the argument of `C17.b/p1` steps 1–3
+for a Gaussian process indexed by time and coordinate); the proof of C9 from
+the paper's three sentences, with C4.c entering as a hypothesis once per mode
+and a supplied step for conditioning on the whole snapshot; then the
+non-vacuity instances. Parked: `future-tasks.md`.
 
 The rest of this section is the state before the review finished, kept as
 written.

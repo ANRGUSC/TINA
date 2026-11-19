@@ -5,6 +5,7 @@ import TinaV2.Statements.C02
 import TinaV2.Statements.C03
 import TinaV2.Statements.C03b
 import TinaV2.Statements.C04b
+import TinaV2.Statements.C04c
 import TinaV2.Statements.C05
 import TinaV2.Statements.C05b
 import TinaV2.Statements.C06b
@@ -13,6 +14,7 @@ import TinaV2.Statements.C07
 import TinaV2.Statements.C07b
 import TinaV2.Statements.C08
 import TinaV2.Statements.C08c
+import TinaV2.Statements.C09
 import TinaV2.Statements.C10
 import TinaV2.Statements.C10b
 import TinaV2.Statements.C11

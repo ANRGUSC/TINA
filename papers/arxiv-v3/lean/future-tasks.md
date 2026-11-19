@@ -98,3 +98,20 @@ the sign of the derivative"; merge them.
   that satisfies the hypotheses" with no proof in Lean that one exists.
 - **A side-by-side page** of step TeX and Lean lemma statement (README, "The
   1:1 rule", planned).
+- **The unequal-rate formula without Gaussianity** (C9). The paper's three
+  sentences use only that each mode satisfies the temporal assumption with its
+  own `T_k`, that the modes are centered, and that they are independent. A
+  statement with those hypotheses would be more general than "Ornstein–Uhlenbeck
+  modes" and would not use C4.c. Scott chose the literal reading on 2026-11-19
+  (`C9/f1/d1`); this is the generalization, parked with section 1.
+- **The differential equation of the Ornstein–Uhlenbeck process** (C4.c). The
+  statement takes the covariance `e^{−|t−s|/T} Σ_S` as a hypothesis
+  (`C4.c/f1/d1`). A separate claim could prove it from the integral form of
+  Eq. (OU_process): the noise is additive, so no stochastic integral is needed,
+  but it needs a two-sided multivariate Brownian motion (Mathlib v4.33.1 has
+  the scalar one on `[0, ∞)`), a matrix square root, and Gaussianity and the
+  covariance of a path integral. A new statement with its own design and
+  review; not started.
+- **A general mean in C4.c** (`C4.c/f1/d2`): the statement applied to
+  `θ − θ̄`. Needs that subtracting constants keeps a process Gaussian; no
+  such lemma for `IsGaussianProcess` was found in Mathlib v4.33.1.

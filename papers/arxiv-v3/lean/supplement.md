@@ -180,6 +180,54 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C13c.A1.s5_strictMono` (proved); uses C13.c/p1/s2, C13.c/p1/s4
 
+## C15.b Single-crossing gives the unique optimum (C15.b/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C15.b/d1): G = e^L with L = log(1 - eta_S) - 2 tau/T continuously differentiable on [0, D] and L' the difference Delta of the two sides of the balance condition (one-sided at the endpoints); the sign of Delta on an open subinterval makes G strictly monotone on its closure; so Delta(0) <= 0 puts the strict maximum at 0, Delta(D) >= 0 at D, and otherwise the intermediate value theorem gives the one zero of Delta, with G increasing before it and decreasing after. The paper states the conclusion without argument.
+
+**Step 1 (supplied). G = e^L, and L is C^1 with derivative Delta.** Let $L(r)=\log[1-\eta_S(r)]-2\tau(r)/T$ on $[0,D]$. Since $\eta_S<1$, $G(r)=e^{L(r)}$ by Eq.~\eqref{eq:snapshot_gain}. Since $\eta_S$ and $\tau$ are continuously differentiable on $[0,D]$ and $1-\eta_S>0$, $L$ is continuously differentiable on $[0,D]$, and its derivative (one-sided at the two endpoints) is the difference $\Delta(r)$ between the left and right sides of Eq.~\eqref{eq:marginal_balance_condition}. In particular $\Delta$ is continuous on $[0,D]$.
+
+- Lean: `TinaV2.C15b.A1.s1_log_gain` (proved)
+
+**Step 2 (supplied). The sign of Delta on (a, b) makes G strictly monotone on [a, b].** Let $[a,b]\subseteq[0,D]$. If $\Delta>0$ on $(a,b)$, then by the mean value theorem $L$ is strictly increasing on $[a,b]$, and so is $G=e^{L}$. If $\Delta<0$ on $(a,b)$, both are strictly decreasing on $[a,b]$.
+
+- Lean: `TinaV2.C15b.A1.s2_monotone_pieces` (proved); uses C15.b/p1/s1
+
+**Step 3 (supplied). Delta(0) <= 0: the optimum is radius zero.** Suppose $\Delta$ is strictly decreasing on $[0,D]$ and $\Delta(0)\le0$. Then $\Delta(r)<\Delta(0)\le0$ for $0<r\le D$, so by step 2 $G$ is strictly decreasing on $[0,D]$: $G(r)<G(0)$ for every $r\in(0,D]$.
+
+- Lean: `TinaV2.C15b.A1.s3_optimum_at_zero` (proved); uses C15.b/p1/s2
+
+**Step 4 (supplied). Delta(D) >= 0: the optimum is radius D.** Suppose $\Delta$ is strictly decreasing on $[0,D]$ and $\Delta(D)\ge0$. Then $\Delta(r)>\Delta(D)\ge0$ for $0\le r<D$, so by step 2 $G$ is strictly increasing on $[0,D]$: $G(r)<G(D)$ for every $r\in[0,D)$.
+
+- Lean: `TinaV2.C15b.A1.s4_optimum_at_D` (proved); uses C15.b/p1/s2
+
+**Step 5 (supplied). Otherwise: the unique interior crossing.** Suppose $\Delta$ is strictly decreasing on $[0,D]$, $\Delta(0)>0$ and $\Delta(D)<0$. By step 1 $\Delta$ is continuous, so the intermediate value theorem gives $r_0\in(0,D)$ with $\Delta(r_0)=0$; it is the only zero because $\Delta$ is strictly decreasing. Then $\Delta>0$ on $[0,r_0)$ and $\Delta<0$ on $(r_0,D]$, so by step 2 $G$ is strictly increasing on $[0,r_0]$ and strictly decreasing on $[r_0,D]$: $G(r)<G(r_0)$ for every $r\ne r_0$ in $[0,D]$.
+
+- Lean: `TinaV2.C15b.A1.s5_interior_crossing` (proved); uses C15.b/p1/s1, C15.b/p1/s2
+
+## C15.c Comparative statics in T and latency scale (C15.c/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C15.c/d1): with tau = alpha tau_0 the difference of the two sides of the balance condition is Delta = (log(1 - eta_S))' - 2 alpha tau_0'/T, which rises pointwise with T and falls with alpha because tau_0' >= 0; by the single-crossing remark a maximizer r has Delta(r) >= 0 if r > 0 and Delta(r) <= 0 if r < D; a maximizer that moved the wrong way would contradict these two signs. The paper states the comparative statics without argument.
+
+**Step 1 (supplied). The scaled delay satisfies the hypotheses; formula for Delta.** Let $\alpha>0$ and $\tau=\alpha\tau_0$. Then $\tau$ is continuously differentiable on $[0,D]$ with $\tau'=\alpha\tau_0'\ge0$, so the pair $(\eta_S,\tau)$ satisfies the hypotheses of Proposition~\ref{thm:marginal_balance}; and the difference between the left and right sides of Eq.~\eqref{eq:marginal_balance_condition} is $\Delta_{\alpha,T}(r)=\frac{d}{dr}\log[1-\eta_S(r)]-2\alpha\tau_0'(r)/T$.
+
+- Lean: `TinaV2.C15c.A1.s1_scaled_delay` (proved)
+
+**Step 2 (supplied). Delta rises with T and falls with alpha.** Since $\tau_0'\ge0$ on $[0,D]$, the formula of step 1 shows: if $0<T\le T'$, then $\Delta_{\alpha,T}\le\Delta_{\alpha,T'}$ on $[0,D]$; and if $0<\alpha\le\alpha'$ and $T>0$, then $\Delta_{\alpha',T}\le\Delta_{\alpha,T}$ on $[0,D]$.
+
+- Lean: `TinaV2.C15c.A1.s2_gap_order` (proved); uses C15.c/p1/s1
+
+**Step 3 (supplied). Sign of Delta at a maximizer.** Let $(\eta_S,\tau)$ satisfy the hypotheses of Proposition~\ref{thm:marginal_balance}, let its difference $\Delta$ be strictly decreasing on $[0,D]$, and let $r$ maximize $G$ on $[0,D]$. By the single-crossing statement, the radius it names is strictly better than every other radius, so $r$ is that radius: $0$ if $\Delta(0)\le0$, $D$ if $\Delta(D)\ge0$, and otherwise the zero of $\Delta$ in $(0,D)$. Hence if $r>0$ then $\Delta(r)\ge0$ (the first case is excluded, and $\Delta(r)$ is $\Delta(D)\ge0$ or $0$), and if $r<D$ then $\Delta(r)\le0$ (the second case is excluded, and $\Delta(r)$ is $\Delta(0)\le0$ or $0$).
+
+- Lean: `TinaV2.C15c.A1.s3_gap_sign_at_optimum` (proved); uses C15.b
+
+**Step 4 (supplied). Larger T: the optimum moves weakly outward.** Larger $T$. Let $\alpha>0$ and $0<T\le T'$, with $\Delta_{\alpha,T}$ and $\Delta_{\alpha,T'}$ strictly decreasing on $[0,D]$, and let $r$ and $r'$ maximize $G$ for $T$ and for $T'$. Suppose $r'<r$. Then $r'<D$, so $\Delta_{\alpha,T'}(r')\le0$ by step 3; and $r>0$, so $\Delta_{\alpha,T}(r)\ge0$ by step 3. Since $\Delta_{\alpha,T}$ is strictly decreasing, $\Delta_{\alpha,T}(r')>\Delta_{\alpha,T}(r)\ge0$, and by step 2 $\Delta_{\alpha,T'}(r')\ge\Delta_{\alpha,T}(r')>0$, a contradiction. Hence $r\le r'$.
+
+- Lean: `TinaV2.C15c.A1.s4_larger_T` (proved); uses C15.c/p1/s1, C15.c/p1/s2, C15.c/p1/s3
+
+**Step 5 (supplied). Larger latency scale: the optimum moves weakly inward.** Larger latency scale. Let $T>0$ and $0<\alpha\le\alpha'$, with $\Delta_{\alpha,T}$ and $\Delta_{\alpha',T}$ strictly decreasing on $[0,D]$, and let $r$ and $r'$ maximize $G$ for $\alpha$ and for $\alpha'$. Suppose $r<r'$. Then $r<D$, so $\Delta_{\alpha,T}(r)\le0$ by step 3; and $r'>0$, so $\Delta_{\alpha',T}(r')\ge0$ by step 3. Since $\Delta_{\alpha',T}$ is strictly decreasing, $\Delta_{\alpha',T}(r)>\Delta_{\alpha',T}(r')\ge0$, and by step 2 $\Delta_{\alpha,T}(r)\ge\Delta_{\alpha',T}(r)>0$, a contradiction. Hence $r'\le r$.
+
+- Lean: `TinaV2.C15c.A1.s5_larger_scale` (proved); uses C15.c/p1/s1, C15.c/p1/s2, C15.c/p1/s3
+
 ## C18 Exponential omission by self-similarity (C18/p1)
 
 The paper's proof, with the supplied steps marked. Appendix: variance ratio, tail split, spatial Markov property, shift invariance, covariance integrals.

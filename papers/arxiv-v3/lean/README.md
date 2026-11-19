@@ -402,14 +402,13 @@ path is proved.
 1. **Definitions and statements.** `Defs/` and a `Statement` for every tier A
    and B claim, no proofs. Each ambiguity in a paper statement becomes a
    finding. Scott reviews the statements against the paper, using the listed
-   differences (`statement_deltas`); approved ones are frozen. *Under way
-   since 2026-11-14: `Defs/` and nineteen statements are frozen; twelve
-   wait for review, which the v3 edits unblocked (see "Next step").*
+   differences (`statement_deltas`); approved ones are frozen. *Done on
+   2026-11-19 for every claim except C4.c and C9: `Defs/` and all 35
+   statements are frozen (see "Next step").*
 2. **Tier A and B proofs**, C7 first, each mirroring the paper's steps, with
-   the step-dependency audit. *Under way: the 12 claims whose proof is complete
-   in the paper are proved against the draft statements, and C5 from a
-   supplement proof (see "Next step"). The other claims the paper states
-   without proof get supplement proofs here.*
+   the step-dependency audit. *Done on 2026-11-19 for every claim with a Lean
+   statement: 32 claims verified, seventeen from the paper's own steps and
+   fifteen with supplied steps or a supplement proof (see "Next step").*
 3. **Tier C**: projection lemma and normal equations. *Statements drafted
    and C1, C2, C3 proved against them on 2026-11-14; C1.b is stated and gets a
    supplement proof.*
@@ -665,18 +664,37 @@ a Lean-only retry.
 
 ## Next step
 
-**State on 2026-11-19: the statement review is complete.** Every Lean
-statement is approved by Scott and frozen: 35 statements, with all of `Defs/`.
-`lake build`, `ledger.py audit` (126 lemmas in 27 attempts, standard three
-axioms only) and `ledger.py check` (0 errors, 0 warnings) pass.
+**State on 2026-11-19, later: every claim with a Lean statement is proved.**
+All 35 Lean statements are approved by Scott and frozen (with all of `Defs/`),
+and the 32 claims among them that assert something have a verified proof.
+`lake build`, `ledger.py audit` (150 lemmas in 32 attempts, standard three
+axioms only) and `ledger.py check` (0 errors, 0 warnings) pass. The frontier is
+empty.
 
-- **Proved and verified: 27 claims.** Seventeen follow the paper step for
+- **Proved and verified: 32 claims.** Seventeen follow the paper step for
   step: C1, C2, C3, C3.b, C4.b, C5.b, C7, C8, C10, C11, C12, C14, C15, C16,
-  C17.b, C19, C19.b. Ten use supplied steps or a supplement proof: C1.b, C1.c,
-  C5, C6.b, C6.c, C7.b, C10.b, C13.b, C13.c, C18.
-- **Frozen, not proved yet: five claims**, all on the frontier, each needing a
-  supplement proof because the paper gives no argument: C8.c, C13, C15.b,
-  C15.c, C20.
+  C17.b, C19, C19.b. Fifteen use supplied steps or a supplement proof: C1.b,
+  C1.c, C5, C6.b, C6.c, C7.b, C8.c, C10.b, C13, C13.b, C13.c, C15.b, C15.c,
+  C18, C20.
+- **The five supplement proofs that were left** were written and proved on
+  2026-11-19, each from supplied steps in the ledger
+  (`ledger.py supplement C13` and so on), each typechecked within two build
+  cycles:
+  - C8.c (3 steps, uses C8): the closed form at every delay, the expansion as
+    the delay decreases to 0 from the derivative of the exponential at 0, and
+    the limit `R_∞`.
+  - C13 (3 steps, uses C12 and C10): `η_S(0) < 1` and `R_∞ > 0` come from the
+    closed forms of C12, which is what the first case of `C10/f2` needs.
+  - C20 (3 steps): the positive-radius condition `vT > 2ℓ_s` is step 1 (it
+    makes the positive part inactive for every `ℓ_c > 0`); no step uses C19.
+  - C15.b (5 steps): `G = e^L`, `L′` is the balance gap, the sign of the gap
+    on an open subinterval gives strict monotonicity on its closure, then the
+    three cases. No step uses C15.
+  - C15.c (5 steps, uses C15.b): the gap rises with `T` and falls with `α`
+    because `τ₀′ ≥ 0`; a maximizer `r` has gap `≥ 0` if `r > 0` and `≤ 0` if
+    `r < D`. This is a different argument from the hand-worked one in
+    `paper-findings-2026-11-14.md`, section 3: it uses C15.b only through its
+    statement.
 - **No Lean statement yet: two claims.** C4.c (single-mode Ornstein–Uhlenbeck)
   and C9 (unequal rates), which need a statement design first.
 - What changed at the review is in "Decisions, 2026-11-19": C10's equality
@@ -684,9 +702,9 @@ axioms only) and `ledger.py check` (0 errors, 0 warnings) pass.
   hypothesis of C18 and C19, and difference rows were added wherever a
   difference lived only in a note.
 
-**Next:** the five supplement proofs (C8.c and C13 first, then C20, C15.b,
-C15.c); then the statement design for C9 and C4.c; then the non-vacuity
-instances. Parked: `future-tasks.md`.
+**Next:** the statement design for C9 and C4.c, to be put to Scott before
+anything is proved; then the non-vacuity instances. Parked: `future-tasks.md`
+(it gained the hypotheses the five new proofs did not use).
 
 The rest of this section is the state before the review finished, kept as
 written.

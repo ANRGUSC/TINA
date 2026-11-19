@@ -22,6 +22,8 @@ import TinaV2.Proofs.C13b.A1
 import TinaV2.Proofs.C13c.A1
 import TinaV2.Proofs.C14.A1
 import TinaV2.Proofs.C15.A1
+import TinaV2.Proofs.C15b.A1
+import TinaV2.Proofs.C15c.A1
 import TinaV2.Proofs.C16.A1
 import TinaV2.Proofs.C17b.A1
 import TinaV2.Proofs.C18.A1
@@ -112,6 +114,12 @@ theorem C14 : TinaV2.C14.Statement := TinaV2.C14.A1.main C07
 /-- C15, attempt C15/a1. -/
 theorem C15 : TinaV2.C15.Statement := TinaV2.C15.A1.main
 
+/-- C15.b, attempt C15.b/a1. -/
+theorem C15b : TinaV2.C15b.Statement := TinaV2.C15b.A1.main
+
+/-- C15.c, attempt C15.c/a1. -/
+theorem C15c : TinaV2.C15c.Statement := TinaV2.C15c.A1.main C15b
+
 /-- C16, attempt C16/a1. -/
 theorem C16 : TinaV2.C16.Statement := TinaV2.C16.A1.main
 
@@ -154,6 +162,8 @@ theorem C20 : TinaV2.C20.Statement := TinaV2.C20.A1.main
 #print axioms C13c
 #print axioms C14
 #print axioms C15
+#print axioms C15b
+#print axioms C15c
 #print axioms C16
 #print axioms C17b
 #print axioms C18

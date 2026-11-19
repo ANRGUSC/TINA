@@ -45,6 +45,8 @@ makes the Lean statement look less like the paper.
 | `C5.b/f1`, affine reduction | `Measurable snap`, `MemLp snap 2`, `Measurable now` | Note on `C5.b/a1`. |
 | `C17.b/f1`, composition in the field model | `0 ≤ r` | Not used by any step. Note on `C17.b/a1`. |
 | `C1/f1`, projection lemma | `IsProbabilityMeasure μ` | Not used by any step. Note on `C1/a1`. |
+| `C15.b/f1`, single crossing | `0 < T`, and of `SmoothCurves`: `τ′ ≥ 0`, `η′ ≤ 0`, `0 ≤ η` | The proof uses continuous differentiability, `η < 1` and `D > 0`. Note on `C15.b/a1`. |
+| `C15.c/f1`, comparative statics | Of `SmoothCurves`: `η′ ≤ 0`, `0 ≤ η` | `τ₀′ ≥ 0` is the hypothesis that carries the result. `0 < α` is used only as `0 ≤ α`. Note on `C15.c/a1`. |
 | `C20/f1`, large decision-range limit | `0 < v`, `0 < T` | The limit needs `0 < ℓ_s` and `vT > 2ℓ_s` only. Note on `C20/a1`. |
 | `C16/f1`, exponential omission | (none found) | Listed so the table is not read as complete: no one has tested the other statements for unused hypotheses. |
 
@@ -64,6 +66,10 @@ the claims with a proved statement:
   are about the gain function alone.
 - C19 is listed on the three steps of C19.b and used by none: the comparative
   statics are proved from the closed form of the radius.
+- Claim-graph edges (not step dependencies) that no step of the supplement
+  proof uses: C20 uses C19 (the limit is about the closed form of the radius)
+  and C15.b uses C15 (the proof works with `log G` directly). Each records
+  what the remark is about.
 - C5 (completing the square) is listed on the two steps of C5.b and not used.
 - C6.b is listed on three steps of C7 and C8 and not used.
 - `C12/p1`: step 4 does not use step 2 in Lean, and step 5 proves a clause

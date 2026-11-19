@@ -654,7 +654,8 @@ agreed edit is upstream and marked done; no point is undecided.
   Gaussian" on C18 and C19, σ > 0 on C11) or reworded to what remains (C15,
   C16: Lean speaks of a maximizer of `G`, the paper of the optimal radius for
   `R = R_∞[1 − G]`).
-- **One open finding**, F11: every point is carried out and Scott can close it.
+- **No open finding.** F11, the last one, was closed by Scott on 2026-11-19
+  (its one point is the statement version `C19.b/f2`).
 
 **Next, in this order:**
 
@@ -871,9 +872,9 @@ definitions; F20 and F21 from the proofs of C17.b and C18. F1 is resolved
 (upstream `284a0e0`). F2, F7, F12–F17 and F19–F21 were closed on 2026-11-14
 with every point carried out and the paper left as written. F6 was closed on
 2026-11-15. F3, F4, F5, F8, F9, F10 and F18 were closed on 2026-11-18: arXiv
-v3 made every agreed edit and settled F9. One is open, F11: its one point is
-carried out (`C19.b/f2`) and it waits for Scott to close it. The detail is in
-the dispositions:
+v3 made every agreed edit and settled F9. F11 was closed on 2026-11-19: its
+one point is carried out as `C19.b/f2`, with the paper left as written. No
+finding is open. The detail is in the dispositions:
 
 ```
 python3 tools/ledger.py dispositions --open     # what is still to do

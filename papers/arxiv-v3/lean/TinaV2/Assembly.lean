@@ -13,6 +13,7 @@ import TinaV2.Proofs.C06c.A1
 import TinaV2.Proofs.C07b.A1
 import TinaV2.Proofs.C08.A2
 import TinaV2.Proofs.C10.A1
+import TinaV2.Proofs.C10b.A1
 import TinaV2.Proofs.C11.A1
 import TinaV2.Proofs.C12.A1
 import TinaV2.Proofs.C13b.A1
@@ -81,6 +82,9 @@ theorem C08 : TinaV2.C08.Statement := TinaV2.C08.A2.main
 /-- C10, attempt C10/a1. -/
 theorem C10 : TinaV2.C10.Statement := TinaV2.C10.A1.main C08
 
+/-- C10.b, attempt C10.b/a1. -/
+theorem C10b : TinaV2.C10b.Statement := TinaV2.C10b.A1.main C10
+
 /-- C11, attempt C11/a1. -/
 theorem C11 : TinaV2.C11.Statement := TinaV2.C11.A1.main
 
@@ -129,6 +133,7 @@ theorem C19b : TinaV2.C19b.Statement := TinaV2.C19b.A1.main
 #print axioms C07b
 #print axioms C08
 #print axioms C10
+#print axioms C10b
 #print axioms C11
 #print axioms C12
 #print axioms C13b

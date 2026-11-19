@@ -30,14 +30,15 @@ theorem s1_comparison (hC8 : C08.Statement) (M : Model ι κ α) (μ : Measure �
   exact ⟨mul_lt_mul_iff_left₀ hR, mul_left_inj' hR.ne'⟩
 
 /-- Step 2 (main-v3.tex 511-512). "For `η_S(0) < 1`, rearranging gives the
-threshold and equality case": the comparison of step 1 is `τ/T > ρ⋆`, and
-`τ/T = ρ⋆` gives equal regret. -/
+threshold and equality case": the comparison of step 1 is `τ/T > ρ⋆`, and the
+equality of step 1 is `τ/T = ρ⋆`. Both are equivalences (statement version
+`C10/f2`): rearranging an equation through the exponential loses nothing. -/
 theorem s2_rearrange (hC8 : C08.Statement) (M : Model ι κ α) (μ : Measure Ω)
     [IsProbabilityMeasure μ] (θ : ℝ → Ω → κ → ℝ) (T t τ : ℝ)
     (hA : TemporalAssumption μ θ T t τ) (hR : 0 < M.Rinf μ (θ t))
     (hη : M.etaS μ 0 (θ t) < 1) :
     (M.Rloc μ (θ t) < M.Rglob μ (θ (t - τ)) (θ t) ↔ rhoStar (M.etaS μ 0 (θ t)) < τ / T) ∧
-      (τ / T = rhoStar (M.etaS μ 0 (θ t)) →
+      (τ / T = rhoStar (M.etaS μ 0 (θ t)) ↔
         M.Rloc μ (θ t) = M.Rglob μ (θ (t - τ)) (θ t)) := by
   obtain ⟨hlt, heq⟩ := s1_comparison hC8 M μ θ T t τ hA hR
   have hpos : 0 < 1 - M.etaS μ 0 (θ t) := sub_pos.mpr hη
@@ -45,13 +46,18 @@ theorem s2_rearrange (hC8 : C08.Statement) (M : Model ι κ α) (μ : Measure Ω
     rw [rhoStar, one_div (1 - M.etaS μ 0 (θ t)), log_inv]
     ring
   have hexp : -2 * τ / T = -(2 * (τ / T)) := by ring
-  refine ⟨?_, fun h => ?_⟩
+  refine ⟨?_, fun h => ?_, fun h => ?_⟩
   · rw [hlt, hρ, hexp, lt_sub_comm, ← lt_log_iff_exp_lt hpos]
     constructor <;> intro h <;> linarith
   · rw [heq, hexp, h, hρ]
     have : -(2 * -(1 / 2 * log (1 - M.etaS μ 0 (θ t)))) = log (1 - M.etaS μ 0 (θ t)) := by ring
     rw [this, exp_log hpos]
     ring
+  · have h1 : exp (-2 * τ / T) = 1 - M.etaS μ 0 (θ t) := by linarith [heq.mp h]
+    have h2 := congrArg log h1
+    rw [log_exp, hexp] at h2
+    rw [hρ]
+    linarith
 
 /-- Step 3 (main-v3.tex 512-514). "At `η_S(0) = 1`, fresh-local regret equals
 `R_∞`, while stale-global regret is strictly smaller at every finite delay." -/

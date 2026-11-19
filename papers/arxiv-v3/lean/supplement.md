@@ -92,6 +92,22 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C07b.A1.s2_subtract` (proved); uses C7.b/p1/s1
 
+## C10.b Zero threshold at eta_S(0) = 0 and a single crossing (C10.b/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C10.b/d1): at eta_S(0) = 0, R_loc = 0 and rho* = 0, so the crossover theorem gives a strict local advantage at every positive delay; for 0 < eta_S(0) < 1 the threshold is positive; and the theorem's two equivalences leave only 'stale-global strictly better' below the threshold. The paper states both sentences without argument.
+
+**Step 1 (supplied). eta_S(0) = 0: zero local regret, zero threshold, local better at every positive delay.** If $\eta_S(0)=0$, then $R_{\rm loc}=\eta_S(0)R_\infty=0$, and $\rho^\star=\tfrac12\log 1=0$. By Theorem~\ref{thm:local_global_crossover}, fresh-local information is strictly better exactly when $\tau/T>0$, that is, since $T>0$, at every positive delay.
+
+- Lean: `TinaV2.C10b.A1.s1_zero_share` (proved); uses C10, C6
+
+**Step 2 (supplied). The threshold is positive for 0 < eta_S(0) < 1.** If $0<\eta_S(0)<1$, then $0<1-\eta_S(0)<1$, so $1/(1-\eta_S(0))>1$ and $\rho^\star=\tfrac12\log\frac{1}{1-\eta_S(0)}>0$.
+
+- Lean: `TinaV2.C10b.A1.s2_threshold_pos` (proved)
+
+**Step 3 (supplied). Below, at and above the threshold.** Let $\eta_S(0)<1$. By Theorem~\ref{thm:local_global_crossover}, fresh-local information is strictly better exactly when $\tau/T>\rho^\star$, and the two regrets are equal exactly when $\tau/T=\rho^\star$. If $\tau/T<\rho^\star$, neither holds, so stale-global information is strictly better. Hence the two losses are equal at one delay only, $\tau=\rho^\star T$, with stale-global strictly better before it and fresh-local strictly better after it.
+
+- Lean: `TinaV2.C10b.A1.s3_single_crossing` (proved); uses C10
+
 ## C13.b Large-n limit of the threshold (C13.b/p1)
 
 The paper gives no proof. Supplement, written for the formalization (disposition C13.b/d1): the ratio (q+gamma(n-1))/(q+gamma n) tends to 1, so the argument of the logarithm tends to 1+gamma/q and its reciprocal, the local share, to q/(q+gamma). The paper states both limits without argument.

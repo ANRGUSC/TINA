@@ -364,18 +364,19 @@ files with the same target.
 
 ## The claim graph
 
-44 claims: 36 in Lean scope, 4 numeric (figures), 4 prose (abstract, related
-work, discussion, appendix remarks). C8.b was merged into C8 on 2026-11-18.
-22 proofs from the paper and 7 supplement proofs, 108 steps in all (85 from
-the paper, 23 supplied), not counting the superseded `C8/p1`. 12 Lean-scope
+45 claims: 37 in Lean scope, 4 numeric (figures), 4 prose (abstract, related
+work, discussion, appendix remarks). C8.b was merged into C8 on 2026-11-18;
+C10.b (the two sentences after the crossover theorem) was added on 2026-11-19.
+22 proofs from the paper and 8 supplement proofs, 111 steps in all (85 from
+the paper, 26 supplied), not counting the superseded `C8/p1`. 13 Lean-scope
 claims are stated in the paper without proof; for all of them the decision is
-that Lean supplies the argument (six done: C1.b, C1.c, C6.b, C7.b, C13.b,
-C13.c; six to write: C4.c, C8.c, C13, C15.b, C15.c, C20). Since arXiv v3 the
+that Lean supplies the argument (seven done: C1.b, C1.c, C6.b, C7.b, C10.b,
+C13.b, C13.c; six to write: C4.c, C8.c, C13, C15.b, C15.c, C20). Since arXiv v3 the
 paper argues C4.b and C9 itself.
 
 | Tier | Needs | Claims |
 |---|---|---|
-| A | Real analysis and algebra | C5, C7.b, C8.c, C10, C13, C13.b, C13.c, C14, C15, C15.b, C15.c, C16, C19, C19.b, C20 |
+| A | Real analysis and algebra | C5, C7.b, C8.c, C10, C10.b, C13, C13.b, C13.c, C14, C15, C15.b, C15.c, C16, C19, C19.b, C20 |
 | B | Finite-dimensional probability: L², conditional expectation, independence | C1.c, C3.b, C4, C4.b, C5.b, C6, C6.b, C6.c, C7, C8, C11, C12 |
 | C | L² projection onto a closed subspace | C1, C1.b, C2, C3 |
 | D | Gaussian processes and the continuum model | C4.c, C9, C17, C17.b, C18 |
@@ -433,6 +434,30 @@ path is proved.
 - Run `ledger.py check` before every commit.
 
 ## Decisions
+
+### Decisions, 2026-11-19
+
+Made by Scott when the statement review resumed.
+
+- **F11 is closed.** Its one point is the statement version `C19.b/f2`; the
+  paper is left as written. No finding is open.
+- **The draft statement files cite `main-v3.tex`.** The header comments of the
+  ten statement files that were still drafts were changed in one pass before
+  any of them was approved. The nineteen files frozen earlier keep
+  `main-v2.tex`.
+- **C10's equality case is an equivalence** (`C10/f2`, difference
+  `C10/f2/d3`). The theorem says "Equality gives equal regret". Taken as one
+  direction, the Lean statement gave only `R_glob ≤ R_loc` below the
+  threshold: that stale-global is strictly better there did not follow from
+  it (checked in Lean). With `τ/T = ρ⋆ ⟺ R_loc = R_glob` it does. The proof's
+  sentence "rearranging gives the threshold and equality case" covers it, so
+  no step was added; the lemma for step 2 grew by five lines. The clause for
+  `η_S(0) = 1` stays at the paper's wording.
+- **The two sentences after the crossover theorem are a claim, C10.b**
+  (`main-v3.tex` 516–519: zero threshold at `η_S(0) = 0`, and "the two losses
+  cross once"). They had no row. Lean supplies the argument (`C10.b/p1`, three
+  supplied steps, from C10's statement alone). The statement `C10.b/f1` is a
+  draft and joins the review.
 
 ### Decisions, 2026-11-18
 
@@ -634,7 +659,8 @@ a Lean-only retry.
 more.** The ledger tracks `submissions/arxiv-v3/` at upstream `12a9b32`; every
 agreed edit is upstream and marked done; no point is undecided.
 
-- **Proved: 26 claims** (`ledger.py audit`: 122 lemmas in 26 attempts; `lake
+- **Proved: 27 claims since 2026-11-19** (C10.b added; `ledger.py audit`:
+  126 lemmas in 27 attempts). On 2026-11-18: 26 claims (122 lemmas in 26 attempts; `lake
   build`, `audit` and `ledger.py check` pass, standard three axioms only). Sixteen are verified,
   as before. Ten are proved against statements that are still drafts
   (`proved_unaudited`): C4.b, C8, C10, C11, C14, C15, C16, C18, C19, C19.b.
@@ -662,7 +688,9 @@ agreed edit is upstream and marked done; no point is undecided.
 1. **The statement review resumes** with the twelve statements the edits
    unblocked, one per turn: C4.b (f2), C8, C10, C11, C14, C15, C15.b, C15.c,
    C16, C18, C19, C19.b (f2). *Under way since 2026-11-19. Frozen so far: C8
-   (now verified; C8.c is on the frontier). Before the first approval the
+   (now verified; C8.c is on the frontier). C10 has a new version (`C10/f2`,
+   see "Decisions, 2026-11-19") and the new remark C10.b a draft statement;
+   both wait for approval, so thirteen statements are in the review now. Before the first approval the
    header comments of the ten draft statement files that still cited
    `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
    earlier keep the old citation.* With C18 and C19 comes one question about the

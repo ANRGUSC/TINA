@@ -747,11 +747,31 @@ C4.c and C9 ("Decisions, 2026-11-19", last block).
   the same mean and covariance. Nothing was vendored and Mathlib was not
   bumped. Now 33 claims are verified (17 following the paper, 16 with supplied
   steps); `audit`: 155 lemmas in 33 attempts.
-- **C9**: `C9/f1` is a draft with eight difference rows (`ledger.py show C9`),
-  waiting for Scott's review; freeze only on his approval. Then its proof from
-  the paper's three sentences (`C9/p1`), with C4.c entering as a hypothesis
-  once per mode and a supplied step for conditioning on the whole snapshot.
-- Then the non-vacuity instances. Parked: `future-tasks.md`.
+- **C9 is done.** Scott approved `C9/f1` and it is frozen. It is proved from
+  the paper's three sentences (`C9/p1`, `Proofs/C09/A1.lean`) with C4.c as a
+  hypothesis, used once per mode, and three supplied steps, each with a
+  disposition (`C9/d1`–`d3`): step 0, the modes add up to the state; step 2a,
+  the innovation of a mode has conditional mean zero given the whole snapshot
+  (C4.c for the mode, independence of the modes' paths, the tower property);
+  step 2b, the regret of the complete old snapshot is `R_∞` minus half the
+  captured gain of the prediction (the cross-term argument of the composition
+  theorem, for the sigma-algebra of the snapshot). New routine file
+  `Routine/Modes.lean`. The handoff expected one supplied step; steps 0 and 2b
+  were added because `main` only combines steps and because "captured
+  quadratic gain" presumes the identity of step 2b.
+- **Every claim with a Lean statement is proved again: 34 verified** (17
+  following the paper, 17 with supplied steps), 37 statements frozen (with
+  three definitions), frontier empty. `lake build`, `ledger.py audit` (162
+  lemmas in 34 attempts, standard three axioms only) and `ledger.py check`
+  (0 errors, 0 warnings) pass.
+- **Next: the non-vacuity instances**, each a new statement that needs a
+  design put to Scott and his review. A lead for the Ornstein–Uhlenbeck
+  hypotheses of C4.c and C9: `X_t = e^{−t/T} B(e^{2t/T})` for a (pre-)Brownian
+  motion `B` is a Gaussian process on the whole line with covariance
+  `e^{−|t−s|/T}`. Mathlib v4.33.1 has the finite-dimensional laws of
+  Brownian motion (`BrownianMotion/GaussianProjectiveFamily.lean`); whether it
+  has their extension to a measure on paths, so that such a `B` exists, has to
+  be checked first. Parked: `future-tasks.md`.
 
 The rest of this section is the state before the review finished, kept as
 written.

@@ -1,0 +1,97 @@
+import TinaV2.Defs
+import TinaV2.Routine.Regret
+import TinaV2.Routine.CommonInfo
+
+/-! # Routine: a target that is a finite sum of contributions
+
+What the proof of the unequal-rate formula (claim C9) uses without saying it:
+the quadratic form of a finite sum expands into a double sum that can be
+integrated term by term; conditional expectation is linear, so it passes
+through a matrix and can be read coordinate by coordinate; and a vector whose
+coordinates have conditional mean zero given `𝒢` is orthogonal in mean to every
+square-integrable `𝒢`-measurable vector (the argument of step 2 of the proof of
+the composition theorem, for a general sigma-algebra).
+
+Used by claim C9. -/
+
+noncomputable section
+
+namespace TinaV2
+
+open MeasureTheory ProbabilityTheory Matrix
+
+variable {Ω : Type} [mΩ : MeasurableSpace Ω] {α κ m : Type} [Fintype α] [Fintype κ] [Fintype m]
+
+/-! ## The quadratic form of a finite sum -/
+
+/-- `(∑_k v_k)ᵀ Q (∑_k v_k) = ∑_k ∑_{k'} v_kᵀ Q v_{k'}`. -/
+theorem quad_sum (Q : Matrix α α ℝ) (v : m → α → ℝ) :
+    quad Q (∑ k, v k) = ∑ k, ∑ k', v k ⬝ᵥ (Q *ᵥ v k') := by
+  simp only [quad, mulVec_sum, dotProduct_sum, sum_dotProduct]
+  exact Finset.sum_comm
+
+/-- The same in expectation, for square-integrable summands. -/
+theorem integral_quad_sum {μ : Measure Ω} (Q : Matrix α α ℝ) {v : m → Ω → α → ℝ}
+    (hv : ∀ k, MemLp (v k) 2 μ) :
+    ∫ ω, quad Q (∑ k, v k ω) ∂μ = ∑ k, ∑ k', ∫ ω, v k ω ⬝ᵥ (Q *ᵥ v k' ω) ∂μ := by
+  simp_rw [quad_sum]
+  rw [integral_finsetSum _ fun k _ => integrable_finsetSum _ fun k' _ =>
+    integrable_dotProduct_mulVec Q (hv k) (hv k')]
+  exact Finset.sum_congr rfl fun k _ => integral_finsetSum _ fun k' _ =>
+    integrable_dotProduct_mulVec Q (hv k) (hv k')
+
+/-! ## Linearity of conditional expectation, for a vector with conditional mean zero -/
+
+/-- A vector whose coordinates all have conditional mean zero has conditional
+mean zero. -/
+theorem condExp_eq_zero_of_apply {μ : Measure Ω} [IsFiniteMeasure μ] {𝒢 : MeasurableSpace Ω}
+    {ε : Ω → κ → ℝ} (hε : Integrable ε μ) (h : ∀ j, μ[fun ω => ε ω j | 𝒢] =ᵐ[μ] 0) :
+    μ[ε | 𝒢] =ᵐ[μ] 0 := by
+  have hall : ∀ᵐ ω ∂μ, ∀ j, (μ[ε | 𝒢]) ω j = 0 := by
+    refine ae_all_iff.2 fun j => ?_
+    have hL := (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : κ => ℝ) j).comp_condExp_comm hε
+      (m := 𝒢)
+    filter_upwards [hL, h j] with ω h1 h2
+    have h1' : (μ[ε | 𝒢]) ω j = (μ[fun ω => ε ω j | 𝒢]) ω := h1
+    rw [h1', h2]
+    rfl
+  filter_upwards [hall] with ω hω
+  funext j
+  exact hω j
+
+/-- If `E[ε | 𝒢] = 0` then `E[A ε | 𝒢] = 0` for every matrix `A`. -/
+theorem condExp_mulVec_eq_zero {μ : Measure Ω} [IsFiniteMeasure μ] {𝒢 : MeasurableSpace Ω}
+    {ε : Ω → κ → ℝ} (hε : Integrable ε μ) (h : μ[ε | 𝒢] =ᵐ[μ] 0) (A : Matrix α κ ℝ) :
+    μ[fun ω => A *ᵥ ε ω | 𝒢] =ᵐ[μ] 0 := by
+  let L : (κ → ℝ) →L[ℝ] (α → ℝ) := LinearMap.toContinuousLinearMap (Matrix.mulVecLin A)
+  have hL := L.comp_condExp_comm hε (m := 𝒢)
+  refine hL.symm.trans ?_
+  filter_upwards [h] with ω hω
+  simp [hω]
+
+/-! ## Orthogonality to what the sigma-algebra determines -/
+
+/-- If every coordinate of `W` is `𝒢`-measurable and every coordinate of `E` has
+conditional mean zero given `𝒢`, then `E[Wᵀ E] = 0`. -/
+theorem integral_dotProduct_eq_zero_of_condExp {μ : Measure Ω} [IsFiniteMeasure μ]
+    {𝒢 : MeasurableSpace Ω} (h𝒢 : 𝒢 ≤ mΩ) {W E : Ω → α → ℝ} (hW : MemLp W 2 μ)
+    (hE : MemLp E 2 μ) (hWm : ∀ c, StronglyMeasurable[𝒢] fun ω => W ω c)
+    (hEc : ∀ c, μ[fun ω => E ω c | 𝒢] =ᵐ[μ] 0) :
+    ∫ ω, W ω ⬝ᵥ E ω ∂μ = 0 := by
+  have hWE : ∀ c, Integrable (fun ω => W ω c * E ω c) μ := fun c =>
+    (memLp_pi_iff.1 hW c).integrable_mul (memLp_pi_iff.1 hE c)
+  have hterm : ∀ c, ∫ ω, W ω c * E ω c ∂μ = 0 := by
+    intro c
+    have hEint : Integrable (fun ω => E ω c) μ := (memLp_pi_iff.1 hE c).integrable one_le_two
+    calc ∫ ω, W ω c * E ω c ∂μ
+        = ∫ ω, (μ[fun ω => W ω c * E ω c | 𝒢]) ω ∂μ := (integral_condExp h𝒢).symm
+      _ = ∫ ω, W ω c * (μ[fun ω => E ω c | 𝒢]) ω ∂μ :=
+          integral_congr_ae (condExp_mul_of_stronglyMeasurable_left (hWm c) (hWE c) hEint)
+      _ = ∫ _, (0 : ℝ) ∂μ := integral_congr_ae (by
+          filter_upwards [hEc c] with ω hω
+          simp [hω])
+      _ = 0 := by simp
+  rw [integral_dotProduct_eq_sum (mΩ := mΩ) hW hE]
+  exact Finset.sum_eq_zero fun c _ => hterm c
+
+end TinaV2

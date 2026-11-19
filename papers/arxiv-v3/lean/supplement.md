@@ -128,6 +128,40 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C08c.A1.s3_large_delay` (proved); uses C8.c/p1/s1
 
+## C9 Unequal-rate formula for a complete old snapshot (C9/p1)
+
+The paper's proof, with the supplied steps marked. Three sentences added in arXiv v3: independence and centering remove the cross-mode terms; the old snapshot predicts mode k with factor exp(-tau/T_k), so its captured gain scales by exp(-2 tau/T_k); sum over modes.
+
+**Step 1 (supplied). The modes add up to the state and to the desired action.** Since $\sum_k P_k=I$, the state is the sum of its modes, $\theta_s=\sum_k P_k\theta_s$ at every epoch $s$, and applying $K$ gives $x_s^\star=\sum_k x_{k,s}^\star$ with $x_{k,s}^\star=KP_k\theta_s$.
+
+- Lean: `TinaV2.C09.A1.s0_decomposition` (proved); uses C6
+
+**Step 2 (paper, MAIN:483). Cross-mode terms vanish, so the weights sum to one.** Independence and centering make the cross-mode terms vanish, so $\sum_k w_k=1$.
+
+- Lean: `TinaV2.C09.A1.s1_cross_terms_vanish` (proved); uses C6, C9/p1/s0
+
+**Step 3 (supplied). Each mode's innovation has conditional mean zero given the whole snapshot.** Fix a mode $k$ and write $a_k=e^{-\tau/T_k}$. By the appendix's Ornstein--Uhlenbeck remark (claim C4.c) applied to the mode, $\mathbb E[P_k\theta_t-a_kP_k\theta_{t-\tau}\mid P_k\theta_{t-\tau}]=0$. The innovation $P_k\theta_t-a_kP_k\theta_{t-\tau}$ and the old value $P_k\theta_{t-\tau}$ are functions of mode $k$'s path; the old values of the other modes are functions of the other paths, which are independent of it. So conditioning on them in addition changes nothing: the conditional mean of the innovation given all the modes' old values is zero. The snapshot $\theta_{t-\tau}=\sum_{k'}P_{k'}\theta_{t-\tau}$ is a function of these old values, so by the tower property $\mathbb E[P_k\theta_t-a_kP_k\theta_{t-\tau}\mid\theta_{t-\tau}]=0$.
+
+- Lean: `TinaV2.C09.A1.s2a_whole_snapshot` (proved); uses C4.c
+
+**Step 4 (paper, MAIN:484). Mode k is predicted with factor exp(-tau/T_k); its captured gain scales by exp(-2 tau/T_k).** The complete old snapshot predicts mode $k$'s contribution as
+$e^{-\tau/T_k}x_{k,t-\tau}^\star$, so its captured quadratic gain scales by
+$e^{-2\tau/T_k}$.
+
+- Lean: `TinaV2.C09.A1.s2_mode_prediction` (proved); uses C4.c, C9/p1/s2a
+
+**Step 5 (supplied). The regret of the complete old snapshot is R_inf minus half the captured gain.** Let $\hat x=\sum_k a_kx_{k,t-\tau}^\star$. By steps 0 and 2, $\hat x=\mathbb E[x_t^\star\mid\theta_{t-\tau}]$. Every admissible rule $u$ of the complete old snapshot is a function of $\theta_{t-\tau}$, and so is $\hat x$, so the cross term $\mathbb E[(\hat x-u)^\top Q(x_t^\star-\hat x)]$ vanishes and $\mathbb E[(u-x_t^\star)^\top Q(u-x_t^\star)]=\mathbb E[(\hat x-u)^\top Q(\hat x-u)]+\mathbb E[(x_t^\star-\hat x)^\top Q(x_t^\star-\hat x)]$. The first term is zero for $u=\hat x$, which is admissible because every agent sees the whole snapshot. The same expansion with $u=0$ gives $\mathbb E[(x_t^\star-\hat x)^\top Q(x_t^\star-\hat x)]=\mathbb E[(x_t^\star)^\top Qx_t^\star]-\mathbb E[\hat x^\top Q\hat x]$. Hence $R_{\rm glob}(\tau)=R_\infty-\tfrac12\mathbb E[\hat x^\top Q\hat x]$.
+
+- Lean: `TinaV2.C09.A1.s2b_regret_gain` (proved); uses C6, C9/p1/s0, C9/p1/s2
+
+**Step 6 (paper, MAIN:486). Sum over modes.** Summing over modes gives
+\[
+1-\frac{R_{\rm glob}(\tau)}{R_\infty}
+=\sum_k w_k e^{-2\tau/T_k}.
+\]
+
+- Lean: `TinaV2.C09.A1.s3_sum_over_modes` (proved); uses C9/p1/s1, C9/p1/s2, C9/p1/s2b
+
 ## C10.b Zero threshold at eta_S(0) = 0 and a single crossing (C10.b/p1)
 
 The paper gives no proof. Supplement, written for the formalization (disposition C10.b/d1): at eta_S(0) = 0, R_loc = 0 and rho* = 0, so the crossover theorem gives a strict local advantage at every positive delay; for 0 < eta_S(0) < 1 the threshold is positive; and the theorem's two equivalences leave only 'stale-global strictly better' below the threshold. The paper states both sentences without argument.
@@ -369,6 +403,9 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 - F15.4 (C2): 'Conditional expectation then gives' leaves out that vanishing against every indicator of G_i means the conditional expectation is zero. Lean: `TinaV2/Proofs/C02/A1.lean::s2_conditional_equations`
 - F16.2 (C3): The orthogonality in the preceding sentence and the linear term of that display agree only through Q x* = b, which is not said. Lean: `TinaV2/Proofs/C03/A1.lean::s2_unique_optimum`
 - F16.3 (C3): That m is itself admissible is used and not stated. Lean: `TinaV2/Proofs/C03/A1.lean::s1_conditioning`
+- C9/d1 (C9): 'Write x* = sum_k x_k*' is notation: with modes P_k theta and sum_k P_k = 1 it is a one-line fact, which the Lean statement lists as its first conclusion. Lean: `TinaV2/Proofs/C09/A1.lean::s0_decomposition`
+- C9/d2 (C9): Step 2 says the complete old snapshot predicts mode k's contribution as exp(-tau/T_k) x*_{k,t-tau}. That the innovation of mode k has conditional mean zero given the whole snapshot, not only given the mode's own old value, is not argued. Lean: `TinaV2/Proofs/C09/A1.lean::s2a_whole_snapshot`
+- C9/d3 (C9): 'Captured quadratic gain' presumes that the regret of the complete old snapshot is R_inf minus half the gain of the conditional-mean prediction. The paper does not say so in this paragraph. Lean: `TinaV2/Proofs/C09/A1.lean::s2b_regret_gain`
 - F13.1 (C11): The step from the conditional mean given one old reading to the best estimate from both does not say that independence of the processes is what allows it. Lean: `TinaV2/Routine/Estimation.lean::condExp_comap_prodMk_of_indepFun_left`
 - F13.2 (C11): 'Our best estimate' uses that the conditional mean has the smallest mean squared error, without pointing to the appendix. Lean: `TinaV2/Routine/Estimation.lean::bestMSE_eq_of_condExp`
 - F13.3 (C11): The error Var(Z_t)(1 - exp(-2 tau/T)) is asserted. Lean: `TinaV2/Proofs/C11/A1.lean::s2_old_readings`

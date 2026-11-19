@@ -707,7 +707,7 @@ agreed edit is upstream and marked done; no point is undecided.
    statement is still a draft: if the review changes C16, step 2 of C19 is
    re-pointed (`ledger.py check` warns about this). C14 and then C16 were frozen next and
    are verified, which cleared that warning; then C15, C15.b and C15.c (the last two
-   have no proof yet). Three remain: C4.b (f2), C11, C19.b (f2). Before the first approval the
+   have no proof yet), then C11. Two remain: C4.b (f2), C19.b (f2). Before the first approval the
    header comments of the ten draft statement files that still cited
    `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
    earlier keep the old citation.* The question about the frozen definitions is
@@ -721,6 +721,10 @@ agreed edit is upstream and marked done; no point is undecided.
    state "independent centered stationary Ornstein–Uhlenbeck modes". The paper
    now has a three-sentence derivation (`C9/p1`).
 4. **A non-vacuity instance for the canonical field** (phase 5).
+
+Parked beside this list, not decided: `future-tasks.md` (hypotheses and
+dependencies that turned out not to be needed, as examples for a later
+question of whether to suggest simplifications; and a few other items).
 
 The sections below are earlier states, kept as written.
 

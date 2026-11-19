@@ -688,9 +688,10 @@ agreed edit is upstream and marked done; no point is undecided.
 1. **The statement review resumes** with the twelve statements the edits
    unblocked, one per turn: C4.b (f2), C8, C10, C11, C14, C15, C15.b, C15.c,
    C16, C18, C19, C19.b (f2). *Under way since 2026-11-19. Frozen so far: C8
-   (now verified; C8.c is on the frontier). C10 has a new version (`C10/f2`,
-   see "Decisions, 2026-11-19") and the new remark C10.b a draft statement;
-   both wait for approval, so thirteen statements are in the review now. Before the first approval the
+   (now verified; C8.c is on the frontier). C10 (new version `C10/f2`, see
+   "Decisions, 2026-11-19") and the new remark C10.b are frozen too: C10 is
+   verified, C10.b verified with supplied steps, and C13 is on the frontier.
+   Ten statements remain. Before the first approval the
    header comments of the ten draft statement files that still cited
    `main-v2.tex` were pointed at `main-v3.tex`; the nineteen files frozen
    earlier keep the old citation.* With C18 and C19 comes one question about the

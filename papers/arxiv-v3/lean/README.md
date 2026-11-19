@@ -736,14 +736,22 @@ empty.
   difference lived only in a note.
 
 **Next (updated 2026-11-19, later):** Scott chose the statement design for
-C4.c and C9 ("Decisions, 2026-11-19", last block). Both statements exist as
-drafts with their difference rows (`ledger.py show C4.c`, `show C9`). In
-order: Scott's review of `C4.c/f1`, then of `C9/f1` (freeze only on his
-approval); the supplement proof of C4.c (the argument of `C17.b/p1` steps 1–3
-for a Gaussian process indexed by time and coordinate); the proof of C9 from
-the paper's three sentences, with C4.c entering as a hypothesis once per mode
-and a supplied step for conditioning on the whole snapshot; then the
-non-vacuity instances. Parked: `future-tasks.md`.
+C4.c and C9 ("Decisions, 2026-11-19", last block).
+
+- **C4.c is done.** Scott approved `C4.c/f1` and it is frozen. It is proved
+  from the supplement proof `C4.c/p1` (four supplied steps,
+  `ledger.py supplement C4.c`, `Proofs/C04c/A1.lean`): the innovation is
+  uncorrelated with every earlier state; joint Gaussianity makes it Gaussian
+  and independent of them; independence and mean zero give the
+  conditional-mean rule; one-time laws agree because they are Gaussian with
+  the same mean and covariance. Nothing was vendored and Mathlib was not
+  bumped. Now 33 claims are verified (17 following the paper, 16 with supplied
+  steps); `audit`: 155 lemmas in 33 attempts.
+- **C9**: `C9/f1` is a draft with eight difference rows (`ledger.py show C9`),
+  waiting for Scott's review; freeze only on his approval. Then its proof from
+  the paper's three sentences (`C9/p1`), with C4.c entering as a hypothesis
+  once per mode and a supplied step for conditioning on the whole snapshot.
+- Then the non-vacuity instances. Parked: `future-tasks.md`.
 
 The rest of this section is the state before the review finished, kept as
 written.

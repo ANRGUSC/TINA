@@ -30,6 +30,26 @@ The paper gives no proof. Supplement, written for the formalization (disposition
 
 - Lean: `TinaV2.C01c.A1.s2_regret_le` (proved); uses C1.c/p1/s1
 
+## C4.c Stationary Gaussian OU satisfies the prediction rule (C4.c/p1)
+
+The paper gives no proof. Supplement, written for the formalization (disposition C4.c/d1): for a jointly Gaussian process with mean zero and covariance exp(-|t-s|/T) Sigma_S, the innovation theta_t - a theta_{t-tau}, a = exp(-tau/T), is uncorrelated with every earlier state because exp(-(t-s)/T) = exp(-tau/T) exp(-(t-tau-s)/T); joint Gaussianity turns this into independence from the earlier states; independence and mean zero give the conditional-mean rule; and one-time laws agree because they are Gaussian with the same mean and covariance. The appendix states the result without argument. This is the argument of the paper's proof for the continuum model (claim C17.b), for a process indexed by time and state coordinate.
+
+**Step 1 (supplied). The innovation is uncorrelated with every earlier state.** Let $\tau\ge0$, $a=e^{-\tau/T}$ and $s\le t-\tau$. By Eq.~\eqref{eq:separable_space_time_covariance}, for all coordinates $k,l$, $\mathbb E[(\theta_{t,k}-a\theta_{t-\tau,k})\theta_{s,l}]=e^{-(t-s)/T}(\Sigma_S)_{kl}-e^{-\tau/T}e^{-(t-\tau-s)/T}(\Sigma_S)_{kl}=0$.
+
+- Lean: `TinaV2.C04c.A1.s1_innovation_uncorrelated` (proved)
+
+**Step 2 (supplied). The innovation is Gaussian and independent of the earlier states.** Each coordinate of the innovation $\theta_t-a\theta_{t-\tau}$ is a linear combination of two values of the process, so the innovation is Gaussian and it is jointly Gaussian with the earlier states $(\theta_s:s\le t-\tau)$. The process has mean zero, so by step 1 every covariance between a coordinate of the innovation and a coordinate of an earlier state vanishes. Jointly Gaussian and uncorrelated families are independent: the innovation is independent of $(\theta_s:s\le t-\tau)$.
+
+- Lean: `TinaV2.C04c.A1.s2_gaussian_independent` (proved); uses C4.c/p1/s1
+
+**Step 3 (supplied). The conditional-mean rule.** The old state $\theta_{t-\tau}$ is one of the earlier states, so by step 2 the innovation is independent of it. The innovation is integrable with mean zero, hence $\mathbb E[\theta_t-a\theta_{t-\tau}\mid\theta_{t-\tau}]=0$, which is Eq.~\eqref{eq:state_innovation_decomposition} with $\varepsilon_{t,\tau}=\theta_t-a\theta_{t-\tau}$.
+
+- Lean: `TinaV2.C04c.A1.s3_prediction` (proved); uses C4, C4.c/p1/s2
+
+**Step 4 (supplied). Stationary with finite second moments.** Every $\theta_t$ is a Gaussian vector, so it has finite second moments. For any two epochs $s,t$ the vectors $\theta_s$ and $\theta_t$ are Gaussian with the same mean, zero, and the same covariance, $\Sigma_S$, by Eq.~\eqref{eq:separable_space_time_covariance} at equal times. A Gaussian law is determined by its mean and covariance, so $\theta_s$ and $\theta_t$ have the same law.
+
+- Lean: `TinaV2.C04c.A1.s4_stationary` (proved); uses C4
+
 ## C5 Quadratic cost and completing the square (C5/p1)
 
 The paper gives no proof. Supplement, written for the formalization (disposition C5/d1): the first-order condition Q x* = b, the expansion of f around x*, and positive definiteness for uniqueness. The paper says only 'Completing the square gives'.

@@ -22,7 +22,7 @@ header { border-top:5px solid var(--teal); border-bottom:1px solid var(--line) }
 h1,h2,h3 { font:normal 2rem/1.14 Georgia,"Times New Roman",serif; margin:0; text-wrap:balance }
 h1 { font-size:clamp(2.7rem,6vw,5rem); letter-spacing:-.045em }
 .hero p { max-width:47rem; margin:.85rem 0 1.25rem; font-size:1.1rem }
-.hero-links { display:flex; flex-wrap:wrap; gap:.5rem 1.5rem }
+.hero-links { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem 1.5rem }
 .layout { display:grid; grid-template-columns:minmax(12rem,16rem) minmax(0,1fr); gap:clamp(2rem,5vw,5rem); align-items:start }
 aside { position:sticky; top:1rem; padding:2.6rem 0 }
 nav a { display:block; margin-top:.55rem; padding:.5rem .2rem .65rem 0; line-height:1.35; text-decoration:none; border-bottom:1px solid var(--line) }
@@ -37,9 +37,9 @@ article { padding:1.65rem 0; border-top:1px solid var(--line); scroll-margin-top
 h3 { font-size:clamp(1.45rem,2.5vw,1.95rem); margin:.45rem 0 }
 article p { max-width:67ch; margin:.65rem 0 1rem }
 .actions { font-size:.94rem; gap:.55rem }
-.actions .proof, .actions .source { display:inline-flex; align-items:center; min-height:2.75rem; padding:.4rem .75rem; text-decoration:none; border:1px solid var(--teal); border-radius:.25rem; font-weight:600 }
-.proof { background:var(--teal); color:white }
-.proof:hover { background:#054e42 }
+.arxiv-link, .actions .proof, .actions .source { display:inline-flex; align-items:center; min-height:2.75rem; padding:.4rem .75rem; text-decoration:none; border:1px solid var(--teal); border-radius:.25rem; font-weight:600 }
+.arxiv-link, .proof { background:var(--teal); color:white }
+.arxiv-link:hover, .proof:hover { background:#054e42 }
 .source:hover { background:#e9f2ef }
 .related { margin:1rem 0 0; padding:0 0 0 .85rem; border-left:2px solid var(--line); list-style:none; font-size:.94rem }
 .related li { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.4rem 1rem; margin:.6rem 0 }
@@ -62,7 +62,8 @@ footer { border-top:1px solid var(--line); padding:1.2rem 0 }
 <h1>Paper-to-proof guide</h1>
 <p>Find each numbered result in <cite>A Theory of Information Architecture for Networked Decisions</cite>, open its page in the paper, and follow its proof in Lean or in English.</p>
 <div class="hero-links" role="navigation" aria-label="Manuscript and proofs">
-<a href="tina-v3.pdf">Open the manuscript PDF</a>
+<a class="arxiv-link" href="https://arxiv.org/abs/2609.06351">Read the paper on arXiv</a>
+<a href="tina-v3.pdf">PDF used in this guide (v3)</a>
 <a href="proofs/#/graph">Dependency graph</a>
 <a href="proofs/#/claims">Claims</a>
 </div>

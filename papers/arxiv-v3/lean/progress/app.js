@@ -560,6 +560,7 @@ function drawSide(lay) {
   const list = a => a.length ? a.sort(idCmp).map(id => claimLink(id)).join(', ') : '<span class="muted">none</span>';
   side.innerHTML = `<button class="close" id="g-close" aria-label="Clear selection">×</button>
     <h3><span class="idlink">${esc(c.id)}</span> ${esc(c.title)}</h3>
+    <a class="btn" href="${claimHref(c.id, 'plain')}">All Proofs</a>
     ${graphExplanations[c.id] ? `<p class="claim-explanation">${esc(graphExplanations[c.id])}</p>
       <details class="graph-statement"><summary>Formal statement</summary><p>${esc(c.statement)}</p></details>`
       : `<p>${esc(c.statement)}</p>`}
@@ -567,8 +568,7 @@ function drawSide(lay) {
     ${c.reasons.length ? `<ul class="reasons small">${c.reasons.map(r => `<li>${prose(r.text)}</li>`).join('')}</ul>` : ''}
     <dl><dt>Kind</dt><dd>${esc(c.kind)}${c.tier ? `, tier ${c.tier}` : ''}</dd>
       <dt>Rests on</dt><dd>${list([...lay.parents.get(c.id)])}</dd>
-      <dt>Used by</dt><dd>${list([...lay.children.get(c.id)])}</dd></dl>
-    <a class="btn" href="#/claim/${encodeURIComponent(c.id)}">Open claim</a>`;
+      <dt>Used by</dt><dd>${list([...lay.children.get(c.id)])}</dd></dl>`;
   document.getElementById('g-close').onclick = () => { G.sel = null; drawGraph(false); };
 }
 

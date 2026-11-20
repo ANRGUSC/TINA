@@ -15,6 +15,7 @@ on:
       - 'papers/arxiv-v3/lean/**'
       - '.github/workflows/verify-arxiv-v3-lean.yml'
       - '.github/workflows/publish-reading-guide.yml'
+      - '.github/scripts/pages_lean_record.py'
   workflow_dispatch:
 
 permissions:
@@ -25,20 +26,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  proof-record:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      reused: ${{ steps.select.outputs.reused }}
+      record: ${{ steps.select.outputs.record }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: select
+        name: Compare proof inputs with the published verification run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/pages_lean_record.py select
+
   verify-lean:
+    needs: proof-record
+    if: needs.proof-record.outputs.reused != 'true'
     uses: ./.github/workflows/verify-arxiv-v3-lean.yml
 
   build:
-    needs: verify-lean
+    needs: [proof-record, verify-lean]
+    if: >-
+      ${{ !cancelled() && needs.proof-record.result == 'success' &&
+      (needs.verify-lean.result == 'success' ||
+      (needs.verify-lean.result == 'skipped' && needs.proof-record.outputs.reused == 'true')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Download the verification record from this run
+        if: needs.proof-record.outputs.reused != 'true'
         uses: actions/download-artifact@v5
         with:
           name: arxiv-v3-lean-${{ github.sha }}
           path: ${{ runner.temp }}/lean-verification
+      - name: Use the previous successful verification
+        if: needs.proof-record.outputs.reused == 'true'
+        env:
+          RECORD: ${{ needs.proof-record.outputs.record }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/lean-verification"
+          printf '%s\n' "$RECORD" > "$RUNNER_TEMP/lean-verification/verification.json"
       - name: Build and verify the guide
         run: python3 explainers/lcss-letter/build_pages.py
       - name: Build the arXiv v3 paper-to-proof guide
@@ -50,7 +85,8 @@ jobs:
         run: |
           python3 -m venv "$RUNNER_TEMP/tina-pages"
           "$RUNNER_TEMP/tina-pages/bin/pip" install --only-binary=:all: pymupdf==1.26.5
-          "$RUNNER_TEMP/tina-pages/bin/python" papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean "$RUNNER_TEMP/lean-verification/verification.json"
+          "$RUNNER_TEMP/tina-pages/bin/python" papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean
+          python3 .github/scripts/pages_lean_record.py attach _site/arxiv-v3/lean/progress/build-info.json "$RUNNER_TEMP/lean-verification/verification.json"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -58,6 +94,7 @@ jobs:
 
   deploy:
     needs: build
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:

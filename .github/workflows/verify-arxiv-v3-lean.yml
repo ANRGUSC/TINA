@@ -6,6 +6,9 @@ on:
   pull_request:
     paths:
       - 'papers/arxiv-v3/lean/**'
+      - '!papers/arxiv-v3/lean/progress/**'
+      - '!papers/arxiv-v3/lean/*.md'
+      - '!papers/arxiv-v3/lean/tools/reader_passages.py'
       - '.github/workflows/verify-arxiv-v3-lean.yml'
 
 permissions:

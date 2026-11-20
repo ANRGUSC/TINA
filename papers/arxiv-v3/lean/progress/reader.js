@@ -98,13 +98,17 @@ async function leanPanel(panel, c) {
 function verificationRecord(c) {
   const record = info?.verification;
   const proof = record?.claims?.[c.id];
-  if (!proof || record.commit !== info.commit) return '';
+  if (!proof) return '';
+  const match = info.verification_match;
+  const reused = record.commit !== info.commit;
+  if (reused && (match?.site_commit !== info.commit || match?.verified_commit !== record.commit)) return '';
   const attempt = M.attempts.find(a => a.claim_id === c.id && a.selected && a.status === 'proved');
   if (attempt?.id !== proof.attempt) return '';
   return `<div class="verification"><details><summary>✓ Machine-checked by Lean</summary>
     <dl class="kv"><dt>Theorem</dt><dd><code>${esc(proof.theorem)}</code></dd>
     <dt>Checked</dt><dd>${esc(record.checked)}</dd>
-    <dt>Commit</dt><dd><a href="https://github.com/${repo()}/commit/${esc(record.commit)}"><code>${esc(record.commit)}</code></a></dd>
+    <dt>Verified commit</dt><dd><a href="https://github.com/${repo()}/commit/${esc(record.commit)}"><code>${esc(record.commit)}</code></a>
+    ${reused ? ' · This site revision uses identical proof inputs.' : ''}</dd>
     <dt>Lean version</dt><dd>${esc(record.lean)}</dd>
     <dt>Transitive axioms</dt><dd>${esc(proof.axioms.join(', ') || 'None')}</dd></dl>
     <p>The axiom audit found no <code>sorry</code> dependencies.</p></details>

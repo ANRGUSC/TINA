@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'explainers/lcss-letter/**'
+      - 'explainers/arxiv-v3/**'
+      - 'submissions/arxiv-v3/*.tex'
+      - 'submissions/arxiv-v3/tina-v3.pdf'
       - 'papers/lcss/main.tex'
       - 'papers/lcss/main.pdf'
       - 'submissions/lcss/lcss-paper.pdf'
@@ -31,6 +34,8 @@ jobs:
       - uses: actions/checkout@v6
       - name: Build and verify the guide
         run: python3 explainers/lcss-letter/build_pages.py
+      - name: Build the arXiv v3 paper-to-proof guide
+        run: python3 explainers/arxiv-v3/build_guide.py _site/arxiv-v3
       # Separate from the reading guide: work-in-progress Lean proof ledger for
       # the arXiv v3 manuscript, published under /arxiv-v3/lean/progress/.
       # (Until 2026-11-18 it tracked arXiv v2 and was under /arxiv-v2/lean/.)

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Find the Lean proof for each numbered result in the arXiv v3 manuscript A Theory of Information Architecture for Networked Decisions.">
+<title>Paper-to-proof guide · TINA arXiv v3</title>
+<style>
+:root { color-scheme: light; --ink:#182e39; --teal:#086859; --muted:#536770; --line:#cdd9d7; --paper:#fcfcfa; }
+* { box-sizing:border-box }
+body { margin:0; color:var(--ink); background:var(--paper); font:1rem/1.55 "Segoe UI",Arial,sans-serif }
+a { color:var(--teal); text-decoration-thickness:1px; text-underline-offset:.2em }
+a:hover { text-decoration-thickness:2px }
+a:focus-visible { outline:3px solid #cd801a; outline-offset:4px }
+.wrap { width:min(75rem, calc(100% - 3rem)); margin:auto }
+header { border-top:5px solid var(--teal); border-bottom:1px solid var(--line) }
+.bar, .actions, .citation, footer .wrap { display:flex; align-items:center; gap:1rem; flex-wrap:wrap }
+.bar { justify-content:space-between; min-height:3.8rem }
+.brand { font-weight:750; letter-spacing:.09em }
+.brand span { margin-left:.7rem; padding-left:.7rem; border-left:1px solid var(--line); font-weight:450; letter-spacing:0 }
+.hero { background:#e9f2ef; padding:clamp(2rem,5vw,4.5rem) 0; border-bottom:1px solid var(--line) }
+h1,h2,h3 { font:normal 2rem/1.14 Georgia,"Times New Roman",serif; margin:0; text-wrap:balance }
+h1 { font-size:clamp(2.7rem,6vw,5rem); letter-spacing:-.045em }
+.hero p { max-width:47rem; margin:.85rem 0 1.25rem; font-size:1.1rem }
+.layout { display:grid; grid-template-columns:minmax(12rem,16rem) minmax(0,1fr); gap:clamp(2rem,5vw,5rem); align-items:start }
+aside { position:sticky; top:1rem; padding:2.6rem 0 }
+nav a { display:block; margin-top:.55rem; padding:.5rem .2rem .65rem 0; line-height:1.35; text-decoration:none; border-bottom:1px solid var(--line) }
+nav a:hover { text-decoration:underline }
+nav a span, .section-label { display:block; font-size:.83rem; letter-spacing:.06em; font-weight:700; color:var(--muted) }
+main { min-width:0; padding-bottom:3rem }
+section { margin-top:2.7rem; scroll-margin-top:1rem }
+h2 { font-size:clamp(1.75rem,3vw,2.5rem); margin:.35rem 0 1rem }
+article { padding:1.65rem 0; border-top:1px solid var(--line); scroll-margin-top:1rem }
+.citation { font-size:.92rem; gap:.85rem }
+.citation strong { color:var(--teal) }
+h3 { font-size:clamp(1.45rem,2.5vw,1.95rem); margin:.45rem 0 }
+article p { max-width:67ch; margin:.65rem 0 1rem }
+.actions { font-size:.94rem }
+.proof { background:var(--teal); color:white; padding:.45rem .78rem; text-decoration:none; border-radius:.25rem; font-weight:600 }
+.proof:hover { background:#054e42 }
+code { margin-left:.3rem; font-family:ui-monospace,monospace; font-size:.89em }
+.related { margin:1rem 0 0; padding-left:1.2rem; font-size:.94rem }
+.related li { margin:.25rem 0 }
+small { color:var(--muted) }
+footer { border-top:1px solid var(--line); padding:1.2rem 0 }
+.skip { position:absolute; top:-5rem; background:white; padding:.5rem }
+.skip:focus { top:0 }
+@media(max-width:720px) {
+ .wrap { width:calc(100% - 2rem) } .layout { display:block } aside { position:static; padding:1.3rem 0 0 }
+ .bar { padding:.7rem 0; gap:.4rem } nav a { padding:.3rem 0 } .actions { gap:.75rem }
+}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#results">Skip to results</a>
+<header><div class="wrap bar"><div class="brand">TINA<span>arXiv v3</span></div>
+<a href="https://github.com/ANRGUSC/TINA/tree/main/papers/arxiv-v3/lean/TinaV2/Proofs">Lean proof directory</a></div></header>
+<div class="hero"><div class="wrap">
+<h1>Paper-to-proof guide</h1>
+<p>Find each numbered result in <cite>A Theory of Information Architecture for Networked Decisions</cite>, open its page in the paper, and follow its proof in Lean or in English.</p>
+<a href="tina-v3.pdf">Open the manuscript PDF</a>
+</div></div>
+<div class="wrap layout">
+<aside><nav aria-label="Paper sections"><strong>In paper order</strong>$contents</nav></aside>
+<main id="results">$sections</main>
+</div>
+<footer><div class="wrap"><a href="#top">Back to top</a><a href="https://anrgusc.github.io/TINA/arxiv-v3/lean/progress/">Explore the full proof ledger</a></div></footer>
+</body></html>

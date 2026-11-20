@@ -58,6 +58,8 @@ shutil.copytree(GUIDE / 'dist', target)
 <title>TINA reading guides</title><style>body{max-width:46rem;margin:4rem auto;padding:0 1.5rem;
 font:22px/1.7 Arial,sans-serif;color:#122e46}h1{line-height:1.2}a{color:#1256a0}</style>
 <h1>TINA reading guides</h1>
+<p><a href="arxiv-v3/">arXiv v3 paper-to-proof guide</a></p>
+<p>Find the Lean proof for each numbered theorem, proposition, lemma, and corollary in the full manuscript.</p>
 <p><a href="lcss-letter/">Too Late to Coordinate: When Local Information Beats Global Sharing</a></p>
 <p>Notation, results, and fully worked proofs of the six-page L-CSS submission manuscript. It has not been accepted for publication.</p>
 <p><a href="https://github.com/ANRGUSC/TINA">Manuscripts, simulations, and proof reports on GitHub</a></p>

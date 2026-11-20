@@ -1153,7 +1153,7 @@ def cmd_db(db, args):
 # ------------------------------------------------------- progress explorer
 # progress/ is a static page that loads ledger/*.sql into SQLite in the
 # browser. It needs ../ledger and ../TinaV2 next to it, so the site mirrors
-# this directory's layout. build-info.json is the only generated file.
+# this directory's layout. The build also renders the manuscript excerpts.
 def build_info(db):
     def git(*a):
         try:
@@ -1163,7 +1163,7 @@ def build_info(db):
             return None
     errs, warns = run_check(db)
     return {"repo": os.environ.get("GITHUB_REPOSITORY", "ANRGUSC/TINA"),
-            "lean_dir": str(ROOT.relative_to(REPO)),
+            "lean_dir": ROOT.relative_to(REPO).as_posix(),
             "commit": os.environ.get("GITHUB_SHA") or git("rev-parse", "HEAD"),
             "generated": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "check": {"errors": errs, "warnings": warns}}
@@ -1179,6 +1179,8 @@ def cmd_site(db, args):
         if (out / sub).exists():
             shutil.rmtree(out / sub)
     shutil.copytree(ROOT / "progress", out / "progress")
+    from reader_passages import build as build_passages
+    build_passages(db, ROOT, REPO, out / "progress" / "paper-assets")
     (out / "ledger").mkdir(parents=True)
     for f in (SCHEMA, DATA):
         shutil.copy(f, out / "ledger" / f.name)
@@ -1204,9 +1206,18 @@ def cmd_site(db, args):
 def cmd_serve(db, args):
     import functools
     import http.server
+    import tempfile
+    from reader_passages import build as build_passages
     port = int(args[0]) if args else 8642
 
     class Handler(http.server.SimpleHTTPRequestHandler):
+        def translate_path(self, path):
+            local = Path(super().translate_path(path))
+            base = ROOT / "progress" / "paper-assets"
+            if local.is_relative_to(base):
+                return str(Path(cache.name) / local.relative_to(base))
+            return str(local)
+
         def do_GET(self):
             if self.path.split("?")[0] == "/progress/build-info.json":
                 body = json.dumps(build_info(connect())).encode()
@@ -1227,6 +1238,8 @@ def cmd_serve(db, args):
 
     Handler.extensions_map = {**Handler.extensions_map, ".wasm": "application/wasm",
                               ".sql": "text/plain; charset=utf-8", ".lean": "text/plain; charset=utf-8"}
+    cache = tempfile.TemporaryDirectory()
+    build_passages(db, ROOT, REPO, Path(cache.name))
     srv = http.server.ThreadingHTTPServer(
         ("127.0.0.1", port), functools.partial(Handler, directory=str(ROOT)))
     print(f"progress explorer: http://127.0.0.1:{port}/progress/   (Ctrl-C to stop; "
@@ -1235,6 +1248,9 @@ def cmd_serve(db, args):
         srv.serve_forever()
     except KeyboardInterrupt:
         pass
+    finally:
+        srv.server_close()
+        cache.cleanup()
 
 
 COMMANDS = {"assembly": cmd_assembly, "audit": cmd_audit, "serve": cmd_serve, "site": cmd_site, "status": cmd_status, "show": cmd_show, "frontier": cmd_frontier,

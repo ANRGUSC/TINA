@@ -90,7 +90,7 @@ def build(output):
   <div class="citation"><strong>{number}</strong><a href="tina-v3.pdf#page={page}">PDF p. {page}</a></div>
   <h3>{escape(title)}</h3><p>{escape(summary)}</p>
   <div class="actions"><a class="proof" href="{proof_url(claim)}">Read Lean proof <code>{claim}</code></a>
-  <a href="https://anrgusc.github.io/TINA/arxiv-v3/lean/progress/#/claim/{claim}">Proof steps in English</a></div>
+  <a href="https://anrgusc.github.io/TINA/arxiv-v3/lean/progress/#/claim/{claim}">Read the claim and proof sketch</a></div>
   {details}</article>''')
         sections.append(f'<section id="{anchor}"><div class="section-label">{section}</div>'
                         f'<h2>{heading}</h2>{"".join(articles)}</section>')

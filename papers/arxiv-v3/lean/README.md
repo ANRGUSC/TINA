@@ -160,14 +160,19 @@ python3 tools/ledger.py sql "SELECT target, body FROM notes WHERE kind = 'failur
 ### Progress explorer
 
 `progress/` is a web page over the same ledger: status overview, the advertised
-results with their completion record, the claim dependency graph, one page per
-claim with the current written proof steps next to their corresponding Lean lemmas.
-Select a graph node to read its plain-English explanation. The explorer reads `ledger/schema.sql` and
-`ledger/data.sql` directly (SQLite compiled to WebAssembly, vendored in
-`progress/vendor/`), so there is no generated data file to keep in step with
-the ledger.
+results with their completion record, the claim dependency graph, and one page
+per claim. Select a node for its English summary and open the claim to read
+the proof sketch, exact manuscript passages, Lamport proof, or Lean source.
+Each tab has a shareable URL. Model definitions, numerical observations, and
+prose claims explain which forms of evidence apply.
+
+The explorer reads `ledger/schema.sql` and `ledger/data.sql` with the SQLite
+WebAssembly build in `progress/vendor/`. The site build renders manuscript
+passages from the published PDF. When that PDF changes, review the page
+regions and update its digest in `progress/paper-passages.json`.
 
 ```
+python3 -m pip install PyMuPDF==1.26.5    # Render manuscript passages for serve and site
 python3 tools/ledger.py serve             # http://127.0.0.1:8642/progress/
 python3 tools/ledger.py site OUTDIR       # static copy for GitHub Pages
 ```

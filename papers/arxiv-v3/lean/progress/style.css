@@ -290,3 +290,35 @@ details.group > summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
 details.group > summary b { font-variant-numeric: tabular-nums; margin-left: 4px; }
 .finding .tbl-wrap { margin-top: 8px; }
 .ico.vsup, .ico.cond { color: #fff; }
+.reader-neighbors { float: right; display: inline-flex; gap: 1rem; }
+.reader-graph { margin-left: .6rem; font-size: .9rem; }
+.reader-tabs { display: flex; flex-wrap: wrap; gap: .3rem; border-bottom: 1px solid var(--line-strong); margin: 1.4rem 0 0; }
+.reader-tabs a { color: var(--ink-2); padding: .7rem .85rem; text-decoration: none; border-bottom: 3px solid transparent; }
+.reader-tabs a:hover { color: var(--link); background: var(--surface-2); }
+.reader-tabs a[aria-selected=true] { color: var(--ink); border-color: var(--link); font-weight: 650; }
+.reader-panel { padding: clamp(1rem,3vw,2rem); background: var(--surface); border: 1px solid var(--line); border-top: 0; overflow-wrap: anywhere; }
+.reader-panel h3:first-child { margin-top: 0; }
+.reader-panel h3 { font-size: 1.18rem; }
+.reader-prose { max-width: 76ch; line-height: 1.65; font-size: 1.02rem; }
+.reader-related { display: flex; flex-wrap: wrap; gap: .5rem 2rem; border-top: 1px solid var(--line); margin-top: 1.5rem; }
+.reader-related ul { padding-left: 1.2rem; }
+.reader-page { margin: 1.2rem 0; max-width: 55rem; }
+.reader-page figcaption, .lp-meta { font-size: .87rem; color: var(--ink-2); }
+.reader-page svg { display: block; width: 100%; height: auto; overflow: hidden; background: white; border: 1px solid var(--line); box-sizing: border-box; }
+.reader-panel details { margin-top: .8rem; }
+.reader-tex { white-space: pre-wrap; }
+.reader-proof + .reader-proof, .reader-lean + .reader-lean { border-top: 1px solid var(--line); padding-top: 1.4rem; margin-top: 1.4rem; }
+.lp-tree { margin: 1.2rem 0; }
+.lp-group { margin: 1.2rem 0; }
+.lp-group .lp-step { margin-left: .65rem; }
+.lp-step { border-left: 2px solid var(--line-strong); padding: .25rem 0 .5rem 1rem; margin: .8rem 0; }
+.lp-step h4 { margin: .3rem 0; }
+.lp-step h4 code { color: var(--link); }
+.lp-gap { color: var(--ink-2); font-size: .9rem; }
+.reader-panel .code { max-height: 70vh; overflow: auto; }
+.reader-panel .katex-display { overflow-x: auto; overflow-y: hidden; }
+@media (max-width: 620px) {
+  .reader-tabs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .reader-tabs a { font-size: .86rem; padding: .55rem; }
+  .reader-panel { padding: .8rem; }
+}

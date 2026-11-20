@@ -276,7 +276,7 @@ function viewOverview() {
       <tbody>${tiers}</tbody></table></div>
     <h2>How to read this page</h2>
     <div class="card">
-      <p>Each written proof step appears beside its Lean lemma. Steps marked <b>supplied</b> give arguments that the manuscript leaves implicit.</p>
+      <p>Open a claim to read its proof sketch, manuscript passage, Lamport proof, and Lean source. Steps marked <b>supplied</b> give arguments that the manuscript leaves implicit.</p>
       <p><b>What verified means.</b> The Lean statement has been compared with the paper and frozen, the proof is complete, the
       end-to-end assembly assumes no unproved claim, and Lean reports only the three standard axioms. The two greens say where the
       argument comes from: the paper, or the paper plus supplied steps.</p>
@@ -623,118 +623,6 @@ function viewClaims(params) {
 }
 
 /* ----------------------------------------------------------- claim detail */
-const STEP_COLOR = { proved: '--st-verified', sorry: '--st-p2', todo: '--st-todo', failed: '--st-blocked' };
-function viewClaim(id) {
-  const c = M.byId.get(id);
-  if (!c) { main.innerHTML = `<p class="empty">No claim with id ${esc(id)}. <a href="#/claims">All claims</a></p>`; return; }
-  const lean = c.scope === 'lean';
-  const needsProof = !['definition', 'assumption'].includes(c.kind);
-  const proofs = q("SELECT * FROM proofs WHERE claim_id = ? AND status IN ('in_paper','supplement') ORDER BY is_primary DESC, version DESC", [id]);
-  const whole = c.disp.find(d => d.whole_proof);
-  const live = q('SELECT * FROM v_formalization WHERE claim_id = ?', [id])[0];
-  const sel = M.attempts.find(a => a.claim_id === id && a.selected && a.formalization_id === live?.id);
-  const dependsOn = M.deps.filter(d => d.claim_id === id), usedBy = M.deps.filter(d => d.depends_on === id);
-  const subs = M.claims.filter(x => x.parent === id);
-  const ordered = M.claims.map(x => x.id), at = ordered.indexOf(id);
-
-  // Pipeline: paper proof -> Lean statement -> Lean proof -> verified.
-  const stage = (label, v, d, color, glyph) => `<div class="stage" style="--c:var(${color})"><div class="k">${label}</div>
-    <div class="v"><span class="ico" style="--c:var(${color})">${glyph}</span>${v}</div><div class="d">${d}</div></div>`;
-  const nSteps = pid => plural(q('SELECT COUNT(*) n FROM steps WHERE proof_id = ?', [pid])[0].n, 'step');
-  const stage1 = !needsProof && !whole && !c.supplement_proof ? stage('1 · Written proof', 'Not needed', `A ${esc(c.kind)} has nothing to prove`, '--st-out', '–')
-    : c.paper_proof ? stage('1 · Written proof', 'In the paper', `${esc(c.paper_proof)}, ${nSteps(c.paper_proof)}${c.n_supplied ? `, ${c.n_supplied} supplied` : ''}`, '--st-verified', '✓')
-    : c.supplement_proof ? stage('1 · Written proof', 'Supplied', `${esc(c.supplement_proof)}, ${nSteps(c.supplement_proof)}; not in the paper`, '--st-vsup', '+')
-    : whole && whole.decision === 'lean_supplies' ? stage('1 · Written proof', 'To be supplied', 'The paper states this without proof; Lean will supply one', '--st-todo', '')
-    : stage('1 · Written proof', 'No current proof', '', '--st-todo', '');
-  const stage4 = c.state === 'verified' ? stage('4 · Verified', 'Follows the paper', 'Every step is a step of the paper\'s proof', '--st-verified', '✓')
-    : c.state === 'verified_supplied' ? stage('4 · Verified', 'With supplied steps', 'Lean proves the paper\'s statement; part of the argument is not in the paper', '--st-vsup', '+')
-    : c.state === 'conditional' ? stage('4 · Verified', 'Conditional', `Still assumes ${esc(c.assumes)}`, '--st-p4', '◐')
-    : c.state === 'needs_paper_edit' ? stage('4 · Verified', 'Paper edit pending', 'Lean mirrors a proposed proof', '--st-blocked', '!')
-    : stage('4 · Verified', 'Not yet', c.assumes ? `The proof still assumes ${esc(c.assumes)}` : '', '--st-todo', '');
-  const pipeline = !lean || !needsProof ? '' : `<div class="pipeline">
-    ${stage1}
-    ${!live ? stage('2 · Lean statement', 'Not written', '', '--st-todo', '')
-      : live.status === 'frozen' ? stage('2 · Lean statement', 'Frozen', esc(live.id), '--st-verified', '✓')
-      : stage('2 · Lean statement', live.status === 'draft' ? 'Draft' : 'Reviewed', `${esc(live.id)}, ${live.status === 'draft' ? 'awaiting review against the paper' : 'not frozen yet'}`, live.status === 'draft' ? '--st-p1' : '--st-p2', '▸')}
-    ${!sel ? stage('3 · Lean proof', 'No attempt', '', '--st-todo', '')
-      : sel.status === 'proved' ? stage('3 · Lean proof', 'Proved', `${esc(sel.id)}${c.n_steps ? `, ${c.n_steps_proved}/${c.n_steps} steps` : ''}${c.axioms ? (c.axioms_standard ? ', standard axioms' : ', non-standard axioms') : ''}`, '--st-verified', '✓')
-      : sel.status === 'failed' ? stage('3 · Lean proof', 'Attempt failed', esc(sel.id), '--st-blocked', '!')
-      : stage('3 · Lean proof', sel.status === 'active' ? 'Under way' : esc(sel.status), esc(sel.id), '--st-p3', '▸')}
-    ${stage4}
-  </div>`;
-
-  const depChips = (rows, key) => rows.length ? `<div class="deps">${rows.sort((a, b) => idCmp(a[key], b[key])).map(d => {
-    const x = M.byId.get(d[key]);
-    return `<a class="chip" href="#/claim/${encodeURIComponent(d[key])}" data-tip-title="${esc(d[key])}: ${esc(x.title)}" data-tip="${esc(KEYS[x.key].label)}${d.note ? ' · ' + esc(d.note) : ''}">${icon(x.key)}<span class="idlink">${esc(d[key])}</span> <small>${esc(d.kind)}</small></a>`;
-  }).join('')}</div>` : '<span class="muted">none</span>';
-
-  const proofHtml = proofs.map(p => {
-    const steps = q('SELECT * FROM steps WHERE proof_id = ? ORDER BY ordinal', [p.id]);
-    const supp = p.status === 'supplement';
-    return `<h3><span class="idlink">${esc(p.id)}</span> <span class="tag ${supp ? 'supplied' : ''}">${supp ? 'supplied · not in the paper' : esc(p.status.replace('_', ' '))}</span>
-        ${p.is_primary ? '' : '<span class="tag">secondary derivation</span>'}</h3>
-      <p>${prose(p.summary)}</p>
-      <div class="steps-head"><span>${supp ? 'Supplied argument' : 'Paper'}, step by step</span><span>Lean lemma for the step</span></div>
-      <div class="steps">${steps.map(s => {
-        const deps = q('SELECT dep_kind, dep_id FROM step_deps WHERE step_id = ?', [s.id]);
-        const maps = q('SELECT * FROM step_map WHERE step_id = ? AND attempt_id = ?', [s.id, sel?.id ?? '']);
-        const top = maps[0];
-        const sup = s.origin === 'supplied';
-        return `<div class="step ${sup ? 'supplied' : ''}"><div>
-            <h4><span class="idlink">s${s.ordinal}</span>${esc(s.title)}${sup && !supp ? ' <span class="tag supplied">supplied · not in the paper</span>' : ''}</h4>
-            ${texHtml(s.tex)}
-            <p class="small muted" style="margin:6px 0 0">${sup ? `Written for the formalization` : paperLink(s.source, s.line_start, s.line_end)}${deps.length ? ` · uses ${deps.map(d => d.dep_kind === 'claim' ? claimLink(d.dep_id)
-              : d.dep_id.startsWith(p.id + '/') ? `<span class="idlink">${esc(d.dep_id.split('/').pop())}</span>`
-              : `<span data-tip="A step of another claim's proof: the paper's sentence cites an equation inside that proof.">step ${linkIds(esc(d.dep_id))}</span>`).join(', ')}` : ''}</p>
-          </div><div class="lean" style="--c:var(${top ? STEP_COLOR[top.status] : '--line-strong'})">
-            ${maps.length ? maps.map(m => `<p><code>${esc(m.lean_decl)}</code><br><span class="tag">${esc(m.status)}</span> <span class="small muted">in ${esc(m.attempt_id)}</span></p>`).join('')
-              : '<p class="muted small">No corresponding Lean lemma for this step.</p>'}
-          </div></div>`;
-      }).join('') || '<div class="step"><div class="muted">No steps recorded.</div><div class="lean"></div></div>'}</div>`;
-  }).join('');
-
-  main.innerHTML = `
-    <p class="crumbs"><a href="#/claims">Claims</a> / ${esc(id)}
-      <span style="float:right">${at > 0 ? `<a href="#/claim/${encodeURIComponent(ordered[at - 1])}">← ${esc(ordered[at - 1])}</a>` : ''}
-      ${at < ordered.length - 1 ? ` &nbsp; <a href="#/claim/${encodeURIComponent(ordered[at + 1])}">${esc(ordered[at + 1])} →</a>` : ''}</span></p>
-    <div class="claim-head">
-      <h2><span class="idlink">${esc(id)}</span> ${esc(c.title)}</h2>
-      <span class="tag">${esc(c.kind)}</span>${c.tier ? `<span class="tag" data-tip="${esc(TIERS[c.tier])}">tier ${c.tier}</span>` : ''}
-    </div>
-    <p style="margin-top:8px">${statusChip(c)} ${minorBadge(c)} <span class="small muted">ledger state <code>${esc(c.state)}</code> · <a href="#/graph/${encodeURIComponent(id)}">show in dependency graph</a></span></p>
-    ${c.reasons.length ? `<ul class="reasons">${c.reasons.map(r => `<li>${prose(r.text)}</li>`).join('')}</ul>` : ''}
-    ${pipeline}
-    <h3>What the paper claims</h3>
-    <div class="card"><p class="statement">${esc(c.statement)}</p>
-      <dl class="kv"><dt>In the paper</dt><dd>${paperLink(c.source, c.line_start, c.line_end) || '<span class="muted">not located</span>'}${c.label ? ` · <code>\\label{${esc(c.label)}}</code>` : ''}</dd>
-        ${c.parent ? `<dt>Stated with</dt><dd>${claimLink(c.parent, true)}</dd>` : ''}
-        ${subs.length ? `<dt>Sub-claims</dt><dd>${subs.map(s => claimLink(s.id)).join(', ')}</dd>` : ''}
-        <dt>Rests on</dt><dd>${depChips(dependsOn, 'depends_on')}</dd>
-        <dt>Used by</dt><dd>${depChips(usedBy, 'claim_id')}</dd>
-      </dl></div>
-    ${sel ? `<h2>Current Lean proof</h2><p>${leanLink(sel.lean_file)}</p>` : ''}
-    ${live ? `<h2>Lean statement</h2><div class="card">
-      <p><code>${esc(live.lean_decl)}</code> · ${leanLink(live.lean_file)}</p>
-      ${deltaList(live.id)}
-      <details data-lean="${esc(live.lean_file)}"><summary>Lean source</summary><div class="src muted small">Loading…</div></details>
-    </div>` : ''}
-    <h2>Written proof${proofs.length > 1 ? 's' : ''}</h2>
-    ${proofs.length ? proofHtml : `<p class="muted">${!needsProof ? 'This is part of the model used by the proofs.' : !lean ? 'This claim is outside the Lean formalization.' : 'No written proof is recorded for this claim.'}</p>`}
-    ${c.assumes != null && sel && sel.status === 'proved' ? `<p class="small muted">End-to-end assembly: ${c.assumes ? `still assumes ${c.assumes.split(', ').map(x => claimLink(x)).join(', ')}` : 'assumes no unproved claim'}; axioms ${c.axioms ? `<code>${esc(c.axioms)}</code>` : 'not recorded yet'}.</p>` : ''}
-    `;
-
-  main.querySelectorAll('details[data-lean]').forEach(d => {
-    const load = () => {
-      if (d.dataset.done) return;
-      d.dataset.done = '1';
-      loadLean(d.dataset.lean).then(src => { d.querySelector('.src').outerHTML = leanHtml(src); })
-        .catch(() => { d.querySelector('.src').textContent = 'Could not load the file from this site. Use the GitHub link above.'; });
-    };
-    if (d.open) load();
-    d.addEventListener('toggle', () => d.open && load());
-  });
-}
-
 /* ---------------------------------------------------------------- routing */
 function route() {
   const [path, query] = (location.hash.replace(/^#\/?/, '') || 'overview').split('?');
@@ -749,7 +637,7 @@ function route() {
   document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.view === nav));
   tip.hidden = true;
   ({ overview: viewOverview, results: viewResults, graph: () => viewGraph(arg),
-     claims: () => viewClaims(params), claim: () => viewClaim(arg) }[view] || viewOverview)();
+     claims: () => viewClaims(params), claim: () => viewClaim(arg, params.get('view')) }[view] || viewOverview)();
   if (!arg || view === 'claim' || view === 'graph') window.scrollTo(0, 0);
 }
 

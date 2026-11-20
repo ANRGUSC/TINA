@@ -15,6 +15,7 @@ on:
       - 'papers/arxiv-v3/lean/progress/**'
       - 'papers/arxiv-v3/lean/ledger/**'
       - 'papers/arxiv-v3/lean/tools/ledger.py'
+      - 'papers/arxiv-v3/lean/tools/reader_passages.py'
       - 'papers/arxiv-v3/lean/TinaV2/**'
       - '.github/workflows/publish-reading-guide.yml'
   workflow_dispatch:
@@ -40,7 +41,10 @@ jobs:
       # the arXiv v3 manuscript, published under /arxiv-v3/lean/progress/.
       # (Until 2026-11-18 it tracked arXiv v2 and was under /arxiv-v2/lean/.)
       - name: Add the arXiv v3 Lean proof-progress explorer
-        run: python3 papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean
+        run: |
+          python3 -m venv "$RUNNER_TEMP/tina-pages"
+          "$RUNNER_TEMP/tina-pages/bin/pip" install --only-binary=:all: pymupdf==1.26.5
+          "$RUNNER_TEMP/tina-pages/bin/python" papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

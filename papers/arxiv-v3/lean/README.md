@@ -161,8 +161,8 @@ python3 tools/ledger.py sql "SELECT target, body FROM notes WHERE kind = 'failur
 
 `progress/` is a web page over the same ledger: status overview, the advertised
 results with their completion record, the claim dependency graph, one page per
-claim with the written proof steps next to their Lean lemmas, findings and
-decisions, paper edits, and a SQL console. It reads `ledger/schema.sql` and
+claim with the current written proof steps next to their corresponding Lean lemmas.
+Select a graph node to read its plain-English explanation. The explorer reads `ledger/schema.sql` and
 `ledger/data.sql` directly (SQLite compiled to WebAssembly, vendored in
 `progress/vendor/`), so there is no generated data file to keep in step with
 the ledger.

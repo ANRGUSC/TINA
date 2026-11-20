@@ -14,18 +14,9 @@
 <body>
 <header class="top">
   <div class="wrap">
-    <div class="scope" role="note">
-      <strong>Work in progress, arXiv v3 only.</strong>
-      This page tracks new Lean proof work for the arXiv v3 revision of the TINA paper
-      (<code>main-v3.tex</code> and <code>technical-appendices-v3.tex</code>; until
-      2026-11-18 it tracked arXiv v2). It is separate from the L-CSS letter and its
-      reading guide and says nothing about that manuscript. Statuses and findings are working
-      notes on a draft and change as the work proceeds. A finding is a place where the formal
-      proof needed more than the text says; none found so far says a stated result is false.
-    </div>
     <div class="titlebar">
       <div>
-        <h1>Lean proof progress <span class="sub">arXiv v3 manuscript</span></h1>
+        <h1>Lean proof explorer <span class="sub">arXiv v3 manuscript</span></h1>
         <p class="meta" id="buildmeta">Loading the ledger…</p>
       </div>
       <nav id="nav" aria-label="Views">
@@ -34,9 +25,6 @@
         <a href="#/results" data-view="results">Results</a>
         <a href="#/graph" data-view="graph">Dependency graph</a>
         <a href="#/claims" data-view="claims">Claims</a>
-        <a href="#/findings" data-view="findings">Findings and decisions</a>
-        <a href="#/edits" data-view="edits">Paper edits</a>
-        <a href="#/sql" data-view="sql">SQL</a>
       </nav>
     </div>
   </div>
@@ -46,9 +34,7 @@
 </main>
 <footer class="wrap foot">
   <p>
-    Data: <code>ledger/schema.sql</code> and <code>ledger/data.sql</code>, loaded into SQLite in your
-    browser (sql.js). Nothing is written back. The ledger is edited only through
-    <code>tools/ledger.py</code>.
+    <a href="https://anrgusc.github.io/TINA/arxiv-v3/tina-v3.pdf">Read the arXiv v3 manuscript</a> ·
     <a href="https://github.com/ANRGUSC/TINA/tree/main/papers/arxiv-v3/lean">Source on GitHub</a>
   </p>
 </footer>

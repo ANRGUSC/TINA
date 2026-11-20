@@ -77,7 +77,7 @@ def build(output):
         return f"{PROOF_ROOT}/{path}"
 
     def reader_url(claim):
-        return f"lean/progress/#/claim/{claim}"
+        return f"proofs/#/claim/{claim}"
 
     def proof_actions(claim):
         return (f'<div class="actions">'
@@ -107,6 +107,8 @@ def build(output):
     template = Template((HERE / "guide.html").read_text(encoding="utf-8"))
     (output / "index.html").write_text(template.substitute(contents="".join(contents),
                                                           sections="".join(sections)), encoding="utf-8")
+    (output / "proofs").mkdir(exist_ok=True)
+    shutil.copyfile(HERE / "proofs.html", output / "proofs/index.html")
     shutil.copyfile(ROOT / "submissions/arxiv-v3/tina-v3.pdf", output / "tina-v3.pdf")
     print(f"Built {len(headings)} numbered results in {output}")
 

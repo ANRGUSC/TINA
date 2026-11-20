@@ -8,7 +8,9 @@
  */
 'use strict';
 
-const LEAN_ROOT = '..';
+const PUBLIC_PROOFS = document.body.hasAttribute('data-public-proofs');
+const ASSETS = new URL('.', document.currentScript.src);
+const LEAN_ROOT = new URL('..', ASSETS).href.replace(/\/$/, '');
 const DEFAULT_REPO = 'ANRGUSC/TINA';
 const DEFAULT_LEAN_DIR = 'papers/arxiv-v3/lean';
 
@@ -574,7 +576,24 @@ function drawSide(lay) {
 
 /* ----------------------------------------------------------------- claims */
 const F = { keys: new Set(), tier: '', text: '', sort: 'id', dir: 1 };
+function viewPublicClaims() {
+  main.innerHTML = `<h2>Claims</h2><div class="filters"><input type="search" id="f-text"
+    placeholder="Search by claim, title, or statement" aria-label="Search claims" value="${esc(F.text)}"></div>
+    <div class="tbl-wrap"><table id="ctable"><thead><tr><th>Claim</th><th>Title</th><th>Kind</th></tr></thead>
+    <tbody></tbody></table></div>`;
+  const draw = () => {
+    const query = F.text.trim().toLowerCase();
+    const rows = M.claims.filter(c => `${c.id} ${c.title} ${c.statement} ${c.kind}`.toLowerCase().includes(query));
+    main.querySelector('tbody').innerHTML = rows.map(c => `<tr><td>${claimLink(c.id)}</td>
+      <td><a href="${claimHref(c.id, 'plain')}">${esc(c.title)}</a></td><td>${esc(c.kind)}</td></tr>`).join('')
+      || '<tr><td colspan="3">No claims match.</td></tr>';
+  };
+  main.querySelector('#f-text').oninput = e => { F.text = e.target.value; draw(); };
+  draw();
+}
+
 function viewClaims(params) {
+  if (PUBLIC_PROOFS) return viewPublicClaims();
   if (params.has('key')) { F.keys = new Set(params.get('key').split(',').filter(k => KEYS[k])); }
   const counts = countKeys(M.claims);
   main.innerHTML = `
@@ -628,8 +647,13 @@ function viewClaims(params) {
 /* ----------------------------------------------------------- claim detail */
 /* ---------------------------------------------------------------- routing */
 function route() {
-  const [path, query] = (location.hash.replace(/^#\/?/, '') || 'overview').split('?');
+  const landing = PUBLIC_PROOFS ? 'claims' : 'overview';
+  const [path, query] = (location.hash.replace(/^#\/?/, '') || landing).split('?');
   const [view, ...rest] = path.split('/');
+  if (PUBLIC_PROOFS && !['claim', 'claims', 'graph'].includes(view)) {
+    history.replaceState(null, '', '#/claims');
+    return route();
+  }
   if (['edits', 'findings', 'sql'].includes(view)) {
     history.replaceState(null, '', '#/results');
     return route();
@@ -645,6 +669,10 @@ function route() {
 }
 
 function header() {
+  if (PUBLIC_PROOFS) {
+    document.getElementById('buildmeta').textContent = `${M.claims.length} claims in the manuscript and appendix`;
+    return;
+  }
   const src = Object.values(M.sources)[0];
   const parts = [`Ledger: ${M.claims.length} claims, ${M.lean.length} in Lean scope`];
   if (src && src.git_commit) parts.push(`aligned to the paper at commit <a href="https://github.com/${repo()}/commit/${src.git_commit}">${src.git_commit.slice(0, 7)}</a>`);
@@ -686,9 +714,9 @@ async function boot() {
       return r.text();
     });
     const [sql, schema, data, build] = await Promise.all([
-      window.initSqlJs({ locateFile: f => `vendor/${f}` }),
+      window.initSqlJs({ locateFile: f => new URL('vendor/' + f, ASSETS).href }),
       text('ledger/schema.sql'), text('ledger/data.sql'),
-      fetch('build-info.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null),
+      fetch(new URL('build-info.json', ASSETS), { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null),
     ]);
     info = build;
     db = new sql.Database();

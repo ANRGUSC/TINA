@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore the arXiv v3 manuscript claims, their dependencies, and their Lean proofs.">
+<title>arXiv v3 Proof Explorer · TINA</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<link rel="stylesheet" href="../lean/progress/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script defer src="../lean/progress/vendor/sql-wasm.js"></script>
+<script defer src="../lean/progress/reader.js"></script>
+<script defer src="../lean/progress/lamport.js"></script>
+<script defer src="../lean/progress/app.js"></script>
+</head>
+<body data-public-proofs>
+<header class="top">
+  <div class="wrap">
+    <div class="titlebar">
+      <div>
+        <h1>Proof Explorer <span class="sub">arXiv v3 manuscript</span></h1>
+        <p class="meta" id="buildmeta">Loading claims…</p>
+      </div>
+      <nav id="nav" aria-label="Views">
+        <a href="../">Paper-to-proof guide</a>
+        <a href="#/graph" data-view="graph">Dependency graph</a>
+        <a href="#/claims" data-view="claims">Claims</a>
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="main" tabindex="-1">
+  <p class="loading">Loading claims…</p>
+</main>
+<footer class="wrap foot">
+  <p>
+    <a href="https://anrgusc.github.io/TINA/arxiv-v3/tina-v3.pdf">Read the arXiv v3 manuscript</a> ·
+    <a href="https://github.com/ANRGUSC/TINA/tree/main/papers/arxiv-v3/lean">Source on GitHub</a>
+  </p>
+</footer>
+<div id="tip" class="tip" hidden></div>
+</body>
+</html>

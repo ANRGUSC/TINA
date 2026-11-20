@@ -22,7 +22,7 @@ function plainPanel(c, proofs) {
 }
 
 async function readPassage(id) {
-  const response = await fetch('paper-assets/' + encodeURIComponent(id) + '.json');
+  const response = await fetch(new URL('paper-assets/' + encodeURIComponent(id) + '.json', ASSETS));
   if (!response.ok) throw new Error(response.status);
   return response.json();
 }
@@ -35,7 +35,7 @@ async function paperPanel(panel, c, proofs) {
     panel.innerHTML = `<h3>Math statement/proof (per paper)</h3>${note}
       ${regions.map(([n,lo,hi]) => `<figure class="reader-page">
         <figcaption><a href="https://anrgusc.github.io/TINA/arxiv-v3/tina-v3.pdf#page=${n}" target="_blank" rel="noopener">Open manuscript · page ${n}</a></figcaption>
-        <svg role="img" aria-label="Manuscript excerpt on page ${n}. The corresponding TeX is available below." viewBox="65 ${lo} 482 ${hi-lo}" width="482" height="${hi-lo}"><image href="paper-assets/page-${n}.svg" width="612" height="792"/></svg></figure>`).join('')}
+        <svg role="img" aria-label="Manuscript excerpt on page ${n}. The corresponding TeX is available below." viewBox="65 ${lo} 482 ${hi-lo}" width="482" height="${hi-lo}"><image href="${new URL('paper-assets/page-' + n + '.svg', ASSETS).href}" width="612" height="792"/></svg></figure>`).join('')}
       <details><summary>Read the manuscript excerpt as TeX</summary>${source.map(s => `<p>${paperLink(s.file,s.first,s.last)}</p><pre class="code reader-tex">${esc(s.tex)}</pre>`).join('')}</details>`;
   } catch (error) {
     panel.innerHTML = `<p>The paper passage could not be loaded. ${paperLink(c.source,c.line_start,c.line_end)}</p>`;

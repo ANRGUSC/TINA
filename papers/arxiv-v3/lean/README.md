@@ -157,7 +157,12 @@ python3 tools/ledger.py audit -v          # what each Lean step lemma uses, agai
 python3 tools/ledger.py sql "SELECT target, body FROM notes WHERE kind = 'failure'"
 ```
 
-### Progress explorer
+### Public Proof Explorer and progress dashboard
+
+The paper guide links readers to the [Proof Explorer](https://anrgusc.github.io/TINA/arxiv-v3/proofs/).
+It opens on the searchable claims list. The [maintainer dashboard](https://anrgusc.github.io/TINA/arxiv-v3/lean/progress/)
+opens on Overview and includes Results, the dependency graph, and the detailed claims table.
+Both use the same ledger, claim reader, Lean source files, and verification record.
 
 `progress/` is a web page over the same ledger: status overview, the advertised
 results with their completion record, the claim dependency graph, and one page

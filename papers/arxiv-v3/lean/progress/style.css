@@ -322,3 +322,8 @@ details.group > summary b { font-variant-numeric: tabular-nums; margin-left: 4px
   .reader-tabs a { font-size: .86rem; padding: .55rem; }
   .reader-panel { padding: .8rem; }
 }
+.verification { display:flex; gap:.45rem 1rem; align-items:baseline; flex-wrap:wrap; margin:1rem 0; }
+.verification details { min-width:0; margin:0; }
+.verification details[open] { flex-basis:100%; }
+.verification summary { color:var(--ink); font-weight:650; cursor:pointer; }
+.verification dd { overflow-wrap:anywhere; }

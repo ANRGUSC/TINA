@@ -95,6 +95,22 @@ async function leanPanel(panel, c) {
   }));
 }
 
+function verificationRecord(c) {
+  const record = info?.verification;
+  const proof = record?.claims?.[c.id];
+  if (!proof || record.commit !== info.commit) return '';
+  const attempt = M.attempts.find(a => a.claim_id === c.id && a.selected && a.status === 'proved');
+  if (attempt?.id !== proof.attempt) return '';
+  return `<div class="verification"><details><summary>✓ Machine-checked by Lean</summary>
+    <dl class="kv"><dt>Theorem</dt><dd><code>${esc(proof.theorem)}</code></dd>
+    <dt>Checked</dt><dd>${esc(record.checked)}</dd>
+    <dt>Commit</dt><dd><a href="https://github.com/${repo()}/commit/${esc(record.commit)}"><code>${esc(record.commit)}</code></a></dd>
+    <dt>Lean version</dt><dd>${esc(record.lean)}</dd>
+    <dt>Transitive axioms</dt><dd>${esc(proof.axioms.join(', ') || 'None')}</dd></dl>
+    <p>The axiom audit found no <code>sorry</code> dependencies.</p></details>
+    <a href="${esc(record.run)}">View verification run</a></div>`;
+}
+
 function viewClaim(id, requested) {
   const c = M.byId.get(id);
   if (!c) { main.innerHTML = `<p>Unknown claim ${esc(id)}. <a href="#/claims">Browse claims</a></p>`; return; }
@@ -111,6 +127,7 @@ function viewClaim(id, requested) {
       <span class="reader-neighbors">${neighbor(-1)} ${neighbor(1)}</span></p>
     <div class="claim-head"><h2><span class="idlink">${esc(id)}</span> ${esc(c.title)}</h2><span class="tag">${esc(c.kind)}</span></div>
     <p>${statusChip(c)} <a class="reader-graph" href="#/graph/${encodeURIComponent(id)}">Show in dependency graph</a></p>
+    ${verificationRecord(c)}
     <div class="reader-tabs" role="tablist" aria-label="Claim views">${tabNames.map(v => `<a id="reader-tab-${v}" role="tab" href="${claimHref(id,v)}" aria-controls="reader-panel" aria-selected="${v===view}" tabindex="${v===view ? 0 : -1}">${readerViews[v]}</a>`).join('')}</div>
     <section id="reader-panel" class="reader-panel" tabindex="0" role="tabpanel" aria-labelledby="reader-tab-${view}"></section></article>`;
   const panel = main.querySelector('#reader-panel');

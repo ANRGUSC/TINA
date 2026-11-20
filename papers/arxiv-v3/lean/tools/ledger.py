@@ -912,7 +912,7 @@ run_cmd do
 """
 
 
-def cmd_audit(db, args):
+def audit_selected(db, args):
     """Compare what each step lemma uses in Lean with what its paper step may use.
 
     For every selected proved attempt, Lean lists the step lemmas and the claim
@@ -938,7 +938,7 @@ def cmd_audit(db, args):
         owner[ns + ".main"] = (a, None)
     if not lemmas:
         print("no selected proved attempts")
-        return
+        return []
     shorts = {a["claim_id"]: a["lean_decl"].split(".")[-2] for a in attempts}
     lean = (AUDIT_LEAN.replace("%LEMMAS%", ", ".join(f"(`{ns}, `{n})" for ns, n in lemmas))
             .replace("%THEOREMS%", ", ".join(f"`TinaV2.Assembly.{s}" for s in shorts.values())))
@@ -1016,11 +1016,16 @@ def cmd_audit(db, args):
         if n != 1:
             errs.append(f"{claim}: no assembled record to store the axioms in: run `ledger.py assembly`")
         recorded += n
-    save(db)
     for e in errs:
         print("ERROR  ", e)
     print(f"{seen} lemmas audited in {len(attempts)} attempts, axioms recorded for {recorded} "
           f"assembled theorems, {len(errs)} errors")
+    return errs
+
+
+def cmd_audit(db, args):
+    errs = audit_selected(db, args)
+    save(db)
     sys.exit(1 if errs else 0)
 
 
@@ -1194,6 +1199,11 @@ def cmd_site(db, args):
         if not (out / r["lean_file"]).is_file():
             sys.exit(f"{r['id']}: {r['lean_file']} is in the ledger but not in the site")
     info = build_info(db)
+    if len(args) > 1:
+        verification = json.loads(Path(args[1]).read_text(encoding="utf-8"))
+        if not info["commit"] or verification["commit"] != info["commit"]:
+            sys.exit("The Lean verification record and site must have the same commit.")
+        info["verification"] = verification
     (out / "progress" / "build-info.json").write_text(json.dumps(info, indent=1))
     (out / "index.html").write_text(
         '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=progress/">'

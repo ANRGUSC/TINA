@@ -1,0 +1,47 @@
+name: Verify arXiv v3 Lean proofs
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'papers/arxiv-v3/lean/**'
+      - '.github/workflows/verify-arxiv-v3-lean.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      LEAN_NUM_THREADS: '2'
+    defaults:
+      run:
+        working-directory: papers/arxiv-v3/lean
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install the pinned Lean toolchain
+        uses: leanprover/lean-action@96e06131c0e9943c780388fd166f55d1e2fa0433
+        with:
+          lake-package-directory: papers/arxiv-v3/lean
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-github-cache: 'false'
+          use-mathlib-cache: 'false'
+      - name: Fetch compiled Mathlib dependencies
+        run: |
+          mapfile -t modules < <(grep -rhE '^import Mathlib(\.|$)' TinaV2 --include='*.lean' | cut -d' ' -f2 | sort -u)
+          lake exe cache get "${modules[@]}"
+      - name: Rebuild v3 proofs and audit each assembled theorem
+        run: python3 tools/verify_release.py "$RUNNER_TEMP/verification.json"
+      - name: Save the verification record
+        uses: actions/upload-artifact@v7
+        with:
+          name: arxiv-v3-lean-${{ github.sha }}
+          path: ${{ runner.temp }}/verification.json
+          if-no-files-found: error
+          overwrite: true

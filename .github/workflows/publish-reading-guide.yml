@@ -12,11 +12,8 @@ on:
       - 'papers/lcss/main.pdf'
       - 'submissions/lcss/lcss-paper.pdf'
       - 'proof-reports/lcss-letter/TINA_LCSS_Submission_Lamport_Report.pdf'
-      - 'papers/arxiv-v3/lean/progress/**'
-      - 'papers/arxiv-v3/lean/ledger/**'
-      - 'papers/arxiv-v3/lean/tools/ledger.py'
-      - 'papers/arxiv-v3/lean/tools/reader_passages.py'
-      - 'papers/arxiv-v3/lean/TinaV2/**'
+      - 'papers/arxiv-v3/lean/**'
+      - '.github/workflows/verify-arxiv-v3-lean.yml'
       - '.github/workflows/publish-reading-guide.yml'
   workflow_dispatch:
 
@@ -28,11 +25,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  verify-lean:
+    uses: ./.github/workflows/verify-arxiv-v3-lean.yml
+
   build:
+    needs: verify-lean
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+      - name: Download the verification record from this run
+        uses: actions/download-artifact@v5
+        with:
+          name: arxiv-v3-lean-${{ github.sha }}
+          path: ${{ runner.temp }}/lean-verification
       - name: Build and verify the guide
         run: python3 explainers/lcss-letter/build_pages.py
       - name: Build the arXiv v3 paper-to-proof guide
@@ -44,7 +50,7 @@ jobs:
         run: |
           python3 -m venv "$RUNNER_TEMP/tina-pages"
           "$RUNNER_TEMP/tina-pages/bin/pip" install --only-binary=:all: pymupdf==1.26.5
-          "$RUNNER_TEMP/tina-pages/bin/python" papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean
+          "$RUNNER_TEMP/tina-pages/bin/python" papers/arxiv-v3/lean/tools/ledger.py site _site/arxiv-v3/lean "$RUNNER_TEMP/lean-verification/verification.json"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

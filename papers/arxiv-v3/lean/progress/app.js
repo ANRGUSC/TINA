@@ -136,6 +136,9 @@ function buildModel() {
 /* ------------------------------------------------------- shared fragments */
 const icon = key => `<span class="ico ${key}" style="--c:var(${KEYS[key].c})" aria-hidden="true">${KEYS[key].glyph}</span>`;
 function statusChip(c, long) {
+  if (c.kind === 'assumption' && !M.attempts.some(a => a.claim_id === c.id && a.selected)) {
+    return '<span class="chip">Model assumption</span>';
+  }
   const k = KEYS[c.key];
   const extra = c.detail && long !== false ? ` · ${esc(c.detail)}` : '';
   if (long === false && c.key === 'blocked') return `<span class="chip" data-tip="${esc(k.help)}">${icon(c.key)}Waiting</span>`;

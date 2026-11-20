@@ -76,6 +76,16 @@ def build(output):
             raise FileNotFoundError(path)
         return f"{PROOF_ROOT}/{path}"
 
+    def reader_url(claim):
+        return f"lean/progress/#/claim/{claim}"
+
+    def proof_actions(claim):
+        return (f'<div class="actions">'
+                f'<a class="proof" aria-label="All Proofs for {claim}" '
+                f'href="{reader_url(claim)}">All Proofs</a>'
+                f'<a class="source" aria-label="Lean Proof Source for {claim}" '
+                f'href="{proof_url(claim)}">Lean Proof Source</a></div>')
+
     sections, contents = [], []
     for anchor, section, heading, group in GROUPS:
         contents.append(f'<a href="#{anchor}"><span>{section}</span>{heading}</a>')
@@ -83,14 +93,13 @@ def build(output):
         for claim in group:
             number, title = headings[claim]
             page, summary, related = RESULTS[claim]
-            links = "".join(f'<li><a href="{proof_url(c)}">{escape(text)}</a> <small>{c}</small></li>'
+            links = "".join(f'<li><a href="{reader_url(c)}">{escape(text)} <small>{c}</small></a>{proof_actions(c)}</li>'
                             for c, text in related)
             details = f'<ul class="related">{links}</ul>' if links else ""
             articles.append(f'''<article id="{number.lower().replace(" ", "-")}">
-  <div class="citation"><strong>{number}</strong><a href="tina-v3.pdf#page={page}">PDF p. {page}</a></div>
+  <div class="citation"><strong>{number}</strong><small>{claim}</small><a href="tina-v3.pdf#page={page}">PDF p. {page}</a></div>
   <h3>{escape(title)}</h3><p>{escape(summary)}</p>
-  <div class="actions"><a class="proof" href="{proof_url(claim)}">Read Lean proof <code>{claim}</code></a>
-  <a href="https://anrgusc.github.io/TINA/arxiv-v3/lean/progress/#/claim/{claim}">Read the claim and proof sketch</a></div>
+  {proof_actions(claim)}
   {details}</article>''')
         sections.append(f'<section id="{anchor}"><div class="section-label">{section}</div>'
                         f'<h2>{heading}</h2>{"".join(articles)}</section>')

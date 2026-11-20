@@ -35,12 +35,14 @@ article { padding:1.65rem 0; border-top:1px solid var(--line); scroll-margin-top
 .citation strong { color:var(--teal) }
 h3 { font-size:clamp(1.45rem,2.5vw,1.95rem); margin:.45rem 0 }
 article p { max-width:67ch; margin:.65rem 0 1rem }
-.actions { font-size:.94rem }
-.proof { background:var(--teal); color:white; padding:.45rem .78rem; text-decoration:none; border-radius:.25rem; font-weight:600 }
+.actions { font-size:.94rem; gap:.55rem }
+.actions a { display:inline-flex; align-items:center; min-height:2.75rem; padding:.4rem .75rem; text-decoration:none; border:1px solid var(--teal); border-radius:.25rem; font-weight:600 }
+.proof { background:var(--teal); color:white }
 .proof:hover { background:#054e42 }
-code { margin-left:.3rem; font-family:ui-monospace,monospace; font-size:.89em }
-.related { margin:1rem 0 0; padding-left:1.2rem; font-size:.94rem }
-.related li { margin:.25rem 0 }
+.source:hover { background:#e9f2ef }
+.related { margin:1rem 0 0; padding:0 0 0 .85rem; border-left:2px solid var(--line); list-style:none; font-size:.94rem }
+.related li { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.4rem 1rem; margin:.6rem 0 }
+.related .actions { font-size:.85rem }
 small { color:var(--muted) }
 footer { border-top:1px solid var(--line); padding:1.2rem 0 }
 .skip { position:absolute; top:-5rem; background:white; padding:.5rem }

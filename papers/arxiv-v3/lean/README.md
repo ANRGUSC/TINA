@@ -177,10 +177,13 @@ python3 tools/ledger.py serve             # http://127.0.0.1:8642/progress/
 python3 tools/ledger.py site OUTDIR       # static copy for GitHub Pages
 ```
 
-Each Pages release first builds the project in a fresh checkout and audits the
-transitive axioms of each selected, fully assembled theorem. The claim reader
-links to the GitHub verification run and shows the theorem, commit, Lean version,
-check time, and axiom list. The workflow is `.github/workflows/verify-arxiv-v3-lean.yml`.
+When proof inputs change, Pages runs `.github/workflows/verify-arxiv-v3-lean.yml`
+to rebuild the project and audit each assembled theorem's transitive axioms.
+For a guide, navigation, or documentation change, Pages compares the proof
+inputs with the commit from the published verification record. If they match
+and GitHub confirms that the original run succeeded, the claim reader retains
+that run's theorem, verified commit, Lean version, check time, and axiom list.
+A missing or unusable record triggers a fresh check.
 
 The Pages workflow (`.github/workflows/publish-reading-guide.yml`) runs `site`
 on every push to `main` that touches this directory and publishes the result at

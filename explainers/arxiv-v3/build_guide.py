@@ -84,7 +84,9 @@ def build(output):
                 f'<a class="proof" aria-label="All Proofs for {claim}" '
                 f'href="{reader_url(claim)}">All Proofs</a>'
                 f'<a class="source" aria-label="Lean Proof Source for {claim}" '
-                f'href="{proof_url(claim)}">Lean Proof Source</a></div>')
+                f'href="{proof_url(claim)}">Lean Proof Source</a>'
+                f'<a href="proofs/#/graph/{claim}" aria-label="Show in dependency graph for {claim}">'
+                'Show in dependency graph</a></div>')
 
     sections, contents = [], []
     for anchor, section, heading, group in GROUPS:

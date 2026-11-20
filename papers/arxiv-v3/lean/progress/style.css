@@ -196,6 +196,9 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .side[hidden] { display: none; }
 .side .close { float: right; border: 0; background: none; font-size: 20px; line-height: 1; cursor: pointer; color: var(--ink-2); padding: 0 2px; }
 .side h3 { margin-top: 0; }
+.side .claim-explanation { font-size: 1rem; line-height: 1.5; }
+.side .graph-statement summary { cursor: pointer; color: var(--ink-2); }
+.side .graph-statement p { overflow-wrap: anywhere; }
 .side dl { margin: 8px 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 13px; }
 .side dt { color: var(--ink-2); }
 .side dd { margin: 0; }

@@ -412,6 +412,54 @@ function checkAlert() {
 }
 
 /* ------------------------------------------------------------------ graph */
+// Reader-facing explanations. The precise statement and review status come from the ledger.
+const graphExplanations = {
+  'C1': 'Imagine knowing the ideal action for every state, then restricting each agent to what it can observe. The best team policy is the feasible one closest to those ideal actions on average, with errors weighted by their cost.',
+  'C1.b': 'Once the team has chosen its best feasible policy, no adjustment based on the same observations can predict the remaining error in a direction that reduces cost. This lets us split the value of full information into the part the policy captures and the part it misses.',
+  'C1.c': 'Giving agents more information can only improve their best achievable performance or leave it unchanged. They can always ignore the extra readings and use their old policy.',
+  'C2': 'At the best team decision, each agent expects no first-order cost saving from nudging its action, given what it can see. For this quadratic cost, satisfying that condition for every agent is enough to identify the optimum.',
+  'C3': 'When every agent sees the same report, the team should use the average full-information action among states consistent with that report. This works even when one agent’s error affects the cost of another’s.',
+  'C3.b': 'If having no observations already costs nothing, the ideal action in centered coordinates is zero with probability one. Every information arrangement can then achieve zero regret, and there is no positive loss by which to divide.',
+  'C3.c': 'In the stationary Markov model, an older complete snapshot cannot improve the best prediction. Stationarity makes the expected loss the same at each time, while interpreting a long run on one sample path as that expectation also calls for ergodicity.',
+  'C4': 'Given the whole old network state, your best prediction scales every old reading by the same factor, which shrinks as the snapshot ages. Even knowing all the old readings, the remaining error averages to zero.',
+  'C4.b': 'In this discrete-time model, each step retains a fixed fraction of the previous state and adds a disturbance whose average given the past is zero. Looking ahead several steps multiplies that fraction once per step.',
+  'C4.c': 'In the continuous-time Gaussian model studied here, an old reading predicts a deviation from the mean that fades exponentially with time. The random change since that reading has mean zero given the old state, as C4 requires.',
+  'C5': 'For a given state, the quadratic cost has one ideal action. Choosing any other action adds exactly half the squared distance from that ideal, with the cost matrix determining which errors matter most.',
+  'C5.b': 'Known averages can be subtracted from both the observations and the actions. Working with deviations from those averages preserves every feasible decision rule and the error it makes.',
+  'C6': 'An information architecture specifies which readings each agent receives and how old they are. Regret measures the extra cost of the best decisions those readings allow, compared with decisions made with full current information.',
+  'C6.b': 'If an agent has no readings, the team’s best fixed choice is the average ideal action, which is zero after centering. The remaining loss measures how much those ideal actions vary in directions that matter for cost.',
+  'C6.c': 'With fresh readings, the fraction of the no-information loss that remains is between zero and one. It can only fall or stay the same as the neighborhood expands, and it reaches zero once every agent sees the whole connected graph.',
+  'C7': 'Delay mixes two losses: the loss with no information and the loss with a fresh view of the same neighborhood. The weight on the fresh-view loss is the square of the prediction factor, so older readings move performance toward the no-information baseline.',
+  'C7.b': 'Measure a snapshot’s value by the fraction of the no-information loss it saves. A delayed snapshot saves the fraction a fresh neighborhood would save, multiplied by the square of the prediction factor.',
+  'C8': 'With a complete old snapshot, the team can act on everything the old state predicts. Its remaining regret comes entirely from changes since the snapshot, and the formula gives that loss at any finite delay.',
+  'C8.c': 'A complete snapshot starts with zero regret. For short delays its loss grows approximately in proportion to its age, and for very long delays it approaches the loss of acting without observations.',
+  'C9': 'A complete snapshot can reveal independent patterns that fade at different speeds. Its remaining value is a weighted average of what each pattern retains, with greater weight on patterns that matter more to the decision.',
+  'C10': 'The more useful information a fresh local reading misses, the older a complete report can be before the local reading beats it. If the local reading misses everything, the complete report wins at every finite age.',
+  'C10.b': 'If a local reading already determines the ideal action, it beats a complete report at any positive delay. If the reading captures only part of what matters, the two choices tie at exactly one delay.',
+  'C11': 'To estimate the average of two independent sensor signals, would you take one fresh reading or both old readings? In this example, the fresh reading gives smaller mean squared error once the pair is more than about 0.35 coherence times old.',
+  'C12': 'When the team pays a penalty for its combined action, each agent’s best response to its own fresh reading is to scale it down by a fixed amount. The result also quantifies the loss from being unable to see the other agents’ readings.',
+  'C13': 'For the shared-resource example, team size and the penalty on the combined action determine a specific delay threshold. Above it, using fresh local readings costs less than using a complete old report.',
+  'C13.b': 'As the team grows, the delay threshold approaches a finite limit. Local readings continue to capture a definite share of the available benefit, determined by the relative strengths of the individual and shared costs.',
+  'C13.c': 'With no shared penalty, any positive delay favors fresh local readings. As the penalty couples agents more strongly, knowing what others are doing becomes more valuable and a complete report can be older before local readings win.',
+  'C14': 'One more hop gives an agent a wider view but can make the whole snapshot older. Take that hop if the wider snapshot still saves more expected loss after its extra delay is counted.',
+  'C15': 'If the best observation radius lies between the two allowed extremes, a small expansion buys exactly as much in additional predictive value as its delay costs. The balance compares proportional changes in value.',
+  'C15.b': 'Suppose the advantage of expanding a little farther steadily decreases with radius. The best radius is where that advantage crosses zero, or at the appropriate endpoint if expanding is already unhelpful at the start or still worthwhile at the end.',
+  'C15.c': 'With the same spatial information curve and a single crossing, slower changes in the state can move the best radius outward, while slower delivery can move it inward. The best radius can stay put, for example at a boundary.',
+  'C16': 'Suppose the information missed falls exponentially with radius and waiting time grows in proportion to distance. The best choice is to stay local if the first expansion gains too little, and otherwise expand to the balance point or the allowed range limit.',
+  'C17': 'Picture sensors all along a line, with nearby readings and nearby times more closely related. Each location wants a distance-weighted average of the field and can see an interval around it, but a wider interval takes longer to arrive.',
+  'C17.b': 'Even with a whole interval of sensors on the line, delay reduces the value of its readings by the same factor as in the network model. If the best predicted action shrinks by a given factor, the gain under squared error shrinks by its square.',
+  'C18': 'On the Gaussian line, knowing a fresh interval lets each boundary reading predict part of the unobserved region beyond it. The fraction of decision-relevant information still missing falls exponentially as the interval widens.',
+  'C19': 'In the line model, it pays to look beyond the local reading exactly when a report can travel more than twice the spatial correlation length in one coherence time. The theorem gives the unique best radius on either side of that threshold.',
+  'C19.b': 'When the best radius is positive, it grows if reports travel faster, the state changes more slowly, or the decision gives distant readings more weight. It shrinks if nearby readings resemble each other over greater distances, comparing settings that stay in the positive-radius regime.',
+  'C20': 'Even if the decision gives weight to readings farther and farther away, the best observation radius approaches a finite limit. In the positive-radius regime, that limit is half the distance a report travels in one coherence time, minus one spatial correlation length.',
+  'C21': 'In the shared-resource simulation, the estimated delay at which fresh local readings overtake a complete old report agrees with the theoretical boundary. The comparison checks the prediction in the simulated cases.',
+  'C22': 'With the allowed radius capped at two, the best choice differs across the three plotted examples. One stays local, another stops partway out at about 0.63, and the third uses the full allowed range.',
+  'C23': 'On the same 64-node ring, changing only how far the decision weights reach shifts the best observation radius from one hop to two and then five. The network and its delay per hop stay fixed.',
+  'C24': 'In the plotted path, ring, grid, and random geometric networks, the best radii are two, two, three, and two hops, respectively. Each optimum is well short of the distance needed to see the whole network.',
+  'C25': 'The paper asks when fresh local information beats an old global view, how far an agent should look, and how that choice changes with the decision it must make. Its main examples put numbers on each of those tradeoffs.',
+  'C26': 'The paper connects its results to earlier work on team decisions and the value of fresh information. In particular, it identifies where Marschak and Radner already derived the marginal balance and the local information share used here.',
+  'C27': 'On a general finite graph, compare the available hop counts directly. In the continuous model, a single crossing of the gain and delay rates can identify the optimum.',
+};
 const G = { showOut: false, kinds: { uses: true, setup: true, instantiates: true, evidence: true }, sel: null, vb: null };
 const NW = 128, NH = 54, GX = 12, GY = 54;
 
@@ -596,9 +644,11 @@ function drawSide(lay) {
   const list = a => a.length ? a.sort(idCmp).map(id => claimLink(id)).join(', ') : '<span class="muted">none</span>';
   side.innerHTML = `<button class="close" id="g-close" aria-label="Clear selection">×</button>
     <h3><span class="idlink">${esc(c.id)}</span> ${esc(c.title)}</h3>
+    ${graphExplanations[c.id] ? `<p class="claim-explanation">${esc(graphExplanations[c.id])}</p>
+      <details class="graph-statement"><summary>Formal statement</summary><p>${esc(c.statement)}</p></details>`
+      : `<p>${esc(c.statement)}</p>`}
     <p>${statusChip(c)} ${minorBadge(c)}</p>
     ${c.reasons.length ? `<ul class="reasons small">${c.reasons.map(r => `<li>${prose(r.text)}</li>`).join('')}</ul>` : ''}
-    <p class="small">${esc(c.statement)}</p>
     <dl><dt>Kind</dt><dd>${esc(c.kind)}${c.tier ? `, tier ${c.tier}` : ''}</dd>
       <dt>Rests on</dt><dd>${list([...lay.parents.get(c.id)])}</dd>
       <dt>Used by</dt><dd>${list([...lay.children.get(c.id)])}</dd></dl>

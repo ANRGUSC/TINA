@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C3.b: Degenerate normalization R_inf = 0
 
-Paper: technical-appendices-v2.tex, paragraph "Degenerate normalization". -/
+Paper: technical-appendices-v3.tex lines 287-292, paragraph "Degenerate normalization". -/
 
 namespace TinaV2.C03b
 

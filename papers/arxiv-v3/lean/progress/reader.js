@@ -72,6 +72,68 @@ function currentDeclaration(src, name) {
   return lines.slice(start, next < 0 ? undefined : next).join('\n').trimEnd();
 }
 
+function extractLeanSignature(src, declName) {
+  if (!src || !declName) return '';
+  const short = declName.split('.').pop();
+  const escRe = short.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`^\\s*(?:private\\s+|protected\\s+)?(?:theorem|lemma|def|abbrev|structure)\\s+${escRe}\\b`, 'm');
+  const m = re.exec(src);
+  if (!m) return '';
+  const rest = src.slice(m.index);
+  const end = rest.search(/\s*:=\s*(?:by\b|\n|$)|^\s*where\b/m);
+  return (end < 0 ? rest.split('\n').slice(0, 12).join('\n') : rest.slice(0, end)).trim();
+}
+
+function formatLeanRef(ref) {
+  if (!ref) return '';
+  const [file, decl] = ref.split('::');
+  return decl ? `${leanLink(file)} · <code>${esc(decl)}</code>` : leanLink(file);
+}
+
+function routineDispositionsHtml(claimId, openByDefault) {
+  const rows = M.disp.filter(d => d.claim_id === claimId && d.decision === 'lean_supplies' && d.lean_ref);
+  if (!rows.length) return '';
+  return `<details class="routine-disps"${openByDefault ? ' open' : ''}>
+    <summary>Routine &amp; internal arguments discharged in Lean (${rows.length})</summary>
+    <p class="small muted">Explicit ledger dispositions recording mathematical steps or technical bookkeeping the manuscript leaves implicit and Lean discharges inside <code>Routine/</code> or the step lemma.</p>
+    <ul class="routine-list">${rows.map(d =>
+      `<li><span class="idlink">${esc(d.id)}</span> ${prose(d.point)}<br><span class="small muted">Discharged by: ${formatLeanRef(d.lean_ref)}</span></li>`
+    ).join('')}</ul>
+  </details>`;
+}
+
+function stepSignatureRowsHtml(proofId, attemptId, proofSrc) {
+  const steps = q('SELECT * FROM steps WHERE proof_id = ? ORDER BY ordinal', [proofId]);
+  const maps = new Map(q('SELECT step_id, lean_decl, status FROM step_map WHERE attempt_id = ?', [attemptId]).map(r => [r.step_id, r]));
+  const deps = q('SELECT step_id, dep_kind, dep_id FROM step_deps WHERE step_id IN (SELECT id FROM steps WHERE proof_id = ?) ORDER BY dep_kind, dep_id', [proofId]);
+  const depsByStep = new Map();
+  for (const d of deps) {
+    if (!depsByStep.has(d.step_id)) depsByStep.set(d.step_id, []);
+    depsByStep.get(d.step_id).push(d.dep_id);
+  }
+  return `<div class="steps-head"><span>Written step (verbatim TeX)</span><span>Lean step lemma signature</span></div>
+    <div class="steps">${steps.map(s => {
+      const m = maps.get(s.id);
+      const sd = depsByStep.get(s.id) || [];
+      const where = s.origin === 'supplied'
+        ? '<span class="tag supplied">supplied</span>'
+        : `<span class="small muted">${paperLink(s.source, s.line_start, s.line_end)}</span>`;
+      const sig = m && proofSrc ? extractLeanSignature(proofSrc, m.lean_decl) : '';
+      return `<div class="step${s.origin === 'supplied' ? ' supplied' : ''}">
+        <div>
+          <h4><span class="idlink">${esc(s.id)}</span> ${esc(s.title)} ${where}</h4>
+          ${texHtml(s.tex)}
+          ${sd.length ? `<p class="small muted step-deps-line">Uses: ${sd.map(x => `<code>${esc(x)}</code>`).join(', ')}</p>` : ''}
+        </div>
+        <div class="lean" style="--c:var(${m?.status === 'proved' ? '--st-verified' : '--st-p3'})">
+          ${m ? `<h4><code>${esc(m.lean_decl)}</code> <span class="tag">${esc(m.status)}</span></h4>
+            ${sig ? leanHtml(sig) : '<p class="small muted">Signature unavailable.</p>'}`
+            : '<p class="small muted">No mapped Lean lemma.</p>'}
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+}
+
 async function leanPanel(panel, c) {
   const live = q('SELECT * FROM v_formalization WHERE claim_id = ?', [c.id])[0];
   if (!live) {
@@ -81,18 +143,26 @@ async function leanPanel(panel, c) {
   }
   const sel = M.attempts.find(a => a.claim_id === c.id && a.selected && a.formalization_id === live.id);
   const files = [live, ...(sel ? [sel] : [])];
-  const maps = sel ? q('SELECT s.title, m.lean_decl FROM step_map m JOIN steps s ON s.id = m.step_id WHERE m.attempt_id = ? ORDER BY s.proof_id, s.ordinal', [sel.id]) : [];
+  const routineHtml = routineDispositionsHtml(c.id, false);
   panel.innerHTML = files.map((f,i) => `<section class="reader-lean"><h3>${i ? 'Selected Lean proof' : sel ? 'Lean statement' : 'Lean model definition'}</h3>
-    <p>${leanLink(f.lean_file)}</p>${i === 0 && M.deltas.some(d => d.formalization_id === live.id) ? `<details><summary>How the Lean statement relates to the manuscript</summary>${deltaList(live.id)}</details>` : ''}<div class="reader-code" role="region" aria-label="${i ? 'Proof' : 'Statement'} source">Loading Lean source…</div></section>`).join('') +
-    (sel ? (maps.length ? `<details><summary>Match written proof steps to Lean declarations</summary><dl>${maps.map(m => `<dt>${esc(m.title)}</dt><dd><code>${esc(m.lean_decl)}</code></dd>`).join('')}</dl></details>` : '')
+    <p>${leanLink(f.lean_file)}</p>${i === 0 && M.deltas.some(d => d.formalization_id === live.id) ? `<details><summary>How the Lean statement relates to the manuscript</summary>${deltaList(live.id)}</details>` : ''}${i === 0 ? routineHtml : ''}<div class="reader-code" role="region" aria-label="${i ? 'Proof' : 'Statement'} source">Loading Lean source…</div></section>`).join('') +
+    (sel ? `<details class="step-sig-details"><summary>Side-by-side step audit: written TeX ↔ Lean lemma signatures</summary><div class="step-sig-host">Loading step signatures…</div></details>`
       : `<p>${linkIds(esc(readerContext[c.id]))}</p>`);
-  await Promise.all(files.map(async (f,i) => {
+  const sources = await Promise.all(files.map(async (f,i) => {
     const node = panel.querySelectorAll('.reader-code')[i];
     try {
       const src = await loadLean(f.lean_file);
       node.innerHTML = leanHtml(i ? src : currentDeclaration(src, f.lean_decl));
-    } catch { node.textContent = 'Could not load this file. Open the GitHub source above.'; }
+      return src;
+    } catch {
+      node.textContent = 'Could not load this file. Open the GitHub source above.';
+      return '';
+    }
   }));
+  if (sel) {
+    const host = panel.querySelector('.step-sig-host');
+    if (host) host.innerHTML = stepSignatureRowsHtml(sel.proof_id, sel.id, sources[1] || '');
+  }
 }
 
 function verificationRecord(c) {

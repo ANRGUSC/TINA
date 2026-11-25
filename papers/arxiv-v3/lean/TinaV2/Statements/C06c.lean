@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C6.c: Omission share is in [0,1], nonincreasing, zero at the diameter
 
-Paper: main-v2.tex Eq. (eta_S_definition) and the paragraph after it. -/
+Paper: main-v3.tex lines 317-326, Eq. (eta_S_definition) and the paragraph after it. -/
 
 namespace TinaV2.C06c
 

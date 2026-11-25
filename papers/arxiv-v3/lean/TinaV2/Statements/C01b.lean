@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C1.b: Q-orthogonality and Pythagorean form
 
-Paper: technical-appendices-v2.tex, the two sentences after the proof of Lemma (radner_projection). -/
+Paper: technical-appendices-v3.tex lines 216-218, the two sentences after the proof of Lemma (radner_projection). -/
 
 namespace TinaV2.C01b
 

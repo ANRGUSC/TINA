@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C3: Common information: vector conditional mean is optimal
 
-Paper: technical-appendices-v2.tex, paragraph "Common-information optimality". -/
+Paper: technical-appendices-v3.tex lines 271-276, paragraph "Common-information optimality". -/
 
 namespace TinaV2.C03
 

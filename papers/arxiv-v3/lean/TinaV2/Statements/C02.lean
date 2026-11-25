@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C2: Coupled conditional normal equations
 
-Paper: technical-appendices-v2.tex Corollary (conditional_normal_equations), Eqs. (conditional_normal_equations), (block_conditional_normal_equations). -/
+Paper: technical-appendices-v3.tex lines 220-269, Corollary (conditional_normal_equations), Eqs. (conditional_normal_equations), (block_conditional_normal_equations). -/
 
 namespace TinaV2.C02
 

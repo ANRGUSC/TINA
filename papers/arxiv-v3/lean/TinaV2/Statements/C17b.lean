@@ -2,8 +2,7 @@ import TinaV2.Defs
 
 /-! # C17.b: The composition law holds in the continuum model
 
-Paper: main-v2.tex, the unlabelled paragraph after Eq. (temporal_propagation_length),
-lines 839-855. -/
+Paper: main-v3.tex lines 854-870, the unlabelled paragraph after Eq. (temporal_propagation_length). -/
 
 namespace TinaV2.C17b
 

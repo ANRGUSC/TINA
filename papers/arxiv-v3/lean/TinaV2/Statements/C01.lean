@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C1: Fixed-architecture quadratic projection
 
-Paper: technical-appendices-v2.tex Lemma (radner_projection), Eqs. (optimal_projection), (projection_regret). -/
+Paper: technical-appendices-v3.tex lines 147-214, Lemma (radner_projection), Eqs. (optimal_projection), (projection_regret). -/
 
 namespace TinaV2.C01
 
@@ -16,9 +16,12 @@ with `x⋆ = Q⁻¹ b(θ_t)`:
 4. it is the unique optimal policy up to almost-sure equality;
 5. `R(𝒜) = ½ ‖x⋆ − Π_{𝒮(𝒜)} x⋆‖_Q²`.
 Items 3–5 are stated for every `p` that is a projection of `x⋆`, so they do not
-depend on which almost-surely-equal version is taken. -/
+depend on which almost-surely-equal version is taken.
+6. Doob–Dynkin bridge (finding F6, disposition `F6.1`): for any radius
+   architecture of the main text, the function-form regret `M.R` equals the
+   appendix's sigma-algebra regret `sigmaRegret` for `𝒢_i = σ(Z_i)`. -/
 def Statement : Prop :=
-  ∀ {ι α Ω : Type} [Fintype α] [DecidableEq α] [m0 : MeasurableSpace Ω] (μ : Measure Ω)
+  (∀ {ι α Ω : Type} [Fintype α] [DecidableEq α] [m0 : MeasurableSpace Ω] (μ : Measure Ω)
     [IsProbabilityMeasure μ] (Q : Matrix α α ℝ) (actor : α → ι) (𝒢 : ι → MeasurableSpace Ω)
     (b : Ω → α → ℝ) (c : Ω → ℝ),
     Q.PosDef → (∀ i, 𝒢 i ≤ m0) → MemLp b 2 μ → Integrable c μ →
@@ -29,6 +32,10 @@ def Statement : Prop :=
     ∀ p, IsQProjection μ Q S xstar p →
       (∀ u ∈ S, expectedCost μ Q b c p ≤ expectedCost μ Q b c u) ∧
       (∀ u ∈ S, expectedCost μ Q b c u ≤ expectedCost μ Q b c p → u =ᵐ[μ] p) ∧
-      sigmaRegret μ Q actor xstar 𝒢 = 1 / 2 * qNormSq μ Q (xstar - p)
+      sigmaRegret μ Q actor xstar 𝒢 = 1 / 2 * qNormSq μ Q (xstar - p)) ∧
+  (∀ {ι κ α Ω : Type} [Fintype κ] [Fintype α] [MeasurableSpace Ω]
+    (M : Model ι κ α) (μ : Measure Ω) (r : ℕ∞) (snap now : Ω → κ → ℝ),
+    M.R μ r snap now = sigmaRegret μ M.Q M.actor (M.target now)
+      (fun i => MeasurableSpace.comap (M.obs r snap i) inferInstance))
 
 end TinaV2.C01

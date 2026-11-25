@@ -327,3 +327,18 @@ details.group > summary b { font-variant-numeric: tabular-nums; margin-left: 4px
 .verification details[open] { flex-basis:100%; }
 .verification summary { color:var(--ink); font-weight:650; cursor:pointer; }
 .verification dd { overflow-wrap:anywhere; }
+
+/* side-by-side step-signature audit & routine dispositions */
+.audit-claim { margin: 10px 0; }
+.audit-claim > summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.audit-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.audit-stmt { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-bottom: 10px; }
+@media (max-width: 860px) { .audit-stmt { grid-template-columns: minmax(0, 1fr); } }
+.routine-disps { margin: 10px 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); }
+.routine-disps > summary { cursor: pointer; font-weight: 600; font-size: 13.5px; }
+.routine-list { margin: 6px 0 2px; padding-left: 18px; font-size: 13.5px; }
+.routine-list li { margin: 4px 0; }
+.step-deps-line { margin: 6px 0 0; }
+.step-sig-details { margin-top: 14px; }
+.step-sig-details > summary { cursor: pointer; font-weight: 600; }
+.step-sig-host { margin-top: 10px; }

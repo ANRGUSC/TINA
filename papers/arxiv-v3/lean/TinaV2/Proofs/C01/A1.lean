@@ -2,6 +2,7 @@ import TinaV2.Statements
 import TinaV2.Routine.Regret
 import TinaV2.Routine.Projection
 import TinaV2.Routine.QHilbert
+import TinaV2.Routine.RadiusInfo
 
 /-! # C1, attempt A1: mirrors paper proof C1/p1
 
@@ -178,6 +179,7 @@ theorem s4_projection (hC5 : C05.Statement) {ι α Ω : Type} [Fintype α] [Deci
       linarith [qNormSq_nonneg μ hQ (u - p)]
 
 theorem main (hC5 : C05.Statement) : C01.Statement := by
+  refine ⟨?_, fun M μ r snap now => M.R_eq_sigmaRegret μ r snap now⟩
   intro ι α Ω _ _ m0 μ _ Q actor 𝒢 b c hQ h𝒢 hb hc xstar S
   obtain ⟨hmem, hzero, hadd, hsmul⟩ := s1_linear_subspace μ actor 𝒢
   exact ⟨⟨hmem, hzero, hadd, hsmul, s2_closed μ actor 𝒢 h𝒢⟩,

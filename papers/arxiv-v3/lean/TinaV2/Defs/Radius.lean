@@ -2,7 +2,7 @@ import TinaV2.Prelude
 
 /-! # Radius choice: gain, crossover threshold and closed-form radii
 
-Paper: `main-v2.tex` Eqs. (OU_crossover), (snapshot_gain),
+Paper: `main-v3.tex` Eqs. (OU_crossover), (snapshot_gain),
 (marginal_balance_condition), (generic_exponential_rstar),
 (canonical_optimal_radius). All are functions of real numbers. -/
 

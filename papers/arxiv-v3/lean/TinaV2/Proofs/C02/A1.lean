@@ -40,7 +40,7 @@ theorem s1_first_order (hC1 : C01.Statement) {ι α Ω : Type} [Fintype α] [Dec
     ∫ ω, h ω ⬝ᵥ (Q *ᵥ p ω - b ω) ∂μ = 0 := by
   -- `p` is optimal in `𝒮(𝒜)` (claim C1)
   have hopt : ∀ u ∈ policySpace μ actor 𝒢, expectedCost μ Q b c p ≤ expectedCost μ Q b c u :=
-    ((hC1 μ Q actor 𝒢 b c hQ h𝒢 hb hc).2.2 p hp).1
+    ((hC1.1 μ Q actor 𝒢 b c hQ h𝒢 hb hc).2.2 p hp).1
   -- the cost along the line `p + t h`, relative to its value at `p`
   have hline : ∀ t : ℝ,
       0 ≤ t * (∫ ω, h ω ⬝ᵥ (Q *ᵥ p ω - b ω) ∂μ) + 1 / 2 * (t ^ 2 * qNormSq μ Q h) := by

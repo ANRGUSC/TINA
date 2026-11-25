@@ -86,7 +86,7 @@ theorem s2_translation_bijection {ι κ α Ω : Type} [Fintype κ] [Fintype α] 
   exact Equiv.iInf_congr (e.subtypeEquiv hadm) hcost
 
 theorem main : C05b.Statement := by
-  intro ι κ α Ω _ _ _ _ _ M μ _ B b₀ snap now r hK _ _ _ hnow
+  intro ι κ α Ω _ _ _ _ _ M μ _ B b₀ snap now r hK hnow
   exact ⟨s1_centered_target M μ B b₀ now hK hnow,
     s2_translation_bijection M μ B b₀ snap now r hK hnow⟩
 

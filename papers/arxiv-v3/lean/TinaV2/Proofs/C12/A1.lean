@@ -155,14 +155,23 @@ theorem s3_mean_terms_min (hq : 0 < q) (hγ : 0 ≤ γ) (M : Model (Fin n) (Fin 
       ((∀ i, ∫ ω, jointAction g (M.obs 0 now) ω i ∂μ = 0) →
         ∫ ω, quadCost M.Q (now ω) 0 (jointAction g (M.obs 0 now) ω) ∂μ
           = ∑ i, ∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
-            - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ) := by
+            - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ) ∧
+      ((∫ ω, quadCost M.Q (now ω) 0 (jointAction g (M.obs 0 now) ω) ∂μ
+          ≤ ∑ i, ∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
+            - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ) →
+        ∀ i, ∫ ω, jointAction g (M.obs 0 now) ω i ∂μ = 0) := by
   rw [s2_centered_cost M hagg μ hst hg]
-  refine ⟨?_, fun h0 => by simp [h0]⟩
   have h1 : 0 ≤ q / 2 * ∑ i, (∫ ω, jointAction g (M.obs 0 now) ω i ∂μ) ^ 2 :=
     mul_nonneg (by positivity) (Finset.sum_nonneg fun i _ => sq_nonneg _)
   have h2 : 0 ≤ γ / 2 * (∑ i, ∫ ω, jointAction g (M.obs 0 now) ω i ∂μ) ^ 2 :=
     mul_nonneg (by positivity) (sq_nonneg _)
-  linarith
+  refine ⟨by linarith, fun h0 => by simp [h0], fun hle i => ?_⟩
+  have hsum_nonneg : 0 ≤ ∑ j, (∫ ω, jointAction g (M.obs 0 now) ω j ∂μ) ^ 2 :=
+    Finset.sum_nonneg fun j _ => sq_nonneg _
+  have hsum_zero : ∑ j, (∫ ω, jointAction g (M.obs 0 now) ω j ∂μ) ^ 2 = 0 := by nlinarith
+  have hi_zero : (∫ ω, jointAction g (M.obs 0 now) ω i ∂μ) ^ 2 = 0 :=
+    (Finset.sum_eq_zero_iff_of_nonneg fun j _ => sq_nonneg _).1 hsum_zero i (Finset.mem_univ i)
+  exact sq_eq_zero_iff.1 hi_zero
 
 /-- Step 4 (main-v2.tex 603-605). "Each remaining term is minimized pointwise
 by `ũ_i = θ_i/(q+γ)`, which is feasible and has zero mean." -/
@@ -171,19 +180,23 @@ theorem s4_pointwise_min (hq : 0 < q) (hγ : 0 ≤ γ) (M : Model (Fin n) (Fin n
     {now : Ω → Fin n → ℝ} (hst : AggregateState μ now σ) :
     (∀ v t : ℝ, (q + γ) / 2 * (t / (q + γ)) ^ 2 - t * (t / (q + γ))
         ≤ (q + γ) / 2 * v ^ 2 - t * v) ∧
+      (∀ v t : ℝ, (q + γ) / 2 * v ^ 2 - t * v
+        - ((q + γ) / 2 * (t / (q + γ)) ^ 2 - t * (t / (q + γ)))
+        = (q + γ) / 2 * (v - t / (q + γ)) ^ 2) ∧
       ∃ g : Rule M.actor fun i => M.Scope 0 i → ℝ,
         Admissible μ (M.obs 0 now) g ∧
         (∀ ω i, jointAction g (M.obs 0 now) ω i = now ω i / (q + γ)) ∧
         ∀ i, ∫ ω, jointAction g (M.obs 0 now) ω i ∂μ = 0 := by
   have hqγ : 0 < q + γ := by linarith
-  constructor
-  · -- pointwise in `(ũ_i, θ_i) = (v, t)`: the difference is a square
+  have hsq : ∀ v t : ℝ, (q + γ) / 2 * v ^ 2 - t * v
+      - ((q + γ) / 2 * (t / (q + γ)) ^ 2 - t * (t / (q + γ)))
+      = (q + γ) / 2 * (v - t / (q + γ)) ^ 2 := by
     intro v t
-    have h : (q + γ) / 2 * v ^ 2 - t * v
-        - ((q + γ) / 2 * (t / (q + γ)) ^ 2 - t * (t / (q + γ)))
-        = (q + γ) / 2 * (v - t / (q + γ)) ^ 2 := by
-      field_simp
-      ring
+    field_simp
+    ring
+  refine ⟨fun v t => ?_, hsq, ?_⟩
+  · -- pointwise in `(ũ_i, θ_i) = (v, t)`: the difference is a square
+    have h := hsq v t
     have h' : 0 ≤ (q + γ) / 2 * (v - t / (q + γ)) ^ 2 := by positivity
     linarith
   · -- feasible: agent `i` sees `θ_i` at radius 0
@@ -206,9 +219,9 @@ theorem s4_pointwise_min (hq : 0 < q) (hγ : 0 ≤ γ) (M : Model (Fin n) (Fin n
 
 /-- Step 5 (main-v2.tex 605-606). "Thus the expected local cost is
 `−nσ²/[2(q+γ)]`, and the best constant cost is zero." The local cost is a lower
-bound over all admissible fresh-local rules, attained by `u_i = θ_i/(q+γ)`;
-every constant action has nonnegative expected cost and the zero action has
-cost zero. -/
+bound over all admissible fresh-local rules, attained uniquely (up to a.s.
+equality) by `u_i = θ_i/(q+γ)`; every constant action has nonnegative expected
+cost and the zero action has cost zero. -/
 theorem s5_local_and_constant_cost (hq : 0 < q) (hγ : 0 ≤ γ)
     (M : Model (Fin n) (Fin n) (Fin n)) (hagg : IsAggregateModel M q γ) (μ : Measure Ω)
     [IsProbabilityMeasure μ] {now : Ω → Fin n → ℝ} (hst : AggregateState μ now σ) :
@@ -220,10 +233,14 @@ theorem s5_local_and_constant_cost (hq : 0 < q) (hγ : 0 ≤ γ)
         (∀ ω i, jointAction g (M.obs 0 now) ω i = now ω i / (q + γ)) ∧
         ∫ ω, quadCost M.Q (now ω) 0 (jointAction g (M.obs 0 now) ω) ∂μ
           = -(n * σ ^ 2) / (2 * (q + γ))) ∧
+      (∀ g : Rule M.actor fun i => M.Scope 0 i → ℝ, Admissible μ (M.obs 0 now) g →
+        ∫ ω, quadCost M.Q (now ω) 0 (jointAction g (M.obs 0 now) ω) ∂μ
+          ≤ -(n * σ ^ 2) / (2 * (q + γ)) →
+        jointAction g (M.obs 0 now) =ᵐ[μ] fun ω i => now ω i / (q + γ)) ∧
       (∀ c : Fin n → ℝ, 0 ≤ ∫ ω, quadCost M.Q (now ω) 0 c ∂μ) ∧
       ∫ ω, quadCost M.Q (now ω) 0 0 ∂μ = 0 := by
   have hqγ : 0 < q + γ := by linarith
-  obtain ⟨hpw, g₀, hg₀, hact, hmean₀⟩ := s4_pointwise_min hq hγ M hagg μ hst
+  obtain ⟨hpw, hsq, g₀, hg₀, hact, hmean₀⟩ := s4_pointwise_min hq hγ M hagg μ hst
   have hθi : ∀ i, MemLp (fun ω => now ω i) 2 μ := memLp_pi_iff.1 hst.memLp
   -- the value of one centered term at the pointwise minimizer: `−σ²/[2(q+γ)]`
   have hmin : ∀ i, (fun ω => (q + γ) / 2 * (now ω i / (q + γ)) ^ 2
@@ -240,31 +257,90 @@ theorem s5_local_and_constant_cost (hq : 0 < q) (hγ : 0 ≤ γ)
   have hsum : ∑ _i : Fin n, -σ ^ 2 / (2 * (q + γ)) = -(n * σ ^ 2) / (2 * (q + γ)) := by
     rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
     ring
-  refine ⟨fun g hg => ?_, ⟨g₀, hg₀, hact, ?_⟩, fun c => ?_, ?_⟩
-  · -- lower bound for every admissible fresh-local rule: steps 3 and 4
-    have hvi : ∀ i, MemLp (fun ω => center μ (jointAction g (M.obs 0 now)) ω i) 2 μ :=
-      memLp_pi_iff.1 (Aggregate.memLp_center hg.2)
-    have hterm : ∀ i, -σ ^ 2 / (2 * (q + γ))
+  have hterm_of : ∀ (g : Rule M.actor fun i => M.Scope 0 i → ℝ) (hg : Admissible μ (M.obs 0 now) g)
+      (i : Fin n), -σ ^ 2 / (2 * (q + γ))
         ≤ ∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
             - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ := by
-      intro i
-      rw [← hval i]
-      refine integral_mono ?_ ?_ fun ω => hpw _ _
-      · rw [hmin i]
-        exact (hθi i).integrable_sq.const_mul _
-      · exact ((hvi i).integrable_sq.const_mul _).sub ((hθi i).integrable_mul (hvi i))
+    intro g hg i
+    have hvi : MemLp (fun ω => center μ (jointAction g (M.obs 0 now)) ω i) 2 μ :=
+      memLp_pi_iff.1 (Aggregate.memLp_center hg.2) i
+    rw [← hval i]
+    refine integral_mono ?_ ?_ fun ω => hpw _ _
+    · rw [hmin i]
+      exact (hθi i).integrable_sq.const_mul _
+    · exact (hvi.integrable_sq.const_mul _).sub ((hθi i).integrable_mul hvi)
+  refine ⟨fun g hg => ?_, ⟨g₀, hg₀, hact, ?_⟩, fun g hg hle => ?_, fun c => ?_, ?_⟩
+  · -- lower bound for every admissible fresh-local rule: steps 3 and 4
     calc -(n * σ ^ 2) / (2 * (q + γ)) = ∑ _i : Fin n, -σ ^ 2 / (2 * (q + γ)) := hsum.symm
       _ ≤ ∑ i, ∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
             - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ :=
-          Finset.sum_le_sum fun i _ => hterm i
+          Finset.sum_le_sum fun i _ => hterm_of g hg i
       _ ≤ _ := (s3_mean_terms_min hq hγ M hagg μ hst hg).1
   · -- the rule `θ_i/(q+γ)` has zero means, so it is its own centered part
-    rw [(s3_mean_terms_min hq hγ M hagg μ hst hg₀).2 hmean₀]
+    rw [(s3_mean_terms_min hq hγ M hagg μ hst hg₀).2.1 hmean₀]
     have hc : ∀ ω i, center μ (jointAction g₀ (M.obs 0 now)) ω i = now ω i / (q + γ) := by
       intro ω i
       rw [center, hmean₀ i, sub_zero, hact]
     simp_rw [hc, hval]
     exact hsum
+  · -- almost-sure uniqueness: zero mean terms and zero pointwise square excess
+    have h3 := s3_mean_terms_min hq hγ M hagg μ hst hg
+    have hsum_le : -(n * σ ^ 2) / (2 * (q + γ))
+        ≤ ∑ i, ∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
+            - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ := by
+      rw [← hsum]
+      exact Finset.sum_le_sum fun i _ => hterm_of g hg i
+    have hmean : ∀ i, ∫ ω, jointAction g (M.obs 0 now) ω i ∂μ = 0 :=
+      h3.2.2 (by linarith)
+    have hsum_diff : ∑ i : Fin n,
+        (∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
+            - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ
+          - (-σ ^ 2 / (2 * (q + γ)))) = 0 := by
+      rw [Finset.sum_sub_distrib, hsum]
+      linarith [h3.1]
+    have hcoord : ∀ i : Fin n,
+        (fun ω => jointAction g (M.obs 0 now) ω i) =ᵐ[μ] fun ω => now ω i / (q + γ) := by
+      intro i
+      have hvi : MemLp (fun ω => center μ (jointAction g (M.obs 0 now)) ω i) 2 μ :=
+        memLp_pi_iff.1 (Aggregate.memLp_center hg.2) i
+      have hi0 : ∫ ω, ((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
+            - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) ∂μ
+          - (-σ ^ 2 / (2 * (q + γ))) = 0 :=
+        (Finset.sum_eq_zero_iff_of_nonneg fun j _ => sub_nonneg.2 (hterm_of g hg j)).1
+          hsum_diff i (Finset.mem_univ i)
+      have hI1 : Integrable (fun ω => (q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
+          - now ω i * center μ (jointAction g (M.obs 0 now)) ω i) μ :=
+        (hvi.integrable_sq.const_mul _).sub ((hθi i).integrable_mul hvi)
+      have hI2 : Integrable (fun ω => (q + γ) / 2 * (now ω i / (q + γ)) ^ 2
+          - now ω i * (now ω i / (q + γ))) μ := by
+        rw [hmin i]
+        exact (hθi i).integrable_sq.const_mul _
+      have hsq_int : ∫ ω, (q + γ) / 2 *
+          (center μ (jointAction g (M.obs 0 now)) ω i - now ω i / (q + γ)) ^ 2 ∂μ = 0 := by
+        have hsub : ∫ ω, (((q + γ) / 2 * center μ (jointAction g (M.obs 0 now)) ω i ^ 2
+              - now ω i * center μ (jointAction g (M.obs 0 now)) ω i)
+            - ((q + γ) / 2 * (now ω i / (q + γ)) ^ 2
+              - now ω i * (now ω i / (q + γ)))) ∂μ = 0 := by
+          rw [integral_sub hI1 hI2, hval i]
+          exact hi0
+        simpa only [hsq] using hsub
+      have hI_sq : Integrable (fun ω => (q + γ) / 2 *
+          (center μ (jointAction g (M.obs 0 now)) ω i - now ω i / (q + γ)) ^ 2) μ :=
+        (hI1.sub hI2).congr (Filter.Eventually.of_forall fun ω => hsq _ _)
+      have hae := (integral_eq_zero_iff_of_nonneg_ae
+        (Filter.Eventually.of_forall fun ω => by positivity) hI_sq).1 hsq_int
+      filter_upwards [hae] with ω hω
+      have hmul : (q + γ) / 2 *
+          (center μ (jointAction g (M.obs 0 now)) ω i - now ω i / (q + γ)) ^ 2 = 0 := hω
+      have hpos : (q + γ) / 2 ≠ 0 := by positivity
+      have hdiff0 : center μ (jointAction g (M.obs 0 now)) ω i - now ω i / (q + γ) = 0 :=
+        sq_eq_zero_iff.1 ((mul_eq_zero.1 hmul).resolve_left hpos)
+      have hc_eq : center μ (jointAction g (M.obs 0 now)) ω i = jointAction g (M.obs 0 now) ω i := by
+        rw [center, hmean i, sub_zero]
+      rw [hc_eq] at hdiff0
+      exact sub_eq_zero.1 hdiff0
+    filter_upwards [ae_all_iff.2 hcoord] with ω hω
+    exact funext hω
   · -- a constant action is an admissible rule with `ũ = 0`
     have hadm : Admissible μ (M.obs 0 now)
         (fun i _ => c i : Rule M.actor fun i => M.Scope 0 i → ℝ) :=
@@ -277,7 +353,7 @@ theorem s5_local_and_constant_cost (hq : 0 < q) (hγ : 0 ≤ γ)
     simp_rw [hc0, Aggregate.jointAction_const] at h3
     simpa using h3
   · -- the zero action has zero means
-    have h3 := (s3_mean_terms_min hq hγ M hagg μ hst (admissible_zero μ (M.obs 0 now))).2
+    have h3 := (s3_mean_terms_min hq hγ M hagg μ hst (admissible_zero μ (M.obs 0 now))).2.1
       (fun i => by simp [jointAction_zero])
     have hc0 : ∀ ω i, center μ (jointAction
         (fun _ _ => 0 : Rule M.actor fun i => M.Scope 0 i → ℝ) (M.obs 0 now)) ω i = 0 := by
@@ -380,14 +456,18 @@ theorem s7_subtract_and_ratio (hC5 : C05.Statement) (hn : 2 ≤ n) (hq : 0 < q) 
     (hσ : 0 < σ) (M : Model (Fin n) (Fin n) (Fin n)) (hagg : IsAggregateModel M q γ)
     (μ : Measure Ω) [IsProbabilityMeasure μ] {now : Ω → Fin n → ℝ}
     (hst : AggregateState μ now σ) :
-    (∃ g : Rule M.actor fun i => M.Scope 0 i → ℝ,
+    ((∃ g : Rule M.actor fun i => M.Scope 0 i → ℝ,
         Admissible μ (M.obs 0 now) g ∧
         (∀ ω i, jointAction g (M.obs 0 now) ω i = now ω i / (q + γ)) ∧
         excessCost μ M.Q (M.target now) (jointAction g (M.obs 0 now)) = M.Rloc μ now) ∧
+      ∀ g : Rule M.actor fun i => M.Scope 0 i → ℝ,
+        Admissible μ (M.obs 0 now) g →
+        excessCost μ M.Q (M.target now) (jointAction g (M.obs 0 now)) ≤ M.Rloc μ now →
+        jointAction g (M.obs 0 now) =ᵐ[μ] fun ω i => now ω i / (q + γ)) ∧
       M.Rinf μ now = aggRinf n q γ σ ∧
       M.Rloc μ now = aggRloc n q γ σ ∧
       M.etaS μ 0 now = aggEta n q γ := by
-  obtain ⟨hlow, ⟨g₀, hg₀, hact, hval⟩, -, hzero⟩ :=
+  obtain ⟨hlow, ⟨g₀, hg₀, hact, hval⟩, huniq, -, hzero⟩ :=
     s5_local_and_constant_cost hq hγ M hagg μ hst
   have hfull := (s6_eigen_full_info_cost hC5 hn hq hγ M hagg μ hst).2.2
   have hn2 : (2 : ℝ) ≤ n := by exact_mod_cast hn
@@ -445,8 +525,11 @@ theorem s7_subtract_and_ratio (hC5 : C05.Statement) (hn : 2 ≤ n) (hq : 0 < q) 
     rw [hRloc, aggRloc]
     field_simp
     ring
-  refine ⟨⟨g₀, hg₀, hact, ?_⟩, e1, e2, ?_⟩
+  refine ⟨⟨⟨g₀, hg₀, hact, ?_⟩, fun g hg hle => ?_⟩, e1, e2, ?_⟩
   · rw [hbridge _ hg₀.2, hval, hfull, hRloc]
+  · refine huniq g hg ?_
+    rw [hbridge _ hg.2, hfull] at hle
+    linarith [hRloc]
   · change M.Rloc μ now / M.Rinf μ now = aggEta n q γ
     rw [e2, e1, aggRloc, aggRinf, aggEta]
     have hn0 : (n : ℝ) ≠ 0 := by linarith

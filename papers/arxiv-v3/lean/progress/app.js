@@ -45,7 +45,7 @@ function q(sql, params) {
 // and a text label, so status never depends on colour alone.
 const KEYS = {
   verified: { group: 'verified', label: 'Verified, follows the paper', glyph: '✓', c: '--st-verified',
-    help: 'The Lean proof is complete, the statement is frozen, every step is a step of the proof in the paper, nothing is assumed, and only the standard axioms are used.' },
+    help: 'The Lean proof is complete, the statement is frozen, every step is a step of the proof in the paper, nothing is assumed, and only the standard axioms are used. Routine mathematical facts discharged by Routine/ or internal lemmas are listed under each claim’s Lean tab.' },
   vsup: { group: 'verified', label: 'Verified, Lean supplies steps', glyph: '+', c: '--st-vsup',
     help: 'Lean proves the statement in the paper, statement frozen, nothing assumed. Some or all of the argument is not in the paper: it is written in the ledger and marked as supplied.' },
   cond: { group: 'progress', label: 'Proved, still assumes a claim', glyph: '◐', c: '--st-p4',
@@ -281,10 +281,10 @@ function viewOverview() {
       <tbody>${tiers}</tbody></table></div>
     <h2>How to read this page</h2>
     <div class="card">
-      <p>Open a claim to read its proof sketch, manuscript passage, Lamport proof, and Lean source. Steps marked <b>supplied</b> give arguments that the manuscript leaves implicit.</p>
+      <p>Open a claim to read its proof sketch, manuscript passage, Lamport proof, and Lean source, or use the <a href="#/audit">Step audit</a> view to inspect every <code>(Step TeX ↔ Lean step lemma signature + statement_deltas)</code> pair side by side. Steps marked <b>supplied</b> give arguments that the manuscript leaves implicit.</p>
       <p><b>What verified means.</b> The Lean statement has been compared with the paper and frozen, the proof is complete, the
       end-to-end assembly assumes no unproved claim, and Lean reports only the three standard axioms. The two greens say where the
-      argument comes from: the paper, or the paper plus supplied steps.</p>
+      argument comes from: the paper, or the paper plus supplied steps. Across all claims, <b>${M.disp.filter(d => d.decision === 'lean_supplies' && d.lean_ref).length}</b> routine-level <code>lean_ref</code> dispositions record technical bookkeeping discharged in <code>Routine/</code> or inside existing step lemmas (surfaced on each claim’s Lean tab and in the Step audit view).</p>
     </div>`;
 }
 
@@ -644,6 +644,106 @@ function viewClaims(params) {
   };
 }
 
+/* ------------------------------------------------------------- step audit */
+const AU = { text: '', headline: false, deltasOnly: false, routineOnly: false };
+
+function viewAudit(focusClaim) {
+  const proved = M.lean.filter(c => M.attempts.some(a => a.claim_id === c.id && a.selected && a.status === 'proved'));
+  const totalRoutine = M.disp.filter(d => d.decision === 'lean_supplies' && d.lean_ref).length;
+  main.innerHTML = `<h2>Side-by-side step-signature audit</h2>
+    <p class="muted">Human sign-off view pairing each claim’s frozen Lean statement and <code>statement_deltas</code> with every <code>(Step TeX ↔ Lean step lemma signature)</code> pair and all <b>${totalRoutine}</b> routine-level <code>lean_ref</code> dispositions.</p>
+    <div class="filters">
+      <input type="search" id="au-text" placeholder="Filter claim, title, statement" value="${esc(AU.text)}" aria-label="Filter audited claims">
+      <button class="toggle text" id="au-head" aria-pressed="${AU.headline}">Headline results only (10)</button>
+      <button class="toggle text" id="au-delta" aria-pressed="${AU.deltasOnly}">With statement deltas</button>
+      <button class="toggle text" id="au-rout" aria-pressed="${AU.routineOnly}">With routine lean_ref (${totalRoutine})</button>
+      <button class="btn ghost" id="au-expand">Expand visible</button>
+      <button class="btn ghost" id="au-collapse">Collapse all</button>
+    </div>
+    <div id="au-list"></div>`;
+
+  const host = document.getElementById('au-list');
+
+  async function hydrateClaim(det, c) {
+    if (det.dataset.loaded) return;
+    det.dataset.loaded = '1';
+    const body = det.querySelector('.audit-body');
+    const live = q('SELECT * FROM v_formalization WHERE claim_id = ?', [c.id])[0];
+    const sel = M.attempts.find(a => a.claim_id === c.id && a.selected && a.status === 'proved');
+    const [stmtSrc, proofSrc] = await Promise.all([
+      live ? loadLean(live.lean_file).catch(() => '') : Promise.resolve(''),
+      sel ? loadLean(sel.lean_file).catch(() => '') : Promise.resolve(''),
+    ]);
+    const stmtDecl = live && stmtSrc ? currentDeclaration(stmtSrc, live.lean_decl) : '';
+    const deltas = live ? deltaList(live.id) : '';
+    const routine = routineDispositionsHtml(c.id, true);
+    body.innerHTML = `
+      <div class="audit-stmt">
+        <div>
+          <p class="small muted" style="margin-bottom:4px"><b>Paper statement</b> · ${paperLink(c.source, c.line_start, c.line_end)} · <a href="${claimHref(c.id, 'lean')}">Open claim view</a></p>
+          <p>${prose(c.statement)}</p>
+          ${deltas || '<p class="small muted">No statement differences recorded.</p>'}
+        </div>
+        <div>
+          <p class="small muted" style="margin-bottom:4px"><b>Frozen Lean statement</b> · ${live ? leanLink(live.lean_file) : ''}</p>
+          ${stmtDecl ? leanHtml(stmtDecl) : '<p class="small muted">Could not load statement source.</p>'}
+        </div>
+      </div>
+      ${routine}
+      ${sel ? `<p class="small muted" style="margin:12px 0 4px"><b>Mirrored proof</b> <code>${esc(sel.proof_id)}</code> ↔ ${leanLink(sel.lean_file)}</p>${stepSignatureRowsHtml(sel.proof_id, sel.id, proofSrc)}` : ''}`;
+  }
+
+  function render() {
+    const query = AU.text.trim().toLowerCase();
+    const rows = proved.filter(c => {
+      if (AU.headline && !c.headline) return false;
+      const deltas = M.deltas.filter(d => d.formalization_id === c.formalization);
+      if (AU.deltasOnly && !deltas.length) return false;
+      const rout = M.disp.filter(d => d.claim_id === c.id && d.decision === 'lean_supplies' && d.lean_ref);
+      if (AU.routineOnly && !rout.length) return false;
+      if (query && !`${c.id} ${c.title} ${c.statement}`.toLowerCase().includes(query)) return false;
+      return true;
+    });
+    if (!rows.length) {
+      host.innerHTML = '<p class="empty">No proved claims match the current filters.</p>';
+      return;
+    }
+    host.innerHTML = rows.map(c => {
+      const deltas = M.deltas.filter(d => d.formalization_id === c.formalization);
+      const narrow = deltas.filter(d => d.kind === 'extra_hypothesis' || d.kind === 'restricted').length;
+      const rout = M.disp.filter(d => d.claim_id === c.id && d.decision === 'lean_supplies' && d.lean_ref).length;
+      const open = focusClaim === c.id;
+      return `<details class="card audit-claim" data-id="${esc(c.id)}"${open ? ' open' : ''}>
+        <summary>
+          <span class="idlink">${esc(c.id)}</span> <b>${esc(c.title)}</b>
+          ${statusChip(c, false)}
+          <span class="tag">${esc(c.n_steps || 0)} steps${c.n_supplied ? ` (${c.n_supplied} supplied)` : ''}</span>
+          ${deltas.length ? `<span class="tag${narrow ? ' restricted' : ''}">${plural(deltas.length, 'delta')}${narrow ? ` · ${narrow} narrower` : ''}</span>` : ''}
+          ${rout ? `<span class="tag">${plural(rout, 'routine ref')}</span>` : ''}
+        </summary>
+        <div class="audit-body"><p class="small muted">Loading statement and step signatures…</p></div>
+      </details>`;
+    }).join('');
+    host.querySelectorAll('details.audit-claim').forEach(det => {
+      const c = M.byId.get(det.dataset.id);
+      det.addEventListener('toggle', () => { if (det.open) hydrateClaim(det, c); });
+      if (det.open) hydrateClaim(det, c);
+    });
+  }
+
+  render();
+  document.getElementById('au-text').oninput = e => { AU.text = e.target.value; render(); };
+  document.getElementById('au-head').onclick = () => { AU.headline = !AU.headline; viewAudit(); };
+  document.getElementById('au-delta').onclick = () => { AU.deltasOnly = !AU.deltasOnly; viewAudit(); };
+  document.getElementById('au-rout').onclick = () => { AU.routineOnly = !AU.routineOnly; viewAudit(); };
+  document.getElementById('au-expand').onclick = () => {
+    host.querySelectorAll('details.audit-claim').forEach(det => { det.open = true; });
+  };
+  document.getElementById('au-collapse').onclick = () => {
+    host.querySelectorAll('details.audit-claim').forEach(det => { det.open = false; });
+  };
+}
+
 /* ----------------------------------------------------------- claim detail */
 /* ---------------------------------------------------------------- routing */
 function route() {
@@ -663,7 +763,7 @@ function route() {
   const nav = view === 'claim' ? 'claims' : view;
   document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.view === nav));
   tip.hidden = true;
-  ({ overview: viewOverview, results: viewResults, graph: () => viewGraph(arg),
+  ({ overview: viewOverview, results: viewResults, audit: () => viewAudit(arg), graph: () => viewGraph(arg),
      claims: () => viewClaims(params), claim: () => viewClaim(arg, params.get('view')) }[view] || viewOverview)();
   if (!arg || view === 'claim' || view === 'graph') window.scrollTo(0, 0);
 }

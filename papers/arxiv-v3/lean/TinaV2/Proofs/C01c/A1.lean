@@ -1,5 +1,6 @@
 import TinaV2.Statements
 import TinaV2.Routine.Projection
+import TinaV2.Routine.RadiusInfo
 
 /-! # C1.c, attempt A1: mirrors the supplement proof C1.c/p1
 
@@ -32,8 +33,9 @@ theorem s2_regret_le (μ : Measure Ω) (Q : Matrix α α ℝ) (hQ : Q.PosDef) (a
   le_sigmaRegret xstar fun u hu =>
     sigmaRegret_le hQ xstar (s1_policy_inclusion μ actor 𝒢 𝒢' h u hu)
 
-/-- Eq. (info_inclusion). -/
+/-- Eq. (info_inclusion) together with the Doob–Dynkin bridge `M.R = sigmaRegret`. -/
 theorem main : C01c.Statement := by
+  refine ⟨?_, fun M μ r snap now => M.R_eq_sigmaRegret μ r snap now⟩
   intro ι α Ω _ m0 μ _ Q actor xstar 𝒢 𝒢' hQ _ h _
   exact ⟨s1_policy_inclusion μ actor 𝒢 𝒢' h, s2_regret_le μ Q hQ actor xstar 𝒢 𝒢' h⟩
 

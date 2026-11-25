@@ -3,7 +3,7 @@ import TinaV2.Defs.Architecture
 /-! # Expected cost, the weighted inner product and orthogonal projection
 (claims C1, C1.b, C2, C3)
 
-Paper: `technical-appendices-v2.tex` Eqs. (quadratic_cost), (policy_subspace),
+Paper: `technical-appendices-v3.tex` lines 25-269, Eqs. (quadratic_cost), (policy_subspace),
 (hilbert_space), (q_inner_product), (optimal_projection),
 (conditional_normal_equations), (block_conditional_normal_equations).
 

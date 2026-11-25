@@ -311,11 +311,15 @@ proof is recognized and must be listed (`C8/p2/s2: uses C7/p1/s3, C7/p1/s4,
 C8/p2/s1`). The finished proof of another claim (its `main`) is never allowed:
 a claim is used through its statement.
 
-One thing needs more than this and is planned (phase 5):
+Human semantic review (completed 2026-11-26, Phase 3 of `docs/arxiv_v3_lean_hardening_plan.md`):
 
-- a generated side-by-side page (step TeX next to the Lean lemma statement) for
-  human review, because whether a Lean statement says what the English says
-  cannot be checked by machine.
+- the Progress Explorer (`progress/#/audit`, and each claim's Lean tab) renders
+  a side-by-side view of each written step's verbatim TeX next to its Lean step
+  lemma signature and `statement_deltas`, together with all 24 routine-level
+  `lean_ref` dispositions;
+- an independent Gate-4 back-translation audit across all 42 frozen files (8
+  `Defs/` + 34 `Statements/`) is recorded in
+  `gate4-semantic-audit-2026-11-26.md` (`0` critical/high discrepancies).
 
 ### When Lean cannot follow the paper
 
@@ -782,8 +786,21 @@ C4.c and C9 ("Decisions, 2026-11-19", last block).
   three definitions), frontier empty. `lake build`, `ledger.py audit` (162
   lemmas in 34 attempts, standard three axioms only) and `ledger.py check`
   (0 errors, 0 warnings) pass.
-- **Next: the non-vacuity instances**, each a new statement that needs a
-  design put to Scott and his review. Parked: `future-tasks.md`.
+- **Next (hardening roadmap in `docs/arxiv_v3_lean_hardening_plan.md`):**
+  - **Phases 0–3 complete (2026-11-26):** CI spec-freeze & Gate-2 static bans
+    enforced in `verify_release.py` and `ledger.py check`; Tiers A–C non-vacuity
+    witnesses compiled and axiom-audited (`TinaV2/NonVacuity/FiniteModels.lean`,
+    10 witness theorems covering 29/34 proved claims); `C1`/`C1.c` Doob–Dynkin
+    bridge (`Model.R_eq_sigmaRegret`), `C12`/`C11` a.s. uniqueness, and `C5.b`
+    cleanup landed in a single consolidated refreeze (`C1/f2`, `C1.c/f2`,
+    `C12/f2`, `C11/f2`, `C5.b/f2`); all 27 frozen `v2.tex` headers updated to
+    `v3` line numbers; `#/audit` step-signature view & routine `lean_ref`
+    transparency live in `progress/`; Gate-4 semantic audit passed 42/42 frozen
+    files (`gate4-semantic-audit-2026-11-26.md`).
+  - **Next up (Phase 4):** Upgrade Lean & Mathlib from `v4.33.1` to `v4.35.0+`
+    (unlocking native `KolmogorovExtension` `#44909` for Phase 5 Tier-D
+    continuum non-vacuity), auto-generate `comparator/Challenge.lean`, and wire
+    `lake comparator` + multi-kernel verification into CI. Parked: `future-tasks.md`.
 - **Non-vacuity, what was checked on 2026-11-19 (scratch files only; nothing
   is in the library and no statement exists until Scott chooses the design).**
   - Mathlib v4.33.1 constructs neither Brownian motion nor any Gaussian

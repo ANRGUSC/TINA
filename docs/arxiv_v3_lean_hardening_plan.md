@@ -25,7 +25,7 @@ What remains to reach a complete 5-Gate `P4+` gold standard are **six targeted u
 | **Git branch / upstream sync** | Operating directly on `main` tracking `origin/main` (`ANRGUSC/TINA`) | Synced with `origin/main`, working cleanly off `main` (done) | **0** |
 | **Live CI spec-freeze bypass (Mode #5/#7)** | `tools/verify_release.py` never calls `ledger.run_check(db)`; `verify-arxiv-v3-lean.yml` and `.github/scripts/pages_lean_record.py` ignore `submissions/arxiv-v3/*.tex`; no static ban on `unsafe`/`native_decide`/`elab`/`macro`; 6 benign `local notation` macros in `Proofs/` | `verify_release.py` enforces `ledger.run_check(db)`, Gate-2 static bans, and `.thmInfo` checks; TeX sources included in CI/reuse inputs; `0` notation overrides | **1** |
 | **Zero compiled non-vacuity witnesses (Mode #4, Gate 1)** | `0` compiled `∃` instances across 34 universally quantified claims (Tiers A–C unblocked on `v4.33.1`; Tier D `CanonicalField.continuous` load-bearing for measurability) | Kernel-checked non-vacuity witnesses for Tiers A–C (31/34 claims) on `v4.33.1`, followed by Tier-D Gaussian/OU & continuous `CanonicalField` witnesses | **2 & 5** |
-| **Residual `restricted` deltas & v2 headers (Mode #1, Gate 4)** | `C1`/`C1.c` unlinked from already-proved `Model.R_eq_sigmaRegret`; `C12` omits almost-sure uniqueness (`C12/f1/d3`); 27 frozen files still cite `main-v2.tex`; step-signature review view pending | Closed avoidable `restricted` deltas, v3 headers aligned, side-by-side step-signature review view & cross-LLM audit complete, **single** consolidated `--refreeze` | **3** |
+| **Residual `restricted` deltas & v2 headers (Mode #1, Gate 4)** | `C1`/`C1.c` export `Model.R_eq_sigmaRegret`; `C12` & `C11` include a.s. uniqueness; `C5.b` drops 3 unused internal hyps; 0 `v2.tex` frozen headers; `#/audit` step-signature view & routine refs live; Gate-4 audit 0 critical/high (done) | Closed avoidable `restricted` deltas, v3 headers aligned, side-by-side step-signature review view & cross-LLM audit complete, **single** consolidated `--refreeze` (done) | **3** |
 | **Single-kernel monoculture & missing `comparator` boundary (Mode #8, Gate 3)** | Pinned to Lean `v4.33.1` single C++ kernel inside one Lake workspace; no external `Challenge.lean` export replay | Lean `v4.35.0+` + Mathlib upgrade (also unlocking native `KolmogorovExtension` `#44909`), auto-generated `Challenge.lean` + `lake comparator` + multi-kernel replay (`lake check --paranoid` / `nanoda`) in CI | **4** |
 | **Manuscript invisibility & Scope-Note Erasure risk (Mode #2/#12, Gate 5)** | `submissions/arxiv-v3/main-v3.tex` has `0` Lean/Mathlib mentions (`has_lean_strong = False`) | Concise Gate-5 Verification Manifest in `main-v3.tex` disclosing `verified` (17) vs. `verified_supplied` (17), OU/field scope, numerics (`C21`–`C24`), Proof Explorer URL, kernels passed, and immutable git tag | **6** |
 
@@ -138,31 +138,29 @@ flowchart TD
 
 ---
 
-### Phase 3: Batched Statement Polish, Co-Author Audit View & Single Consolidated Refreeze (~1 day · 1 Refreeze Ceremony)
+### Phase 3: Batched Statement Polish, Co-Author Audit View & Single Consolidated Refreeze (Completed 2026-11-26 · 1 Refreeze Ceremony)
 
 **Goal:** Close every avoidable Layer-A `restricted` delta, update stale `v2` file headers, add the planned human review view, run an independent cross-LLM semantic check, and perform **exactly one** `ledger.py freeze --refreeze` pass.
 
 **Actions:**
-- [ ] **3.1 Export / link the Doob–Dynkin bridge (`C1/f1/d5`, `C1.c/f1/d1`):**
-  - `Model.R_eq_sigmaRegret` is already proved in `TinaV2/Routine/RadiusInfo.lean:91-112`.
-  - Add a concise bridge statement (either as a conjunct/corollary on `C1`/`C1.c` or a dedicated frozen bridge declaration exported in `Assembly.lean`) and update `statement_deltas` to clear the two "not yet linked to the function-form regret of the main text" `restricted` deltas.
-- [ ] **3.2 Close almost-sure uniqueness gap in headline `C12` (`C12/f1/d3`):**
-  - Strengthen `TinaV2/Statements/C12.lean` (or add sub-claim `C12.b`) to assert that $u_i = \theta_i / (q + \gamma)$ is **almost-surely unique** among admissible local rules attaining `R_loc`, derived cleanly from `C2` + `Model.R_eq_sigmaRegret` (~10–20 lines).
-  - Optionally decide whether to add the analogous uniqueness clause to `C11` (`C11/f1/d2`, `future-tasks.md:92-94`).
-- [ ] **3.3 Triage parked unused-hypothesis items (`future-tasks.md` §1b):**
-  - **Recommendation:** Keep hypotheses that mirror the paper's stated assumptions (`SmoothCurves`, `0 < v`, `0 < T`, `IsProbabilityMeasure`) so statements stay faithful to the manuscript; drop only purely formalization-internal unused hypotheses (`C5.b`: `Measurable snap`, `MemLp snap 2`, `Measurable now`) if Scott agrees.
-- [ ] **3.4 Align all 27 frozen file headers from `v2` to `v3`:**
-  - Update header comments across the 27 files in `TinaV2/Defs/` and `TinaV2/Statements/` that still reference `main-v2.tex` / `technical-appendices-v2.tex` to cite `main-v3.tex` / `technical-appendices-v3.tex` with exact v3 line numbers.
-- [ ] **3.5 Build the side-by-side Step-Signature Audit View & routine-disposition transparency (`README.md:314-319`):**
-  - Add a compact review view in `papers/arxiv-v3/lean/progress/` pairing each `(Step TeX ↔ Lean Step Lemma Signature + statement_deltas)` for rapid human sign-off.
-  - Surface the 20 routine-level `lean_ref` dispositions (`supplement.md`) in the Proof Explorer claim view/legend so readers clearly see what `Routine/` discharges beneath `verified` claims.
-- [ ] **3.6 Independent cross-LLM semantic audit (Gate 4, Role Separation):**
-  - Run an adversarial back-translation check (using a distinct model family from the proving agent, e.g., Gemini or GPT) across all 8 `Defs/` + 34 `Statements/` files against `submissions/arxiv-v3/main-v3.tex` and `technical-appendices-v3.tex` to flag any subtle quantifier, boundary, or hypothesis inversion before freezing.
-- [ ] **3.7 Consolidated Refreeze Ceremony:**
-  - Review unified diff across `Defs/`, `Statements/`, and `statement_deltas` with Scott.
-  - Run `ledger.py freeze ... --refreeze` once for modified frozen files, regenerate `Assembly.lean` + docs (`ledger.py assembly && ledger.py docs`), and verify `ledger.py check` + `lake build TinaV2` + `ledger.py audit`.
+- [x] **3.1 Export / link the Doob–Dynkin bridge (`C1/f1/d5`, `C1.c/f1/d1`):**
+  - Exported the Doob–Dynkin bridge `M.R μ r snap now = sigmaRegret ...` (proved via `Model.R_eq_sigmaRegret` in `TinaV2/Routine/RadiusInfo.lean:91-112`) directly inside `TinaV2.C01.Statement` (`C1/f2`) and `TinaV2.C01c.Statement` (`C1.c/f2`), updated `C01/A1`, `C01b/A1`, `C01c/A1`, and `C02/A1`, and cleared both `restricted` deltas (`C1/f2/d5` and `C1.c/f2/d1` now `kind = 'form'`).
+- [x] **3.2 Close almost-sure uniqueness gap in headline `C12` (`C12/f1/d3`) & `C11` (`C11/f1/d2`):**
+  - Strengthened `TinaV2/Statements/C12.lean` (`C12/f2`) to assert that $u_i = \theta_i / (q + \gamma)$ is **almost-surely unique** among admissible fresh-local rules attaining `R_loc`, proved directly within `Proofs/C12/A1.lean` (`s3`–`s5`, `s7`) with zero extra claim dependencies (closing `C12/f1/d3`, bringing `C12` narrower deltas to `0`).
+  - Also added almost-sure uniqueness for both the fresh (`X_t/2`) and stale (`e^{-τ/T} Z_{t-τ}`) best estimators in `TinaV2/Statements/C11.lean` (`C11/f2`) via `bestMSE_unique_of_condExp` in `TinaV2/Routine/Estimation.lean`, resolving `future-tasks.md:92-94`.
+- [x] **3.3 Triage parked unused-hypothesis items (`future-tasks.md` §1b):**
+  - Kept all paper-mirroring hypotheses (`SmoothCurves`, `0 < v`, `0 < T`, `IsProbabilityMeasure`); dropped only the 3 purely formalization-internal unused hypotheses (`Measurable snap`, `MemLp snap 2 μ`, `Measurable now`) from `TinaV2/Statements/C05b.lean` (`C5.b/f2`, `C5.b/f2/d2`).
+- [x] **3.4 Align all 27 frozen file headers from `v2` to `v3`:**
+  - Updated header comments across all 27 frozen files in `TinaV2/Defs/` (8 files) and `TinaV2/Statements/` (19 files) from `main-v2.tex` / `technical-appendices-v2.tex` to `main-v3.tex` / `technical-appendices-v3.tex` with exact v3 line numbers (`0` `v2.tex` refs remain in frozen files).
+- [x] **3.5 Build the side-by-side Step-Signature Audit View & routine-disposition transparency (`README.md:314-319`):**
+  - Added the `#/audit` (`Step audit`) view in `papers/arxiv-v3/lean/progress/` (`index.html`, `app.js`, `reader.js`, `style.css`) pairing each claim's frozen Lean statement + `statement_deltas` with every `(Step TeX ↔ Lean step lemma signature)` pair, plus upgraded each claim's Lean tab with side-by-side step signatures.
+  - Surfaced all 24 routine-level `lean_ref` dispositions (`decision = 'lean_supplies' AND lean_ref IS NOT NULL`) inside both the claim Lean tab (`reader.js`) and `#/audit` / Overview legend (`app.js`).
+- [x] **3.6 Independent cross-LLM semantic audit (Gate 4, Role Separation):**
+  - Ran 3 parallel independent read-only adversarial back-translation subagents across all 42 frozen files (8 `Defs/` + 34 `Statements/`) against verbatim `submissions/arxiv-v3/main-v3.tex` and `technical-appendices-v3.tex`: **0 critical/high semantic discrepancies**. Recorded full summary in `papers/arxiv-v3/lean/gate4-semantic-audit-2026-11-26.md` and added bookkeeping delta `C14/f1/d5` (for `main-v3.tex:731`) plus `Defs/Aggregate.lean` line-number fix.
+- [x] **3.7 Consolidated Refreeze Ceremony:**
+  - Refrozen all 28 modified frozen files (`8 Defs + 20 Statements`) in one consolidated `ledger.py freeze --refreeze` pass, regenerated `TinaV2/Assembly.lean` + `paper-findings-dispositions.md` + `supplement.md`, and verified `lake build TinaV2` (3,315 jobs), `ledger.py audit` (162 lemmas, 34 assembled theorems, 10 non-vacuity witnesses, `0` errors), `ledger.py check` (`0 errors, 0 warnings`), and `ledger.py site` + `build_guide.py`.
 
-**Exit Criteria:** Avoidable `restricted` deltas (`C1`, `C1.c`, `C12`) closed; 0 `main-v2.tex` header leftovers; side-by-side step-signature audit view live; single clean refreeze commit green in CI.
+**Exit Criteria:** Avoidable `restricted` deltas (`C1`, `C1.c`, `C12`) closed; 0 `main-v2.tex` header leftovers; side-by-side step-signature audit view live; single clean refreeze commit green in CI. (Met.)
 
 ---
 

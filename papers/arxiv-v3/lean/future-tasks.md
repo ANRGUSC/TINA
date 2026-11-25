@@ -42,7 +42,7 @@ makes the Lean statement look less like the paper.
 |---|---|---|
 | `C11/f1`, two-sensor example | The two stationarity hypotheses (`IdentDistrib`) | Mean zero and variance `σ²` are assumed at every time, which already gives what stationarity is used for. The alternative that is closer to the paper: assume the moments at one time and keep "stationary". Square integrability is also implied by the variance hypothesis. |
 | `C15/f1`, marginal balance | `0 < T`, `0 < D`, `τ′ ≥ 0`, `η′ ≤ 0`, `0 ≤ η` | They come with `SmoothCurves`, which C15.b and C15.c share. Note on `C15/a1`. |
-| `C5.b/f1`, affine reduction | `Measurable snap`, `MemLp snap 2`, `Measurable now` | Note on `C5.b/a1`. |
+| `C5.b/f1`, affine reduction | `Measurable snap`, `MemLp snap 2`, `Measurable now` | **Resolved (2026-11-26, `C5.b/f2`):** dropped in Phase 3 refreeze. |
 | `C17.b/f1`, composition in the field model | `0 ≤ r` | Not used by any step. Note on `C17.b/a1`. |
 | `C1/f1`, projection lemma | `IsProbabilityMeasure μ` | Not used by any step. Note on `C1/a1`. |
 | `C15.b/f1`, single crossing | `0 < T`, and of `SmoothCurves`: `τ′ ≥ 0`, `η′ ≤ 0`, `0 ≤ η` | The proof uses continuous differentiability, `η < 1` and `D > 0`. Note on `C15.b/a1`. |
@@ -82,22 +82,23 @@ small fact about the proof and may be worth telling Bhaskar (kind 1a).
 
 Also parked here, from a todo note on `C16/a1`: `Routine/ExpRadius.lean` and
 `Routine/RadiusCalculus.lean` each have a wrapper for "strictly monotone from
-the sign of the derivative"; merge them.
+the sign of the derivative"; merge them. *(Resolved 2026-11-26 in Phase 1.)*
 
 ## 2. Other parked items
 
 - **An example for "the optimum can stay unchanged at a boundary"** (C15.c).
-  The sentence is not stated in Lean (`C15.c/f1/d3`). Stating it means proving
-  one example in which a larger `T` leaves the optimum at `0` or at `D`.
-- **Uniqueness of the best estimate in the two-sensor example.** `C11/f1` says
-  the named estimates attain the smallest error, not that nothing else does
-  (`C11/f1/d2`).
-- **Non-vacuity instances** (README, phase 5): a concrete model satisfying the
-  temporal assumption with `R_∞ > 0` and `0 < η_S(0) < 1`, and a Gaussian field
-  satisfying `CanonicalField`. Until then each theorem is about "every model
-  that satisfies the hypotheses" with no proof in Lean that one exists.
-- **A side-by-side page** of step TeX and Lean lemma statement (README, "The
-  1:1 rule", planned).
+  *(Resolved 2026-11-26 in Phase 2: `exists_smoothCurves_boundary_sticking` in
+  `TinaV2/NonVacuity/FiniteModels.lean` proves pinning at both `0` and `D`.)*
+- **Uniqueness of the best estimate in the two-sensor example.** *(Resolved
+  2026-11-26 in Phase 3: `C11/f2` adds almost-sure uniqueness for both the
+  fresh and stale estimators via `Routine/Estimation.lean::bestMSE_unique_of_condExp`.)*
+- **Non-vacuity instances** (README, phase 5): Tiers A–C (29/34 proved claims)
+  are compiled and CI axiom-audited in `TinaV2/NonVacuity/FiniteModels.lean`
+  (Phase 2, 2026-11-26); Tier-D continuum Gaussian/OU (`C4.c`, `C9`) and
+  `CanonicalField` (`C17.b`, `C18`, `C19`) witnesses are scheduled for Phase 5
+  after the Phase 4 Lean/Mathlib `v4.35.0+` upgrade.
+- **A side-by-side page** of step TeX and Lean lemma statement *(Resolved
+  2026-11-26 in Phase 3: `progress/#/audit` and each claim's Lean tab).*
 - **The unequal-rate formula without Gaussianity** (C9). The paper's three
   sentences use only that each mode satisfies the temporal assumption with its
   own `T_k`, that the modes are centered, and that they are independent. A

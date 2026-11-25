@@ -2,8 +2,8 @@ import TinaV2.Prelude
 
 /-! # Quadratic cost and tracking loss (claim C5)
 
-Paper: `main-v2.tex` Eq. (tracking_loss); `technical-appendices-v2.tex`
-Eqs. (quadratic_cost), (clairvoyant), (complete_square).
+Paper: `main-v3.tex` Eq. (tracking_loss); `technical-appendices-v3.tex`
+lines 25-68, Eqs. (quadratic_cost), (clairvoyant), (complete_square).
 
 Actions are vectors indexed by a finite type `α` of action coordinates. -/
 

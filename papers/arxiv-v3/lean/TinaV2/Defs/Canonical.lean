@@ -2,11 +2,11 @@ import TinaV2.Defs.Architecture
 
 /-! # The canonical line model (claim C17)
 
-Paper: `main-v2.tex` Section "The canonical three-length result",
+Paper: `main-v3.tex` Section "The canonical three-length result" (lines 809-852),
 Eqs. (canonical_space_time_covariance), (canonical_target),
 (canonical_tracking_cost), (canonical_radius_observation); and
-`technical-appendices-v2.tex` Section "Canonical spatial omission calculation"
-for "a continuous version of the field".
+`technical-appendices-v3.tex` Section "Canonical spatial omission calculation"
+(lines 410-488) for "a continuous version of the field".
 
 Conventions.
 * The field is `θ : ℝ → ℝ → Ω → ℝ`, read `θ z t ω`: location, time, outcome.

@@ -31,7 +31,10 @@ theorem s1_fresh_reading (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ 
     (hY : ∀ s, ∫ ω, Y s ω ∂μ = 0 ∧ ∫ ω, Y s ω ^ 2 ∂μ = σ ^ 2)
     (hind : IndepFun (fun ω (s : ℝ) => X s ω) (fun ω (s : ℝ) => Y s ω) μ) :
     bestMSE μ (fun ω => (X t ω + Y t ω) / 2) (X t) = σ ^ 2 / 4 ∧
-      ∫ ω, ((X t ω + Y t ω) / 2 - X t ω / 2) ^ 2 ∂μ = σ ^ 2 / 4 := by
+      ∫ ω, ((X t ω + Y t ω) / 2 - X t ω / 2) ^ 2 ∂μ = σ ^ 2 / 4 ∧
+      ∀ g : ℝ → ℝ, Measurable g → MemLp (fun ω => g (X t ω)) 2 μ →
+        ∫ ω, ((X t ω + Y t ω) / 2 - g (X t ω)) ^ 2 ∂μ ≤ σ ^ 2 / 4 →
+        (fun ω => g (X t ω)) =ᵐ[μ] fun ω => X t ω / 2 := by
   -- the error is the missing term `Y_t/2`, so the mean squared error is `σ²/4`
   have herr : ∀ ω, (X t ω + Y t ω) / 2 - X t ω / 2 = Y t ω / 2 := fun ω => by ring
   have hmse : ∫ ω, ((X t ω + Y t ω) / 2 - X t ω / 2) ^ 2 ∂μ = σ ^ 2 / 4 := by
@@ -55,10 +58,12 @@ theorem s1_fresh_reading (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ 
       hXc hYc).trans ?_
     filter_upwards with ω
     simp
-  -- unsaid in the paper: the conditional mean is the best estimate
-  refine ⟨?_, hmse⟩
-  rw [bestMSE_eq_of_condExp (h := fun x => x / 2) (hXm t) (memLp_half_add (hX2 t) (hY2 t))
-    (measurable_id.div_const 2) (memLp_div_const (hX2 t) 2) hcond, hmse]
+  -- unsaid in the paper: the conditional mean is the unique best estimate
+  refine ⟨?_, hmse, fun g hg hg2 hle => ?_⟩
+  · rw [bestMSE_eq_of_condExp (h := fun x => x / 2) (hXm t) (memLp_half_add (hX2 t) (hY2 t))
+      (measurable_id.div_const 2) (memLp_div_const (hX2 t) 2) hcond, hmse]
+  · exact bestMSE_unique_of_condExp (h := fun x => x / 2) (hXm t) (memLp_half_add (hX2 t) (hY2 t))
+      (measurable_id.div_const 2) (memLp_div_const (hX2 t) 2) hg hg2 hcond (by rwa [hmse])
 
 /-- Step 2 (main-v2.tex 73-79). "With both old readings, we know the old average
 `Z_{t−τ}` exactly. Suppose the two signal processes are independent and
@@ -82,7 +87,13 @@ theorem s2_old_readings (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ �
     bestMSE μ (fun ω => (X t ω + Y t ω) / 2) (fun ω => (X (t - τ) ω, Y (t - τ) ω))
         = Var[fun ω => (X t ω + Y t ω) / 2; μ] * (1 - exp (-2 * τ / T)) ∧
       ∫ ω, ((X t ω + Y t ω) / 2 - exp (-τ / T) * ((X (t - τ) ω + Y (t - τ) ω) / 2)) ^ 2 ∂μ
-        = Var[fun ω => (X t ω + Y t ω) / 2; μ] * (1 - exp (-2 * τ / T)) := by
+        = Var[fun ω => (X t ω + Y t ω) / 2; μ] * (1 - exp (-2 * τ / T)) ∧
+      ∀ g : ℝ × ℝ → ℝ, Measurable g →
+        MemLp (fun ω => g (X (t - τ) ω, Y (t - τ) ω)) 2 μ →
+        ∫ ω, ((X t ω + Y t ω) / 2 - g (X (t - τ) ω, Y (t - τ) ω)) ^ 2 ∂μ
+          ≤ Var[fun ω => (X t ω + Y t ω) / 2; μ] * (1 - exp (-2 * τ / T)) →
+        (fun ω => g (X (t - τ) ω, Y (t - τ) ω))
+          =ᵐ[μ] fun ω => exp (-τ / T) * ((X (t - τ) ω + Y (t - τ) ω) / 2) := by
   have ha2 : exp (-τ / T) ^ 2 = exp (-2 * τ / T) := by
     rw [← exp_nat_mul]
     congr 1
@@ -181,10 +192,12 @@ theorem s2_old_readings (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ �
       = Var[fun ω => (X t ω + Y t ω) / 2; μ] * (1 - exp (-2 * τ / T)) := by
     rw [hvar, ← ha2]
     linear_combination (-1 : ℝ) * hsum
-  -- unsaid in the paper: the conditional mean is the best estimate
-  refine ⟨?_, hmse⟩
-  rw [bestMSE_eq_of_condExp (h := fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2)) hobs hZ2 hh hh2 hcond,
-    hmse]
+  -- unsaid in the paper: the conditional mean is the unique best estimate
+  refine ⟨?_, hmse, fun g hg hg2 hle => ?_⟩
+  · rw [bestMSE_eq_of_condExp (h := fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2)) hobs hZ2 hh hh2 hcond,
+      hmse]
+  · exact bestMSE_unique_of_condExp (h := fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2)) hobs hZ2 hh hh2
+      hg hg2 hcond (by rwa [hmse])
 
 /-- Step 3 (main-v2.tex 79-86). "Since `Var(Z_t) = σ²/2`, the fresh reading wins
 when `σ²/4 < (σ²/2)(1 − e^{−2τ/T}) ⟺ τ > T log 2 / 2`." -/

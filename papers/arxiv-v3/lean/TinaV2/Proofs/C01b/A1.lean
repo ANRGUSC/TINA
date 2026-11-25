@@ -62,7 +62,7 @@ theorem s3_regret (hC1 : C01.Statement) (μ : Measure Ω) [IsProbabilityMeasure 
     funext ω
     rw [mulVec_mulVec, nonsing_inv_mul Q (isUnit_iff_ne_zero.2 hQ.det_pos.ne'), one_mulVec]
   -- Lemma (radner_projection) with `b = Q x⋆` and `c = 0`
-  have h := hC1 μ Q actor 𝒢 (fun ω => Q *ᵥ xstar ω) (fun _ => 0) hQ h𝒢 (memLp_mulVec Q hx)
+  have h := hC1.1 μ Q actor 𝒢 (fun ω => Q *ᵥ xstar ω) (fun _ => 0) hQ h𝒢 (memLp_mulVec Q hx)
     (integrable_zero Ω ℝ μ)
   simp only [hinv] at h
   -- Eq. (projection_regret): `R(𝒜) = ½ ‖x⋆ − u⋆‖_Q²`

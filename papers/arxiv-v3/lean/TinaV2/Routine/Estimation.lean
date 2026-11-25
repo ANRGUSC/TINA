@@ -147,6 +147,42 @@ theorem bestMSE_eq_of_condExp {μ : Measure Ω} [IsFiniteMeasure μ] {target : �
   have : 0 ≤ ∫ ω, (h (obs ω) - g (obs ω)) ^ 2 ∂μ := integral_nonneg fun _ => sq_nonneg _
   linarith
 
+/-- Almost-sure uniqueness of the conditional-mean estimator: if
+`E[target | obs] = h(obs)` and another square-integrable estimator `g(obs)`
+achieves no larger mean squared error, then `g(obs) = h(obs)` almost surely. -/
+theorem bestMSE_unique_of_condExp {μ : Measure Ω} [IsFiniteMeasure μ] {target : Ω → ℝ}
+    {obs : Ω → O} {h g : O → ℝ} (hobs : Measurable obs) (ht : MemLp target 2 μ)
+    (hh : Measurable h) (hh2 : MemLp (fun ω => h (obs ω)) 2 μ)
+    (hg : Measurable g) (hg2 : MemLp (fun ω => g (obs ω)) 2 μ)
+    (hcond : μ[target | MeasurableSpace.comap obs inferInstance] =ᵐ[μ] fun ω => h (obs ω))
+    (hle : ∫ ω, (target ω - g (obs ω)) ^ 2 ∂μ ≤ ∫ ω, (target ω - h (obs ω)) ^ 2 ∂μ) :
+    (fun ω => g (obs ω)) =ᵐ[μ] fun ω => h (obs ω) := by
+  have hE2 : MemLp (fun ω => target ω - h (obs ω)) 2 μ := ht.sub hh2
+  have hD2 : MemLp (fun ω => h (obs ω) - g (obs ω)) 2 μ := hh2.sub hg2
+  have horth : ∫ ω, (h (obs ω) - g (obs ω)) * (target ω - h (obs ω)) ∂μ = 0 :=
+    integral_mul_error_of_condExp (k := fun o => h o - g o) hobs ht hh hh2 (hh.sub hg) hD2 hcond
+  have hI1 : Integrable (fun ω => (target ω - h (obs ω)) ^ 2) μ := hE2.integrable_sq
+  have hI2 : Integrable (fun ω => 2 * ((h (obs ω) - g (obs ω)) * (target ω - h (obs ω)))) μ :=
+    (hD2.integrable_mul hE2).const_mul 2
+  have hI3 : Integrable (fun ω => (h (obs ω) - g (obs ω)) ^ 2) μ := hD2.integrable_sq
+  have hI12 : Integrable (fun ω => (target ω - h (obs ω)) ^ 2
+      + 2 * ((h (obs ω) - g (obs ω)) * (target ω - h (obs ω)))) μ := hI1.add hI2
+  have hpt : ∀ ω, (target ω - g (obs ω)) ^ 2 = (target ω - h (obs ω)) ^ 2
+      + 2 * ((h (obs ω) - g (obs ω)) * (target ω - h (obs ω)))
+      + (h (obs ω) - g (obs ω)) ^ 2 := fun ω => by ring
+  have hexp : ∫ ω, (target ω - g (obs ω)) ^ 2 ∂μ
+      = ∫ ω, (target ω - h (obs ω)) ^ 2 ∂μ + ∫ ω, (h (obs ω) - g (obs ω)) ^ 2 ∂μ := by
+    simp_rw [hpt]
+    rw [integral_add hI12 hI3, integral_add hI1 hI2, integral_const_mul, horth]
+    ring
+  have hzero : ∫ ω, (h (obs ω) - g (obs ω)) ^ 2 ∂μ = 0 :=
+    le_antisymm (by linarith) (integral_nonneg fun _ => sq_nonneg _)
+  have hae : (fun ω => (h (obs ω) - g (obs ω)) ^ 2) =ᵐ[μ] 0 :=
+    (integral_eq_zero_iff_of_nonneg_ae (Filter.Eventually.of_forall fun _ => sq_nonneg _) hI3).1
+      hzero
+  filter_upwards [hae] with ω hω
+  exact (sub_eq_zero.1 (sq_eq_zero_iff.1 hω)).symm
+
 /-! ## Independence: an extra independent observation, and joint stationarity -/
 
 /-- If `m₂` is independent of `σ(f) ⊔ m₁`, then conditioning on `m₂` in addition

@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C7: Spatio-temporal composition
 
-Paper: main-v2.tex Theorem (spatiotemporal_composition), Eq. (regret_composition_unnormalized). -/
+Paper: main-v3.tex lines 379-443, Theorem (spatiotemporal_composition), Eq. (regret_composition_unnormalized). -/
 
 namespace TinaV2.C07
 

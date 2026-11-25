@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C5.b: Centering the affine model is without loss
 
-Paper: technical-appendices-v2.tex, paragraph "Centering the affine model". -/
+Paper: technical-appendices-v3.tex lines 87-97, paragraph "Centering the affine model". -/
 
 namespace TinaV2.C05b
 
@@ -15,7 +15,7 @@ def Statement : Prop :=
   ∀ {ι κ α Ω : Type} [Fintype ι] [Fintype κ] [Fintype α] [DecidableEq α] [MeasurableSpace Ω]
     (M : Model ι κ α) (μ : Measure Ω) [IsProbabilityMeasure μ]
     (B : Matrix α κ ℝ) (b₀ : α → ℝ) (snap now : Ω → κ → ℝ) (r : ℕ∞),
-    M.K = M.Q⁻¹ * B → Measurable snap → MemLp snap 2 μ → Measurable now → MemLp now 2 μ →
+    M.K = M.Q⁻¹ * B → MemLp now 2 μ →
     let xstar : Ω → α → ℝ := fun ω => M.Q⁻¹ *ᵥ (B *ᵥ now ω + b₀)
     (∀ ω, center μ xstar ω = M.K *ᵥ center μ now ω) ∧
     regret μ M.Q M.actor xstar (M.obs r snap) = M.R μ r (center μ snap) (center μ now)

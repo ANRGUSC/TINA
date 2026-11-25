@@ -2,7 +2,7 @@ import TinaV2.Defs
 
 /-! # C13.b: Large-n limit of the threshold
 
-Paper: main-v2.tex Eq. (large_n_threshold) and the sentence after it. -/
+Paper: main-v3.tex lines 663-678, Eq. (large_n_threshold) and the sentence after it. -/
 
 namespace TinaV2.C13b
 

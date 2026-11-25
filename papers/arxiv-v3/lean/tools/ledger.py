@@ -71,6 +71,94 @@ TABLES = ["meta", "sources", "claims", "claim_deps", "proofs", "steps",
           "disposition_scope", "statement_deltas", "frozen_files", "notes"]
 
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
+COMPILER_TRUST_AXIOMS = {"Lean.ofReduceBool", "Lean.ofReduceNat", "Lean.trustCompiler"}
+
+GATE2_BANNED = [
+    ("sorry/admit", re.compile(r"\b(?:sorry|admit)\b")),
+    ("axiom", re.compile(r"\baxiom\b")),
+    ("compiler-trust bypass", re.compile(r"\b(?:native_decide|ofReduceBool|ofReduceNat|trustCompiler)\b")),
+    ("unsafe/extern bypass", re.compile(r"\b(?:unsafe|implemented_by|extern)\b")),
+    ("metaprogramming/eval", re.compile(r"#eval\b|\b(?:elab|macro|macro_rules|syntax)\b")),
+    ("notation override", re.compile(r"\b(?:(?:local|scoped)\s+)?notation\b")),
+]
+
+
+def strip_lean_comments(src):
+    """Strip `--` line comments, nested `/- ... -/` block comments, and string
+    literal contents, preserving newlines so line numbers remain exact."""
+    out = []
+    i, n, depth = 0, len(src), 0
+    in_str = False
+    while i < n:
+        c = src[i]
+        nxt = src[i + 1] if i + 1 < n else ""
+        if depth > 0:
+            if c == "/" and nxt == "-":
+                depth += 1
+                out.append("  ")
+                i += 2
+            elif c == "-" and nxt == "/":
+                depth -= 1
+                out.append("  ")
+                i += 2
+            elif c == "\n":
+                out.append("\n")
+                i += 1
+            else:
+                out.append(" ")
+                i += 1
+        elif in_str:
+            if c == "\\" and i + 1 < n:
+                out.append("  ")
+                i += 2
+            elif c == '"':
+                in_str = False
+                out.append('"')
+                i += 1
+            elif c == "\n":
+                out.append("\n")
+                i += 1
+            else:
+                out.append(" ")
+                i += 1
+        else:
+            if c == "-" and nxt == "-":
+                while i < n and src[i] != "\n":
+                    out.append(" ")
+                    i += 1
+            elif c == "/" and nxt == "-":
+                depth = 1
+                out.append("  ")
+                i += 2
+            elif c == '"':
+                in_str = True
+                out.append('"')
+                i += 1
+            else:
+                out.append(c)
+                i += 1
+    return "".join(out)
+
+
+def scan_gate2_policy(root=ROOT):
+    """Scan all Lean sources in TinaV2 for Gate-2 forbidden constructs."""
+    errs = []
+    files = []
+    top = root / "TinaV2.lean"
+    if top.exists():
+        files.append(top)
+    files.extend(sorted((root / "TinaV2").rglob("*.lean")))
+    for path in files:
+        rel = path.relative_to(root).as_posix()
+        stripped = strip_lean_comments(path.read_text(encoding="utf-8"))
+        for lineno, line in enumerate(stripped.splitlines(), 1):
+            for label, pat in GATE2_BANNED:
+                m = pat.search(line)
+                if m:
+                    errs.append(
+                        f"{rel}:{lineno}: forbidden Gate-2 construct ({label}): `{m.group(0)}`"
+                    )
+    return errs
 
 
 def now():
@@ -517,6 +605,9 @@ def run_check(db):
             errs.append(f"TinaV2/Routine/{f.name} imports {', '.join(bad)}; routine files may "
                         f"not import statements or proofs")
 
+    # 4d. Gate-2 static policy scan across all Lean files in TinaV2.
+    errs.extend(scan_gate2_policy(ROOT))
+
     # 4a. The assembly file is the one the selected attempts generate, and the
     # `assembled` rows say what it says.
     if q("SELECT 1 FROM attempts WHERE selected = 1 AND status = 'proved'"):
@@ -905,10 +996,17 @@ run_cmd do
       logInfo m!"AUDIT {n} := {uses}"
 
 run_cmd do
+  let env ← getEnv
   let thms : List Name := [%THEOREMS%]
   for n in thms do
-    let ax ← Lean.collectAxioms n
-    logInfo m!"AXIOMS {n} := {ax.toList}"
+    match env.find? n with
+    | some (.thmInfo _) =>
+      let ax ← Lean.collectAxioms n
+      logInfo m!"AXIOMS {n} := {ax.toList}"
+    | some _ =>
+      logInfo m!"NOT-THEOREM {n}"
+    | none =>
+      logInfo m!"AUDIT-MISSING {n}"
 """
 
 
@@ -953,6 +1051,8 @@ def audit_selected(db, args):
     errs, seen = [], 0
     for m in re.finditer(r"AUDIT-MISSING (\S+)", out):
         errs.append(f"{m.group(1)}: not found in the built project")
+    for m in re.finditer(r"NOT-THEOREM (\S+)", out):
+        errs.append(f"{m.group(1)}: expected a kernel theorem (.thmInfo), not a def/axiom/opaque")
     for m in re.finditer(r"AUDIT (\S+) := \[(.*?)\]", out, re.S):
         seen += 1
         name, used = m.group(1), [u.strip() for u in m.group(2).replace("\n", " ").split(",") if u.strip()]
@@ -1006,6 +1106,9 @@ def audit_selected(db, args):
             errs.append(f"{claim}: Lean did not report the axioms of Assembly.{short}")
             continue
         ax = axioms[short]
+        compiler_ax = sorted(set(ax) & COMPILER_TRUST_AXIOMS)
+        if compiler_ax:
+            errs.append(f"{claim}: Assembly.{short} depends on compiler-trust axiom(s): {compiler_ax}")
         ok = set(ax) <= STANDARD_AXIOMS
         if not ok:
             errs.append(f"{claim}: Assembly.{short} depends on {sorted(set(ax) - STANDARD_AXIOMS)}")

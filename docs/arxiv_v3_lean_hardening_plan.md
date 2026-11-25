@@ -74,36 +74,36 @@ flowchart TD
 
 ---
 
-### Phase 1: Close CI Spec-Freeze Bypass & Gate-2 Static Policy Hardening (~1–2 hours · Zero Refreezes)
+### Phase 1: Close CI Spec-Freeze Bypass & Gate-2 Static Policy Hardening (Completed 2026-11-26 · Zero Refreezes)
 
 **Goal:** Make TINA's existing frozen-spec guarantees and Gate-2 static hygiene hard CI merge gates without touching any frozen `Defs/` or `Statements/` file.
 
 **Actions:**
-- [ ] **1.1 Enforce `ledger.run_check(db)` inside `papers/arxiv-v3/lean/tools/verify_release.py`:**
+- [x] **1.1 Enforce `ledger.run_check(db)` inside `papers/arxiv-v3/lean/tools/verify_release.py`:**
   - At the start of `verify()` (`verify_release.py:12-29`), call `errs, warns = ledger.run_check(db)`.
   - Raise `ValueError` immediately if `errs` is non-empty (blocking any un-refrozen `Defs/`/`Statements/` edit, broken verbatim TeX step, unmapped lemma, or import-isolation violation).
   - Include `check_warnings: warns` in the emitted `verification.json` and print a warning summary in `GITHUB_STEP_SUMMARY`.
-- [ ] **1.2 Close the TeX-change CI & verification-reuse blind spot:**
+- [x] **1.2 Close the TeX-change CI & verification-reuse blind spot:**
   - In `.github/workflows/verify-arxiv-v3-lean.yml` (`pull_request.paths`), add:
     - `'submissions/arxiv-v3/main-v3.tex'`
     - `'submissions/arxiv-v3/technical-appendices-v3.tex'`
   - In `.github/scripts/pages_lean_record.py` (`INPUTS`, lines 15–17), add `'submissions/arxiv-v3/main-v3.tex'` and `'submissions/arxiv-v3/technical-appendices-v3.tex'` so `publish-reading-guide.yml` cannot reuse a prior `verification.json` when manuscript text changes.
-- [ ] **1.3 Add Gate-2 comment-stripped static policy checks to `ledger.py check`:**
+- [x] **1.3 Add Gate-2 comment-stripped static policy checks to `ledger.py check`:**
   - Add a Lean comment-stripping scanner (`--` line comments and nested `/- ... -/` block comments) checking all `.lean` files under `TinaV2/` (`Defs/`, `Statements/`, `Routine/`, `Proofs/`, `Assembly.lean`) for forbidden constructs:
     - Soundness / compiler-trust bypasses: `sorry`, `admit`, `axiom`, `native_decide`, `ofReduceBool`, `ofReduceNat`, `trustCompiler`, `unsafe`, `implemented_by`, `extern`.
     - Metaprogramming / notation overrides: `#eval`, `elab`, `macro`, `macro_rules`, `syntax`, `local notation`, `notation` (in `Proofs/`, `Statements/`, `Defs/`, `Routine/`).
   - Note: Keep `Smoke.lean` (or future `Challenge.lean` stubs in Phase 4) explicitly scoped so intentional `Challenge.lean` `sorry` stubs are isolated outside `TinaV2/`.
-- [ ] **1.4 Strengthen `AUDIT_LEAN` in `papers/arxiv-v3/lean/tools/ledger.py` (lines 874–912):**
+- [x] **1.4 Strengthen `AUDIT_LEAN` in `papers/arxiv-v3/lean/tools/ledger.py` (lines 874–912):**
   - For every `TinaV2.Assembly.Cxx` theorem, assert `env.find? n` matches `.thmInfo` (`wasOriginallyTheorem`, preventing `def`/non-theorem spoofing).
   - Explicitly check that `Lean.ofReduceBool` and `Lean.trustCompiler` never appear in transitive axioms (already implied by `<= STANDARD_AXIOMS`, but worth explicit error diagnostics).
-- [ ] **1.5 Eliminate all 6 `local notation` macros in `TinaV2/Proofs/`:**
+- [x] **1.5 Eliminate all 6 `local notation` macros in `TinaV2/Proofs/`:**
   - Replace with plain `let`/`abbrev` or `Routine/` helpers in:
     - `TinaV2/Proofs/C09/A1.lean:30`
     - `TinaV2/Proofs/C16/A1.lean:18`, `20`
     - `TinaV2/Proofs/C17b/A1.lean:26`
     - `TinaV2/Proofs/C18/A1.lean:30`
     - `TinaV2/Proofs/C19/A1.lean:15` (superseded attempt; clean anyway so repo-wide static scans report `0` notation overrides)
-- [ ] **1.6 Deduplicate derivative-sign monotonicity helper (`future-tasks.md:83-85`):**
+- [x] **1.6 Deduplicate derivative-sign monotonicity helper (`future-tasks.md:83-85`):**
   - Merge the duplicate wrapper between `TinaV2/Routine/ExpRadius.lean` and `TinaV2/Routine/RadiusCalculus.lean`.
 
 **Exit Criteria:**

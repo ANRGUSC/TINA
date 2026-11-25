@@ -13,6 +13,8 @@ PROJECT = "papers/arxiv-v3/lean"
 # Include new proof inputs by default. Only reader assets and documentation
 # are independent of the Lean build and ledger audit.
 INPUTS = [PROJECT, ".github/workflows/verify-arxiv-v3-lean.yml",
+          "submissions/arxiv-v3/main-v3.tex",
+          "submissions/arxiv-v3/technical-appendices-v3.tex",
           f":(exclude){PROJECT}/progress/**", f":(exclude){PROJECT}/tools/reader_passages.py",
           f":(exclude,glob){PROJECT}/*.md"]
 

@@ -9,6 +9,8 @@ on:
       - '!papers/arxiv-v3/lean/progress/**'
       - '!papers/arxiv-v3/lean/*.md'
       - '!papers/arxiv-v3/lean/tools/reader_passages.py'
+      - 'submissions/arxiv-v3/main-v3.tex'
+      - 'submissions/arxiv-v3/technical-appendices-v3.tex'
       - '.github/workflows/verify-arxiv-v3-lean.yml'
 
 permissions:

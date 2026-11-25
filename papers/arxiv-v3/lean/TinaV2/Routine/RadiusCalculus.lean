@@ -24,21 +24,23 @@ theorem log_gain {η τ : ℝ → ℝ} {T r : ℝ} (h : η r < 1) :
   rw [log_mul (sub_pos.mpr h).ne' (exp_pos _).ne', log_exp]
   ring
 
-/-- A positive derivative on a convex set gives a strictly increasing function. -/
+/-- A strictly positive derivative on the interior of a convex set gives a strictly
+increasing function on the set. -/
 theorem strictMonoOn_of_hasDerivAt_pos {D : Set ℝ} (hD : Convex ℝ D) {f f' : ℝ → ℝ}
-    (hf : ∀ x ∈ D, HasDerivAt f (f' x) x) (hpos : ∀ x ∈ D, 0 < f' x) : StrictMonoOn f D :=
+    (hf : ∀ x ∈ D, HasDerivAt f (f' x) x) (hpos : ∀ x ∈ interior D, 0 < f' x) : StrictMonoOn f D :=
   strictMonoOn_of_deriv_pos hD (fun x hx => (hf x hx).continuousAt.continuousWithinAt)
     fun x hx => by
       rw [(hf x (interior_subset hx)).deriv]
-      exact hpos x (interior_subset hx)
+      exact hpos x hx
 
-/-- A negative derivative on a convex set gives a strictly decreasing function. -/
+/-- A strictly negative derivative on the interior of a convex set gives a strictly
+decreasing function on the set. -/
 theorem strictAntiOn_of_hasDerivAt_neg {D : Set ℝ} (hD : Convex ℝ D) {f f' : ℝ → ℝ}
-    (hf : ∀ x ∈ D, HasDerivAt f (f' x) x) (hneg : ∀ x ∈ D, f' x < 0) : StrictAntiOn f D :=
+    (hf : ∀ x ∈ D, HasDerivAt f (f' x) x) (hneg : ∀ x ∈ interior D, f' x < 0) : StrictAntiOn f D :=
   strictAntiOn_of_deriv_neg hD (fun x hx => (hf x hx).continuousAt.continuousWithinAt)
     fun x hx => by
       rw [(hf x (interior_subset hx)).deriv]
-      exact hneg x (interior_subset hx)
+      exact hneg x hx
 
 /-- Unfolding `canonRadius`: it depends on `v` and `T` only through `vT`. -/
 theorem canonRadius_mul (ℓc ℓs v T : ℝ) :

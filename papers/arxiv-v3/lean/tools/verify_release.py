@@ -15,6 +15,12 @@ def verify(output):
     if commit != os.environ["GITHUB_SHA"]:
         raise ValueError("The checked-out source differs from the requested GitHub commit.")
     db = ledger.connect()
+    check_errors, check_warnings = ledger.run_check(db)
+    if check_errors:
+        raise ValueError(
+            "The Lean ledger invariant and Gate-2 policy check failed:\n"
+            + "\n".join(check_errors)
+        )
     assembly, plan = ledger.assembly_plan(db)
     if not plan or assembly != ledger.ASSEMBLY.read_text(encoding="utf-8"):
         raise ValueError("Assembly.lean must compose the selected proof attempts in the ledger.")
@@ -48,13 +54,22 @@ def verify(output):
     run = (f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/"
            f"{os.environ['GITHUB_RUN_ID']}/attempts/{os.environ['GITHUB_RUN_ATTEMPT']}")
     checked = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    record = {"commit": commit, "checked": checked, "lean": lean, "run": run, "claims": claims}
+    record = {"commit": commit, "checked": checked, "lean": lean, "run": run,
+              "check_warnings": check_warnings, "claims": claims}
     output.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
         print("## arXiv v3 Lean verification\n", file=summary)
         print(f"Checked {checked} at `{commit}` using {lean}.\n", file=summary)
+        print(f"Ledger invariant and Gate-2 static policy check passed (`0` errors, "
+              f"`{len(check_warnings)}` warnings).\n", file=summary)
+        if check_warnings:
+            print("Warnings:\n", file=summary)
+            for w in check_warnings:
+                print(f"- {w}", file=summary)
+            print(file=summary)
         print(f"Lean rebuilt the project and checked {len(claims)} assembled theorems. "
-              "Every theorem uses only standard axioms and has no `sorryAx` dependency.\n", file=summary)
+              "Every theorem is a kernel `.thmInfo` using only standard axioms with no `sorryAx` dependency.\n",
+              file=summary)
         print("| Claim | Theorem | Transitive axioms |\n|---|---|---|", file=summary)
         for claim, row in claims.items():
             print(f"| {claim} | `{row['theorem']}` | {', '.join(row['axioms']) or 'None'} |", file=summary)

@@ -12,9 +12,6 @@ open Real Set
 
 variable (ℓc ℓs v T : ℝ)
 
-local notation "G" =>
-  gain (fun r : ℝ => ℓc / (ℓc + 2 * ℓs) * exp (-2 * r / ℓc)) (fun r : ℝ => r / v) T
-
 /-- Step 1 (main-v2.tex 910-911): Lemma (canonical_eta_S) gives
 `η₀ = ℓ_c/(ℓ_c + 2ℓ_s)`. In the algebraic form the statement already fixes this
 `η₀`, so the lemma (C18, tier D) is not a hypothesis here. The step records only
@@ -34,6 +31,7 @@ condition `η₀(1 + vT/ℓ_c) > 1` is `vT > 2ℓ_s`. The paper's proposition is
 algebraic form does not mention the field model, so that is not a hypothesis. -/
 theorem s2_substitute (hC16 : C16.Statement)
     (hℓc : 0 < ℓc) (hℓs : 0 < ℓs) (hv : 0 < v) (hT : 0 < T) :
+    let G := gain (fun r : ℝ => ℓc / (ℓc + 2 * ℓs) * exp (-2 * r / ℓc)) (fun r : ℝ => r / v) T
     (∀ r, 0 ≤ r → r ≠ canonRadius ℓc ℓs v T → G r < G (canonRadius ℓc ℓs v T)) ∧
       (0 < canonRadius ℓc ℓs v T ↔ 2 * ℓs < v * T) := by
   obtain ⟨hη0, hη1⟩ := s1_eta0 ℓc ℓs hℓc hℓs

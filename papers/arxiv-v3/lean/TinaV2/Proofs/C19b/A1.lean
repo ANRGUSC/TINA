@@ -45,7 +45,7 @@ theorem s1_deriv_vT (ℓc ℓs : ℝ) (hc : 0 < ℓc) (hs : 0 < ℓs) :
   refine ⟨hderiv, fun v T hv hT hreg => ?_⟩
   have hmono : StrictMonoOn (fun y => canonRadius ℓc ℓs y 1) (Ioi (2 * ℓs)) :=
     RadiusCalculus.strictMonoOn_of_hasDerivAt_pos (convex_Ioi _)
-      (fun x hx => (hderiv x hx).1) (fun x hx => (hderiv x hx).2)
+      (fun x hx => (hderiv x hx).1) (fun x hx => (hderiv x (interior_subset hx)).2)
   refine ⟨fun T' hT' => ?_, fun v' hv' => ?_⟩
   · have hlt : v * T < v * T' := mul_lt_mul_of_pos_left hT' hv
     rw [RadiusCalculus.canonRadius_mul ℓc ℓs v T, RadiusCalculus.canonRadius_mul ℓc ℓs v T']
@@ -84,7 +84,7 @@ theorem s2_deriv_ls (ℓc v T : ℝ) (hc : 0 < ℓc) :
   have hanti : StrictAntiOn (fun y => canonRadius ℓc y v T) (Ioo 0 (v * T / 2)) :=
     RadiusCalculus.strictAntiOn_of_hasDerivAt_neg (convex_Ioo _ _)
       (fun y hy => (hderiv y hy.1 (by linarith [hy.2])).1)
-      (fun y hy => (hderiv y hy.1 (by linarith [hy.2])).2)
+      (fun y hy => (hderiv y (interior_subset hy).1 (by linarith [(interior_subset hy).2])).2)
   exact ⟨hderiv, fun ℓs ℓs' hs hlt hreg' =>
     hanti ⟨hs, by linarith⟩ ⟨hs.trans hlt, by linarith⟩ hlt⟩
 

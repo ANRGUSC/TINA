@@ -29,7 +29,7 @@ theorem comap_lineObs_le (θ : ℝ → ℝ → Ω → ℝ) (r z s : ℝ) :
     MeasurableSpace.comap (lineObs θ r z s) MeasurableSpace.pi
       ≤ MeasurableSpace.comap (fun ω (y : ℝ) => θ y s ω) MeasurableSpace.pi := by
   have hρ : Measurable fun (f : ℝ → ℝ) (u : Icc (-r) r) => f (z + u) :=
-    measurable_pi_lambda _ fun u => measurable_pi_apply _
+    Measurable.of_eval fun u => measurable_pi_apply _
   have hcomp : lineObs θ r z s
       = (fun (f : ℝ → ℝ) (u : Icc (-r) r) => f (z + u)) ∘ fun ω (y : ℝ) => θ y s ω := rfl
   rw [hcomp, ← MeasurableSpace.comap_comp]

@@ -110,7 +110,7 @@ theorem exists_local_rule_eq (M : Model ι ι ι) (ho : M.owner = id) (ha : M.ac
     ∃ φ : ι → ℝ → ℝ, (∀ c, Measurable (φ c)) ∧
       ∀ (s : ι → ℝ) (c : ι), g c (M.view 0 (M.actor c) s) = φ c (s c) := by
   refine ⟨fun c x => g c fun _ => x,
-    fun c => (hg c).comp (measurable_pi_lambda _ fun _ => measurable_id), fun s c => ?_⟩
+    fun c => (hg c).comp (Measurable.of_eval fun _ => measurable_id), fun s c => ?_⟩
   rw [view_zero M ho]
   have hc : M.actor c = c := congrFun ha c
   exact congrArg (g c) (funext fun _ => congrArg s hc)

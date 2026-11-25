@@ -75,7 +75,7 @@ theorem integral_lineTarget (h : CanonicalField μ θ σ ℓs T) {ℓc : ℝ} (h
 omit [IsProbabilityMeasure μ] in
 theorem measurable_lineObs (h : CanonicalField μ θ σ ℓs T) (r z t : ℝ) :
     Measurable (lineObs θ r z t) :=
-  measurable_pi_lambda _ fun _ => h.measurable _ _
+  Measurable.of_eval fun _ => h.measurable _ _
 
 /-- The regret at a location is `q/2` times the expected conditional variance
 of the target given the observed interval. -/

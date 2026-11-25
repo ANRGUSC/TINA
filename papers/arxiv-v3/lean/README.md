@@ -60,14 +60,18 @@ ledger/schema.sql     tables and views
 ledger/data.sql       one INSERT per row; the committed source of truth
 tools/ledger.py       CLI: status, show, headline, dispositions, supplement,
                       docs, frontier, sql, add, set, note, check, assembly,
-                      audit, graph, edit-diff, edit-apply, db, serve, site,
-                      freeze, unfreeze
+                      comparator-spec, audit, graph, edit-diff, edit-apply, db,
+                      serve, site, freeze, unfreeze
 paper-findings-2026-11-14.md      the memo as sent to the co-author
 paper-findings-dispositions.md    generated: what was decided about each point
 supplement.md                     generated: the arguments that are not in the paper
 progress/             the progress explorer: a static page that loads the
                       ledger into SQLite in the browser (see below)
-lakefile.toml, lean-toolchain     Lean 4.33.1 + Mathlib v4.33.1
+lakefile.toml, lean-toolchain     Lean 4.36.0 + Mathlib v4.36.0
+comparator/           auto-generated `Challenge.lean` (Defs+Statements only,
+                      `sorry` stubs) and `Solution.lean` (re-exporting
+                      `TinaV2.Assembly`), plus `comparator.json` with
+                      `challenge_sha256` for `lake comparator --paranoid`
 TinaV2/Prelude.lean   the only Mathlib import (a narrow module list)
 TinaV2/Smoke.lean     toolchain smoke test, not part of the ledger
 TinaV2/Routine/       regularity lemmas the paper leaves implicit
@@ -153,6 +157,7 @@ python3 tools/ledger.py docs              # regenerate the two generated documen
 python3 tools/ledger.py frontier          # claims ready to prove
 python3 tools/ledger.py check             # invariants below; non-zero exit on failure
 python3 tools/ledger.py assembly          # regenerate TinaV2/Assembly.lean and what each theorem assumes
+python3 tools/ledger.py comparator-spec   # regenerate comparator/Challenge.lean, Solution.lean, comparator.json
 python3 tools/ledger.py audit -v          # what each Lean step lemma uses, against step_deps; records axioms
 python3 tools/ledger.py sql "SELECT target, body FROM notes WHERE kind = 'failure'"
 ```
@@ -797,10 +802,21 @@ C4.c and C9 ("Decisions, 2026-11-19", last block).
     `v3` line numbers; `#/audit` step-signature view & routine `lean_ref`
     transparency live in `progress/`; Gate-4 semantic audit passed 42/42 frozen
     files (`gate4-semantic-audit-2026-11-26.md`).
-  - **Next up (Phase 4):** Upgrade Lean & Mathlib from `v4.33.1` to `v4.35.0+`
-    (unlocking native `KolmogorovExtension` `#44909` for Phase 5 Tier-D
-    continuum non-vacuity), auto-generate `comparator/Challenge.lean`, and wire
-    `lake comparator` + multi-kernel verification into CI. Parked: `future-tasks.md`.
+  - **Phase 4 complete (2026-11-26):** Upgraded Lean & Mathlib to stable
+    `v4.36.0` (`fc4f59e5`, unlocking native `MeasureTheory/Constructions/KolmogorovExtension.lean`
+    `#44909` with `0` frozen-file edits); added deterministic `ledger.py comparator-spec`
+    emitting `comparator/Challenge.lean` (SHA-256
+    `cd36223fea5f5f81c99a04ed48c8c14b3dceebbb5621cde5f292c9052fe201e0`),
+    `comparator/Solution.lean`, and `comparator.json` outside `TinaV2/`;
+    wired `lake comparator --paranoid` (all 6 independent kernels: `lean`,
+    `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) into
+    `tools/verify_release.py`, `.github/workflows/verify-arxiv-v3-lean.yml`
+    (with `bubblewrap`), and the Proof Explorer verification badge.
+  - **Next up (Phase 5):** Tier-D continuum non-vacuity witnesses (`C4.c`, `C9`,
+    and pathwise spatially continuous `CanonicalField` in
+    `TinaV2/NonVacuity/GaussianModels.lean`) using native Mathlib
+    `KolmogorovExtension` and a specialized 1D Gaussian Kolmogorov–Chentsov
+    modification. Parked: `future-tasks.md`.
 - **Non-vacuity, what was checked on 2026-11-19 (scratch files only; nothing
   is in the library and no statement exists until Scott chooses the design).**
   - Mathlib v4.33.1 constructs neither Brownian motion nor any Gaussian

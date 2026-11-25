@@ -285,6 +285,7 @@ function viewOverview() {
       <p><b>What verified means.</b> The Lean statement has been compared with the paper and frozen, the proof is complete, the
       end-to-end assembly assumes no unproved claim, and Lean reports only the three standard axioms. The two greens say where the
       argument comes from: the paper, or the paper plus supplied steps. Across all claims, <b>${M.disp.filter(d => d.decision === 'lean_supplies' && d.lean_ref).length}</b> routine-level <code>lean_ref</code> dispositions record technical bookkeeping discharged in <code>Routine/</code> or inside existing step lemmas (surfaced on each claim’s Lean tab and in the Step audit view).</p>
+      ${info?.verification?.comparator_passed ? `<p><b>Gate-3 multi-kernel replay.</b> <code>lake comparator --paranoid</code> verified all assembled theorems against hash-locked ${leanLink('comparator/Challenge.lean')} (SHA-256 <code>${esc((info.verification.challenge_sha256 || '').slice(0, 16))}…</code>) across <b>${(info.verification.kernels_passed || []).length}</b> independent kernels: ${(info.verification.kernels_passed || []).map(k => `<code>${esc(k)}</code>`).join(', ')}.</p>` : ''}
     </div>`;
 }
 

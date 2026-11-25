@@ -38,6 +38,8 @@ Mutating commands rewrite data.sql, so every change is a readable git diff.
     ledger.py check                  verify ledger <-> paper <-> Lean invariants
     ledger.py assembly               write TinaV2/Assembly.lean from the selected attempts
                                      and record what each assembled theorem assumes
+    ledger.py comparator-spec        write comparator/Challenge.lean, comparator/Solution.lean,
+                                     and comparator.json with challenge_sha256
     ledger.py audit [-v]             compare what each Lean step lemma uses with
                                      step_deps, and record the axioms
     ledger.py graph                  claim dependency graph (Mermaid)
@@ -651,6 +653,27 @@ def run_check(db):
         for claim in sorted(rows):
             errs.append(f"{claim}: assembled record without a selected proved attempt: run `ledger.py assembly`")
 
+        # 4e. Comparator specification files match the deterministic generator
+        # and Challenge.lean matches the SHA-256 recorded in comparator.json.
+        chal_txt, sol_txt, cfg_txt, chal_sha = comparator_spec(db)
+        for path, want, label in [
+            (CHALLENGE_LEAN, chal_txt, "comparator/Challenge.lean"),
+            (SOLUTION_LEAN, sol_txt, "comparator/Solution.lean"),
+            (COMPARATOR_JSON, cfg_txt, "comparator.json"),
+        ]:
+            if not path.exists():
+                errs.append(f"{label} is missing: run `ledger.py comparator-spec`")
+            elif path.read_text(encoding="utf-8") != want:
+                errs.append(f"{label} is out of date: run `ledger.py comparator-spec`")
+        if CHALLENGE_LEAN.exists() and COMPARATOR_JSON.exists():
+            try:
+                recorded_sha = json.loads(COMPARATOR_JSON.read_text(encoding="utf-8")).get("challenge_sha256")
+            except (OSError, ValueError):
+                recorded_sha = None
+            actual_sha = hashlib.sha256(CHALLENGE_LEAN.read_bytes()).hexdigest()
+            if recorded_sha != actual_sha or recorded_sha != chal_sha:
+                errs.append("comparator.json challenge_sha256 does not match comparator/Challenge.lean")
+
     # 4b. Every live Lean statement exists where the ledger says it does.
     for f in q("SELECT * FROM formalizations WHERE status != 'superseded'"):
         path = ROOT / f["lean_file"]
@@ -883,6 +906,11 @@ def cmd_edit_apply(db, args):
 
 
 ASSEMBLY = ROOT / "TinaV2" / "Assembly.lean"
+COMPARATOR_DIR = ROOT / "comparator"
+CHALLENGE_LEAN = COMPARATOR_DIR / "Challenge.lean"
+SOLUTION_LEAN = COMPARATOR_DIR / "Solution.lean"
+COMPARATOR_JSON = ROOT / "comparator.json"
+PERMITTED_AXIOMS = ["propext", "Quot.sound", "Classical.choice"]
 
 
 def assembly_text(db):
@@ -967,6 +995,107 @@ def assembly_plan(db):
     return "\n".join(out), plan
 
 
+def comparator_spec(db):
+    """Deterministically generate (Challenge.lean, Solution.lean, comparator.json,
+    challenge_sha256) for `lake comparator` verification.
+
+    `Challenge.lean` lives outside `TinaV2/` (under `comparator/`) so the Gate-2
+    zero-`sorry` scan on `TinaV2/` stays strictly unconditional, and imports only
+    the frozen `TinaV2.Defs` and `TinaV2.Statements` modules.
+    """
+    _, plan = assembly_plan(db)
+    rows = db.execute(
+        "SELECT f.claim_id, f.lean_decl, a.id AS attempt_id, c.title "
+        "FROM attempts a JOIN formalizations f ON f.id = a.formalization_id "
+        "JOIN claims c ON c.id = f.claim_id "
+        "WHERE a.selected = 1 AND a.status = 'proved'"
+    ).fetchall()
+    items = []
+    for r in rows:
+        short = r["lean_decl"].split(".")[-2]
+        _, assumes_str = plan[r["claim_id"]]
+        if assumes_str:
+            sys.exit(f"{r['claim_id']}: cannot emit unconditional comparator spec while assuming {assumes_str}")
+        items.append((short, r["claim_id"], r["attempt_id"], r["title"]))
+    items.sort(key=lambda x: x[0])
+
+    chal = [
+        "import TinaV2.Defs",
+        "import TinaV2.Statements",
+        "",
+        "/-! # Comparator Challenge Specification",
+        "",
+        "Generated deterministically by `python3 tools/ledger.py comparator-spec`.",
+        "Do not edit by hand.",
+        "",
+        "Imports only the frozen `TinaV2.Defs` and `TinaV2.Statements` modules.",
+        "Each stub below states the exact theorem that `comparator/Solution.lean` must",
+        "prove under `lake comparator` using only `{propext, Quot.sound, Classical.choice}`.",
+        "Kept outside `TinaV2/` so the Gate-2 zero-`sorry` scan on `TinaV2/` stays",
+        "strictly unconditional. -/",
+        "",
+        "namespace TinaV2.Comparator",
+        "",
+    ]
+    sol = [
+        "import TinaV2.Assembly",
+        "",
+        "/-! # Comparator Solution Re-export",
+        "",
+        "Generated deterministically by `python3 tools/ledger.py comparator-spec`.",
+        "Do not edit by hand.",
+        "",
+        "Re-exports every assembled theorem from `TinaV2.Assembly` under the exact",
+        "names declared in `comparator/Challenge.lean` for `lake comparator`. -/",
+        "",
+        "namespace TinaV2.Comparator",
+        "",
+    ]
+    theorem_names = []
+    for short, claim_id, attempt_id, title in items:
+        theorem_names.append(f"TinaV2.Comparator.{short}")
+        chal += [
+            f"/-- {claim_id}: {title} -/",
+            f"theorem {short} : TinaV2.{short}.Statement := by sorry",
+            "",
+        ]
+        sol += [
+            f"/-- {claim_id}, attempt {attempt_id}. -/",
+            f"theorem {short} : TinaV2.{short}.Statement := TinaV2.Assembly.{short}",
+            "",
+        ]
+    chal += ["end TinaV2.Comparator", ""]
+    sol += ["end TinaV2.Comparator", ""]
+    chal_txt = "\n".join(chal)
+    sol_txt = "\n".join(sol)
+    chal_sha = hashlib.sha256(chal_txt.encode("utf-8")).hexdigest()
+    cfg = {
+        "challenge_module": "Challenge",
+        "solution_module": "Solution",
+        "theorem_names": theorem_names,
+        "definition_names": [],
+        "permitted_axioms": list(PERMITTED_AXIOMS),
+        "challenge_sha256": chal_sha,
+    }
+    cfg_txt = json.dumps(cfg, indent=2) + "\n"
+    return chal_txt, sol_txt, cfg_txt, chal_sha
+
+
+def write_comparator_spec(db):
+    chal_txt, sol_txt, cfg_txt, chal_sha = comparator_spec(db)
+    COMPARATOR_DIR.mkdir(parents=True, exist_ok=True)
+    CHALLENGE_LEAN.write_text(chal_txt, encoding="utf-8")
+    SOLUTION_LEAN.write_text(sol_txt, encoding="utf-8")
+    COMPARATOR_JSON.write_text(cfg_txt, encoding="utf-8")
+    return chal_sha, len(json.loads(cfg_txt)["theorem_names"])
+
+
+def cmd_comparator_spec(db, args):
+    chal_sha, n = write_comparator_spec(db)
+    print(f"wrote {CHALLENGE_LEAN.relative_to(ROOT)}, {SOLUTION_LEAN.relative_to(ROOT)}, "
+          f"{COMPARATOR_JSON.relative_to(ROOT)}; {n} theorems, challenge_sha256={chal_sha}")
+
+
 def cmd_assembly(db, args):
     text, plan = assembly_plan(db)
     ASSEMBLY.write_text(text)
@@ -983,6 +1112,9 @@ def cmd_assembly(db, args):
     cond = {c: a for c, (_, a) in plan.items() if a}
     print(f"wrote {ASSEMBLY.relative_to(ROOT)}; {len(plan)} assembled theorems"
           + (f", conditional: {', '.join(f'{c} (on {a})' for c, a in sorted(cond.items()))}" if cond else ""))
+    if not cond:
+        chal_sha, n = write_comparator_spec(db)
+        print(f"updated comparator spec ({n} theorems, challenge_sha256={chal_sha[:12]}…)")
 
 
 AUDIT_LEAN = """import TinaV2.Assembly
@@ -1424,7 +1556,7 @@ def cmd_serve(db, args):
         cache.cleanup()
 
 
-COMMANDS = {"assembly": cmd_assembly, "audit": cmd_audit, "serve": cmd_serve, "site": cmd_site, "status": cmd_status, "show": cmd_show, "frontier": cmd_frontier,
+COMMANDS = {"assembly": cmd_assembly, "comparator-spec": cmd_comparator_spec, "audit": cmd_audit, "serve": cmd_serve, "site": cmd_site, "status": cmd_status, "show": cmd_show, "frontier": cmd_frontier,
             "sql": cmd_sql, "add": cmd_add, "set": cmd_set, "note": cmd_note,
             "check": cmd_check, "graph": cmd_graph, "edit-diff": cmd_edit_diff,
             "headline": cmd_headline, "dispositions": cmd_dispositions,

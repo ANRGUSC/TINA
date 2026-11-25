@@ -37,7 +37,7 @@ variable {Ω : Type} [m0 : MeasurableSpace Ω] {ι α : Type} [Fintype α]
 /-- The indicator of an event is square-integrable under a finite measure. -/
 theorem memLp_indicator_one {μ : Measure Ω} [IsFiniteMeasure μ] {s : Set Ω}
     (hs : MeasurableSet s) : MemLp (s.indicator fun _ => (1 : ℝ)) 2 μ :=
-  (memLp_const (1 : ℝ)).indicator hs
+  (memLp_const (1 : ℝ)).indicator hs.nullMeasurableSet
 
 /-- A perturbation supported on the action coordinate `k`, with that coordinate a
 square-integrable function measurable with respect to the sigma-algebra of the

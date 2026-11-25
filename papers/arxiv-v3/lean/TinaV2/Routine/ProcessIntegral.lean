@@ -142,7 +142,7 @@ theorem integrable_prod_mul_right (hφ : L2Process μ φ) (hgm : Measurable g)
   obtain ⟨C, hC⟩ := hφ.bound
   have hm : AEStronglyMeasurable (fun p : A × Ω => g p.1 * (φ p.1 p.2 * Y p.2)) (ν.prod μ) :=
     (hgm.comp measurable_fst).aestronglyMeasurable.mul
-      (hφ.measurable.aestronglyMeasurable.mul hY.1.comp_snd)
+      (hφ.measurable.aestronglyMeasurable.mul hY.aestronglyMeasurable.comp_snd)
   refine integrable_weight_mul (Φ := fun a ω => φ a ω * Y ω) (K := (C + ∫ ω, Y ω ^ 2 ∂μ) / 2)
     hg hm (fun a => (hφ.memLp a).integrable_mul hY) fun a => ?_
   refine (integral_abs_mul_le_of_memLp (hφ.memLp a) hY).trans ?_

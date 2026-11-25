@@ -137,7 +137,7 @@ theorem s2a_whole_snapshot [IsProbabilityMeasure μ] (hC4c : C04c.Statement)
   -- `m₁`: mode `k`'s old value; `m₂`: the other modes' old values
   let T : Finset m := Finset.univ.erase k
   let others : Ω → (T → κ → ℝ) := fun ω i => P i *ᵥ θ (t - τ) ω
-  have hom : Measurable others := measurable_pi_lambda _ fun i => hzm i (t - τ)
+  have hom : Measurable others := Measurable.of_eval fun i => hzm i (t - τ)
   have hm₁ : MeasurableSpace.comap (fun ω => P k *ᵥ θ (t - τ) ω) MeasurableSpace.pi ≤ mΩ :=
     (hzm k (t - τ)).comap_le
   have hm₂ : MeasurableSpace.comap others MeasurableSpace.pi ≤ mΩ := hom.comap_le
@@ -149,11 +149,11 @@ theorem s2a_whole_snapshot [IsProbabilityMeasure μ] (hC4c : C04c.Statement)
       (MeasurableSpace.comap (fun ω (i : T) (s : ℝ) => P i *ᵥ θ s ω) MeasurableSpace.pi) μ :=
     (IndepFun_iff_Indep _ _ _).1
       (hind.indepFun_finset {k} T (by simp [T])
-        (fun i => measurable_pi_lambda _ fun s => hzm i s))
+        (fun i => Measurable.of_eval fun s => hzm i s))
   have hle₂ : MeasurableSpace.comap others MeasurableSpace.pi
       ≤ MeasurableSpace.comap (fun ω (i : T) (s : ℝ) => P i *ᵥ θ s ω) MeasurableSpace.pi := by
     have hψ : Measurable (fun (f : T → ℝ → κ → ℝ) (i : T) => f i (t - τ)) :=
-      measurable_pi_lambda _ fun i => (measurable_pi_apply (t - τ)).comp (measurable_pi_apply i)
+      Measurable.of_eval fun i => (measurable_pi_apply (t - τ)).comp (measurable_pi_apply i)
     have hc : Measurable[MeasurableSpace.comap (fun ω (i : T) (s : ℝ) => P i *ᵥ θ s ω)
         MeasurableSpace.pi] others :=
       hψ.comp (comap_measurable (fun ω (i : T) (s : ℝ) => P i *ᵥ θ s ω))

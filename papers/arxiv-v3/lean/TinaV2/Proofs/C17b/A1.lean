@@ -91,7 +91,7 @@ theorem s3_condExp_scales [IsProbabilityMeasure μ] (h : CanonicalField μ θ σ
       ((IndepFun_iff_Indep _ _ _).1 (s2_innovation_independent h hτ t))
       (comap_lineObs_le θ r z (t - τ))
   have hεm : Measurable[mΩ] fun ω (y : ℝ) => θ y t ω - exp (-τ / T) * θ y (t - τ) ω :=
-    measurable_pi_lambda _ fun y => (h.measurable y t).sub ((h.measurable y (t - τ)).const_mul _)
+    Measurable.of_eval fun y => (h.measurable y t).sub ((h.measurable y (t - τ)).const_mul _)
   -- so conditioning the integrated innovation on the interval gives its mean, zero
   have hW : μ[fun ω => ∫ u, lineKernel ℓc u
         * (θ (z + u) t ω - exp (-τ / T) * θ (z + u) (t - τ) ω) | lineObsSigma θ r z (t - τ)]
@@ -147,7 +147,7 @@ theorem s5_stationarity [IsProbabilityMeasure μ] (h : CanonicalField μ θ σ �
     (measurable_lineKernel ℓc) volume (integrable_lineKernel hℓc)
   have hρ : Measurable fun p : ℝ × (ℝ → ℝ) => (p.1, fun u : Icc (-r) r => p.2 (u : ℝ)) :=
     measurable_fst.prodMk
-      (measurable_pi_lambda _ fun u => (measurable_pi_apply (u : ℝ)).comp measurable_snd)
+      (Measurable.of_eval fun u => (measurable_pi_apply (u : ℝ)).comp measurable_snd)
   have hpair : IdentDistrib
       (fun ω => (lineTarget θ ℓc z (t - τ) ω, lineObs θ r z (t - τ) ω))
       (fun ω => (lineTarget θ ℓc z t ω, lineObs θ r z t ω)) μ μ := hjoint.comp hρ

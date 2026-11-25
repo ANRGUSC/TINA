@@ -8,7 +8,17 @@ relaxedAutoImplicit = false
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.33.1"
+rev = "v4.36.0"
 
 [[lean_lib]]
 name = "TinaV2"
+
+[[lean_lib]]
+name = "Challenge"
+srcDir = "comparator"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+srcDir = "comparator"
+roots = ["Solution"]

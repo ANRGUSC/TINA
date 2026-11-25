@@ -30,8 +30,8 @@ theorem identDistrib_integral_prodMk {φ ψ : ℝ → Ω → ℝ} (hφ : L2Proce
   set Ψ : Ω → ℝ → ℝ := fun ω a => ψ a ω with hΨ
   set X : Ω → ℝ := fun ω => ∫ a, g a * φ a ω ∂ν with hX
   set X' : Ω → ℝ := fun ω => ∫ a, g a * ψ a ω ∂ν with hX'
-  have hΦm : Measurable Φ := measurable_pi_lambda _ hφm
-  have hΨm : Measurable Ψ := measurable_pi_lambda _ hψm
+  have hΦm : Measurable Φ := Measurable.of_eval hφm
+  have hΨm : Measurable Ψ := Measurable.of_eval hψm
   -- the integral is a measurable function `F` of the path
   have hXm : StronglyMeasurable[MeasurableSpace.comap Φ MeasurableSpace.pi] X := by
     refine stronglyMeasurable_integral_of_continuous (fun a => ?_) hφc hgm ν

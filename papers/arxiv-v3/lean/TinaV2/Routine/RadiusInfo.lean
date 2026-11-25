@@ -46,7 +46,7 @@ def restrictView {r r' : ℕ∞} (h : r ≤ r') (i : ι) (o : M.Scope r' i → �
 
 theorem measurable_restrictView {r r' : ℕ∞} (h : r ≤ r') (i : ι) :
     Measurable (M.restrictView h i) :=
-  measurable_pi_lambda _ fun _ => measurable_pi_apply _
+  Measurable.of_eval fun _ => measurable_pi_apply _
 
 /-- The radius-`r` view is the restriction of the radius-`r'` view. -/
 theorem restrictView_view {r r' : ℕ∞} (h : r ≤ r') (i : ι) (s : κ → ℝ) :

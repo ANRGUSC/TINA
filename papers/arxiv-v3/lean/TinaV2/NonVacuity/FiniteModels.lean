@@ -748,7 +748,7 @@ private theorem measurable_tempY (s : ℝ) : Measurable (tempY s) :=
   (measurable_singleProc s).comp measurable_snd
 
 private theorem measurable_tempTheta (s : ℝ) : Measurable (tempTheta s) := by
-  refine measurable_pi_lambda _ fun i => ?_
+  refine Measurable.of_eval fun i => ?_
   fin_cases i
   · exact measurable_tempX s
   · exact measurable_tempY s
@@ -786,7 +786,7 @@ private theorem indepFun_tempX_tempY_process :
     rw [hinter, tempMeasure_preimage_fst s, tempMeasure_preimage_snd t,
       tempMeasure, Measure.prod_prod]
   have hm : Measurable (fun (u : SingleSpace) (s : ℝ) => singleProc s u) :=
-    measurable_pi_lambda _ measurable_singleProc
+    Measurable.of_eval measurable_singleProc
   exact hfst_snd.comp hm hm
 
 private theorem identDistrib_tempTheta (s s' : ℝ) :
@@ -800,7 +800,7 @@ private theorem identDistrib_tempTheta (s s' : ℝ) :
       ← Measure.map_prod_map _ _ (measurable_singleProc s') (measurable_singleProc s'),
       singleProc_map_eq, singleProc_map_eq]
   have hvec : Measurable (fun p : ℝ × ℝ => ![p.1, p.2]) := by
-    refine measurable_pi_lambda _ fun i => ?_
+    refine Measurable.of_eval fun i => ?_
     fin_cases i <;> [exact measurable_fst; exact measurable_snd]
   exact hprod.comp hvec
 
@@ -894,7 +894,7 @@ private theorem predictionRule_tempTheta {τ : ℝ} (hτ : 0 ≤ τ) :
     let B₁ : Set ℝ := {x : ℝ | ![x, singleProc (-τ) ω₂] ∈ B}
     have hB₁ : MeasurableSet B₁ := by
       have hm1 : Measurable (fun x : ℝ => ![x, singleProc (-τ) ω₂]) := by
-        refine measurable_pi_lambda _ fun j => ?_
+        refine Measurable.of_eval fun j => ?_
         fin_cases j <;> [exact measurable_id; exact measurable_const]
       exact hm1 hB
     have heq : (fun ω₁ => (tempTheta (-τ) ⁻¹' B).indicator
@@ -916,7 +916,7 @@ private theorem predictionRule_tempTheta {τ : ℝ} (hτ : 0 ≤ τ) :
     let B₂ : Set ℝ := {y : ℝ | ![singleProc (-τ) ω₁, y] ∈ B}
     have hB₂ : MeasurableSet B₂ := by
       have hm2 : Measurable (fun y : ℝ => ![singleProc (-τ) ω₁, y]) := by
-        refine measurable_pi_lambda _ fun j => ?_
+        refine Measurable.of_eval fun j => ?_
         fin_cases j <;> [exact measurable_const; exact measurable_id]
       exact hm2 hB
     have heq : (fun ω₂ => (tempTheta (-τ) ⁻¹' B).indicator
@@ -1127,11 +1127,11 @@ private theorem ar1Theta_succ (s : ℤ) (ω : AR1Space) :
   rw [hshift, tsum_mul_left, add_comm]
 
 private theorem measurable_ar1Theta (s : ℤ) : Measurable (ar1Theta s) := by
-  refine measurable_pi_lambda _ fun _ => Measurable.tsum fun k => ?_
+  refine Measurable.of_eval fun _ => Measurable.tsum fun k => ?_
   exact measurable_const.mul ((measurable_of_finite rad).comp (measurable_pi_apply (s - k)))
 
 private theorem measurable_ar1Eps (s : ℤ) : Measurable (ar1Eps s) :=
-  measurable_pi_lambda _ fun _ => (measurable_of_finite rad).comp (measurable_pi_apply s)
+  Measurable.of_eval fun _ => (measurable_of_finite rad).comp (measurable_pi_apply s)
 
 private theorem memLp_ar1Theta (s : ℤ) : MemLp (ar1Theta s) 2 ar1Measure :=
   MemLp.of_bound (measurable_ar1Theta s).aestronglyMeasurable 2
@@ -1147,7 +1147,7 @@ private theorem identDistrib_ar1Theta (s t : ℤ) :
     IdentDistrib (ar1Theta s) (ar1Theta t) ar1Measure ar1Measure := by
   let shift : AR1Space → AR1Space := fun ω n => ω (n + (s - t))
   have hshift_meas : Measurable shift :=
-    measurable_pi_lambda _ fun n => measurable_pi_apply (n + (s - t))
+    Measurable.of_eval fun n => measurable_pi_apply (n + (s - t))
   have hmap : ar1Measure.map shift = ar1Measure := by
     unfold ar1Measure
     exact Measure.map_infinitePi_infinitePi_of_inj (f := fun n : ℤ => n + (s - t))
@@ -1177,7 +1177,7 @@ private theorem ar1_condExp_eps_zero (s : ℤ) :
     (measurable_pi_apply n : Measurable fun ω : AR1Space => ω n).comap_le
   have hG_meas : Measurable (fun (x : ℕ → Bool) (_ : Fin 1) =>
       ∑' k : ℕ, (1 / 2 : ℝ) ^ k * rad (x k)) :=
-    measurable_pi_lambda _ fun _ => Measurable.tsum fun k =>
+    Measurable.of_eval fun _ => Measurable.tsum fun k =>
       measurable_const.mul ((measurable_of_finite rad).comp (measurable_pi_apply k))
   have htheta_le_past :
       (⨆ u : {u : ℤ // u ≤ s}, MeasurableSpace.comap (ar1Theta u) MeasurableSpace.pi) ≤
@@ -1214,7 +1214,7 @@ private theorem ar1_condExp_eps_zero (s : ℤ) :
     indep_of_indep_of_le_right hind_s htheta_le_past
   have heps_sm : StronglyMeasurable[ar1Coord (s + 1)] (ar1Eps (s + 1)) := by
     have hconst : Measurable (fun (b : Bool) (_ : Fin 1) => rad b) :=
-      measurable_pi_lambda _ fun _ => measurable_of_finite rad
+      Measurable.of_eval fun _ => measurable_of_finite rad
     exact (hconst.comp (comap_measurable (fun ω : AR1Space => ω (s + 1)))).stronglyMeasurable
   have hce := condExp_indep_eq (hmCoord_le (s + 1)) htheta_le heps_sm hind_theta
   have hint0 : ∫ ω, ar1Eps (s + 1) ω ∂ar1Measure = 0 := by

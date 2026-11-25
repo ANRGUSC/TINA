@@ -105,7 +105,8 @@ theorem s2_old_readings (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ �
   -- "we know the old average `Z_{t−τ}` exactly": `a Z_{t−τ}` is a function of the
   -- two old readings
   have hobs : Measurable fun ω => (X (t - τ) ω, Y (t - τ) ω) := (hXm _).prodMk (hYm _)
-  have hh : Measurable fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2) := by fun_prop
+  have hh : Measurable fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2) :=
+    measurable_const.mul ((measurable_fst.add measurable_snd).div_const 2)
   have hZ2 : MemLp (fun ω => (X t ω + Y t ω) / 2) 2 μ := memLp_half_add (hX2 t) (hY2 t)
   have hh2 : MemLp (fun ω => a * ((X (t - τ) ω + Y (t - τ) ω) / 2)) 2 μ :=
     (memLp_half_add (hX2 _) (hY2 _)).const_mul a
@@ -142,7 +143,8 @@ theorem s2_old_readings (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ �
       (hind.comp (measurable_pi_apply t) (measurable_pi_apply t))
   have hstat : ∫ ω, ((X (t - τ) ω + Y (t - τ) ω) / 2) ^ 2 ∂μ
       = ∫ ω, ((X t ω + Y t ω) / 2) ^ 2 ∂μ :=
-    (hpair.comp (u := fun p : ℝ × ℝ => ((p.1 + p.2) / 2) ^ 2) (by fun_prop)).integral_eq
+    (hpair.comp (u := fun p : ℝ × ℝ => ((p.1 + p.2) / 2) ^ 2)
+      (((measurable_fst.add measurable_snd).div_const 2).pow_const 2)).integral_eq
   -- mean zero: `Var(Z_t) = E[Z_t²]`
   have hZ0 : ∫ ω, (X t ω + Y t ω) / 2 ∂μ = 0 := by
     rw [integral_div, integral_add (hXi t) (hYi t), (hX t).1, (hY t).1]
@@ -153,7 +155,10 @@ theorem s2_old_readings (μ : Measure Ω) [IsProbabilityMeasure μ] (X Y : ℝ �
   -- `E[Z_t²] = E[(Z_t − a Z_{t−τ})²] + a² E[Z_{t−τ}²]`
   have horth : ∫ ω, a * ((X (t - τ) ω + Y (t - τ) ω) / 2)
       * ((X t ω + Y t ω) / 2 - a * ((X (t - τ) ω + Y (t - τ) ω) / 2)) ∂μ = 0 :=
-    integral_mul_error_of_condExp (h := fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2))
+    integral_mul_error_of_condExp
+      (target := fun ω => (X t ω + Y t ω) / 2)
+      (obs := fun ω => (X (t - τ) ω, Y (t - τ) ω))
+      (h := fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2))
       (k := fun p : ℝ × ℝ => a * ((p.1 + p.2) / 2)) hobs hZ2 hh hh2 hh hh2 hcond
   have hE2 : MemLp (fun ω => (X t ω + Y t ω) / 2 - a * ((X (t - τ) ω + Y (t - τ) ω) / 2)) 2 μ :=
     hZ2.sub hh2

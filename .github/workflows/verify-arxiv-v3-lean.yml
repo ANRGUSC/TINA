@@ -19,7 +19,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       LEAN_NUM_THREADS: '2'
     defaults:
@@ -27,6 +27,21 @@ jobs:
         working-directory: papers/arxiv-v3/lean
     steps:
       - uses: actions/checkout@v6
+      - name: Install and configure bubblewrap for lake comparator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bubblewrap
+          sudo tee /etc/apparmor.d/bwrap <<'EOF'
+          abi <abi/4.0>,
+          include <tunables/global>
+
+          profile bwrap /usr/bin/bwrap flags=(unconfined) {
+            userns,
+            include if exists <local/bwrap>
+          }
+          EOF
+          sudo systemctl reload apparmor
+          bwrap --ro-bind / / /bin/true
       - name: Install the pinned Lean toolchain
         uses: leanprover/lean-action@96e06131c0e9943c780388fd166f55d1e2fa0433
         with:
@@ -41,7 +56,7 @@ jobs:
         run: |
           mapfile -t modules < <(grep -rhE '^import Mathlib(\.|$)' TinaV2 --include='*.lean' | cut -d' ' -f2 | sort -u)
           lake exe cache get "${modules[@]}"
-      - name: Rebuild v3 proofs and audit each assembled theorem
+      - name: Rebuild v3 proofs, audit theorems, and run multi-kernel comparator replay
         run: python3 tools/verify_release.py "$RUNNER_TEMP/verification.json"
       - name: Save the verification record
         uses: actions/upload-artifact@v7

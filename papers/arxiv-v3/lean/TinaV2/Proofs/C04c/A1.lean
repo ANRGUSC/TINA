@@ -102,7 +102,7 @@ theorem s2_gaussian_independent [IsProbabilityMeasure μ]
         rw [covariance_eq_sub hX2 (hL p.1 p.2), h0 p.1 p.2, mul_zero, sub_zero]
         exact s1_innovation_uncorrelated hG hc hτ (mem_Iic.mp p.1.2) k p.2)
     have hψ : Measurable (fun (f : Iic (t - τ) × κ → ℝ) (s : Iic (t - τ)) (l : κ) => f (s, l)) :=
-      measurable_pi_lambda _ fun s => measurable_pi_lambda _ fun l => measurable_pi_apply (s, l)
+      Measurable.of_eval fun s => Measurable.of_eval fun l => measurable_pi_apply (s, l)
     exact hind.comp measurable_id hψ
 
 /-- Step 3 (supplied). The old state `θ_{t−τ}` is one of the earlier states, so

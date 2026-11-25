@@ -174,14 +174,29 @@ function verificationRecord(c) {
   if (reused && (match?.site_commit !== info.commit || match?.verified_commit !== record.commit)) return '';
   const attempt = M.attempts.find(a => a.claim_id === c.id && a.selected && a.status === 'proved');
   if (attempt?.id !== proof.attempt) return '';
-  return `<div class="verification"><details><summary>✓ Machine-checked by Lean</summary>
+  const kernels = Array.isArray(record.kernels_passed) ? record.kernels_passed : [];
+  const multiKernel = record.comparator_passed && kernels.length > 1;
+  const summaryLabel = multiKernel
+    ? `✓ Machine-checked by Lean (${kernels.length} independent kernels)`
+    : '✓ Machine-checked by Lean';
+  const compRow = record.challenge_sha256
+    ? `<dt>Comparator</dt><dd>${record.comparator_passed ? 'Passed' : 'Not passed'} · ${leanLink('comparator/Challenge.lean')} SHA-256 <code>${esc(record.challenge_sha256)}</code></dd>`
+    : '';
+  const kernelRow = kernels.length
+    ? `<dt>Kernels passed</dt><dd>${kernels.map(k => `<code>${esc(k)}</code>`).join(', ')}</dd>`
+    : '';
+  const note = multiKernel
+    ? `The axiom audit found no <code>sorry</code> dependencies, and <code>lake comparator --paranoid</code> replayed the exported proof terms against the hash-locked challenge specification across ${kernels.length} independent kernels.`
+    : 'The axiom audit found no <code>sorry</code> dependencies.';
+  return `<div class="verification"><details><summary>${summaryLabel}</summary>
     <dl class="kv"><dt>Theorem</dt><dd><code>${esc(proof.theorem)}</code></dd>
     <dt>Checked</dt><dd>${esc(record.checked)}</dd>
     <dt>Verified commit</dt><dd><a href="https://github.com/${repo()}/commit/${esc(record.commit)}"><code>${esc(record.commit)}</code></a>
     ${reused ? ' · This site revision uses identical proof inputs.' : ''}</dd>
     <dt>Lean version</dt><dd>${esc(record.lean)}</dd>
-    <dt>Transitive axioms</dt><dd>${esc(proof.axioms.join(', ') || 'None')}</dd></dl>
-    <p>The axiom audit found no <code>sorry</code> dependencies.</p></details>
+    <dt>Transitive axioms</dt><dd>${esc(proof.axioms.join(', ') || 'None')}</dd>
+    ${compRow}${kernelRow}</dl>
+    <p>${note}</p></details>
     <a href="${esc(record.run)}">View verification run</a></div>`;
 }
 

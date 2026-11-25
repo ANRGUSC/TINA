@@ -154,14 +154,14 @@ namespace Model
 variable (M : Model ι κ α)
 
 theorem measurable_view (r : ℕ∞) (i : ι) : Measurable (M.view r i) :=
-  measurable_pi_lambda _ fun k => measurable_pi_apply k.1
+  Measurable.of_eval fun k => measurable_pi_apply k.1
 
 /-- The joint action of a rule on radius-`r` views is one measurable function of
 the whole snapshot. -/
 theorem measurable_jointAction_view (r : ℕ∞) {g : Rule M.actor fun i => M.Scope r i → ℝ}
     (hg : ∀ c, Measurable (g c)) :
     Measurable fun s : κ → ℝ => fun c => g c (M.view r (M.actor c) s) :=
-  measurable_pi_lambda _ fun c => (hg c).comp (M.measurable_view r (M.actor c))
+  Measurable.of_eval fun c => (hg c).comp (M.measurable_view r (M.actor c))
 
 omit [MeasurableSpace Ω] in
 theorem jointAction_obs (r : ℕ∞) (g : Rule M.actor fun i => M.Scope r i → ℝ)

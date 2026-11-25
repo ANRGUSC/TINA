@@ -250,8 +250,8 @@ theorem identDistrib_of_isGaussianProcess {S : Type} {X Y : S → Ω → ℝ}
     (hcov : ∀ s s', ∫ ω, X s ω * X s' ω ∂μ = ∫ ω, Y s ω * Y s' ω ∂μ) :
     IdentDistrib (fun ω s => X s ω) (fun ω s => Y s ω) μ μ := by
   classical
-  have hXa : AEMeasurable (fun ω s => X s ω) μ := (measurable_pi_lambda _ hXm).aemeasurable
-  have hYa : AEMeasurable (fun ω s => Y s ω) μ := (measurable_pi_lambda _ hYm).aemeasurable
+  have hXa : AEMeasurable (fun ω s => X s ω) μ := (Measurable.of_eval hXm).aemeasurable
+  have hYa : AEMeasurable (fun ω s => Y s ω) μ := (Measurable.of_eval hYm).aemeasurable
   rw [identDistrib_iff_forall_finset_identDistrib hXa hYa]
   intro I
   have hGX := hX.hasGaussianLaw I

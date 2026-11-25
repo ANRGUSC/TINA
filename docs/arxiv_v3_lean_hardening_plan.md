@@ -26,7 +26,7 @@ What remains to reach a complete 5-Gate `P4+` gold standard are **six targeted u
 | **Live CI spec-freeze bypass (Mode #5/#7)** | `tools/verify_release.py` never calls `ledger.run_check(db)`; `verify-arxiv-v3-lean.yml` and `.github/scripts/pages_lean_record.py` ignore `submissions/arxiv-v3/*.tex`; no static ban on `unsafe`/`native_decide`/`elab`/`macro`; 6 benign `local notation` macros in `Proofs/` | `verify_release.py` enforces `ledger.run_check(db)`, Gate-2 static bans, and `.thmInfo` checks; TeX sources included in CI/reuse inputs; `0` notation overrides | **1** |
 | **Zero compiled non-vacuity witnesses (Mode #4, Gate 1)** | `0` compiled `∃` instances across 34 universally quantified claims (Tiers A–C unblocked on `v4.33.1`; Tier D `CanonicalField.continuous` load-bearing for measurability) | Kernel-checked non-vacuity witnesses for Tiers A–C (31/34 claims) on `v4.33.1`, followed by Tier-D Gaussian/OU & continuous `CanonicalField` witnesses | **2 & 5** |
 | **Residual `restricted` deltas & v2 headers (Mode #1, Gate 4)** | `C1`/`C1.c` export `Model.R_eq_sigmaRegret`; `C12` & `C11` include a.s. uniqueness; `C5.b` drops 3 unused internal hyps; 0 `v2.tex` frozen headers; `#/audit` step-signature view & routine refs live; Gate-4 audit 0 critical/high (done) | Closed avoidable `restricted` deltas, v3 headers aligned, side-by-side step-signature review view & cross-LLM audit complete, **single** consolidated `--refreeze` (done) | **3** |
-| **Single-kernel monoculture & missing `comparator` boundary (Mode #8, Gate 3)** | Pinned to Lean `v4.33.1` single C++ kernel inside one Lake workspace; no external `Challenge.lean` export replay | Lean `v4.35.0+` + Mathlib upgrade (also unlocking native `KolmogorovExtension` `#44909`), auto-generated `Challenge.lean` + `lake comparator` + multi-kernel replay (`lake check --paranoid` / `nanoda`) in CI | **4** |
+| **Single-kernel monoculture & missing `comparator` boundary (Mode #8, Gate 3)** | Upgraded to Lean/Mathlib `v4.36.0` (includes native `KolmogorovExtension` `#44909`); auto-generated `comparator/Challenge.lean`, `comparator/Solution.lean`, and `comparator.json`; `lake comparator --paranoid` passes all 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) and publishes `challenge_sha256`, `comparator_passed`, and `kernels_passed` (done) | Lean `v4.36.0` + Mathlib upgrade (unlocking native `KolmogorovExtension` `#44909`), auto-generated `Challenge.lean` + `lake comparator --paranoid` multi-kernel replay in CI (done) | **4** |
 | **Manuscript invisibility & Scope-Note Erasure risk (Mode #2/#12, Gate 5)** | `submissions/arxiv-v3/main-v3.tex` has `0` Lean/Mathlib mentions (`has_lean_strong = False`) | Concise Gate-5 Verification Manifest in `main-v3.tex` disclosing `verified` (17) vs. `verified_supplied` (17), OU/field scope, numerics (`C21`–`C24`), Proof Explorer URL, kernels passed, and immutable git tag | **6** |
 
 ---
@@ -164,24 +164,25 @@ flowchart TD
 
 ---
 
-### Phase 4: Toolchain Upgrade (`v4.35.0+`), Auto-Generated `Challenge.lean` Comparator & Multi-Kernel Gate 3 (~1–2 days)
+### Phase 4: Toolchain Upgrade (`v4.36.0`), Auto-Generated `Challenge.lean` Comparator & Multi-Kernel Gate 3 (Completed 2026-11-26 · Zero Refreezes)
 
 **Goal:** Add `P4`'s cryptographic adversarial boundary (`lake comparator`), eliminate single-kernel C++ monoculture (`Mode #8`), and unlock native Mathlib `KolmogorovExtension` (`#44909`) for Phase 5.
 
-**Actions:**
-- [ ] **4.1 Bump Lean & Mathlib pin from `v4.33.1` to `v4.35.0+`:**
-  - Select the latest stable Lean/Mathlib release tag (`>= v4.35.0`) that (a) includes Mathlib `#44909` (`MeasureTheory/Constructions/KolmogorovExtension.lean`), (b) has prebuilt Mathlib oleans on `lake exe cache`, and (c) is supported by `lake comparator` and multi-kernel checking (`lake check --paranoid` / `nanoda`).
-  - Update `papers/arxiv-v3/lean/lean-toolchain` and `papers/arxiv-v3/lean/lakefile.toml` (`rev`).
-  - Fix any Mathlib API renames across the 28 imported modules in `TinaV2/Prelude.lean` and `TinaV2/` (record proof-file adjustments as Lean-only retries; if any `Defs/`/`Statements/` syntax shift is unavoidable, document it explicitly in the refreeze note).
-- [ ] **4.2 Auto-generate `Challenge.lean`, `Solution.lean`, and `comparator.json`:**
-  - Extend `tools/ledger.py assembly` (or add `ledger.py comparator-spec`) to emit a deterministic standalone `Challenge.lean` importing **only** `TinaV2.Defs` and `TinaV2.Statements` with `theorem Cxx : TinaV2.Cxx.Statement := by sorry` stubs (plus a `Solution.lean` re-exporting `TinaV2.Assembly`), and record the SHA-256 of `Challenge.lean`.
-  - Keep `Challenge.lean` outside `TinaV2/` (e.g., `comparator/Challenge.lean`) so the Phase-1 zero-`sorry` scan on `TinaV2/` remains strictly unconditional.
-- [ ] **4.3 Wire `lake comparator` + multi-kernel verification into `verify_release.py` and CI:**
-  - Run `lake comparator` (verifying exported proof terms from `Solution.lean` against hash-locked `Challenge.lean`) inside `tools/verify_release.py`.
-  - Run `lake check --paranoid` (or explicit external kernel replay via `nanoda` / `lean4lean` / `con-leche`, depending on available release binaries for the target Lean version) inside `.github/workflows/verify-arxiv-v3-lean.yml`.
-  - Record `challenge_sha256`, `comparator_passed`, and `kernels_passed` in `verification.json` and display them in the Proof Explorer verification badge.
+**Decision D3 Resolved:** Selected stable **`leanprover/lean4:v4.36.0`** + **`mathlib4` `v4.36.0`** (`fc4f59e5`, released 2026-11-16): `v4.35.0` lacked `#44909`, whereas `v4.36.0` is the newest stable release that simultaneously ships native `Mathlib/MeasureTheory/Constructions/KolmogorovExtension.lean`, prebuilt Mathlib oleans on `lake exe cache`, and `lake comparator --paranoid` with all 5 bundled external kernels.
 
-**Exit Criteria:** Clean-checkout GitHub Actions CI passes `lake build TinaV2`, `ledger.py check`, `ledger.py audit`, `lake comparator`, and independent multi-kernel replay, with `challenge_sha256` and `kernels_passed` published in `verification.json`.
+**Actions:**
+- [x] **4.1 Bump Lean & Mathlib pin from `v4.33.1` to `v4.36.0`:**
+  - Updated `papers/arxiv-v3/lean/lean-toolchain`, `papers/arxiv-v3/lean/lakefile.toml` (`rev = "v4.36.0"` plus `Challenge`/`Solution` `lean_lib` targets under `srcDir = "comparator"`), and `papers/arxiv-v3/lean/lake-manifest.json`.
+  - Fixed minimal Mathlib API drift across `Routine/` (`Regret`, `ProcessIntegral`, `NormalEq`, `Aggregate`, `ProcessLaw`, `Conditioning`, `RadiusInfo`, `CanonicalTime`, `Canonical`), `Proofs/` (`C04c/A1`, `C09/A1`, `C11/A1`, `C17b/A1`), and `NonVacuity/FiniteModels.lean` (`measurable_pi_lambda _` → `Measurable.of_eval`, `MemLp.1` → `MemLp.aestronglyMeasurable`, `MemLp.indicator hs.nullMeasurableSet`, explicit `target`/`obs` in `C11/A1` to avoid `whnf` heartbeat timeout). **Zero frozen `Defs/` or `Statements/` files required edits (`0` refreezes).**
+- [x] **4.2 Auto-generate `Challenge.lean`, `Solution.lean`, and `comparator.json`:**
+  - Added `comparator_spec(db)` and `ledger.py comparator-spec` (also auto-updated by `ledger.py assembly` and enforced by `ledger.py check`) emitting deterministic standalone `comparator/Challenge.lean` (importing only `TinaV2.Defs` and `TinaV2.Statements` with 34 `sorry` stubs, SHA-256 `cd36223fea5f5f81c99a04ed48c8c14b3dceebbb5621cde5f292c9052fe201e0`), `comparator/Solution.lean` (re-exporting `TinaV2.Assembly`), and `comparator.json` (with `challenge_sha256` and `permitted_axioms`).
+  - Kept `comparator/` outside `TinaV2/` so the Phase-1 Gate-2 zero-`sorry` scan on `TinaV2/` remains strictly unconditional.
+- [x] **4.3 Wire `lake comparator --paranoid` + multi-kernel verification into `verify_release.py` and CI:**
+  - Wired `lake comparator --config comparator.json --paranoid` into `papers/arxiv-v3/lean/tools/verify_release.py`, verifying all 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) accept all 34 theorems (~55,161 exported declarations) and emitting `challenge_sha256`, `comparator_passed`, and `kernels_passed` into `verification.json` and `GITHUB_STEP_SUMMARY`.
+  - Added `bubblewrap` installation + Ubuntu 24.04 AppArmor `bwrap` profile to `.github/workflows/verify-arxiv-v3-lean.yml` (90-minute timeout) and required `comparator_passed` + `challenge_sha256` + `kernels_passed` for verification reuse in `.github/scripts/pages_lean_record.py`.
+  - Updated the Proof Explorer verification badge (`progress/reader.js`, `progress/app.js`) to display `Challenge.lean` SHA-256, comparator status, and all passed kernels.
+
+**Exit Criteria:** `lake build TinaV2` (6,882 jobs), `ledger.py check` (`0 errors, 0 warnings`), `ledger.py audit` (162 lemmas, 34 assembled theorems, 10 non-vacuity witnesses, `0` errors), and `lake comparator --paranoid` (all 6 independent kernels passing) verified locally and wired into GitHub Actions CI with `challenge_sha256`, `comparator_passed`, and `kernels_passed` published in `verification.json`. (Met.)
 
 ---
 
@@ -244,7 +245,7 @@ flowchart TD
 | :---: | :--- | :---: | :--- |
 | **D1** | **Non-vacuity module placement:** Standalone `TinaV2/NonVacuity/*.lean` audited by `verify_release.py`, or new rows inside `ledger/data.sql`? | Phases 2 & 5 | **Standalone `TinaV2/NonVacuity/`** audited by `verify_release.py` (keeps the ledger's `claims` table strictly 1:1 with the manuscript). |
 | **D2** | **Scope of `C1`/`C1.c` bridge & `C12` uniqueness:** Strengthen existing `C1`/`C1.c`/`C12` statements in place, or add sub-claims (`C12.b`)? | Phase 3 | Add `R_eq_sigmaRegret` bridge + `C12` uniqueness in Phase 3's single consolidated refreeze; keep paper-mirroring hypotheses in `future-tasks.md` §1b. |
-| **D3** | **Target Lean/Mathlib version for Gate 3:** Pin to `v4.35.0` or latest stable Mathlib release with `#44909` + working `comparator` + `nanoda`? | Phase 4 | Verify binary/cache availability of `comparator` + `nanoda`/`lake check --paranoid` right before Phase 4 and pin to the newest stable tag supporting all three. |
+| **D3** | **Target Lean/Mathlib version for Gate 3:** Pin to `v4.35.0` or latest stable Mathlib release with `#44909` + working `comparator` + `nanoda`? | Phase 4 | **Resolved (`v4.36.0`, 2026-11-26):** `v4.35.0` lacks `#44909`; stable `v4.36.0` (`fc4f59e5`) ships native `KolmogorovExtension`, prebuilt Mathlib oleans, and `lake comparator --paranoid` (6 kernels passing). |
 | **D4** | **Co-author sign-off on `main-v3.tex` Gate-5 block:** Include a 1-sentence abstract mention, or keep disclosure in Introduction + Code/Data Availability? | Phase 6 | Coordinate with Bhaskar: 1 sentence in Intro (or Abstract) + structured `\paragraph{Formal Verification.}` beside Code and Data Availability. |
 
 ---

@@ -42,7 +42,9 @@ def reusable_record(release):
     if (not match or not record["claims"]
             or not record.get("comparator_passed")
             or not record.get("challenge_sha256")
-            or not record.get("kernels_passed")):
+            or not record.get("kernels_passed")
+            or not record.get("non_vacuity")
+            or not record.get("non_vacuity_coverage")):
         raise ValueError("Incomplete published verification record")
     run_id, attempt = match.groups()
     endpoint = f"repos/{repo}/actions/runs/{run_id}/attempts/{attempt}"

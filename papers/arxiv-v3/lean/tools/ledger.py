@@ -96,6 +96,14 @@ NONVACUITY_WITNESSES = [
      ["C11"]),
     ("TinaV2.NonVacuity.FiniteModels.exists_stationary_ar1_witness",
      ["C4.b"]),
+    ("TinaV2.NonVacuity.GaussianModels.exists_stationary_ou_witness",
+     ["C4.c"]),
+    ("TinaV2.NonVacuity.GaussianModels.exists_unequal_rate_ou_modes_witness",
+     ["C9"]),
+    ("TinaV2.NonVacuity.GaussianModels.exists_canonicalField",
+     ["C17.b", "C18", "C19"]),
+    ("TinaV2.NonVacuity.GaussianModels.exists_canonicalField_interior_regime",
+     ["C17.b", "C18", "C19"]),
 ]
 
 GATE2_BANNED = [
@@ -1119,6 +1127,7 @@ def cmd_assembly(db, args):
 
 AUDIT_LEAN = """import TinaV2.Assembly
 import TinaV2.NonVacuity.FiniteModels
+import TinaV2.NonVacuity.GaussianModels
 open Lean Elab Command
 
 /-- Constants of the attempt namespace `ns` that `n` uses, looking through

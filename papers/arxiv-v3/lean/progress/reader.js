@@ -185,6 +185,12 @@ function verificationRecord(c) {
   const kernelRow = kernels.length
     ? `<dt>Kernels passed</dt><dd>${kernels.map(k => `<code>${esc(k)}</code>`).join(', ')}</dd>`
     : '';
+  const nvWits = Object.entries(record.non_vacuity || {})
+    .filter(([, row]) => Array.isArray(row.claims) && row.claims.includes(c.id))
+    .map(([name]) => name);
+  const nvRow = nvWits.length
+    ? `<dt>Non-vacuity</dt><dd>${nvWits.map(w => `<code>${esc(w)}</code>`).join(', ')}</dd>`
+    : '';
   const note = multiKernel
     ? `The axiom audit found no <code>sorry</code> dependencies, and <code>lake comparator --paranoid</code> replayed the exported proof terms against the hash-locked challenge specification across ${kernels.length} independent kernels.`
     : 'The axiom audit found no <code>sorry</code> dependencies.';
@@ -195,7 +201,7 @@ function verificationRecord(c) {
     ${reused ? ' · This site revision uses identical proof inputs.' : ''}</dd>
     <dt>Lean version</dt><dd>${esc(record.lean)}</dd>
     <dt>Transitive axioms</dt><dd>${esc(proof.axioms.join(', ') || 'None')}</dd>
-    ${compRow}${kernelRow}</dl>
+    ${nvRow}${compRow}${kernelRow}</dl>
     <p>${note}</p></details>
     <a href="${esc(record.run)}">View verification run</a></div>`;
 }

@@ -812,11 +812,20 @@ C4.c and C9 ("Decisions, 2026-11-19", last block).
     `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) into
     `tools/verify_release.py`, `.github/workflows/verify-arxiv-v3-lean.yml`
     (with `bubblewrap`), and the Proof Explorer verification badge.
-  - **Next up (Phase 5):** Tier-D continuum non-vacuity witnesses (`C4.c`, `C9`,
-    and pathwise spatially continuous `CanonicalField` in
-    `TinaV2/NonVacuity/GaussianModels.lean`) using native Mathlib
-    `KolmogorovExtension` and a specialized 1D Gaussian Kolmogorov–Chentsov
-    modification. Parked: `future-tasks.md`.
+  - **Phase 5 complete (2026-11-26):** Added Tier-D continuum non-vacuity
+    witnesses in `TinaV2/NonVacuity/GaussianModels.lean` (imported by
+    `TinaV2.lean`, `0` frozen-file edits) using native Mathlib
+    `KolmogorovExtension` (`projectiveLimit`), `multivariateGaussian`,
+    `Matrix.PosSemidef.hadamard`, and a specialized 1D Gaussian
+    Kolmogorov–Chentsov dyadic-grid continuous modification (`exists_stationary_ou_witness`
+    for `C4.c`, `exists_unequal_rate_ou_modes_witness` for `C9`,
+    `exists_canonicalField` and `exists_canonicalField_interior_regime` for
+    `C17.b`/`C18`/`C19`); registered all 14 non-vacuity witness theorems in
+    `tools/ledger.py`, `tools/verify_release.py`, and the Proof Explorer for
+    full **34/34** proved-claim non-vacuity coverage with `{propext, Classical.choice, Quot.sound}` only.
+  - **Next up (Phase 6):** Gate-5 Verification Manifest in
+    `submissions/arxiv-v3/main-v3.tex` and immutable archival release tag
+    (`arxiv-v3-lean-v1.0`). Parked: `future-tasks.md`.
 - **Non-vacuity, what was checked on 2026-11-19 (scratch files only; nothing
   is in the library and no statement exists until Scott chooses the design).**
   - Mathlib v4.33.1 constructs neither Brownian motion nor any Gaussian

@@ -24,7 +24,7 @@ What remains to reach a complete 5-Gate `P4+` gold standard are **six targeted u
 | :--- | :--- | :--- | :---: |
 | **Git branch / upstream sync** | Operating directly on `main` tracking `origin/main` (`ANRGUSC/TINA`) | Synced with `origin/main`, working cleanly off `main` (done) | **0** |
 | **Live CI spec-freeze bypass (Mode #5/#7)** | `tools/verify_release.py` never calls `ledger.run_check(db)`; `verify-arxiv-v3-lean.yml` and `.github/scripts/pages_lean_record.py` ignore `submissions/arxiv-v3/*.tex`; no static ban on `unsafe`/`native_decide`/`elab`/`macro`; 6 benign `local notation` macros in `Proofs/` | `verify_release.py` enforces `ledger.run_check(db)`, Gate-2 static bans, and `.thmInfo` checks; TeX sources included in CI/reuse inputs; `0` notation overrides | **1** |
-| **Zero compiled non-vacuity witnesses (Mode #4, Gate 1)** | `0` compiled `∃` instances across 34 universally quantified claims (Tiers A–C unblocked on `v4.33.1`; Tier D `CanonicalField.continuous` load-bearing for measurability) | Kernel-checked non-vacuity witnesses for Tiers A–C (31/34 claims) on `v4.33.1`, followed by Tier-D Gaussian/OU & continuous `CanonicalField` witnesses | **2 & 5** |
+| **Zero compiled non-vacuity witnesses (Mode #4, Gate 1)** | `14` compiled `∃` witness theorems (`10` in `FiniteModels.lean` + `4` in `GaussianModels.lean`) covering **34/34** proved claims across Tiers A–D (including stationary OU processes and a pathwise spatially continuous `CanonicalField`), audited as `.thmInfo` with `{propext, Classical.choice, Quot.sound}` only (done) | Kernel-checked non-vacuity witnesses for Tiers A–D (34/34 claims) including Tier-D Gaussian/OU & continuous `CanonicalField` witnesses (done) | **2 & 5** |
 | **Residual `restricted` deltas & v2 headers (Mode #1, Gate 4)** | `C1`/`C1.c` export `Model.R_eq_sigmaRegret`; `C12` & `C11` include a.s. uniqueness; `C5.b` drops 3 unused internal hyps; 0 `v2.tex` frozen headers; `#/audit` step-signature view & routine refs live; Gate-4 audit 0 critical/high (done) | Closed avoidable `restricted` deltas, v3 headers aligned, side-by-side step-signature review view & cross-LLM audit complete, **single** consolidated `--refreeze` (done) | **3** |
 | **Single-kernel monoculture & missing `comparator` boundary (Mode #8, Gate 3)** | Upgraded to Lean/Mathlib `v4.36.0` (includes native `KolmogorovExtension` `#44909`); auto-generated `comparator/Challenge.lean`, `comparator/Solution.lean`, and `comparator.json`; `lake comparator --paranoid` passes all 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) and publishes `challenge_sha256`, `comparator_passed`, and `kernels_passed` (done) | Lean `v4.36.0` + Mathlib upgrade (unlocking native `KolmogorovExtension` `#44909`), auto-generated `Challenge.lean` + `lake comparator --paranoid` multi-kernel replay in CI (done) | **4** |
 | **Manuscript invisibility & Scope-Note Erasure risk (Mode #2/#12, Gate 5)** | `submissions/arxiv-v3/main-v3.tex` has `0` Lean/Mathlib mentions (`has_lean_strong = False`) | Concise Gate-5 Verification Manifest in `main-v3.tex` disclosing `verified` (17) vs. `verified_supplied` (17), OU/field scope, numerics (`C21`–`C24`), Proof Explorer URL, kernels passed, and immutable git tag | **6** |
@@ -186,32 +186,22 @@ flowchart TD
 
 ---
 
-### Phase 5: Tier-D Continuum Non-Vacuity (`C4.c`, `C9`, and `CanonicalField`) (~2–4 days)
+### Phase 5: Tier-D Continuum Non-Vacuity (`C4.c`, `C9`, and `CanonicalField`) (Completed 2026-11-26 · Zero Refreezes)
 
 **Goal:** Prove in Lean (using only standard axioms) that a non-trivial stationary Ornstein–Uhlenbeck Gaussian process (`C4.c`, `C9`) and a pathwise spatially continuous space-time `CanonicalField` (`C17`–`C19`) with $\sigma \neq 0$ actually exist—closing the single deepest mathematical non-vacuity question (`CanonicalField.continuous` in `Defs/Canonical.lean:46`).
 
 **Actions:**
-- [ ] **5.1 Step 5a — Stationary Gaussian / OU process witnesses (`C4.c` & `C9`, ~150–250 LoC):**
-  - Create `TinaV2/NonVacuity/GaussianModels.lean`.
-  - Build on Phase 4's native Mathlib `KolmogorovExtension` (`#44909`) and `Matrix.PosSemidef.hadamard` (leveraging the 2026-11-19 scratch results in `b66b3bd`: pre-Brownian motion on `ℝ≥0 → ℝ`, time-changed $X_t = e^{-t/T} B(e^{2t/T})$ with covariance $e^{-|t-s|/T}$, and general PSD-kernel Gaussian process construction via `measurePreserving_restrict₂_multivariateGaussian`).
-  - Prove positive-semidefiniteness of the 1D exponential kernel $e^{-|t-s|/T}$ cleanly via explicit ordered-grid AR(1)/Markov innovation decomposition.
-  - Instantiate concrete witnesses for `C4.c` and `C9` with `0 < M.Rinf`.
-- [ ] **5.2 Step 5b — Specialized 1D Gaussian Kolmogorov–Chentsov for `CanonicalField` (~350–500 LoC):**
-  - Avoid vendoring 190 KB of general metric-space KC from `RemyDegenne/brownian-motion`.
-  - Exploit two TINA-specific simplifications:
-    1. `CanonicalField.continuous` only requires spatial continuity $z \mapsto \theta(z, t, \omega)$ at each fixed $t$, and the covariance $\sigma^2 e^{-|z-z'|/\ell_s} e^{-|t-s|/T}$ is a separable product of two 1D OU kernels.
-    2. For centered 1D Gaussian increments with $\mathbb{E}[(X_z - X_{z'})^2] \le L |z - z'|$, Gaussian fourth moments immediately satisfy $\mathbb{E}[(X_z - X_{z'})^4] = 3(\mathbb{E}[(X_z - X_{z'})^2])^2 \le 3 L^2 |z - z'|^2$ (exponent $1 + \beta = 2 > 1$).
-  - Construct a Borel–Cantelli dyadic-grid continuous modification on $[-N, N]$ (patched over $N \in \mathbb{N}$), preserving `IsGaussianProcess`, zero mean, measurability, and exact `cov`.
-  - Prove:
-    ```lean
-    theorem exists_canonicalField (hσ : σ ≠ 0) (hℓs : 0 < ℓs) (hT : 0 < T) :
-      ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (_ : IsProbabilityMeasure μ)
-        (θ : ℝ → ℝ → Ω → ℝ), CanonicalField μ θ σ ℓs T
-    ```
-- [ ] **5.3 Audit Tier-D witnesses in `verify_release.py`:**
-  - Add `GaussianModels` / `exists_canonicalField` to the CI axiom audit list (`{propext, Classical.choice, Quot.sound}` only) and surface non-vacuity coverage (`34/34 claims`) in `verification.json` and the Proof Explorer.
+- [x] **5.1 Step 5a — Stationary Gaussian / OU process witnesses (`C4.c` & `C9`):**
+  - Created `TinaV2/NonVacuity/GaussianModels.lean` (imported by `TinaV2.lean`) using native Mathlib `KolmogorovExtension` (`projectiveLimit`), `multivariateGaussian` (`measurePreserving_restrict₂_multivariateGaussian`), and `Matrix.PosSemidef.hadamard`.
+  - Proved positive-semidefiniteness of the 1D exponential kernel $e^{-|t-s|/T}$ (`posSemidef_expKernel`) by diagonal congruence from the Brownian covariance matrix `min(e^{2t/T}, e^{2s/T})` (`posSemidef_matrix_measure_inter`).
+  - Constructed concrete non-degenerate witnesses `exists_stationary_ou_witness` (`C4.c`, 2-sensor unit-rate OU with `R_∞ = 1/2 > 0`) and `exists_unequal_rate_ou_modes_witness` (`C9`, 2-mode independent OU product space with strictly unequal rates `T₀ = 1 ≠ 2 = T₁` and `R_∞ = 1/2 > 0`).
+- [x] **5.2 Step 5b — Specialized 1D Gaussian Kolmogorov–Chentsov for `CanonicalField`:**
+  - Proved the exact Gaussian 4th-moment identity (`fourth_moment_gaussianReal`: $\mathbb{E}[Z^4] = 3(\mathbb{E}[Z^2])^2$ via `iteratedDeriv_mgf_zero`), 4th-moment Borel–Cantelli on adjacent dyadic pairs of $[-N, N]$ with threshold $(7/8)^n$, exact telescoping dyadic chaining (`|f(d_n) - f(d_m)| ≤ 7(7/8)^m`), and 2nd-moment Borel–Cantelli a.s. modification (`exists_continuous_modification_1d`).
+  - Applied `exists_continuous_modification_1d` slicewise in $t$ to the separable PSD-kernel field (`canonKernel` via `Matrix.PosSemidef.hadamard`) to prove `exists_canonicalField (hσ : σ ≠ 0) (hℓs : 0 < ℓs) (hT : 0 < T) : ∃ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω) (_ : IsProbabilityMeasure μ) (θ : ℝ → ℝ → Ω → ℝ), CanonicalField μ θ σ ℓs T` and `exists_canonicalField_interior_regime` (covering `C17.b`, `C18`, `C19` in the positive interior-radius regime `2 ℓ_s < v T`).
+- [x] **5.3 Audit Tier-D witnesses in `ledger.py`, `verify_release.py`, and Proof Explorer:**
+  - Registered all 4 new Tier-D witness theorems in `tools/ledger.py` (`NONVACUITY_WITNESSES` / `AUDIT_LEAN`, bringing total to 14 witness theorems), enforced complete 34/34 claim coverage and recorded `non_vacuity_coverage` in `tools/verify_release.py` (`verification.json` + `GITHUB_STEP_SUMMARY`) and `.github/scripts/pages_lean_record.py`, and surfaced per-claim witness theorems and overview coverage in `progress/reader.js` and `progress/app.js`.
 
-**Exit Criteria:** `exists_canonicalField` and `C4.c`/`C9` witnesses compile cleanly in CI with standard axioms only, achieving **34/34** non-vacuity coverage across Tiers A–D.
+**Exit Criteria:** `exists_canonicalField`, `exists_canonicalField_interior_regime`, and `C4.c`/`C9` witnesses compile cleanly (`lake build TinaV2`, 6,902 jobs; `ledger.py check`: `0 errors, 0 warnings`; `ledger.py audit`: 162 lemmas, 34 assembled theorems, 14 non-vacuity witnesses, `0` errors) with standard axioms only (`{propext, Classical.choice, Quot.sound}`), achieving **34/34** non-vacuity coverage across Tiers A–D with **0** frozen-file edits. (Met.)
 
 ---
 

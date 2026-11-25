@@ -109,6 +109,11 @@ def verify(output, no_sandbox=False):
                          "axioms": row["axioms"].split(", ") if row["axioms"] else []}
     if set(claims) != set(plan):
         raise ValueError("A selected theorem is missing its verification record.")
+    covered_nv = {c for row in non_vacuity.values() for c in row["claims"]}
+    missing_nv = sorted(set(claims) - covered_nv)
+    if missing_nv:
+        raise ValueError(f"Non-vacuity witnesses do not cover assembled claim(s): {', '.join(missing_nv)}")
+    nv_coverage = {"covered": len(set(claims) & covered_nv), "total": len(claims)}
 
     lean = subprocess.check_output(["lake", "env", "lean", "--version"], cwd=root, text=True).strip()
     run = (f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/"
@@ -125,6 +130,7 @@ def verify(output, no_sandbox=False):
         "kernels_passed": kernels_passed,
         "claims": claims,
         "non_vacuity": non_vacuity,
+        "non_vacuity_coverage": nv_coverage,
     }
     output.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
@@ -143,7 +149,8 @@ def verify(output, no_sandbox=False):
         print(f"- Independent kernels passed ({len(kernels_passed)}): "
               + ", ".join(f"`{k}`" for k in kernels_passed) + "\n", file=summary)
         print(f"Lean rebuilt the project and checked {len(claims)} assembled theorems and "
-              f"{len(non_vacuity)} non-vacuity witness theorems. "
+              f"{len(non_vacuity)} non-vacuity witness theorems "
+              f"({nv_coverage['covered']}/{nv_coverage['total']} claims covered across Tiers A–D). "
               "Every theorem is a kernel `.thmInfo` using only standard axioms with no `sorryAx` dependency.\n",
               file=summary)
         print("| Claim | Theorem | Transitive axioms |\n|---|---|---|", file=summary)

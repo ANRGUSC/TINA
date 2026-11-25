@@ -30,8 +30,15 @@ def verify(output):
         raise ValueError("Verification needs a clean build of the project's Lean modules.")
     subprocess.run(["lake", "build", "TinaV2"], cwd=root, check=True)
     db.execute("UPDATE assembled SET axioms=NULL, standard=NULL, checked=NULL")
-    if ledger.audit_selected(db, []):
+    non_vacuity = {}
+    if ledger.audit_selected(db, [], nonvacuity_out=non_vacuity):
         raise ValueError("The Lean proof audit failed.")
+    expected_wits = {w for w, _ in ledger.NONVACUITY_WITNESSES}
+    if set(non_vacuity) != expected_wits:
+        raise ValueError("A non-vacuity witness theorem is missing its verification record.")
+    for wit, row in non_vacuity.items():
+        if not (set(row["axioms"]) <= ledger.STANDARD_AXIOMS):
+            raise ValueError(f"{wit}: non-vacuity witness uses non-standard axioms {row['axioms']}")
 
     claims = {}
     for row in db.execute("""
@@ -55,7 +62,7 @@ def verify(output):
            f"{os.environ['GITHUB_RUN_ID']}/attempts/{os.environ['GITHUB_RUN_ATTEMPT']}")
     checked = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     record = {"commit": commit, "checked": checked, "lean": lean, "run": run,
-              "check_warnings": check_warnings, "claims": claims}
+              "check_warnings": check_warnings, "claims": claims, "non_vacuity": non_vacuity}
     output.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
         print("## arXiv v3 Lean verification\n", file=summary)
@@ -67,12 +74,18 @@ def verify(output):
             for w in check_warnings:
                 print(f"- {w}", file=summary)
             print(file=summary)
-        print(f"Lean rebuilt the project and checked {len(claims)} assembled theorems. "
+        print(f"Lean rebuilt the project and checked {len(claims)} assembled theorems and "
+              f"{len(non_vacuity)} non-vacuity witness theorems. "
               "Every theorem is a kernel `.thmInfo` using only standard axioms with no `sorryAx` dependency.\n",
               file=summary)
         print("| Claim | Theorem | Transitive axioms |\n|---|---|---|", file=summary)
         for claim, row in claims.items():
             print(f"| {claim} | `{row['theorem']}` | {', '.join(row['axioms']) or 'None'} |", file=summary)
+        print("\n### Non-vacuity witnesses\n", file=summary)
+        print("| Witness theorem | Claims covered | Transitive axioms |\n|---|---|---|", file=summary)
+        for wit, row in non_vacuity.items():
+            print(f"| `{wit}` | {', '.join(row['claims'])} | {', '.join(row['axioms']) or 'None'} |",
+                  file=summary)
 
 
 if __name__ == "__main__":

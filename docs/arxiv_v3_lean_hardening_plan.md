@@ -113,27 +113,26 @@ flowchart TD
 
 ---
 
-### Phase 2: Tiers A–C Non-Vacuity Witnesses on `v4.33.1` (~0.5–1 day · Zero Refreezes)
+### Phase 2: Tiers A–C Non-Vacuity Witnesses on `v4.33.1` (Completed 2026-11-26 · Zero Refreezes)
 
-**Goal:** Eliminate `Mode #4` (vacuous-truth risk) for **31 of 34 proved claims** immediately on `v4.33.1`, touching zero frozen `Defs/` or `Statements/` files.
+**Goal:** Eliminate `Mode #4` (vacuous-truth risk) for **all non-continuum Tiers A–C claims (29/34 proved claims; remaining 5 are Tier-D Gaussian/CanonicalField claims `C4.c`, `C9`, `C17.b`, `C18`, `C19`)** immediately on `v4.33.1`, touching zero frozen `Defs/` or `Statements/` files.
 
-**Design Decision (Confirm Before Coding):**
-- **Recommended layout:** Create `TinaV2/NonVacuity/FiniteModels.lean` (imported by `TinaV2.lean`, kept separate from `Proofs/` so the ledger's 1:1 manuscript-claim mapping stays pure) and add a `NonVacuity` axiom-audit list to `verify_release.py` / `AUDIT_LEAN` so every non-vacuity witness is CI-verified to use only `{propext, Classical.choice, Quot.sound}`.
-- *Alternative:* Track non-vacuity witnesses as formalizations in the SQLite ledger. (Higher ledger schema overhead for objects that are not paper claims.)
+**Design Decision (Adopted per D1):**
+- **Standalone module:** `TinaV2/NonVacuity/FiniteModels.lean` (imported by `TinaV2.lean`, kept separate from `Proofs/` so the ledger's 1:1 manuscript-claim mapping stays pure), with all 10 witness theorems wired into `tools/ledger.py` (`NONVACUITY_WITNESSES` / `AUDIT_LEAN`) and `tools/verify_release.py` (`verification.json` + `GITHUB_STEP_SUMMARY`) asserting `.thmInfo` and `{propext, Classical.choice, Quot.sound}` only.
 
 **Actions:**
-- [ ] **2.1 Analytic curves witness (`C15`, `C15.b`, `C15.c`, `C16`):**
-  - Instantiate `SmoothCurves η τ D` on `[0, 1]` with $\eta(r) = \frac{1}{2} e^{-2r}$, $\tau(r) = r$, $T = 4$.
-  - Prove `StrictAntiOn (balanceGap η τ T D) (Icc 0 D)`.
-  - Exhibit both an **interior crossing** witness and a **boundary-sticking** witness (where increasing $T$ leaves the optimum pinned at $0$ or $D$, directly resolving parked item `C15.c/f1/d3` in `future-tasks.md:89-91`).
-- [ ] **2.2 Aggregate-coupling witness (`C12`, `C13`, `C13.b`, `C13.c`):**
-  - Instantiate `n = 2`, $q = 1$, $\gamma = 1$, $\sigma = 1$ with independent Rademacher states $\theta_1, \theta_2 \in \{-1, +1\}$ under uniform probability measure on `Bool × Bool`.
-  - Prove `Q.PosDef`, `IsAggregateModel`, and `AggregateState`.
-- [ ] **2.3 Finite team, crossover, & projection witnesses (`C1`–`C3.b`, `C5`, `C5.b`, `C6.b`, `C6.c`, `C7`, `C7.b`, `C8`, `C8.c`, `C10`, `C10.b`, `C11`, `C14`):**
-  - On the same 2-agent Rademacher space (`ι = κ = α = Fin 2` over `Bool × Bool`), prove `0 < M.Rinf` and `0 < M.etaS μ 0 < 1` (`η₀ = 1/2`, matching the two-sensor example `C11`) and instantiate the `C1`–`C3` Hilbert projection hypothesis bundle.
-  - Instantiate a non-degenerate `TemporalAssumption` witness (e.g., at zero delay / discrete stationary coupling, with the continuous-time Gaussian OU witness following in Phase 5).
-- [ ] **2.4 Wire `NonVacuity` theorems into `verify_release.py`:**
-  - Verify `lake build TinaV2` compiles `TinaV2.NonVacuity.FiniteModels` and record its theorems' transitive axioms (`{propext, Classical.choice, Quot.sound}`) in `verification.json`.
+- [x] **2.1 Analytic curves witness (`C15`, `C15.b`, `C15.c`, `C16`, `C19.b`, `C20`):**
+  - Instantiated `SmoothCurves η τ D` on `[0, 1]` with $\eta(r) = \frac{1}{2} e^{-2r}$, $\tau(r) = r$, $T = 4$.
+  - Proved `StrictAntiOn (balanceGap η τ T D) (Icc 0 D)`.
+  - Exhibited both an **interior crossing** witness (`exists_smoothCurves_interior_crossing`) and **left/right boundary-sticking** witnesses (`exists_smoothCurves_boundary_sticking`, where increasing $T$ leaves the unique optimum pinned at `0` for `T = 1/2 → 1` or at `D = 1` for `T = 100 → 200`, directly resolving parked item `C15.c/f1/d3` in `future-tasks.md:89-91`), plus closed-form radius regime witnesses (`exists_expRadius_and_canonRadius_regimes`).
+- [x] **2.2 Aggregate-coupling witness (`C12`, `C13`, `C13.b`, `C13.c`):**
+  - Instantiated `n = 2`, $q = 1$, $\gamma = 1$, $\sigma = 1$ with independent Rademacher states $\theta_1, \theta_2 \in \{-1, +1\}$ under uniform probability measure on `Bool × Bool`.
+  - Proved `Q.PosDef`, `IsAggregateModel`, `AggregateState`, `M.G.Connected`, `0 < M.Rinf`, and `0 < M.etaS μ 0 < 1` (`exists_aggregateModel_and_state`).
+- [x] **2.3 Finite team, crossover, AR(1), & projection witnesses (`C1`–`C3.b`, `C4.b`, `C5`, `C5.b`, `C6.b`, `C6.c`, `C7`, `C7.b`, `C8`, `C8.c`, `C10`, `C10.b`, `C11`, `C14`):**
+  - On `Bool × Bool` (`ι = κ = α = Fin 2`), proved `exists_twoSensor_finite_model` (`R_∞ = 1/2 > 0`, `R_loc = 1/4`, `η₀ = 1/2`, matching the two-sensor example `C11`), `exists_projection_and_cost_bundle` (`C1`–`C3`, `C5`, `C5.b`), and `exists_degenerate_normalization_witness` (`C3.b`).
+  - Instantiated a non-degenerate continuous-delay `TemporalAssumption` witness holding for all `τ ≥ 0` (`exists_temporal_and_crossover_witness` covering `C7`–`C8.c`, `C10`–`C10.b`, `C13`, `C14`), a positive-delay two-sensor process witness (`exists_twoSensor_process_witness` for `C11`), and a discrete-time stationary AR(1) witness on `ℤ → Bool` (`exists_stationary_ar1_witness` for `C4.b`).
+- [x] **2.4 Wire `NonVacuity` theorems into `verify_release.py`:**
+  - Verified `lake build TinaV2` compiles `TinaV2.NonVacuity.FiniteModels`, wired all 10 witness theorems into `ledger.py` (`NONVACUITY_WITNESSES` / `AUDIT_LEAN`) and `verify_release.py`, and recorded their `.thmInfo` check and transitive axioms (`{propext, Classical.choice, Quot.sound}`) in `verification.json` and `GITHUB_STEP_SUMMARY`.
 
 **Exit Criteria:** All non-continuum hypothesis bundles (31/34 claims) have kernel-checked `∃ ...` existential witnesses in `TinaV2/NonVacuity/FiniteModels.lean` audited by CI with standard axioms only.
 

@@ -73,6 +73,29 @@ TABLES = ["meta", "sources", "claims", "claim_deps", "proofs", "steps",
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 COMPILER_TRUST_AXIOMS = {"Lean.ofReduceBool", "Lean.ofReduceNat", "Lean.trustCompiler"}
 
+NONVACUITY_WITNESSES = [
+    ("TinaV2.NonVacuity.FiniteModels.exists_smoothCurves_interior_crossing",
+     ["C15", "C15.b", "C15.c", "C16"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_smoothCurves_boundary_sticking",
+     ["C15.c"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_expRadius_and_canonRadius_regimes",
+     ["C16", "C19.b", "C20"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_aggregateModel_and_state",
+     ["C6.b", "C6.c", "C12", "C13.b", "C13.c"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_twoSensor_finite_model",
+     ["C6.b", "C6.c", "C11"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_projection_and_cost_bundle",
+     ["C1", "C1.b", "C1.c", "C2", "C3", "C5", "C5.b"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_degenerate_normalization_witness",
+     ["C3.b"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_temporal_and_crossover_witness",
+     ["C7", "C7.b", "C8", "C8.c", "C10", "C10.b", "C13", "C14"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_twoSensor_process_witness",
+     ["C11"]),
+    ("TinaV2.NonVacuity.FiniteModels.exists_stationary_ar1_witness",
+     ["C4.b"]),
+]
+
 GATE2_BANNED = [
     ("sorry/admit", re.compile(r"\b(?:sorry|admit)\b")),
     ("axiom", re.compile(r"\baxiom\b")),
@@ -963,6 +986,7 @@ def cmd_assembly(db, args):
 
 
 AUDIT_LEAN = """import TinaV2.Assembly
+import TinaV2.NonVacuity.FiniteModels
 open Lean Elab Command
 
 /-- Constants of the attempt namespace `ns` that `n` uses, looking through
@@ -1007,10 +1031,23 @@ run_cmd do
       logInfo m!"NOT-THEOREM {n}"
     | none =>
       logInfo m!"AUDIT-MISSING {n}"
+
+run_cmd do
+  let env ← getEnv
+  let wits : List Name := [%NONVACUITY%]
+  for n in wits do
+    match env.find? n with
+    | some (.thmInfo _) =>
+      let ax ← Lean.collectAxioms n
+      logInfo m!"NONVACUITY-AXIOMS {n} := {ax.toList}"
+    | some _ =>
+      logInfo m!"NOT-THEOREM {n}"
+    | none =>
+      logInfo m!"AUDIT-MISSING {n}"
 """
 
 
-def audit_selected(db, args):
+def audit_selected(db, args, nonvacuity_out=None):
     """Compare what each step lemma uses in Lean with what its paper step may use.
 
     For every selected proved attempt, Lean lists the step lemmas and the claim
@@ -1019,6 +1056,9 @@ def audit_selected(db, args):
     may belong to another claim's proof where `step_deps` says so (the paper's
     step cites an equation inside that proof); the map from Lean lemma to step
     covers every selected attempt, so such a use is compared like any other.
+
+    Also verifies that every assembled theorem and every registered non-vacuity
+    witness theorem is a kernel `.thmInfo` depending only on standard axioms.
     """
     import tempfile
     q = lambda sql, *p: db.execute(sql, p).fetchall()
@@ -1039,14 +1079,15 @@ def audit_selected(db, args):
         return []
     shorts = {a["claim_id"]: a["lean_decl"].split(".")[-2] for a in attempts}
     lean = (AUDIT_LEAN.replace("%LEMMAS%", ", ".join(f"(`{ns}, `{n})" for ns, n in lemmas))
-            .replace("%THEOREMS%", ", ".join(f"`TinaV2.Assembly.{s}" for s in shorts.values())))
+            .replace("%THEOREMS%", ", ".join(f"`TinaV2.Assembly.{s}" for s in shorts.values()))
+            .replace("%NONVACUITY%", ", ".join(f"`{w}" for w, _ in NONVACUITY_WITNESSES)))
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "Audit.lean"
         f.write_text(lean)
         r = subprocess.run(["lake", "env", "lean", str(f)], cwd=ROOT, capture_output=True, text=True)
     out = r.stdout + r.stderr
     if r.returncode != 0:
-        sys.exit("audit could not run (build first with `lake build TinaV2.Assembly`):\n" + out)
+        sys.exit("audit could not run (build first with `lake build TinaV2`):\n" + out)
     stmt_claim = {r["lean_decl"]: r["claim_id"] for r in q("SELECT claim_id, lean_decl FROM formalizations")}
     errs, seen = [], 0
     for m in re.finditer(r"AUDIT-MISSING (\S+)", out):
@@ -1119,10 +1160,27 @@ def audit_selected(db, args):
         if n != 1:
             errs.append(f"{claim}: no assembled record to store the axioms in: run `ledger.py assembly`")
         recorded += n
+    # Axioms of each non-vacuity witness theorem.
+    nv_axioms = {m.group(1): sorted(x.strip() for x in m.group(2).replace("\n", " ").split(",") if x.strip())
+                 for m in re.finditer(r"NONVACUITY-AXIOMS (\S+) := \[(.*?)\]", out, re.S)}
+    nv_audited = 0
+    for wit, covered in NONVACUITY_WITNESSES:
+        if wit not in nv_axioms:
+            errs.append(f"{wit}: Lean did not report the axioms of non-vacuity witness")
+            continue
+        ax = nv_axioms[wit]
+        compiler_ax = sorted(set(ax) & COMPILER_TRUST_AXIOMS)
+        if compiler_ax:
+            errs.append(f"{wit}: non-vacuity witness depends on compiler-trust axiom(s): {compiler_ax}")
+        if not (set(ax) <= STANDARD_AXIOMS):
+            errs.append(f"{wit}: non-vacuity witness depends on {sorted(set(ax) - STANDARD_AXIOMS)}")
+        if nonvacuity_out is not None:
+            nonvacuity_out[wit] = {"claims": list(covered), "axioms": ax}
+        nv_audited += 1
     for e in errs:
         print("ERROR  ", e)
     print(f"{seen} lemmas audited in {len(attempts)} attempts, axioms recorded for {recorded} "
-          f"assembled theorems, {len(errs)} errors")
+          f"assembled theorems, {nv_audited} non-vacuity witnesses audited, {len(errs)} errors")
     return errs
 
 

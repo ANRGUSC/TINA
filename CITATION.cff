@@ -2,11 +2,11 @@ cff-version: 1.2.0
 message: "If you use this manuscript or reproduction package, please cite it as below."
 title: "TINA: A Theory of Information Architecture for Networked Decisions"
 type: software
-version: "1.0.0-submission"
-date-released: 2026-08-29
+version: "arxiv-v3-lean-v1.0"
+date-released: 2026-11-26
 license: BSD-3-Clause
 repository-code: "https://github.com/ANRGUSC/TINA"
-url: "https://github.com/ANRGUSC/TINA/releases/tag/v1.0.0-submission"
+url: "https://github.com/ANRGUSC/TINA/releases/tag/arxiv-v3-lean-v1.0"
 authors:
   - family-names: Moeller
     given-names: Scott

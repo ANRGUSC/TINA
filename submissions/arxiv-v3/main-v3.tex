@@ -188,7 +188,7 @@ Section~\ref{sec:numerical-evaluation} gives four numerical illustrations,
 including noncanonical graphs; Sections~\ref{sec:related_work} and
 \ref{sec:discussion_conclusions} discuss related work and implications.
 Technical appendices retain the broader formulation, proofs, and
-reproducibility details.
+reproducibility details. All 34 mathematical claims in this manuscript have been formally verified in Lean~4 and Mathlib, as summarized in the Formal Verification statement at the end of Section~\ref{sec:discussion_conclusions}.
 
 \section{Model and observations}
 \label{sec:model}
@@ -1317,6 +1317,40 @@ The manuscript source, numerical code, experiment configurations, processed
 reference results, and figure-generation pipeline are available in the public
 TINA repository at \url{https://github.com/ANRGUSC/TINA}
 \cite{tina2026software}.
+
+\paragraph{Formal Verification.}
+All 34 mathematical claims in this manuscript (10/10 numbered theorems,
+propositions, lemmas, and corollaries plus 24 remarks and examples; 162
+step-audited lemmas) have been machine-checked in Lean~4 and Mathlib
+(\texttt{v4.36.0}, Mathlib commit \texttt{fc4f59e5}) with zero \texttt{sorry}
+placeholders and using only the standard axioms
+\{\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}\}.
+Of the 34 verified claims, 17 (\texttt{verified}, including 9/10 headline
+results) are mirrored 1:1 sentence by sentence directly from the manuscript
+text, and 17 (\texttt{verified\_supplied}, including 1/10 headline result,
+Lemma~\ref{prop:canonical_eta_S} / \texttt{C18}) have frozen statements proved
+unconditionally with omitted steps or proofs recorded explicitly in
+\nolinkurl{papers/arxiv-v3/lean/supplement.md}.
+Three explicit scope boundaries apply: the Ornstein--Uhlenbeck remarks
+(\texttt{C4.c}, \texttt{C9}) formalize the stationary Gaussian covariance law
+rather than deriving it from the It\^o SDE~\eqref{eq:OU_process}; the
+canonical line model (\texttt{C17}--\texttt{C19}) uses a pathwise spatially
+continuous version of the Gaussian field; and the numerical illustrations
+(\texttt{C21}--\texttt{C24}) are verified by deterministic Python scripts
+rather than Lean.
+To rule out vacuous hypotheses, 14 kernel-checked existential non-vacuity
+witness theorems (\nolinkurl{FiniteModels.lean} and
+\nolinkurl{GaussianModels.lean}, including stationary Ornstein--Uhlenbeck
+processes and a pathwise spatially continuous \texttt{CanonicalField}) achieve
+34/34 proved-claim coverage under the same standard axioms.
+Independent multi-kernel verification via \texttt{lake comparator --paranoid}
+passes all 6 kernels (\texttt{lean}, \texttt{leanchecker-paranoid},
+\texttt{lean4lean}, \texttt{nanoda}, \texttt{con-leche}, and \texttt{con-ron})
+against \nolinkurl{comparator/Challenge.lean} (SHA-256
+\nolinkurl{cd36223fea5f5f81c99a04ed48c8c14b3dceebbb5621cde5f292c9052fe201e0}).
+The interactive Proof Explorer is published at
+\url{https://anrgusc.github.io/TINA/arxiv-v3/proofs/}, and the verified
+artifact is archived under git tag \texttt{arxiv-v3-lean-v1.0}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

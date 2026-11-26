@@ -284,8 +284,9 @@ H.~S. Witsenhausen, ``A counterexample in stochastic optimum control,''
 \BIBentryALTinterwordspacing
 S.~Moeller and B.~Krishnamachari, ``{TINA}: Reproduction package for ``a theory
   of information architecture for networked decisions'','' GitHub repository,
-  2026, source code, data, figures, and manuscript materials. [Online].
-  Available: \url{https://github.com/ANRGUSC/TINA}
+  2026, source code, Lean 4 formal proofs (tag arxiv-v3-lean-v1.0), data,
+  figures, and manuscript materials. [Online]. Available:
+  \url{https://github.com/ANRGUSC/TINA}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}

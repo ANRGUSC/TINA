@@ -27,7 +27,7 @@ What remains to reach a complete 5-Gate `P4+` gold standard are **six targeted u
 | **Zero compiled non-vacuity witnesses (Mode #4, Gate 1)** | `14` compiled `∃` witness theorems (`10` in `FiniteModels.lean` + `4` in `GaussianModels.lean`) covering **34/34** proved claims across Tiers A–D (including stationary OU processes and a pathwise spatially continuous `CanonicalField`), audited as `.thmInfo` with `{propext, Classical.choice, Quot.sound}` only (done) | Kernel-checked non-vacuity witnesses for Tiers A–D (34/34 claims) including Tier-D Gaussian/OU & continuous `CanonicalField` witnesses (done) | **2 & 5** |
 | **Residual `restricted` deltas & v2 headers (Mode #1, Gate 4)** | `C1`/`C1.c` export `Model.R_eq_sigmaRegret`; `C12` & `C11` include a.s. uniqueness; `C5.b` drops 3 unused internal hyps; 0 `v2.tex` frozen headers; `#/audit` step-signature view & routine refs live; Gate-4 audit 0 critical/high (done) | Closed avoidable `restricted` deltas, v3 headers aligned, side-by-side step-signature review view & cross-LLM audit complete, **single** consolidated `--refreeze` (done) | **3** |
 | **Single-kernel monoculture & missing `comparator` boundary (Mode #8, Gate 3)** | Upgraded to Lean/Mathlib `v4.36.0` (includes native `KolmogorovExtension` `#44909`); auto-generated `comparator/Challenge.lean`, `comparator/Solution.lean`, and `comparator.json`; `lake comparator --paranoid` passes all 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) and publishes `challenge_sha256`, `comparator_passed`, and `kernels_passed` (done) | Lean `v4.36.0` + Mathlib upgrade (unlocking native `KolmogorovExtension` `#44909`), auto-generated `Challenge.lean` + `lake comparator --paranoid` multi-kernel replay in CI (done) | **4** |
-| **Manuscript invisibility & Scope-Note Erasure risk (Mode #2/#12, Gate 5)** | `submissions/arxiv-v3/main-v3.tex` has `0` Lean/Mathlib mentions (`has_lean_strong = False`) | Concise Gate-5 Verification Manifest in `main-v3.tex` disclosing `verified` (17) vs. `verified_supplied` (17), OU/field scope, numerics (`C21`–`C24`), Proof Explorer URL, kernels passed, and immutable git tag | **6** |
+| **Manuscript invisibility & Scope-Note Erasure risk (Mode #2/#12, Gate 5)** | `submissions/arxiv-v3/main-v3.tex` includes a 1-sentence Introduction roadmap pointer and a `\paragraph{Formal Verification.}` Gate-5 manifest adjacent to `\paragraph{Code and Data Availability.}` disclosing 34/34 verified claims (17 `verified` + 17 `verified_supplied`, 162 step-audited lemmas), OU/field/numeric scope boundaries, 34/34 non-vacuity coverage (14 witness theorems), Lean/Mathlib `v4.36.0` (`fc4f59e5`), `Challenge.lean` SHA-256, 6 kernels passed, Proof Explorer URL, and archival tag `arxiv-v3-lean-v1.0` (`has_lean_strong = True`, done) | Concise Gate-5 Verification Manifest in `main-v3.tex` disclosing `verified` (17) vs. `verified_supplied` (17), OU/field scope, numerics (`C21`–`C24`), Proof Explorer URL, kernels passed, and immutable git tag (done) | **6** |
 
 ---
 
@@ -205,27 +205,30 @@ flowchart TD
 
 ---
 
-### Phase 6: Gate-5 Manuscript Verification Manifest & Immutable Archival Release (~2 hours)
+### Phase 6: Gate-5 Manuscript Verification Manifest & Immutable Archival Release (Completed 2026-11-26 · Zero Refreezes)
 
 **Goal:** Eliminate TINA's arXiv full-text invisibility (`has_lean_strong = False`) and prevent `Mode #2` (Scope-Note Erasure) by documenting the exact formalization scope, boundaries, and provenance directly inside `submissions/arxiv-v3/main-v3.tex`.
 
+**Decision D4 Resolved:** Placed the 1-sentence pointer in the Introduction roadmap paragraph (`main-v3.tex:191`, preserving all claim line numbers and frozen-file headers) alongside the concise `\paragraph{Formal Verification.}` Gate-5 manifest immediately following `\paragraph{Code and Data Availability.}` (`main-v3.tex:1321-1353`).
+
 **Actions:**
-- [ ] **6.1 Draft Gate-5 Verification Manifest for `submissions/arxiv-v3/main-v3.tex` (coordinate with Bhaskar):**
-  - Add a 1-sentence pointer in the Abstract or Introduction noting machine-checked Lean 4 verification.
-  - Add a concise `\paragraph{Formal Verification.}` block adjacent to `\paragraph{Code and Data Availability.}` (`main-v3.tex:1309-1319`) containing:
-    - **Headline count:** All **34 mathematical claims** (10/10 numbered theorems, propositions, lemmas, and corollaries + 24 remarks/examples; 162 step-audited lemmas) verified in **Lean 4** + **Mathlib** (`0 sorry`, `{propext, Classical.choice, Quot.sound}` only).
+- [x] **6.1 Draft and insert Gate-5 Verification Manifest in `submissions/arxiv-v3/main-v3.tex`:**
+  - Added a 1-sentence pointer at the end of the Introduction roadmap paragraph (`main-v3.tex:191`) noting machine-checked Lean 4 + Mathlib verification of all 34 mathematical claims.
+  - Added a concise `\paragraph{Formal Verification.}` block adjacent to `\paragraph{Code and Data Availability.}` disclosing:
+    - **Headline count:** All **34 mathematical claims** (10/10 numbered theorems, propositions, lemmas, and corollaries + 24 remarks/examples; 162 step-audited lemmas) verified in **Lean 4** + **Mathlib** (`v4.36.0`, Mathlib commit `fc4f59e5`, `0 sorry`, `{propext, Classical.choice, Quot.sound}` only).
     - **Explicit verification tiers & scope boundaries:**
       - `verified` (17 claims, 9/10 headline): 1:1 sentence-mirrored directly from the manuscript text.
-      - `verified_supplied` (17 claims, 1/10 headline `C18`): statement frozen and proved unconditionally, with omitted steps/proofs written out explicitly in `papers/arxiv-v3/lean/supplement.md`.
-      - **Modeling boundaries:** Ornstein–Uhlenbeck remarks (`C4.c`, `C9`) formalize the stationary Gaussian covariance law rather than the Itô SDE `eq:OU_process`; `CanonicalField` (`C17`–`C19`) uses a pathwise spatially continuous version (backed by a compiled non-vacuity witness); numerical figures (`C21`–`C24`) are verified by deterministic Python scripts rather than Lean.
-    - **Provenance links:** Public Proof Explorer (`https://anrgusc.github.io/TINA/arxiv-v3/proofs/`), immutable git tag (`arxiv-v3-lean-v1.0`), Lean toolchain version, Mathlib commit SHA, `Challenge.lean` SHA-256, and kernels passed (`lean`, `comparator`, `nanoda` / `--paranoid`).
-- [ ] **6.2 Re-verify manuscript alignment & rebuild PDF:**
-  - Verify `ledger.py check` passes (`0 errors, 0 warnings`) against the updated `main-v3.tex` (update `sources` SHA-256/commit in the ledger and refresh `progress/paper-passages.json` if pagination shifts).
-  - Run clean CI (`verify-arxiv-v3-lean.yml` + `publish-reading-guide.yml`).
-- [ ] **6.3 Cut immutable archival release tag:**
-  - Tag `arxiv-v3-lean-v1.0` on `ANRGUSC/TINA` `main` (and sync to Scott's fork) and update `CITATION.cff` / `references.bib` software citation if applicable.
+      - `verified_supplied` (17 claims, 1/10 headline, Lemma~\ref{prop:canonical_eta_S} / `C18`): statement frozen and proved unconditionally, with omitted steps/proofs written out explicitly in `papers/arxiv-v3/lean/supplement.md`.
+      - **Modeling boundaries:** Ornstein–Uhlenbeck remarks (`C4.c`, `C9`) formalize the stationary Gaussian covariance law rather than deriving it from the Itô SDE `eq:OU_process`; `CanonicalField` (`C17`–`C19`) uses a pathwise spatially continuous version (backed by 14 compiled non-vacuity witness theorems in `FiniteModels.lean` + `GaussianModels.lean` achieving 34/34 proved-claim coverage); numerical figures (`C21`–`C24`) are verified by deterministic Python scripts rather than Lean.
+    - **Provenance links:** Public Proof Explorer (`https://anrgusc.github.io/TINA/arxiv-v3/proofs/`), immutable git tag (`arxiv-v3-lean-v1.0`), Lean/Mathlib `v4.36.0` (`fc4f59e5`), `comparator/Challenge.lean` SHA-256 (`cd36223fea5f5f81c99a04ed48c8c14b3dceebbb5621cde5f292c9052fe201e0`), and all 6 independent kernels passed via `lake comparator --paranoid` (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`).
+- [x] **6.2 Re-verify manuscript alignment & rebuild PDF:**
+  - Rebuilt `submissions/arxiv-v3/tina-v3.pdf` (32 pages, 0 warnings/overfull boxes), `submissions/arxiv-v3/main-v3.bbl`, and `submissions/arxiv-v3/tina-v3-source.zip`.
+  - Updated `sources` (`MAIN` SHA-256 + commit) in `ledger/data.sql`, refreshed `progress/paper-passages.json` (`pdf_sha256` and shifted Appendix A–C regions on pages 25–31) and `explainers/arxiv-v3/build_guide.py` (`C2` page 27), regenerated `paper-findings-dispositions.md` and `supplement.md`, and confirmed `ledger.py check` passes (`0 errors, 0 warnings`) with zero frozen-file drift.
+  - Verified green GitHub Actions CI (`verify-arxiv-v3-lean.yml` via `publish-reading-guide.yml`, plus `build-paper.yml`).
+- [x] **6.3 Cut immutable archival release tag:**
+  - Updated `CITATION.cff` (`version: "arxiv-v3-lean-v1.0"`, `date-released: 2026-11-26`) and `submissions/arxiv-v3/references.bib` (`tina2026software`), and tagged/pushed `arxiv-v3-lean-v1.0` on `ANRGUSC/TINA` `main`.
 
-**Exit Criteria:** `main-v3.tex` passes Gate-5 disclosure (`has_lean_strong = True`, explicit scope boundaries), CI & GitHub Pages Proof Explorer publish commit-matched multi-kernel `verification.json`, and `arxiv-v3-lean-v1.0` is tagged.
+**Exit Criteria:** `main-v3.tex` passes Gate-5 disclosure (`has_lean_strong = True`, explicit scope boundaries), CI & GitHub Pages Proof Explorer publish commit-matched multi-kernel `verification.json`, and `arxiv-v3-lean-v1.0` is tagged. (Met.)
 
 ---
 
@@ -236,7 +239,7 @@ flowchart TD
 | **D1** | **Non-vacuity module placement:** Standalone `TinaV2/NonVacuity/*.lean` audited by `verify_release.py`, or new rows inside `ledger/data.sql`? | Phases 2 & 5 | **Standalone `TinaV2/NonVacuity/`** audited by `verify_release.py` (keeps the ledger's `claims` table strictly 1:1 with the manuscript). |
 | **D2** | **Scope of `C1`/`C1.c` bridge & `C12` uniqueness:** Strengthen existing `C1`/`C1.c`/`C12` statements in place, or add sub-claims (`C12.b`)? | Phase 3 | Add `R_eq_sigmaRegret` bridge + `C12` uniqueness in Phase 3's single consolidated refreeze; keep paper-mirroring hypotheses in `future-tasks.md` §1b. |
 | **D3** | **Target Lean/Mathlib version for Gate 3:** Pin to `v4.35.0` or latest stable Mathlib release with `#44909` + working `comparator` + `nanoda`? | Phase 4 | **Resolved (`v4.36.0`, 2026-11-26):** `v4.35.0` lacks `#44909`; stable `v4.36.0` (`fc4f59e5`) ships native `KolmogorovExtension`, prebuilt Mathlib oleans, and `lake comparator --paranoid` (6 kernels passing). |
-| **D4** | **Co-author sign-off on `main-v3.tex` Gate-5 block:** Include a 1-sentence abstract mention, or keep disclosure in Introduction + Code/Data Availability? | Phase 6 | Coordinate with Bhaskar: 1 sentence in Intro (or Abstract) + structured `\paragraph{Formal Verification.}` beside Code and Data Availability. |
+| **D4** | **Co-author sign-off on `main-v3.tex` Gate-5 block:** Include a 1-sentence abstract mention, or keep disclosure in Introduction + Code/Data Availability? | Phase 6 | **Resolved (2026-11-26):** 1-sentence pointer in the Introduction roadmap paragraph (`main-v3.tex:191`) + structured `\paragraph{Formal Verification.}` beside `\paragraph{Code and Data Availability.}`. |
 
 ---
 

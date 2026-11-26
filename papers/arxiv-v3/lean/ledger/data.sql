@@ -13,7 +13,7 @@ INSERT INTO meta (key, value) VALUES ('toolchain', 'Lean 4.33.1, Mathlib v4.33.1
 
 -- sources
 INSERT INTO sources (id, path, git_commit, sha256) VALUES ('APP', 'submissions/arxiv-v3/technical-appendices-v3.tex', '12a9b3265fec20d55c9e630fbeee1016f3fca3c1', '32ded68b597fba6fd5868f27b2136920111785f138b057c7875519697fa147c7');
-INSERT INTO sources (id, path, git_commit, sha256) VALUES ('MAIN', 'submissions/arxiv-v3/main-v3.tex', '12a9b3265fec20d55c9e630fbeee1016f3fca3c1', 'd7995f2ae29a9cf8fe75c861cac270a7c480045900182460b017ab5de2384a7d');
+INSERT INTO sources (id, path, git_commit, sha256) VALUES ('MAIN', 'submissions/arxiv-v3/main-v3.tex', '6f24d1f94714469388b3cd1ec3a685c0db7cb84f', '22af8172e71ce7de6ba1b19d12b211f4b8365090b2b3d5d00f3b310350f62a51');
 
 -- claims
 INSERT INTO claims (id, parent, kind, title, statement, source, label, line_start, line_end, scope, tier, notes, headline) VALUES ('C1', NULL, 'lemma', 'Fixed-architecture quadratic projection', 'The admissible policy set S(A) is a closed linear subspace of L2; the unique optimal policy is the Q-weighted orthogonal projection of x* onto S(A); R(A) = (1/2)||x* - Pi x*||_Q^2.', 'APP', 'lem:radner_projection', 147, 214, 'lean', 'C', NULL, 1);

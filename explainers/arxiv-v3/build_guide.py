@@ -35,7 +35,7 @@ RESULTS = {
             [("C19.b", "Items 1–4 · How the optimal radius varies"), ("C17.b", "Why the delay law holds for the field")]),
     "C1": (26, "Fix what each agent can observe. The unique best feasible policy is the weighted orthogonal projection of the full-information action onto the space of admissible policies. Regret is half the squared projection error.",
            [("C1.b", "Orthogonality and the Pythagorean identity")]),
-    "C2": (26, "Each agent’s component of the cost gradient must have conditional mean zero given its own observations. These coupled equations characterize the team optimum.",
+    "C2": (27, "Each agent’s component of the cost gradient must have conditional mean zero given its own observations. These coupled equations characterize the team optimum.",
            [("C3", "Common observations and the conditional-mean policy")]),
 }
 

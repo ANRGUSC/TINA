@@ -11,14 +11,15 @@ directory was `papers/arxiv-v2/lean` until then; links to that path, including
 the one to `paper-findings-dispositions.md` sent to the co-author, no longer
 resolve. Two names still say v2:
 
-- The Lean package and namespace are `TinaV2`. Renaming them would change the
-  hash of every approved file.
-- The header comments of the frozen files under `TinaV2/Defs/` and
-  `TinaV2/Statements/` cite `main-v2.tex`, for the same reason. The ledger
-  (`sources`, `claims`, `steps`) holds the v3 files and line numbers, and the
-  proof files changed for v3 cite `main-v3.tex`.
+- The Lean package and namespace remain `TinaV2`. Renaming them would change
+  the hash of every approved file. (The header comments of all 27 frozen files
+  under `TinaV2/Defs/` and `TinaV2/Statements/` were updated to cite
+  `main-v3.tex` / `technical-appendices-v3.tex` during the Phase 3 consolidated
+  refreeze.)
 
-The ledger is aligned to the manuscript at commit `12a9b32`
+The ledger is aligned to `submissions/arxiv-v3/main-v3.tex` at commit `6f24d1f`
+(which adds the Gate-5 Formal Verification manifest) and
+`technical-appendices-v3.tex` at `12a9b32`
 (`python3 tools/ledger.py sql "SELECT * FROM sources"`). When the paper changes
 upstream, `ledger.py check` reports which step texts are no longer found; the
 steps, line ranges and `sources` rows are then updated through the CLI.
@@ -823,9 +824,18 @@ C4.c and C9 ("Decisions, 2026-11-19", last block).
     `C17.b`/`C18`/`C19`); registered all 14 non-vacuity witness theorems in
     `tools/ledger.py`, `tools/verify_release.py`, and the Proof Explorer for
     full **34/34** proved-claim non-vacuity coverage with `{propext, Classical.choice, Quot.sound}` only.
-  - **Next up (Phase 6):** Gate-5 Verification Manifest in
-    `submissions/arxiv-v3/main-v3.tex` and immutable archival release tag
-    (`arxiv-v3-lean-v1.0`). Parked: `future-tasks.md`.
+  - **Phase 6 complete (2026-11-26):** Inserted the Gate-5 Formal Verification
+    manifest in `submissions/arxiv-v3/main-v3.tex` (1-sentence pointer in the
+    Introduction roadmap paragraph + `\paragraph{Formal Verification.}` beside
+    `\paragraph{Code and Data Availability.}` disclosing 34/34 verified claims,
+    17 `verified` + 17 `verified_supplied`, 162 step-audited lemmas, OU/field/numeric
+    scope boundaries, 34/34 non-vacuity coverage, Lean/Mathlib `v4.36.0`
+    (`fc4f59e5`), `Challenge.lean` SHA-256, 6 kernels passed, Proof Explorer
+    URL, and archival tag `arxiv-v3-lean-v1.0`), rebuilt `tina-v3.pdf` /
+    `main-v3.bbl` / `tina-v3-source.zip`, updated `CITATION.cff` and
+    `references.bib`, realigned `sources` (`MAIN` at `6f24d1f`) and
+    `progress/paper-passages.json` (`0` frozen-file edits), verified green CI,
+    and cut immutable archival tag `arxiv-v3-lean-v1.0`. Parked: `future-tasks.md`.
 - **Non-vacuity, what was checked on 2026-11-19 (scratch files only; nothing
   is in the library and no statement exists until Scott chooses the design).**
   - Mathlib v4.33.1 constructs neither Brownian motion nor any Gaussian

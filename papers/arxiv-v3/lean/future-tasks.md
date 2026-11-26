@@ -92,11 +92,13 @@ the sign of the derivative"; merge them. *(Resolved 2026-11-26 in Phase 1.)*
 - **Uniqueness of the best estimate in the two-sensor example.** *(Resolved
   2026-11-26 in Phase 3: `C11/f2` adds almost-sure uniqueness for both the
   fresh and stale estimators via `Routine/Estimation.lean::bestMSE_unique_of_condExp`.)*
-- **Non-vacuity instances** (README, phase 5): Tiers A–C (29/34 proved claims)
-  are compiled and CI axiom-audited in `TinaV2/NonVacuity/FiniteModels.lean`
-  (Phase 2, 2026-11-26); Tier-D continuum Gaussian/OU (`C4.c`, `C9`) and
-  `CanonicalField` (`C17.b`, `C18`, `C19`) witnesses are scheduled for Phase 5
-  after the Phase 4 Lean/Mathlib `v4.35.0+` upgrade.
+- **Non-vacuity instances** (README, phase 5). *(Resolved 2026-11-26 across
+  Phase 2 and Phase 5: all 14 kernel-checked witness theorems are compiled and
+  CI axiom-audited for full 34/34 proved-claim coverage — Tiers A–C in
+  `TinaV2/NonVacuity/FiniteModels.lean` (Phase 2) and Tier-D continuum
+  Gaussian/OU (`C4.c`, `C9`) plus pathwise spatially continuous `CanonicalField`
+  (`C17.b`, `C18`, `C19`) witnesses in `TinaV2/NonVacuity/GaussianModels.lean`
+  (Phase 5, after the Phase 4 Lean/Mathlib `v4.36.0` upgrade).)*
 - **A side-by-side page** of step TeX and Lean lemma statement *(Resolved
   2026-11-26 in Phase 3: `progress/#/audit` and each claim's Lean tab).*
 - **The unequal-rate formula without Gaussianity** (C9). The paper's three
